@@ -11,6 +11,7 @@ export interface SidebarProps {
 
 export { default as Sidebar } from './Sidebar.vue'
 export { default as SidebarContent } from './main/SidebarContent.vue'
+export { default as SidebarSection } from './main/SidebarSection.vue'
 export { default as SidebarFooter } from './SidebarFooter.vue'
 export { default as SidebarGroup } from './group/SidebarGroup.vue'
 export { default as SidebarGroupAction } from './group/SidebarGroupAction.vue'

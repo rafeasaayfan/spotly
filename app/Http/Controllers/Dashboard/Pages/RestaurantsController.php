@@ -5,14 +5,22 @@ namespace App\Http\Controllers\Dashboard\Pages;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class ProjectsController extends Controller
+class RestaurantsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $query = User::query();
+
+        $columnsSearching = ['name', 'email'];
+
+        $data = $this->dataTable($query, $request, $columnsSearching);
+
+        return Inertia::render('dashboard/pages/users/Users', [
+            'users' => $data,
+        ]);
     }
 
     /**

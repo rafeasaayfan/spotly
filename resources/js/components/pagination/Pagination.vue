@@ -5,10 +5,12 @@ import { usePage } from '@inertiajs/vue3';
 import { ArrowBigLeftDash, ArrowBigRightDash, Ellipsis } from 'lucide-vue-next';
 import { PaginationBtn } from '../ui/pagination';
 import { computed } from 'vue';
+import { type TableConditions } from '@/lib/dataTable';
 
 const props = defineProps<{
     links: PaginationLink[];
     applyFilters: (overrides: Record<string, any>) => void;
+    tableConditions: TableConditions;
 }>();
 
 const formattedLinks = computed(() => formatPaginationLinks(props.links));
@@ -25,7 +27,7 @@ function goToPage(url: string | null) {
 </script>
 
 <template>
-    <div class="flex items-center gap-1.5">
+    <div v-if="formattedLinks.length > 1 && props.tableConditions.enablePagination" class="flex items-center gap-1.5">
         <div v-for="link in formattedLinks" :key="link.label">
             <PaginationBtn @click="goToPage(link.url)" :disabled="!link.url" :active="link.active">
                 <template v-if="!isNaN(Number(link.label))">

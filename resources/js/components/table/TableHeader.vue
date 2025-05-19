@@ -12,7 +12,7 @@ import { type Column } from '@/composables/dataTable/useDataTable';
 import { Link } from '@inertiajs/vue3';
 import { Search, Settings } from 'lucide-vue-next';
 import { ref, watch } from 'vue';
-import { DangerBtn, PrimaryButton } from '../ui/buttons';
+import { Button } from '../ui/button';
 import { Toggle } from '../ui/fields';
 
 import { type TableConditions } from '@/lib/dataTable';
@@ -43,7 +43,7 @@ watch(
 
 // Watch localSearch and call applyFilters when it changes
 watch(localSearch, (val) => {
-    props.applyFilters({ search: val });
+    props.applyFilters({ search: val, page: 1 });
 });
 </script>
 
@@ -94,12 +94,12 @@ watch(localSearch, (val) => {
 
         <div class="flex items-center gap-2">
             <Link v-if="props.selectedIds.length === 0 && props.tableConditions.enableCreate" :href="route(props.routeName + '.create')">
-                <PrimaryButton>Create</PrimaryButton>
+                <Button>Create</Button>
             </Link>
 
-            <DangerBtn v-else-if="props.selectedIds.length > 0 && props.tableConditions.enableRowsDelete" @click="handleAction('delete', props.selectedIds)">
+            <Button v-else-if="props.selectedIds.length > 0 && props.tableConditions.enableRowsDelete" @click="handleAction('delete', props.selectedIds)">
                 Delete {{ props.selectedIds.length }} item
-            </DangerBtn>
+            </Button>
         </div>
     </div>
 </template>

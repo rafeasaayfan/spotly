@@ -10,7 +10,6 @@ const emits = defineEmits<CheckboxRootEmits>()
 
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props
-
   return delegated
 })
 
@@ -22,12 +21,17 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     data-slot="checkbox"
     v-bind="forwarded"
     :class="
-      cn('cursor-pointer rounded border-0 w-[19px] h-[19px] flex justify-center items-center bg-slate-300 dark:bg-slate-900 checked:bg-blue-900 checked:dark:bg-blue-600 checked:after:text-white checked:focus:bg-blue-900 checked:focus:dark:bg-blue-600 transition-transform duration-300 active:scale-95 focus:outline-none focus:ring-0',
-         props.class)"
+      cn(
+        'cursor-pointer rounded border-0 w-[19px] h-[19px] flex justify-center items-center transition-transform duration-300 active:scale-95 focus:outline-none focus:ring-0',
+        'bg-slate-300 dark:bg-slate-900',
+        'data-[state=checked]:bg-blue-600 data-[state=checked]:dark:bg-blue-500',
+        props.class
+      )
+    "
   >
     <CheckboxIndicator
       data-slot="checkbox-indicator"
-      class="flex items-center justify-center text-current transition-none"
+      class="flex items-center justify-center text-current transition-none data-[state=checked]:text-white"
     >
       <slot>
         <Check class="size-3.5" />

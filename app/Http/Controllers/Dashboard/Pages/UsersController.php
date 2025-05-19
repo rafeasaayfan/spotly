@@ -20,7 +20,6 @@ class UsersController extends Controller
         $query = User::query();
 
         $columnsSearching = ['name', 'email'];
-        // $relations = ['profile'];
 
         $data = $this->dataTable($query, $request, $columnsSearching);
 
@@ -42,7 +41,17 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = new User($validated);
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        return redirect()->route('dashboard.users.index')->with('success', 'User created successfully');
     }
 
     /**
@@ -53,7 +62,7 @@ class UsersController extends Controller
         $user = User::findOrFail($id);
 
         return Inertia::render('dashboard/pages/users/actions/View', [
-            'user' => $user,
+            'data' => $user,
         ]);
     }
 
@@ -65,7 +74,7 @@ class UsersController extends Controller
         $user = User::findOrFail($id);
 
         return Inertia::render('dashboard/pages/users/actions/Edit', [
-            'user' => $user,
+            'data' => $user,
         ]);
     }
 
@@ -74,7 +83,24 @@ class UsersController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = User::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $id,
+            'password' => 'nullable|string|min:8|confirmed',
+        ]);
+
+        if ($request->has('password') && $validated['password']) {
+            $validated['password'] = bcrypt($validated['password']);
+        } else {
+            // Remove password from the data if it's not provided
+            unset($validated['password']);
+        }
+
+        $data->update($validated);
+
+        return redirect()->route('dashboard.users.index')->with('success', 'User updated successfully');
     }
 
     /**

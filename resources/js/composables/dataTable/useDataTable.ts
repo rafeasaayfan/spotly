@@ -1,7 +1,7 @@
 import { router } from '@inertiajs/vue3';
-import { computed, reactive, ref } from 'vue';
+import { computed, ref } from 'vue';
 
-export interface PaginationData {
+export interface DataTableProps {
     data: Record<string, any>[];
     links: Array<{
         url: string | null;
@@ -41,7 +41,9 @@ export interface DataTableOptions {
 }
 
 export function useDataTable(options: DataTableOptions) {
-    const filters = reactive<FilterOptions>({
+    const query = route().queryParams
+
+    const filters = <FilterOptions>({
         search: '',
         filter: {},
         sort_by: 'id',
@@ -49,6 +51,7 @@ export function useDataTable(options: DataTableOptions) {
         limit: 10,
         page: 1,
         ...options.initialFilters,
+        ...query,
     });
 
     const columnsVisibility = ref<Record<string, boolean>>(
@@ -69,8 +72,8 @@ export function useDataTable(options: DataTableOptions) {
         Object.assign(filters, overrides);
 
         if (options.routeName) {
-            router.post(
-                route(options.routeName),
+            router.get(
+                route(options.routeName + '.index'),
                 { ...filters },
                 {
                     preserveState: true,
@@ -81,7 +84,7 @@ export function useDataTable(options: DataTableOptions) {
         }
     }
 
-    function createPaginationMeta(paginationData: PaginationData) {
+    function createPaginationMeta(paginationData: DataTableProps) {
         return computed(() => ({
             current_page: paginationData.current_page,
             per_page: paginationData.per_page,

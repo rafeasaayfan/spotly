@@ -4,7 +4,7 @@ import SidebarContentHeader from '@/components/sidebar/content/SidebarContentHea
 import SidebarMain from '@/components/sidebar/content/SidebarMain.vue';
 import SidebarUser from '@/components/sidebar/content/SidebarUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader} from '@/components/ui/sidebar';
-import { sidebarVariant } from '@/config/navigation';
+import { sidebarVariant } from '@/config/navigations';
 import { SharedData } from '@/types';
 import { usePage } from '@inertiajs/vue3';
 

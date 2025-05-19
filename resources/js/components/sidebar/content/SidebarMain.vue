@@ -12,7 +12,7 @@ import {
     SidebarMenuSubItem,
     SidebarSection,
 } from '@/components/ui/sidebar';
-import { mainSidebarItems as items } from '@/config/navigation';
+import { mainSidebarItems as items } from '@/config/navigations';
 import { type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import { Minus, Plus } from 'lucide-vue-next';
@@ -40,37 +40,45 @@ function isDropdownOpen(title: string) {
 }
 
 function onEnter(el: Element) {
-    el.style.height = '0';
-    el.style.opacity = '0';
+    const element = el as HTMLElement;
+
+    element.style.height = '0';
+    element.style.opacity = '0';
     nextTick(() => {
-        el.style.transition = 'all 0.3s ease';
-        el.style.height = el.scrollHeight + 'px';
-        el.style.opacity = '1';
+        element.style.transition = 'all 0.3s ease';
+        element.style.height = element.scrollHeight + 'px';
+        element.style.opacity = '1';
     });
 }
 
 function onAfterEnter(el: Element) {
-    el.style.height = '';
-    el.style.opacity = '';
+    const element = el as HTMLElement;
+
+    element.style.height = '';
+    element.style.opacity = '';
 }
 
-function onLeave(el: HTMLElement) {
-    el.style.height = el.scrollHeight + 'px';
+function onLeave(el: Element) {
+    const element = el as HTMLElement;
+
+    element.style.height = el.scrollHeight + 'px';
 
     // Force reflow to apply the height before collapsing
-    void el.offsetHeight;
+    void element.offsetHeight;
 
     nextTick(() => {
-        el.style.transition = 'all 0.2s ease';
-        el.style.height = '0';
-        el.style.opacity = '0';
+        element.style.transition = 'all 0.2s ease';
+        element.style.height = '0';
+        element.style.opacity = '0';
     });
 }
-
 function onAfterLeave(el: Element) {
-    el.style.height = '';
-    el.style.opacity = '';
+    const element = el as HTMLElement;
+
+    element.style.height = '';
+    element.style.opacity = '';
 }
+
 </script>
 
 <template>

@@ -12,11 +12,13 @@ trait DataTableTrait
         $filters = $request->input('filter', []);
         $sortBy = $request->input('sort_by', 'id');
         $sortDir = $request->input('sort_dir', 'desc');
-        $page = (int)$request->get('page', 1);
+        // $page = (int)$request->get('page', 1);
         $perPage = (int)$request->input('limit', 10);
 
         // Apply column selection
-        $this->applyColumnSelection($query, $columnsSelection);
+        if (!empty($columnsSelection)) {
+            $this->applyColumnSelection($query, $columnsSelection);
+        }
 
         // Load relations
         if (!empty($relations)) {
@@ -33,7 +35,7 @@ trait DataTableTrait
 
         $query->orderBy($sortBy, $sortDir);
 
-        $results = $query->paginate($perPage, ['*'], 'page', $page);
+        $results = $query->paginate($perPage);
 
         // Transform results to flatten relation data
         // $this->flattenRelationData($results, $relations);
@@ -50,11 +52,7 @@ trait DataTableTrait
      */
     protected function applyColumnSelection($query, array $columns)
     {
-        if (empty($columns) || $columns == 'all') {
-            return;
-        } else {
-            $query->select($columns);
-        }
+        $query->select($columns);
     }
 
     /**

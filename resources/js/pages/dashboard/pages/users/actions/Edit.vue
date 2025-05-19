@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PrimaryButton } from '@/components/ui/buttons';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/fields';
 import DashboardLayout from '@/layouts/DashboardLayout.vue';
 import { type BreadcrumbItem } from '@/types';
@@ -71,7 +71,7 @@ const columns = {
                 </div>
 
                 <div class="flex justify-end lg:col-span-2">
-                    <PrimaryButton :disabled="form.processing">Update</PrimaryButton>
+                    <Button :disabled="form.processing">Update</Button>
                 </div>
             </form>
         </div>

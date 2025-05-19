@@ -2,8 +2,8 @@
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItemType } from '@/types';
-import AppearenceBtn from '@/components/preferences/appearance/AppearanceBtn.vue';
-import LanguagesMenu from '@/components/preferences/language/LanguagesMenu.vue';
+import AppearenceBtn from '@/components/appearance/AppearanceBtn.vue';
+import LanguagesMenu from '@/components/languages/Languages.vue';
 import AuthAvatar from '@/components/AuthAvatar.vue';
 
 withDefaults(

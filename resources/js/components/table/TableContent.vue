@@ -30,7 +30,7 @@ const props = defineProps<TableProps>();
             <Thead>
                 <Tr>
                     <Th class="w-3" v-if="props.tableConditions.enableRowsDelete">
-                        <Checkbox :model-value="allSelected" @update:modelValue="toggleSelectAll" />
+                        <Checkbox :model-value="allSelected" @update:modelValue="val => typeof val === 'boolean' && toggleSelectAll(val)" />
                     </Th>
                     <Th
                         v-for="column in props.columns"
@@ -60,7 +60,7 @@ const props = defineProps<TableProps>();
                 <!-- Row: every data row && index: is the number of this row -->
                 <Tr v-for="(row, index) in props.data" :key="index" class="w-3 text-sm text-slate-950/90 dark:text-slate-100/90">
                     <Td class="max-w-5" v-if="props.tableConditions.enableRowsDelete">
-                        <Checkbox :model-value="selectedIds.includes(row.id)" @update:modelValue="(val) => toggleRowSelection(row.id, val)" />
+                        <Checkbox :model-value="selectedIds.includes(row.id)" @update:modelValue="val => typeof val === 'boolean' && toggleRowSelection(row.id, val)" />
                     </Td>
 
                     <Td v-for="column in props.columns" :key="column.key">

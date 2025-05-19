@@ -94,7 +94,11 @@ const { handleAction } = useTableActions(selectedIds, props.routeName);
                 <Meta :meta="meta" />
             </div>
 
-            <Pagination :links="props.tableData.links" :applyFilters="applyFilters" :tableConditions="tableConditions" />
+            <Pagination
+                :links="props.tableData.links"
+                :applyFilters="applyFilters"
+                :tableConditions="tableConditions"
+            />
         </div>
     </div>
 </template>
