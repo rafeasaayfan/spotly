@@ -2,9 +2,10 @@
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/ui/fields';
 import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
+import SocialAuth from './SocialAuth.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 
@@ -79,5 +80,7 @@ const submit = () => {
                 <TextLink :href="route('login')" class="underline underline-offset-4" :tabindex="6">Log in</TextLink>
             </div>
         </form>
+
+        <SocialAuth />
     </AuthBase>
 </template>

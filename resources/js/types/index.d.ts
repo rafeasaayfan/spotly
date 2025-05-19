@@ -16,15 +16,12 @@ export interface NavItem {
     href: string;
     icon?: LucideIcon;
     isActive?: boolean;
-}
-
-export interface SidebarItem extends NavItem {
-    children?: SidebarItem[];
+    children?: NavItem[];
 }
 
 export interface SidebarSection {
     name: string;
-    items: SidebarItem[];
+    items: NavItem[];
 }
 
 export interface SharedData extends PageProps {

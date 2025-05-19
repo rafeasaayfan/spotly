@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
-    dashboardPagesRoutes('users', UsersController::class);
-    dashboardPagesRoutes('users', ProjectsController::class);
+    // dashboardPagesRoutes('users', UsersController::class);
+    // dashboardPagesRoutes('users', ProjectsController::class);
 });
 
 function dashboardPagesRoutes($name, $controller) {

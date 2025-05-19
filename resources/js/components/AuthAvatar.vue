@@ -1,0 +1,33 @@
+<script setup lang="ts">
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import UserMenuContent from '@/components/userDropdown/UserMenuContent.vue';
+import { getInitials } from '@/composables/useInitials';
+import { usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
+
+const page = usePage<SharedData>();
+const auth = computed(() => page.props.auth);
+</script>
+
+<template>
+    <DropdownMenu>
+        <DropdownMenuTrigger :as-child="true">
+            <Button
+                variant="ghost"
+                size="icon"
+                class="focus-within:ring-primary relative size-10 w-auto cursor-pointer rounded-full p-1 focus-within:ring-2"
+            >
+                <Avatar class="size-8 overflow-hidden rounded-full">
+                    <AvatarImage v-if="auth.user.avatar" :src="auth.user.avatar" :alt="auth.user.name" />
+                    <AvatarFallback class="rounded-lg font-semibold text-black dark:text-white">
+                        {{ getInitials(auth.user?.name) }}
+                    </AvatarFallback>
+                </Avatar>
+            </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" class="w-56">
+            <UserMenuContent :user="auth.user" />
+        </DropdownMenuContent>
+    </DropdownMenu>
+</template>

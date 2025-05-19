@@ -1,0 +1,49 @@
+<script setup lang="ts">
+import { formatPaginationLinks, type PaginationLink } from '@/lib/pagination';
+import type { SharedData } from '@/types';
+import { usePage } from '@inertiajs/vue3';
+import { ArrowBigLeftDash, ArrowBigRightDash, Ellipsis } from 'lucide-vue-next';
+import { PaginationBtn } from '../ui/pagination';
+import { computed } from 'vue';
+
+const props = defineProps<{
+    links: PaginationLink[];
+    applyFilters: (overrides: Record<string, any>) => void;
+}>();
+
+const formattedLinks = computed(() => formatPaginationLinks(props.links));
+
+const page = usePage<SharedData>();
+
+function goToPage(url: string | null) {
+    if (!url) return;
+
+    const pageNumber = new URL(url).searchParams.get('page');
+
+    props.applyFilters({ page: pageNumber });
+}
+</script>
+
+<template>
+    <div class="flex items-center gap-1.5">
+        <div v-for="link in formattedLinks" :key="link.label">
+            <PaginationBtn @click="goToPage(link.url)" :disabled="!link.url" :active="link.active">
+                <template v-if="!isNaN(Number(link.label))">
+                    {{ link.label }}
+                </template>
+
+                <template v-else-if="link.label.includes('Previous')">
+                    <component :is="page.props.lang == 'ar' ? ArrowBigRightDash : ArrowBigLeftDash" class="h-5.5 w-5.5" />
+                </template>
+
+                <template v-else-if="link.label.includes('Next')">
+                    <component :is="page.props.lang == 'ar' ? ArrowBigLeftDash : ArrowBigRightDash" class="h-5.5 w-5.5" />
+                </template>
+
+                <template v-else-if="link.label === '...'">
+                    <Ellipsis class="h-5.5 w-5.5" />
+                </template>
+            </PaginationBtn>
+        </div>
+    </div>
+</template>

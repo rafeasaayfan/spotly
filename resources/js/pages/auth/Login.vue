@@ -2,10 +2,11 @@
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/fields';
+import { Input } from '@/components/ui/fields';
 import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
+import SocialAuth from './SocialAuth.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 
@@ -89,5 +90,7 @@ const submit = () => {
                 <TextLink :href="route('register')" :tabindex="5">Sign up</TextLink>
             </div>
         </form>
+
+        <SocialAuth />
     </AuthBase>
 </template>
