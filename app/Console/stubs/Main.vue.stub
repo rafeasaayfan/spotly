@@ -1,0 +1,42 @@
+<script setup lang="ts">
+import DataTable from '@/components/table/DataTable.vue';
+import DashboardLayout from '@/layouts/DashboardLayout.vue';
+
+import { Head } from '@inertiajs/vue3';
+
+import { type DataTableProps } from '@/composables/dataTable/useDataTable';
+import { defaultTableConditions } from '@/lib/dataTable';
+import { type BreadcrumbItem } from '@/types';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: '{{ Title }}',
+        href: '/dashboard/{{ slug }}',
+    },
+];
+
+const columns = [
+{{ columns }}
+];
+
+const props = defineProps<{
+    {{ slug }}: DataTableProps;
+}>();
+
+const tableConditions = {
+    ...defaultTableConditions,
+};
+</script>
+
+<template>
+    <Head title="{{ Title }}" />
+
+    <DashboardLayout :breadcrumbs="breadcrumbs">
+        <DataTable
+            :table-data="props.{{ slug }}"
+            :columns="columns"
+            route-name="dashboard.{{ slug }}"
+            :table-conditions="tableConditions"
+        />
+    </DashboardLayout>
+</template>
