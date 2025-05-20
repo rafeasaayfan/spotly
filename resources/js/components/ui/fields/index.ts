@@ -1,5 +1,7 @@
 export { default as Checkbox } from './Checkbox.vue'
 export { default as Input } from '../fields/Input.vue'
 export { default as Select } from '../fields/Select.vue'
+export { default as SelectWithSearch } from '../fields/SelectWithSearch.vue'
 export { default as Toggle } from '../fields/Toggle.vue'
+export { default as File } from '../fields/File.vue'
 

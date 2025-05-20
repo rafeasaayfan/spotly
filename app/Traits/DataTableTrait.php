@@ -2,7 +2,8 @@
 
 namespace App\Traits;
 
-use Illuminate\Support\Str;
+// use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Schema;
 
 trait DataTableTrait
 {
@@ -33,12 +34,17 @@ trait DataTableTrait
             $this->applyFilters($query, $filters);
         }
 
-        $query->orderBy($sortBy, $sortDir);
+        $table = $query->getModel()->getTable();
+        if (Schema::hasColumn($table, $sortBy)) {
+            $query->orderBy($sortBy, $sortDir);
+        }
 
         $results = $query->paginate($perPage);
 
         // Transform results to flatten relation data
-        // $this->flattenRelationData($results, $relations);
+        if (!empty($relations)) {
+            $this->flattenRelationData($results, $relations);
+        }
 
         return $results;
     }
@@ -65,9 +71,11 @@ trait DataTableTrait
     protected function loadRelations($query, array $relationColumns)
     {
         foreach ($relationColumns as $relation) {
-            if (str_contains($relation, '.')) {
-                [$relation, $field] = explode('.', $relation, 2);
-                $query->withSelectedColumns($relation, $field);
+            if (str_contains($relation, '_')) {
+                [$relationName, $field] = explode('_', $relation, 2);
+                $query->with([$relationName => function ($q) use ($field) {
+                    $q->select('id', $field);
+                }]);
             } else {
                 $query->with($relation);
             }
@@ -139,16 +147,19 @@ trait DataTableTrait
     protected function flattenRelationData($results, array $relationColumns)
     {
         $results->getCollection()->transform(function ($item) use ($relationColumns) {
-            foreach ($relationColumns as $relation => $fields) {
-                if (!isset($item->$relation)) {
-                    continue;
-                }
+            foreach ($relationColumns as $relationColumn) {
+                if (str_contains($relationColumn, '_')) {
+                    [$relation, $field] = explode('_', $relationColumn, 2);
 
-                foreach ($fields as $field) {
+                    if (!isset($item->$relation)) {
+                        continue;
+                    }
+
+                    // Flatten the relation field to the parent item
                     $item->setAttribute("{$relation}_{$field}", $item->$relation->$field ?? null);
-                }
 
-                unset($item->$relation);
+                    unset($item->$relation);
+                }
             }
 
             return $item;

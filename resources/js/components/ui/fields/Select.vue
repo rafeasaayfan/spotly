@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
 
 const props = defineProps<{
-  modelValue: string | number
+  modelValue: string | File | number | null
   active?: boolean
   class?: HTMLAttributes['class']
   name?: string

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { PrimaryButton } from '@/components/ui/buttons';
-import { File, Input, Select } from '@/components/ui/fields';
+import { Button } from '@/components/ui/button';
+import { File, Input, SelectWithSearch } from '@/components/ui/fields';
 import DashboardLayout from '@/layouts/DashboardLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/vue3';
@@ -34,45 +34,33 @@ const columns = {
         type: 'image',
         label: 'Image',
     },
-    address: {
+    country: {
         type: 'text',
-        label: 'Address',
+        label: 'Country',
     },
     city: {
         type: 'text',
         label: 'City',
     },
-    country: {
+    phone_number: {
         type: 'text',
-        label: 'Country',
-    },
-    phone: {
-        type: 'text',
-        label: 'Phone',
+        label: 'Phone Number',
     },
     email: {
         type: 'email',
         label: 'Email',
     },
-    website: {
-        type: 'text',
-        label: 'Webiste url',
-    },
-    opening_hours: {
+    open_start: {
         type: 'time',
         label: 'Opening hours',
     },
-    closing_hours: {
+    close_start: {
         type: 'time',
         label: 'Closing hours',
     },
-    description: {
-        type: 'textarea',
-        label: 'Description',
-    },
 };
 
-const form = useForm<Record<string, string | File | null>>(Object.fromEntries(Object.keys(columns).map((key) => [key, ''])));
+const form = useForm<Record<string, string | File | number | null>>(Object.fromEntries(Object.keys(columns).map((key) => [key, ''])));
 </script>
 
 <template>
@@ -80,9 +68,12 @@ const form = useForm<Record<string, string | File | null>>(Object.fromEntries(Ob
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <div class="w-full p-4">
-            <Link :href="route('dashboard.restaurants.index')" class="flex cursor-pointer items-center gap-3">
+            <Link
+                :href="route('dashboard.restaurants.index')"
+                class="flex w-fit cursor-pointer items-center gap-1 rounded bg-blue-600/30 px-2 py-1 hover:bg-blue-600/50"
+            >
                 <ArrowBigLeft class="size-4" />
-                <p class="text-semibold">Go Back</p>
+                <p class="text-semibold text-sm">Go Back</p>
             </Link>
         </div>
 
@@ -102,11 +93,16 @@ const form = useForm<Record<string, string | File | null>>(Object.fromEntries(Ob
                     </template>
 
                     <template v-else-if="config.type === 'select'">
-                        <Select v-model="form[field]">
-                            <option v-for="option in props.users" :key="option.id ?? option" :value="option.id ?? option">
-                                {{ option.name ?? option }}
-                            </option>
-                        </Select>
+                        <SelectWithSearch
+                            v-model="form[field]"
+                            :options="
+                                props.users.map((user) => ({
+                                    label: user.name ?? user,
+                                    value: user.id ?? user,
+                                }))
+                            "
+                            placeholder="Select a user"
+                        />
                     </template>
 
                     <template v-else-if="config.type === 'image'">
@@ -130,7 +126,7 @@ const form = useForm<Record<string, string | File | null>>(Object.fromEntries(Ob
                 </div>
 
                 <div class="flex justify-end lg:col-span-2 xl:col-span-3">
-                    <PrimaryButton :disabled="form.processing">Submit</PrimaryButton>
+                    <Button :disabled="form.processing">Submit</Button>
                 </div>
             </form>
         </div>

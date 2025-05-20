@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { PrimaryButton } from '@/components/ui/buttons';
-import { Input, Select, File } from '@/components/ui/fields';
+import { Button } from '@/components/ui/button';
+import { File, Input, SelectWithSearch } from '@/components/ui/fields';
 import DashboardLayout from '@/layouts/DashboardLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/vue3';
@@ -37,41 +37,33 @@ const columns = {
         type: 'image',
         label: 'Image',
     },
-    address: {
+    country: {
         type: 'text',
-        label: 'Address',
+        label: 'Country',
     },
     city: {
         type: 'text',
         label: 'City',
     },
-    country: {
+    phone_number: {
         type: 'text',
-        label: 'Country',
-    },
-    phone: {
-        type: 'text',
-        label: 'Phone',
+        label: 'Phone Number',
     },
     email: {
         type: 'email',
         label: 'Email',
     },
-    website: {
-        type: 'text',
-        label: 'Webiste url',
-    },
-    opening_hours: {
+    open_start: {
         type: 'time',
         label: 'Opening hours',
     },
-    closing_hours: {
+    close_start: {
         type: 'time',
         label: 'Closing hours',
     },
-    description: {
-        type: 'textarea',
-        label: 'Description',
+    status: {
+        type: 'select',
+        label: 'Status',
     },
 };
 </script>
@@ -81,9 +73,12 @@ const columns = {
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <div class="w-full p-4">
-            <Link :href="route('dashboard.restaurants.index')" class="flex cursor-pointer items-center gap-3">
+            <Link
+                :href="route('dashboard.restaurants.index')"
+                class="flex w-fit cursor-pointer items-center gap-1 rounded bg-blue-600/30 px-2 py-1 hover:bg-blue-600/50"
+            >
                 <ArrowBigLeft class="size-4" />
-                <p class="text-semibold">Go Back</p>
+                <p class="text-semibold text-sm">Go Back</p>
             </Link>
         </div>
 
@@ -96,21 +91,26 @@ const columns = {
 
                     <!-- Text / Email -->
                     <template v-if="config.type === 'text' || config.type === 'email'">
-                        <Input :type="config.type" v-model="form[field]" class="input" />
+                        <Input :type="config.type" v-model="form[field]" />
                     </template>
 
                     <!-- Textarea -->
                     <template v-else-if="config.type === 'textarea'">
-                        <textarea class="input w-full rounded-md border bg-zinc-800 p-2 text-white" />
+                        <textarea class="w-full rounded-md border bg-zinc-800 p-2 text-white" />
                     </template>
 
                     <!-- Select -->
                     <template v-else-if="config.type === 'select'">
-                        <Select class="input">
-                            <option v-for="option in props.users" :key="option.id ?? option" :value="option.id ?? option">
-                                {{ option.name ?? option }}
-                            </option>
-                        </Select>
+                        <SelectWithSearch
+                            v-model="form[field]"
+                            :options="
+                                props.users.map((user) => ({
+                                    label: user.name ?? user,
+                                    value: user.id ?? user,
+                                }))
+                            "
+                            placeholder="Select a user"
+                        />
                     </template>
 
                     <!-- Image -->
@@ -132,7 +132,7 @@ const columns = {
                 </div>
 
                 <div class="flex justify-end lg:col-span-2 xl:col-span-3">
-                    <PrimaryButton :disabled="form.processing">Update</PrimaryButton>
+                    <Button :disabled="form.processing">Update</Button>
                 </div>
             </form>
         </div>

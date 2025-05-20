@@ -79,6 +79,14 @@ function onAfterLeave(el: Element) {
     element.style.opacity = '';
 }
 
+function activeUrl(href: string) {
+    if(href === '/dashboard') {
+        return href === page.url;
+    } else {
+        return href === page.url || page.url.startsWith(href);
+    }
+}
+
 </script>
 
 <template>
@@ -91,7 +99,7 @@ function onAfterLeave(el: Element) {
                     <SidebarMenuItem v-for="item in section.items" :key="item.title">
                         <SidebarMenuButton
                             as-child
-                            :is-active="item.href === page.url"
+                            :is-active="activeUrl(item.href)"
                             :tooltip="item.title"
                             @click="item.children && toggleDropdown(item.title)"
                         >
@@ -122,7 +130,7 @@ function onAfterLeave(el: Element) {
                                 ref="dropdownRef"
                             >
                                 <SidebarMenuSubItem v-for="child in item.children" :key="child.title">
-                                    <SidebarMenuSubButton :tooltip="child.title" :is-active="child.href === page.url">
+                                    <SidebarMenuSubButton :tooltip="child.title" :is-active="activeUrl(child.href)">
                                         <Link :href="child.href" class="w-full">{{ child.title }}</Link>
                                     </SidebarMenuSubButton>
                                 </SidebarMenuSubItem>
