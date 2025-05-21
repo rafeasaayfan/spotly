@@ -33,17 +33,17 @@ export const footerSidebarItems: SidebarSection[] = [
     {
         name: 'Roles & Permissions',
         items: [{
-            title: 'Assigments',
-            href: '/dashboard/assigments',
+            title: 'Assignments',
+            href: '/dashboard/assignmets',
             icon: PercentDiamondIcon,
             children: [
                 {
-                    title: 'All Users',
-                    href: '/users/all',
+                    title: 'Permissions',
+                    href: '/dashboard/assignmets/permissions',
                 },
                 {
-                    title: 'Create User',
-                    href: '/users/create',
+                    title: 'Roles',
+                    href: '/dashboard/assignmets/roles',
                 },
             ]
         }],

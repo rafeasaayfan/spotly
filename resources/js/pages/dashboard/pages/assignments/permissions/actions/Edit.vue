@@ -1,0 +1,1 @@
+<template><div>Missing stub: Edit.vue.stub</div></template>
