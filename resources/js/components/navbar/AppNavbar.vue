@@ -25,11 +25,11 @@ const props = withDefaults(defineProps<Props>(), {
             <!-- Mobile Menu -->
             <MobileNav />
 
-            <Link :href="route('dashboard.index')" class="hidden md:flex items-center gap-2">
+            <Link :href="route('home')" class="hidden md:flex items-center gap-2">
                 <AppLogo />
             </Link>
 
-            <Link :href="route('dashboard.index')" class="flex md:hidden items-center gap-2">
+            <Link :href="route('home')" class="flex md:hidden items-center gap-2">
                 <AppLogoIcon class="size-16" />
             </Link>
 
@@ -50,7 +50,7 @@ const props = withDefaults(defineProps<Props>(), {
         </div>
     </div>
 
-    <div v-if="props.breadcrumbs.length > 1" class="border-sidebar-border/70 flex w-full border-b">
+    <div v-if="props.breadcrumbs.length > 1" class="border-muted flex w-full border-b">
         <div class="mx-auto flex h-12 w-full items-center justify-start px-4 text-neutral-500 md:max-w-7xl">
             <Breadcrumbs :breadcrumbs="breadcrumbs" />
         </div>

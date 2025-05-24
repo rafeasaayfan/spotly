@@ -15,7 +15,7 @@ const page = usePage<SharedData>();
 const isCurrentRoute = computed(() => (url: string) => page.url === url);
 
 const activeItemStyles = computed(
-    () => (url: string) => (isCurrentRoute.value(url) ? 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100' : ''),
+    () => (url: string) => (isCurrentRoute.value(url) ? 'bg-content-3-active text-active' : ''),
 );
 </script>
 
@@ -23,22 +23,25 @@ const activeItemStyles = computed(
     <div class="lg:hidden">
         <Sheet>
             <SheetTrigger :as-child="true">
-                <Button variant="ghost" size="icon" class="bg-gray-500/30">
+                <Button variant="ghost" size="icon">
                     <Menu class="!h-5 !w-5" />
                 </Button>
             </SheetTrigger>
-            <SheetContent :side="page.props.lang == 'ar' ? 'right' : 'left'" class="w-[260px]">
+
+            <SheetContent :side="page.props.lang == 'ar' ? 'right' : 'left'" class="w-[260px] md:w-[320px]">
                 <SheetTitle class="sr-only">Navigation Menu</SheetTitle>
-                <SheetHeader class="flex border-b border-gray-500/10 pb-10">
+
+                <SheetHeader class="flex border-b border-muted pb-10">
                     <!-- <AppLogoIcon class="size-12 bg-red-500" /> -->
                 </SheetHeader>
+
                 <div class="flex h-full flex-1 flex-col justify-between space-y-4 py-3 px-4">
                     <nav class="space-y-2">
                         <Link
                             v-for="item in navbarItems"
                             :key="item.title"
                             :href="item.href"
-                            class="hover:bg-accent flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium"
+                            class="bg-content-3 flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium"
                             :class="activeItemStyles(item.href)"
                             :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'"
                         >
