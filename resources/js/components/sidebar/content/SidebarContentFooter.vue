@@ -33,10 +33,10 @@ function isActiveUrl(href: string): boolean {
     // if(href === '/dashboard') {
     //     return href === page.url;
     // }
-    return href === page.url;
+    return href === page.url || page.url.startsWith(href);
 }
 
-function isChildActive(children: Array<{ href: string }>): boolean {
+function isHasChildActive(children: Array<{ href: string }>): boolean {
     return children.some((child) => {
         return child.href === page.url || page.url.startsWith(child.href);
     });
@@ -58,7 +58,7 @@ function isDropdownOpen(title: string) : boolean {
 onMounted(() => {
     items.forEach(section => {
         section.items.forEach(item => {
-            if (item.children && isChildActive(item.children)) {
+            if (item.children && isHasChildActive(item.children)) {
                 if (!openDropdowns.value.includes(item.title)) {
                     openDropdowns.value.push(item.title);
                 }
@@ -116,8 +116,8 @@ function onAfterLeave(el: Element) {
                 <SidebarMenuItem v-for="item in section.items" :key="item.title">
                     <SidebarMenuButton
                         as-child
-                        :is-active="isActiveUrl(item.href)"
-                        :is-child-active="item.children ? isChildActive(item.children) : false"
+                        :is-active="item.children?.length ? false : isActiveUrl(item.href)"
+                        :is-child-active="item.children?.length ? isHasChildActive(item.children) : false"
                         :tooltip="item.title"
                         @click="item.children && toggleDropdown(item.title)"
                     >
@@ -136,7 +136,7 @@ function onAfterLeave(el: Element) {
                         </template>
                     </SidebarMenuButton>
 
-                    <SidebarMenuBadge v-if="item.children?.length" :is-active="item.children ? isChildActive(item.children) : false">
+                    <SidebarMenuBadge v-if="item.children?.length" :is-active="item.children ? isHasChildActive(item.children) : false">
                         <Plus v-show="!isDropdownOpen(item.title)" class="h-3 w-3" />
                         <Minus v-show="isDropdownOpen(item.title)" class="h-3 w-3" />
                     </SidebarMenuBadge>

@@ -17,13 +17,11 @@ export const mainSidebarItems: SidebarSection[] = [
             title: 'Users',
             href: '/dashboard/users',
             icon: UsersIcon,
-            children: []
         },
         {
             title: 'Restaurants',
             href: '/dashboard/restaurants',
             icon: HomeIcon,
-            children: []
         }
     ],
     },
