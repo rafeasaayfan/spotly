@@ -96,6 +96,7 @@ const { handleAction } = useTableActions(selectedIds, props.routeName);
 
             <Pagination
                 :links="props.tableData.links"
+                :data="props.tableData"
                 :applyFilters="applyFilters"
                 :tableConditions="tableConditions"
             />
