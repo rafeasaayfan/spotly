@@ -16,7 +16,6 @@ defineProps<Props>();
     <svg
         :class="className"
         v-bind="$attrs"
-        version="1.0"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 300.000000 291.000000"
         preserveAspectRatio="xMidYMid meet"

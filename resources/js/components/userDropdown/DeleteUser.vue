@@ -4,7 +4,7 @@ import { ref } from 'vue';
 
 // Components
 import HeadingSmall from '@/components/HeadingSmall.vue';
-import InputError from '@/components/InputError.vue';
+import InputError from '@/components/ui/fields/InputError.vue';
 import { Button } from '@/components/ui/buttons';
 import {
     Dialog,

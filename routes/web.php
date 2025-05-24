@@ -15,7 +15,7 @@ Route::get('/setLang/{lang}', function ($lang = null) {
 Route::middleware([LanguageMiddleware::class])->group(function () {
 
     Route::get('/', function () {
-        return Inertia::render('Welcome');
+        return Inertia::render('Landing');
     })->name('landing');
 
     Route::get('/home', function () {

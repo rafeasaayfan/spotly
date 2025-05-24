@@ -8,13 +8,13 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-primary text-content shadow-xs',
+          'bg-primary text-for-bg-primary shadow-xs',
         destructive:
-          'bg-destructive text-content shadow-xs',
+          'bg-destructive text-for-bg-destructive shadow-xs',
         outline:
           'border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 ',
         secondary:
-          'bg-secondary text-content shadow-xs',
+          'bg-secondary text-for-bg-secondary shadow-xs',
         ghost:
           'bg-content text-body-muted',
         link: 'text-primary underline-offset-4 hover:underline',
