@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import AppLogoIcon from '@/components/logo/AppLogoIcon.vue';
+import { useSidebar } from '@/components/ui/sidebar/utils'
+
+const { state } = useSidebar()
 </script>
 
 <template>
-    <div class="flex aspect-square items-center justify-center text-sidebar-primary-foreground bg-blue-950/10">
-        <AppLogoIcon class="size-16" />
+    <div>
+        <AppLogoIcon :class="state == 'collapsed' ? 'size-9' : 'size-18'" />
     </div>
-    <div class="ml-1 grid flex-1 text-left text-sm">
-        <span class="mb-0.5 truncate font-semibold leading-none">Vue.RS</span>
+    <div class="grid flex-1 text-start text-md" :class="state == 'collapsed' ? 'hidden' : 'block'">
+        <span class="text-active truncate font-bold leading-none">VUE.RS</span>
     </div>
 </template>

@@ -20,7 +20,7 @@ const imageSrc = computed(() => props.src || '/images/default-image.avif');
     <img
       :src="imageSrc"
       :alt="props.alt || 'No image'"
-      :class="['max-w-full max-h-full object-cover rounded-md cursor-pointer hover:scale-105 transition duration-300', props.class]"
+      :class="['max-w-full max-h-full object-cover rounded-md hover:-translate-y-1 hover:shadow-lg cursor-pointer transition duration-300', props.class]"
       @click="show = true"
     />
 

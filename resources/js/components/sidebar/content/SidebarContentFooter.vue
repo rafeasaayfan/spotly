@@ -11,12 +11,11 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
-import { Plus, Minus } from 'lucide-vue-next';
 import { footerSidebarItems as items } from '@/config/navigations';
 import { type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { ref } from 'vue';
-import { nextTick } from 'vue';
+import { Minus, Plus } from 'lucide-vue-next';
+import { nextTick, onMounted, ref } from 'vue';
 
 interface Props {
     // items: NavItem[];
@@ -30,6 +29,19 @@ defineProps<Props>();
 // Track which dropdowns are open
 const openDropdowns = ref<string[]>([]);
 
+function isActiveUrl(href: string): boolean {
+    // if(href === '/dashboard') {
+    //     return href === page.url;
+    // }
+    return href === page.url;
+}
+
+function isChildActive(children: Array<{ href: string }>): boolean {
+    return children.some((child) => {
+        return child.href === page.url || page.url.startsWith(child.href);
+    });
+}
+
 function toggleDropdown(title: string) {
     if (openDropdowns.value.includes(title)) {
         openDropdowns.value = openDropdowns.value.filter((t) => t !== title);
@@ -38,9 +50,22 @@ function toggleDropdown(title: string) {
     }
 }
 
-function isDropdownOpen(title: string) {
+function isDropdownOpen(title: string) : boolean {
     return openDropdowns.value.includes(title);
 }
+
+// Initialize openDropdowns on component mount
+onMounted(() => {
+    items.forEach(section => {
+        section.items.forEach(item => {
+            if (item.children && isChildActive(item.children)) {
+                if (!openDropdowns.value.includes(item.title)) {
+                    openDropdowns.value.push(item.title);
+                }
+            }
+        });
+    });
+});
 
 function onEnter(el: Element) {
     const element = el as HTMLElement;
@@ -91,7 +116,8 @@ function onAfterLeave(el: Element) {
                 <SidebarMenuItem v-for="item in section.items" :key="item.title">
                     <SidebarMenuButton
                         as-child
-                        :is-active="item.href === page.url"
+                        :is-active="isActiveUrl(item.href)"
+                        :is-child-active="item.children ? isChildActive(item.children) : false"
                         :tooltip="item.title"
                         @click="item.children && toggleDropdown(item.title)"
                     >
@@ -110,19 +136,19 @@ function onAfterLeave(el: Element) {
                         </template>
                     </SidebarMenuButton>
 
-                    <SidebarMenuBadge v-if="item.children?.length">
+                    <SidebarMenuBadge v-if="item.children?.length" :is-active="item.children ? isChildActive(item.children) : false">
                         <Plus v-show="!isDropdownOpen(item.title)" class="h-3 w-3" />
                         <Minus v-show="isDropdownOpen(item.title)" class="h-3 w-3" />
                     </SidebarMenuBadge>
 
-                    <transition name="fade-slide" @enter="onEnter" @after-enter="onAfterEnter" @leave="onLeave" @after-leave="onAfterLeave">
+                    <transition v-if="item.children?.length" name="fade-slide" @enter="onEnter" @after-enter="onAfterEnter" @leave="onLeave" @after-leave="onAfterLeave">
                         <SidebarMenuSub
                             class="overflow-hidden transition-all duration-300"
-                            v-show="item.children?.length && isDropdownOpen(item.title)"
+                            v-show="isDropdownOpen(item.title)"
                             ref="dropdownRef"
                         >
                             <SidebarMenuSubItem v-for="child in item.children" :key="child.title">
-                                <SidebarMenuSubButton :tooltip="child.title" :is-active="child.href === page.url">
+                                <SidebarMenuSubButton :tooltip="child.title" :is-active="isActiveUrl(child.href)">
                                     <Link :href="child.href" class="w-full">{{ child.title }}</Link>
                                 </SidebarMenuSubButton>
                             </SidebarMenuSubItem>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { cn } from '@/lib/utils'
-import { ArrowBigDown, ArrowBigDownDash, ArrowBigUpDash } from 'lucide-vue-next';
+import { ArrowBigDownDash, ArrowBigUpDash } from 'lucide-vue-next';
 
 const props = defineProps<{
   modelValue: string | number | File | null
@@ -20,11 +20,27 @@ const isOpen = ref(false)
 const search = ref('')
 const selected = computed(() => props.options.find(option => option.value === props.modelValue)?.label || '')
 
+const selectRef = ref<HTMLElement | null>(null)
+
 const filteredOptions = computed(() =>
   props.options.filter(option =>
     option.label.toLowerCase().includes(search.value.toLowerCase())
   )
 )
+
+function handleClickOutside(event: MouseEvent) {
+  if (selectRef.value && !selectRef.value.contains(event.target as Node)) {
+    isOpen.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 
 function selectOption(value: string | number) {
   emit('update:modelValue', value)
@@ -38,10 +54,10 @@ function toggleDropdown() {
 </script>
 
 <template>
-  <div class="relative w-full" :class="props.class">
+  <div ref="selectRef" class="relative w-full" :class="props.class">
     <button
       type="button"
-      class="w-full text-start bg-slate-300 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-sm p-2 rounded-md cursor-pointer"
+      class="w-full text-start border border-muted bg-slate-300 hover:bg-slate-200 dark:bg-slate-950 dark:hover:bg-slate-950 text-sm p-2 rounded-md cursor-pointer"
       @click="toggleDropdown"
     >
       <div class="flex items-center justify-between">
@@ -55,13 +71,13 @@ function toggleDropdown() {
 
     <div
       v-if="isOpen"
-      class="absolute mt-1 z-50 w-full bg-white dark:bg-slate-900 border rounded-md shadow-md max-h-60 overflow-auto"
+      class="dropdown-scrollbar absolute mt-1 z-50 w-full bg-white dark:bg-slate-900 border border-muted rounded-md shadow-lg max-h-60 overflow-auto"
     >
       <input
         v-model="search"
         type="text"
         placeholder="Search..."
-        class="w-full p-2 text-sm bg-zinc-900 border-b border-slate-300 dark:border-slate-700 focus:outline-none"
+        class="w-full p-2 text-sm bg-slate-200 dark:bg-slate-950 border-b border-blue-700 shadow-lg focus:outline-none"
       />
 
       <div v-if="filteredOptions.length === 0" class="p-2 text-sm text-slate-500">
@@ -72,10 +88,49 @@ function toggleDropdown() {
         v-for="option in filteredOptions"
         :key="option.value"
         @click="selectOption(option.value)"
-        class="cursor-pointer p-2 text-sm hover:bg-slate-200 dark:hover:bg-slate-700"
+        class="cursor-pointer p-2 text-sm hover:bg-slate-200 dark:hover:bg-slate-950"
       >
         {{ option.label }}
       </div>
     </div>
   </div>
 </template>
+
+<style>
+/* Scrollbar styles for your dropdown */
+.dropdown-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #64748b #f1f5f9; /* thumb color, track color */
+}
+
+/* Chrome, Edge, Safari */
+.dropdown-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dropdown-scrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9; /* track color */
+}
+
+.dropdown-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #64748b; /* thumb color */
+  border-radius: 4px;
+  border: 2px solid #f1f5f9; /* to add some padding around thumb */
+}
+
+/* Dark mode overrides */
+.dark .dropdown-scrollbar {
+  scrollbar-color: #94a3b8 #1e293b;
+}
+
+.dark .dropdown-scrollbar::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+.dark .dropdown-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #94a3b8;
+  border: 2px solid #1e293b;
+}
+
+</style>

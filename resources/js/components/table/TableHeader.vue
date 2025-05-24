@@ -67,13 +67,9 @@ watch(localSearch, (val) => {
 
             <DropdownMenu v-if="props.tableConditions.enableColsVisible">
                 <DropdownMenuTrigger :as-child="true">
-                    <PrimaryButton
-                        variant="ghost"
-                        size="icon"
-                        class="focus-within:ring-primary relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-full focus-within:ring-2"
-                    >
-                        <Settings class="h-5 w-5" />
-                    </PrimaryButton>
+                    <Button variant="ghost" size="icon" class="relative flex cursor-pointer items-center justify-center rounded-full">
+                        <Settings class="size-5" />
+                    </Button>
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="end" class="w-48">
@@ -81,8 +77,9 @@ watch(localSearch, (val) => {
 
                     <DropdownMenuSeparator />
 
-                    <DropdownMenuGroup v-for="column in props.columns" :key="column.key">
+                    <DropdownMenuGroup class="gap-2">
                         <Toggle
+                            v-for="column in props.columns" :key="column.key"
                             :label="column.label"
                             :modelValue="columnsVisibility[column.key]"
                             @update:modelValue="(val) => updateColumnVisibility(column.key, val)"
@@ -97,7 +94,11 @@ watch(localSearch, (val) => {
                 <Button>Create</Button>
             </Link>
 
-            <Button v-else-if="props.selectedIds.length > 0 && props.tableConditions.enableRowsDelete" @click="handleAction('delete', props.selectedIds)">
+            <Button
+                variant="destructive"
+                v-else-if="props.selectedIds.length > 0 && props.tableConditions.enableRowsDelete"
+                @click="handleAction('delete', props.selectedIds)"
+            >
                 Delete {{ props.selectedIds.length }} item
             </Button>
         </div>

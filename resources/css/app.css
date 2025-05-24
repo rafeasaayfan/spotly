@@ -8,93 +8,58 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans:
-    Instrument Sans, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-
-  --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-sm: calc(var(--radius) - 4px);
-
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-
-  --color-sidebar: var(--sidebar-background);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-}
-
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
-  }
-}
-
-@layer utilities {
-  body,
-  html {
     --font-sans:
-      'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
-      'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-      'Noto Color Emoji';
-  }
+        Instrument Sans, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* --color-background: var(--background);
+    --color-secondary: var(--secondary-background);
+
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5); */
 }
 
-:root {
-  --background: hsl(0 0% 100%);
+/* :root {
+  --background: hsl(0, 0%, 100%);
+
   --foreground: hsl(0 0% 3.9%);
+
   --card: hsl(0 0% 100%);
   --card-foreground: hsl(0 0% 3.9%);
+
   --popover: hsl(0 0% 100%);
   --popover-foreground: hsl(0 0% 3.9%);
+
   --primary: hsl(0 0% 9%);
   --primary-foreground: hsl(0 0% 98%);
   --secondary: hsl(0 0% 92.1%);
@@ -122,17 +87,20 @@
   --sidebar-accent-foreground: hsl(0 0% 30%);
   --sidebar-border: hsl(0 0% 91%);
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
-  --sidebar:
-    hsl(0 0% 98%);
+  --sidebar: hsl(0 0% 98%);
 }
 
 .dark {
-  --background: hsl(0 0% 3.9%);
+  --background: hsl(0, 0%, 0%);
+
   --foreground: hsl(0 0% 98%);
+
   --card: hsl(0 0% 3.9%);
   --card-foreground: hsl(0 0% 98%);
+
   --popover: hsl(0 0% 3.9%);
   --popover-foreground: 0 0% 98%;
+
   --primary: hsl(0 0% 98%);
   --primary-foreground: hsl(0 0% 9%);
   --secondary: hsl(0 0% 14.9%);
@@ -151,7 +119,8 @@
   --chart-3: hsl(30 80% 55%);
   --chart-4: hsl(280 65% 60%);
   --chart-5: hsl(340 75% 55%);
-  --sidebar-background: hsl(0 0% 7%);
+
+  --sidebar-background: hsl(0, 0%, 4%);
   --sidebar-foreground: hsl(0 0% 95.9%);
   --sidebar-primary: hsl(360, 100%, 100%);
   --sidebar-primary-foreground: hsl(0 0% 100%);
@@ -159,29 +128,296 @@
   --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
   --sidebar-border: hsl(0 0% 15.9%);
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
-  --sidebar:
-    hsl(240 5.9% 10%);
+  --sidebar: hsl(240 5.9% 10%);
+} */
+
+
+:root {
+    --background: hsl(0 0% 100%);
+    --secondary-background: hsl(0 0% 94%);
+
+    --foreground: hsl(0 0% 4%);
+    --foreground-muted: hsl(0 0% 25%);
+    --foreground-hover: hsl(0 0% 10%);
+    --foreground-active: hsl(0 0% 0%);
+    --foreground-active-link: hsl(216 80% 30%);
+    --foreground-active-link-2: hsl(0 72% 51%);
+
+    --card: hsl(0 0% 96%);
+
+    --popover: hsl(0 0% 98%);
+
+    --content-bg: hsl(0 0% 92%);
+    --content-bg-hover: hsl(0 0% 90%);
+    --content-bg-active: hsl(0 0% 89%);
+
+    --content-2-bg: transparent;
+    --content-2-bg-hover: hsl(0 0% 97%);
+    --content-2-bg-active: hsl(0 0% 100%);
+
+    --content-3-bg: transparent;
+    --content-3-bg-hover: hsl(0 0% 91%);
+    --content-3-bg-active: hsl(0 0% 98%);
+
+    --primary: hsl(216 80% 30%);
+    --primary-hover: hsl(216 80% 25%);
+    --primary-active: hsl(216 80% 20%);
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(0 0% 88%);
+    --secondary-hover: hsl(0 0% 78%);
+    --secondary-active: hsl(0 0% 68%);
+    --secondary-foreground: hsl(0 0% 100%);
+    --destructive: hsl(0 72% 51%);
+    --destructive-hover: hsl(0 72% 41%);
+    --destructive-active: hsl(0 72% 31%);
+    --destructive-foreground: hsl(0 0% 100%);
+
+    --border: hsl(0 0% 85%);
+    --border-primary: hsl(216 80% 80%);
+
+    --input: hsl(0 0% 89.8%);
 }
 
-@layer base {
-    * {
-        @apply border-border;
-    }
+.dark {
+    --background: hsl(0 0% 0%);
+    --secondary-background: hsl(0 0% 4%);
 
-    body {
-        @apply bg-background text-foreground;
-    }
+    --foreground: hsl(0 0% 80%);
+    --foreground-muted: hsl(0 0% 50%);
+    --foreground-hover: hsl(0 0% 95%);
+    --foreground-active: hsl(0 0% 100%);
+    --foreground-active-link: hsl(220 60% 50%);
+    --foreground-active-link-2: hsl(355, 78%, 56%);
+
+    --card: hsl(0 0% 6%);
+
+    --popover: hsl(0 0% 2%);
+
+    --content-bg: hsl(0 0% 8%);
+    --content-bg-hover: hsl(0 0% 15%);
+    --content-bg-active: hsl(0 0% 18%);
+
+    --content-2-bg: transparent;
+    --content-2-bg-hover: hsl(0 0% 2%);
+    --content-2-bg-active: hsl(0 0% 0%);
+
+    --content-3-bg: transparent;
+    --content-3-bg-hover: hsl(0 0% 9%);
+    --content-3-bg-active: hsl(0 0% 12%);
+
+    --primary: hsl(220 60% 50%);
+    --primary-hover: hsl(220 60% 45%);
+    --primary-active: hsl(220 60% 40%);
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(0 0% 22%);
+    --secondary-hover: hsl(0 0% 18%);
+    --secondary-active: hsl(0 0% 15%);
+    --secondary-foreground: hsl(0 0% 100%);
+    --destructive: hsl(355, 78%, 56%);
+    --destuctive-hover: hsl(355, 78%, 46%);
+    --destructive-active: hsl(355, 78%, 36%);
+    --destructive-foreground: hsl(0 0% 100%);
+
+    --border: hsl(0 0% 10%);
+    --border-primary: hsl(220 60% 15%);
+
+    --input: hsl(217, 33%, 1%);
 }
 
-/*
-  ---break---
-*/
+body {
+    background-color: var(--background);
+    color: var(--foreground);
+}
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+/** =============== BG =============== */
+.bg-body {
+    background-color: var(--background);
+}
+
+.bg-navs {
+    background-color: var(--secondary-background);
+}
+
+.bg-card {
+    background-color: var(--card);
+}
+
+.bg-popover {
+    background-color: var(--popover);
+}
+
+.bg-input {
+    background-color: var(--input);
+}
+
+/** =============== Text =============== */
+.text-body {
+    color: var(--foreground);
+}
+
+.text-body-muted {
+    color: var(--foreground-muted);
+}
+
+.text-body-muted:hover,
+.text-body:hover {
+    color: var(--foreground-hover);
+}
+
+.text-body-muted:active,
+.text-body:active {
+    color: var(--foreground-active);
+}
+
+.text-active {
+    color: var(--foreground-active);
+}
+
+.text-active-link {
+    color: var(--foreground-active-link);
+}
+.text-active-link-2 {
+    color: var(--foreground-active-link-2);
+}
+
+/** =============== Buttons || Nice colors =============== */
+.bg-primary {
+    background-color: var(--primary);
+}
+.bg-primary:hover {
+    background-color: var(--primary-hover);
+}
+.bg-primary:active {
+    background-color: var(--primary-active);
+}
+.bg-primary-active {
+    background-color: var(--primary-active);
+}
+.fill-primary {
+    fill: var(--primary);
+}
+.fill-primary:hover {
+    fill: var(--primary-hover);
+}
+.fill-primary:active {
+    fill: var(--primary-active);
+}
+.fill-primary-active {
+    fill: var(--primary-active);
+}
+
+.bg-secondary {
+    background-color: var(--secondary);
+}
+.bg-secondary:hover {
+    background-color: var(--secondary-hover);
+}
+.bg-secondary:active {
+    background-color: var(--secondary-active);
+}
+.bg-secondary-active {
+    background-color: var(--secondary-active);
+}
+.fill-secondary {
+    fill: var(--secondary);
+}
+.fill-secondary:hover {
+    fill: var(--secondary-hover);
+}
+.fill-secondary:active {
+    fill: var(--secondary-active);
+}
+.fill-secondary-active {
+    fill: var(--secondary-active);
+}
+
+.bg-destructive {
+    background-color: var(--destructive);
+}
+.bg-destructive:hover {
+    background-color: var(--destructive-hover);
+}
+.bg-destructive:active {
+    background-color: var(--destructive-active);
+}
+.bg-destructive-active {
+    background-color: var(--destructive-active);
+}
+
+.fill-destructive {
+    fill: var(--destructive);
+}
+.fill-destructive:hover {
+    fill: var(--destructive-hover);
+}
+.fill-destructive:active {
+    fill: var(--destructive-active);
+}
+.fill-destructive-active {
+    fill: var(--destructive-active);
+}
+
+.text-for-bg-primary {
+    color: var(--primary-foreground);
+}
+
+.text-for-bg-secondary {
+    color: var(--secondary-foreground);
+}
+
+.text-for-bg-destructive {
+    color: var(--destructive-foreground);
+}
+
+/** =============== Border =============== */
+.border-muted {
+    border-color: var(--border);
+}
+
+.border-primary {
+    border-color: var(--border-primary);
+}
+
+/** =============== Content Bg Action =============== */
+.bg-content {
+    background-color: var(--content-bg);
+}
+.bg-content:hover {
+    background-color: var(--content-bg-hover);
+}
+.bg-content:active {
+    background-color: var(--content-bg-active);
+}
+.bg-content-active {
+    background-color: var(--content-bg-active);
+}
+
+.text-content {
+    color: var(--primary-foreground);
+}
+
+.bg-content-2 {
+    background-color: var(--content-2-bg);
+}
+.bg-content-2:hover {
+    background-color: var(--content-2-bg-hover);
+}
+.bg-content-2:active {
+    background-color: var(--content-2-bg-active);
+}
+.bg-content-2-active {
+    background-color: var(--content-2-bg-active);
+}
+
+.bg-content-3 {
+    background-color: var(--content-3-bg);
+}
+.bg-content-3:hover {
+    background-color: var(--content-3-bg-hover);
+}
+.bg-content-3:active {
+    background-color: var(--content-3-bg-active);
+}
+.bg-content-3-active {
+    background-color: var(--content-3-bg-active);
 }

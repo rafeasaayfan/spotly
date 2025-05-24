@@ -12,7 +12,7 @@ const props = defineProps<TableProps>();
 </script>
 
 <template>
-    <div class="relative overflow-x-auto rounded-md border border-slate-500/10 shadow xl:overflow-visible dark:border-slate-600/10">
+    <div class="relative overflow-x-auto rounded-md border border-muted shadow xl:overflow-visible">
         <Table>
             <Thead>
                 <Tr>
@@ -27,7 +27,7 @@ const props = defineProps<TableProps>();
 
             <Tbody>
                 <!-- Row: every data row && index: is the number of this row -->
-                <Tr v-for="(row, index) in props.data" :key="index" class="w-3 text-sm text-slate-950/90 dark:text-slate-100/90">
+                <Tr v-for="(row, index) in props.data" :key="index">
                     <Td class="max-w-5">
                         <Checkbox />
                     </Td>

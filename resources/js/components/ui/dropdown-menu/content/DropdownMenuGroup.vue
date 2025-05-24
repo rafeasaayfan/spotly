@@ -8,6 +8,7 @@ const props = defineProps<DropdownMenuGroupProps>()
   <DropdownMenuGroup
     data-slot="dropdown-menu-group"
     v-bind="props"
+    class="flex flex-col gap-1"
   >
     <slot />
   </DropdownMenuGroup>

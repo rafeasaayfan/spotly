@@ -12,7 +12,7 @@ const props = defineProps<{
     data-slot="table"
     :class="
       cn(
-        'min-w-[900px] min-h-20 md:w-full bg-white dark:bg-sidebar rounded-md divide-y divide-slate-500/10 dark:divide-slate-600/10',
+        'min-w-[900px] min-h-20 md:w-full bg-card rounded-md divide-y divide-slate-500/10 dark:divide-slate-600/10',
         props.class,
       )
     "

@@ -27,14 +27,14 @@ defineProps<Props>();
 
     <DropdownMenuGroup>
         <DropdownMenuItem :as-child="true">
-            <Link class="flex w-full items-center gap-2" :href="route('profile.edit')" prefetch as="button">
+            <Link class="flex w-full items-center gap-2 curs2or-pointer" :href="route('profile.edit')" prefetch as="button">
                 <Settings class="h-4 w-4" />
                 Settings
             </Link>
         </DropdownMenuItem>
 
         <DropdownMenuItem :as-child="true">
-            <Link class="flex w-full items-center gap-2" :href="route('dashboard.index')" prefetch as="button">
+            <Link class="flex w-full items-center gap-2 cursor-pointer" :href="route('dashboard.index')" prefetch as="button">
                 <LayoutGrid class="h-4 w-4" />
                 Dashboard
             </Link>
@@ -43,8 +43,8 @@ defineProps<Props>();
 
     <DropdownMenuSeparator />
 
-    <DropdownMenuItem variant="destructive" :as-child="true" class="bg-red-500/10 hover:bg-red-500/40">
-        <Link class="flex w-full items-center gap-2" method="post" :href="route('logout')" @click="handleLogout" as="button">
+    <DropdownMenuItem variant="destructive" :as-child="true" class="bg-destructive text-for-bg-destructive">
+        <Link class="flex w-full items-center gap-2 cursor-pointer" method="post" :href="route('logout')" @click="handleLogout" as="button">
             <LogOut class="h-4 w-4" />
             Log out
         </Link>

@@ -15,5 +15,8 @@ export const [useSidebar, provideSidebarContext] = createContext<{
   isMobile: Ref<boolean>
   openMobile: Ref<boolean>
   setOpenMobile: (value: boolean) => void
+  isMedium: Ref<boolean>
+  openMedium: Ref<boolean>
+  setOpenMedium: (value: boolean) => void
   toggleSidebar: () => void
 }>('Sidebar')

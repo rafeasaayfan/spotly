@@ -43,8 +43,8 @@ const isRTL = computed(() => page.props.lang === 'ar')
       :class="[
         'relative flex items-center w-8 h-5 rounded-full border cursor-pointer transition-all ease-in-out duration-150 active:scale-95',
         toggleChecked
-          ? 'bg-blue-900 dark:bg-blue-600 border-slate-500/10 dark:border-slate-600/10'
-          : 'bg-slate-300 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border-slate-500/10 dark:border-slate-600/10'
+          ? 'bg-primary border-muted'
+          : 'bg-slate-300 hover:bg-slate-200 dark:bg-slate-950 dark:hover:bg-slate-900 border-muted'
       ]"
     >
       <div
@@ -63,7 +63,8 @@ const isRTL = computed(() => page.props.lang === 'ar')
 
     <span
       v-if="props.label"
-      class="text-sm text-slate-950/75 dark:text-slate-100/75"
+      class="text-sm"
+      :class="toggleChecked ? 'text-body' : 'text-body-muted'"
     >
       {{ props.label.charAt(0).toUpperCase() + props.label.slice(1) }}
     </span>

@@ -46,7 +46,7 @@ const form = useForm<Record<string, string | File | null>>(
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <div class="w-full p-4">
-            <Link :href="route('dashboard.restaurants.index')"
+            <Link :href="route('dashboard.users.index')"
                 class="w-fit py-1 px-2 rounded flex items-center gap-1 cursor-pointer bg-blue-600/30 hover:bg-blue-600/50">
                 <ArrowBigLeft class="size-4" />
                 <p class="text-semibold text-sm">Go Back</p>

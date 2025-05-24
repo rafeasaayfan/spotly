@@ -25,11 +25,11 @@ const props = defineProps<TableProps>();
 </script>
 
 <template>
-    <div class="relative overflow-x-auto rounded-md border border-slate-500/10 shadow xl:overflow-visible dark:border-slate-600/10">
+    <div class="relative overflow-x-auto rounded-md border border-muted shadow xl:overflow-visible">
         <Table>
             <Thead>
-                <Tr>
-                    <Th class="w-3" v-if="props.tableConditions.enableRowsDelete">
+                <Tr class="font-semibold">
+                    <Th class="w-3 text-body-muted" v-if="props.tableConditions.enableRowsDelete">
                         <Checkbox :model-value="allSelected" @update:modelValue="val => typeof val === 'boolean' && toggleSelectAll(val)" />
                     </Th>
                     <Th
@@ -41,7 +41,7 @@ const props = defineProps<TableProps>();
                                 sort_dir: filters.sort_dir === 'asc' ? 'desc' : 'asc',
                             })
                         "
-                        class="cursor-pointer select-none"
+                        class="cursor-pointer select-none text-body-muted"
                     >
                         <div class="flex items-center gap-2">
                             <span>{{ column.label }}</span>
@@ -49,7 +49,7 @@ const props = defineProps<TableProps>();
                         </div>
                     </Th>
                     <Th
-                        class="w-10"
+                        class="w-10 text-body-muted"
                         v-if="props.tableConditions.enableEdit || props.tableConditions.enableView || props.tableConditions.enableDelete"
                     >
                     </Th>
@@ -58,7 +58,7 @@ const props = defineProps<TableProps>();
 
             <Tbody v-if="props.data.length > 0">
                 <!-- Row: every data row && index: is the number of this row -->
-                <Tr v-for="(row, index) in props.data" :key="index" class="w-3 text-sm text-slate-950/90 dark:text-slate-100/90">
+                <Tr v-for="(row, index) in props.data" :key="index" class="w-3 text-sm text-body font-medium bg-content-3">
                     <Td class="max-w-5" v-if="props.tableConditions.enableRowsDelete">
                         <Checkbox :model-value="selectedIds.includes(row.id)" @update:modelValue="val => typeof val === 'boolean' && toggleRowSelection(row.id, val)" />
                     </Td>
@@ -89,7 +89,7 @@ const props = defineProps<TableProps>();
             </Tbody>
 
             <Tbody v-else>
-                <Tr class="w-3 text-sm text-slate-950/90 dark:text-slate-100/90">
+                <Tr class="w-3 text-sm text-body-muted">
                     <Td colspan="12">
                         <div class="flex w-full flex-col items-center justify-center gap-2 py-3">
                             <Inbox class="size-10" />

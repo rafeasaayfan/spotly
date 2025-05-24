@@ -3,7 +3,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import UserMenuContent from '@/components/userDropdown/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
+import { Button } from '@/components/ui/button'
 import { usePage } from '@inertiajs/vue3';
+import { SharedData } from '@/types';
 import { computed } from 'vue';
 
 const page = usePage<SharedData>();
@@ -16,11 +18,11 @@ const auth = computed(() => page.props.auth);
             <Button
                 variant="ghost"
                 size="icon"
-                class="focus-within:ring-primary relative size-10 w-auto cursor-pointer rounded-full p-1 focus-within:ring-2"
+                class="size-10 w-auto cursor-pointer rounded-full p-1 bg-primary"
             >
                 <Avatar class="size-8 overflow-hidden rounded-full">
                     <AvatarImage v-if="auth.user.avatar" :src="auth.user.avatar" :alt="auth.user.name" />
-                    <AvatarFallback class="rounded-lg font-semibold text-black dark:text-white">
+                    <AvatarFallback class="rounded-lg font-bold text-for-bg-primary">
                         {{ getInitials(auth.user?.name) }}
                     </AvatarFallback>
                 </Avatar>

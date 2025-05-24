@@ -41,11 +41,14 @@ const form = useForm<Record<string, string | File | null>>(
     <Head title="Permissions" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
-        <div class="w-full p-4">
-            <Link :href="route('dashboard.permissions.index')"
-                class="w-fit py-1 px-2 rounded flex items-center gap-1 cursor-pointer bg-blue-600/30 hover:bg-blue-600/50">
+
+                <div class="w-full p-4">
+            <Link
+                :href="route('dashboard.permissions.index')"
+                class="flex w-fit cursor-pointer items-center justify-center gap-1 rounded bg-primary px-3 py-1 text-body"
+            >
                 <ArrowBigLeft class="size-4" />
-                <p class="text-semibold text-sm">Go Back</p>
+                <p class="font-semibold text-sm">Go Back</p>
             </Link>
         </div>
 

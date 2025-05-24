@@ -15,15 +15,15 @@ const isActive = computed(() => props.currentSort.key === props.sortKey)
 <template>
   <span :class="cn('flex flex-col items-center gap-[0.1px]', props.class)">
     <ChevronUpIcon
-      class="size-2.5"
+      class="size-3.5"
       :class="[
-        isActive && props.currentSort.direction === 'asc' ? 'text-black dark:text-blue-600' : 'opacity-30'
+        isActive && props.currentSort.direction === 'asc' ? 'text-blue-800 dark:text-blue-700' : 'opacity-30'
       ]"
     />
     <ChevronDownIcon
-      class="size-2.5 -mt-1"
+      class="size-3.5 -mt-2"
       :class="[
-        isActive && props.currentSort.direction === 'desc' ? 'text-black dark:text-blue-600' : 'opacity-30'
+        isActive && props.currentSort.direction === 'desc' ? 'text-blue-600 dark:text-blue-700' : 'opacity-30'
       ]"
     />
   </span>

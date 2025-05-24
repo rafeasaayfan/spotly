@@ -30,7 +30,7 @@ function updateValue(event: Event) {
     @change="updateValue"
     :class="
       cn(
-        'bg-slate-300 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800',
+        'bg-slate-300 hover:bg-slate-300 dark:bg-slate-950 dark:hover:bg-slate-950',
         'placeholder:text-slate-800 dark:placeholder:text-slate-200 text-slate-900 dark:text-slate-100 text-sm',
         'min-w-18 w-full p-2 border-none rounded-md cursor-pointer duration-300 focus:border-blue-900 dark:focus:border-blue-600',
         props.class

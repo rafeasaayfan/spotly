@@ -12,7 +12,7 @@ const props = defineProps<{
     data-slot="tr"
     :class="
       cn(
-        'text-xs text-slate-950/50 dark:text-slate-100/50',
+        'text-xs',
         props.class,
       )
     "

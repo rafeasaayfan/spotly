@@ -82,7 +82,7 @@ const columns = {
             </Link>
         </div>
 
-        <div class="m-4 flex flex-col gap-3 rounded-md border bg-zinc-950 px-8 py-4 shadow-md">
+        <div class="mx-4 flex flex-col gap-3 bg-card rounded-md border border-muted p-5 shadow-md">
             <h3>Edit restaurant data</h3>
 
             <form @submit.prevent="submit" class="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">

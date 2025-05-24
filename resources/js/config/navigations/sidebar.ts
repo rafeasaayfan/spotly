@@ -34,16 +34,16 @@ export const footerSidebarItems: SidebarSection[] = [
         name: 'Roles & Permissions',
         items: [{
             title: 'Assignments',
-            href: '/dashboard/assignmets',
+            href: '/dashboard/assignments',
             icon: PercentDiamondIcon,
             children: [
                 {
                     title: 'Permissions',
-                    href: '/dashboard/assignmets/permissions',
+                    href: '/dashboard/assignments/permissions',
                 },
                 {
                     title: 'Roles',
-                    href: '/dashboard/assignmets/roles',
+                    href: '/dashboard/assignments/roles',
                 },
             ]
         }],
@@ -52,5 +52,7 @@ export const footerSidebarItems: SidebarSection[] = [
 
 //? Sidebar UI
 export type SidebarVariant = 'sidebar' | 'floating' | 'inset';
+export type sidebarCollapsible = 'offcanvas' | 'icon' | 'none';
 
 export const sidebarVariant: SidebarVariant = 'sidebar';
+export const sidebarCollapsible: sidebarCollapsible = 'icon';

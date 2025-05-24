@@ -7,7 +7,7 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import { ArrowBigLeft } from 'lucide-vue-next';
 
 const props = defineProps<{
-    users: Array<{ id: number; name: string }>;
+    data: Array<{ id: number; name: string }>;
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -70,14 +70,14 @@ const form = useForm<Record<string, string | File | number | null>>(Object.fromE
         <div class="w-full p-4">
             <Link
                 :href="route('dashboard.restaurants.index')"
-                class="flex w-fit cursor-pointer items-center gap-1 rounded bg-blue-600/30 px-2 py-1 hover:bg-blue-600/50"
+                class="flex w-fit cursor-pointer items-center justify-center gap-1 rounded bg-primary px-3 py-1 text-body"
             >
                 <ArrowBigLeft class="size-4" />
-                <p class="text-semibold text-sm">Go Back</p>
+                <p class="font-semibold text-sm">Go Back</p>
             </Link>
         </div>
 
-        <div class="m-4 flex flex-col gap-3 rounded-md border bg-zinc-950 px-8 py-4 shadow-md">
+        <div class="mx-4 flex flex-col gap-3 rounded-md border border-muted p-5 shadow-md">
             <h3>Create new restaurants</h3>
 
             <form class="grid gap-4 lg:grid-cols-2 xl:grid-cols-3" @submit.prevent="submit">
@@ -96,7 +96,7 @@ const form = useForm<Record<string, string | File | number | null>>(Object.fromE
                         <SelectWithSearch
                             v-model="form[field]"
                             :options="
-                                props.users.map((user) => ({
+                                props.data.map((user) => ({
                                     label: user.name ?? user,
                                     value: user.id ?? user,
                                 }))

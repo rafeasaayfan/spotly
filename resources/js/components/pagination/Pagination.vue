@@ -27,7 +27,7 @@ function goToPage(url: string | null) {
 </script>
 
 <template>
-    <div v-if="formattedLinks.length > 1 && props.tableConditions.enablePagination" class="flex items-center gap-1.5">
+    <div v-if="formattedLinks.length > 1 && props.tableConditions.enablePagination" class="flex flex-wrap items-center gap-1.5">
         <div v-for="link in formattedLinks" :key="link.label">
             <PaginationBtn @click="goToPage(link.url)" :disabled="!link.url" :active="link.active">
                 <template v-if="!isNaN(Number(link.label))">

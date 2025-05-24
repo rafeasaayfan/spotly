@@ -16,7 +16,7 @@ const props = defineProps<{
     data-slot="th"
     :class="
       cn(
-        'py-2 min-w-10 border-slate-500/10 dark:border-slate-600/10 rounded-md',
+        'py-2 min-w-10 border-muted rounded-md',
         page.props.lang == 'ar' ? 'text-right border-l px-3' : 'text-left border-r px-3',
         props.class,
       )

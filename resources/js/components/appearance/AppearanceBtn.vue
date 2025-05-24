@@ -14,11 +14,11 @@ function toggleTheme() {
   <Button
     variant="ghost"
     size="icon"
-    class="relative size-10 w-auto cursor-pointer rounded-full flex items-center justify-center h-8 w-8 focus-visible:ring-2 focus-visible:ring-primary"
+    class="relative cursor-pointer rounded-full"
     @click="toggleTheme"
     :title="appearance === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
   >
     <Sun v-if="appearance === 'light'" class="size-5 text-yellow-500" />
-    <Moon v-else class="size-5 text-gray-300" />
+    <Moon v-else class="size-5" />
   </Button>
 </template>

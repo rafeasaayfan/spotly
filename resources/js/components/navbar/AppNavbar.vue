@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-    <div class="border-sidebar-border/80 dark:border-sidebar-border/30 border-b">
+    <div class="bg-navs border-b border-muted">
         <div class="mx-auto flex h-16 items-center px-4 md:max-w-7xl justify-between">
             <!-- Mobile Menu -->
             <MobileNav />

@@ -14,7 +14,7 @@ const props = defineProps<{
 </script>
 
 <template>
-    <p class="flex items-center gap-2 text-xs text-gray-600/90 dark:text-gray-600/80">
+    <p class="flex items-center gap-2 text-xs text-body-muted">
         <span class="flex items-center gap-1">
             <span>Showing</span>
             <span>{{ props.meta.from }} to {{ props.meta.to }}</span>

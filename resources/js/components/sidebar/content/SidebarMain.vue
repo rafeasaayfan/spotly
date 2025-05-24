@@ -16,7 +16,7 @@ import { mainSidebarItems as items } from '@/config/navigations';
 import { type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import { Minus, Plus } from 'lucide-vue-next';
-import { nextTick, ref } from 'vue';
+import { nextTick, onMounted, ref } from 'vue';
 
 // defineProps<{
 //     items: SidebarSection[];
@@ -26,6 +26,20 @@ const page = usePage<SharedData>();
 
 // Track which dropdowns are open
 const openDropdowns = ref<string[]>([]);
+
+function isActiveUrl(href: string) : boolean {
+    if(href === '/dashboard') {
+        return href === page.url;
+    }
+
+    return href === page.url || page.url.startsWith(href);
+}
+
+function isChildActive(children: Array<{ href: string }>): boolean {
+    return children.some(child => {
+        return child.href === page.url || page.url.startsWith(child.href);
+    });
+}
 
 function toggleDropdown(title: string) {
     if (openDropdowns.value.includes(title)) {
@@ -38,6 +52,19 @@ function toggleDropdown(title: string) {
 function isDropdownOpen(title: string) {
     return openDropdowns.value.includes(title);
 }
+
+// Initialize openDropdowns on component mount
+onMounted(() => {
+    items.forEach(section => {
+        section.items.forEach(item => {
+            if (item.children && isChildActive(item.children)) {
+                if (!openDropdowns.value.includes(item.title)) {
+                    openDropdowns.value.push(item.title);
+                }
+            }
+        });
+    });
+});
 
 function onEnter(el: Element) {
     const element = el as HTMLElement;
@@ -78,15 +105,6 @@ function onAfterLeave(el: Element) {
     element.style.height = '';
     element.style.opacity = '';
 }
-
-function activeUrl(href: string) {
-    if(href === '/dashboard') {
-        return href === page.url;
-    } else {
-        return href === page.url || page.url.startsWith(href);
-    }
-}
-
 </script>
 
 <template>
@@ -99,7 +117,8 @@ function activeUrl(href: string) {
                     <SidebarMenuItem v-for="item in section.items" :key="item.title">
                         <SidebarMenuButton
                             as-child
-                            :is-active="activeUrl(item.href)"
+                            :is-active="isActiveUrl(item.href)"
+                            :is-child-active="item.children ? isChildActive(item.children) : false"
                             :tooltip="item.title"
                             @click="item.children && toggleDropdown(item.title)"
                         >
@@ -130,7 +149,7 @@ function activeUrl(href: string) {
                                 ref="dropdownRef"
                             >
                                 <SidebarMenuSubItem v-for="child in item.children" :key="child.title">
-                                    <SidebarMenuSubButton :tooltip="child.title" :is-active="activeUrl(child.href)">
+                                    <SidebarMenuSubButton :tooltip="child.title" :is-active="isActiveUrl(child.href)">
                                         <Link :href="child.href" class="w-full">{{ child.title }}</Link>
                                     </SidebarMenuSubButton>
                                 </SidebarMenuSubItem>

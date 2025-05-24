@@ -40,10 +40,10 @@ class RestaurantsController extends Controller
      */
     public function create()
     {
-        $users = User::select(['id', 'name'])->get();
+        $restaurants = User::select(['id', 'name'])->get();
 
         return Inertia::render('dashboard/pages/restaurants/actions/Create', [
-            'data' => $users,
+            'data' => $restaurants,
         ]);
     }
 
@@ -158,7 +158,7 @@ class RestaurantsController extends Controller
             'ids.*' => 'integer|exists:restaurants,id',
         ]);
 
-        User::destroy($validated['ids']);
+        Restaurant::destroy($validated['ids']);
 
         return redirect()->back()->with('success', __('Restaurant(s) deleted successfully.'));
     }

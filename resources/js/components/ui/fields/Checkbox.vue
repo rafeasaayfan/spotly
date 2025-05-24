@@ -23,8 +23,8 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     :class="
       cn(
         'cursor-pointer rounded border-0 w-[19px] h-[19px] flex justify-center items-center transition-transform duration-300 active:scale-95 focus:outline-none focus:ring-0',
-        'bg-slate-300 dark:bg-slate-900',
-        'data-[state=checked]:bg-blue-600 data-[state=checked]:dark:bg-blue-500',
+        'bg-slate-300 dark:bg-slate-950',
+        'data-[state=checked]:bg-blue-800 data-[state=checked]:dark:bg-blue-600',
         props.class
       )
     "
