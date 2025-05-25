@@ -3,9 +3,9 @@ import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 // Components
-import HeadingSmall from '@/components/HeadingSmall.vue';
+import HeadingSmall from '@/components/headers/HeadingSmall.vue';
 import InputError from '@/components/ui/fields/InputError.vue';
-import { Button } from '@/components/ui/buttons';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogClose,
@@ -16,7 +16,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/ui/fields';
 import { Label } from '@/components/ui/label';
 
 const passwordInput = ref<HTMLInputElement | null>(null);
@@ -45,11 +45,13 @@ const closeModal = () => {
 <template>
     <div class="space-y-6">
         <HeadingSmall title="Delete account" description="Delete your account and all of its resources" />
-        <div class="space-y-4 rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
+
+        <div class="space-y-4 rounded-md border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
             <div class="relative space-y-0.5 text-red-600 dark:text-red-100">
-                <p class="font-medium">Warning</p>
-                <p class="text-sm">Please proceed with caution, this cannot be undone.</p>
+                <p class="font-semibold">Warning</p>
+                <p class="text-sm text-body-muted">Please proceed with caution, this cannot be undone.</p>
             </div>
+
             <Dialog>
                 <DialogTrigger as-child>
                     <Button variant="destructive">Delete account</Button>

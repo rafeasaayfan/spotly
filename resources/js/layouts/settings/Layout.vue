@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Heading from '@/components/Heading.vue';
+import Heading from '@/components/headers/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { type NavItem } from '@/types';
@@ -20,23 +20,30 @@ const sidebarNavItems: NavItem[] = [
     },
 ];
 
-const page = usePage();
+interface ZiggyProps {
+  location: string
+}
+
+const page = usePage<{ ziggy?: ZiggyProps }>()
 
 const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.location).pathname : '';
 </script>
 
 <template>
-    <div class="px-4 py-6">
-        <Heading title="Settings" description="Manage your profile and account settings" />
+    <div class="flex flex-col gap-3 px-4 py-6">
+        <header class="w-full bg-card rounded-md p-2">
+            <Heading title="Settings" description="Manage your profile and account settings" />
+        </header>
 
-        <div class="flex flex-col space-y-8 md:space-y-0 lg:flex-row lg:space-x-12 lg:space-y-0">
-            <aside class="w-full max-w-xl lg:w-48">
-                <nav class="flex flex-col space-x-0 space-y-1">
+        <div class="grid grid-cols-5 space-y-8 md:space-y-0 lg:space-x-8 lg:space-y-0">
+
+            <aside class="col-span-1 w-full max-w-xl lg:w-48 bg-navs py-4 px-2 rounded-md">
+                <nav class="flex flex-col space-x-0 space-y-2">
                     <Button
                         v-for="item in sidebarNavItems"
                         :key="item.href"
-                        variant="ghost"
-                        :class="['w-full justify-start', { 'bg-muted': currentPath === item.href }]"
+                        variant="tab"
+                        :class="['w-full justify-start', { 'bg-content-2-active border border-primary text-active': currentPath === item.href }]"
                         as-child
                     >
                         <Link :href="item.href">
@@ -48,11 +55,12 @@ const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.locati
 
             <Separator class="my-6 md:hidden" />
 
-            <div class="flex-1 md:max-w-2xl">
+            <div class="col-span-4 w-full p-4 rounded-md">
                 <section class="max-w-xl space-y-12">
                     <slot />
                 </section>
             </div>
+
         </div>
     </div>
 </template>
