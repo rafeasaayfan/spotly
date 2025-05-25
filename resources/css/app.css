@@ -167,10 +167,14 @@
     --secondary-hover: hsl(0 0% 78%);
     --secondary-active: hsl(0 0% 68%);
     --secondary-foreground: hsl(0 0% 100%);
-    --destructive: hsl(0 72% 51%);
-    --destructive-hover: hsl(0 72% 41%);
-    --destructive-active: hsl(0 72% 31%);
+    --destructive: hsl(0 80% 51%);
+    --destructive-hover: hsl(0 80% 41%);
+    --destructive-active: hsl(0 80% 31%);
     --destructive-foreground: hsl(0 0% 100%);
+    --success: hsl(120, 80%, 30%);
+    --success-hover: hsl(120, 80%, 25%);
+    --success-active: hsl(120, 80%, 20%);
+    --success-foreground: hsl(0 0% 100%);
 
     --border: hsl(0 0% 85%);
     --border-primary: hsl(216 80% 80%);
@@ -205,18 +209,22 @@
     --content-3-bg-hover: hsl(0 0% 9%);
     --content-3-bg-active: hsl(0 0% 12%);
 
-    --primary: hsl(220 60% 50%);
-    --primary-hover: hsl(220 60% 45%);
-    --primary-active: hsl(220 60% 40%);
+    --primary: hsl(220 65% 50%);
+    --primary-hover: hsl(220 65% 45%);
+    --primary-active: hsl(220 65% 40%);
     --primary-foreground: hsl(0 0% 100%);
     --secondary: hsl(0 0% 22%);
     --secondary-hover: hsl(0 0% 18%);
     --secondary-active: hsl(0 0% 15%);
     --secondary-foreground: hsl(0 0% 100%);
-    --destructive: hsl(355, 78%, 56%);
-    --destuctive-hover: hsl(355, 78%, 46%);
-    --destructive-active: hsl(355, 78%, 36%);
+    --destructive: hsl(355, 65%, 56%);
+    --destuctive-hover: hsl(355, 65%, 46%);
+    --destructive-active: hsl(355, 65%, 36%);
     --destructive-foreground: hsl(0 0% 100%);
+    --success: hsl(120, 65%, 50%);
+    --success-hover: hsl(120, 65%, 45%);
+    --success-active: hsl(120, 65%, 40%);
+    --success-foreground: hsl(0 0% 100%);
 
     --border: hsl(0 0% 10%);
     --border-primary: hsl(220 60% 15%);
@@ -276,6 +284,7 @@ body {
 .text-active-link {
     color: var(--foreground-active-link);
 }
+
 .text-active-link-2 {
     color: var(--foreground-active-link-2);
 }
@@ -284,24 +293,31 @@ body {
 .bg-primary {
     background-color: var(--primary);
 }
+
 .bg-primary:hover {
     background-color: var(--primary-hover);
 }
+
 .bg-primary:active {
     background-color: var(--primary-active);
 }
+
 .bg-primary-active {
     background-color: var(--primary-active);
 }
+
 .fill-primary {
     fill: var(--primary);
 }
+
 .fill-primary:hover {
     fill: var(--primary-hover);
 }
+
 .fill-primary:active {
     fill: var(--primary-active);
 }
+
 .fill-primary-active {
     fill: var(--primary-active);
 }
@@ -309,24 +325,31 @@ body {
 .bg-secondary {
     background-color: var(--secondary);
 }
+
 .bg-secondary:hover {
     background-color: var(--secondary-hover);
 }
+
 .bg-secondary:active {
     background-color: var(--secondary-active);
 }
+
 .bg-secondary-active {
     background-color: var(--secondary-active);
 }
+
 .fill-secondary {
     fill: var(--secondary);
 }
+
 .fill-secondary:hover {
     fill: var(--secondary-hover);
 }
+
 .fill-secondary:active {
     fill: var(--secondary-active);
 }
+
 .fill-secondary-active {
     fill: var(--secondary-active);
 }
@@ -334,12 +357,15 @@ body {
 .bg-destructive {
     background-color: var(--destructive);
 }
+
 .bg-destructive:hover {
     background-color: var(--destructive-hover);
 }
+
 .bg-destructive:active {
     background-color: var(--destructive-active);
 }
+
 .bg-destructive-active {
     background-color: var(--destructive-active);
 }
@@ -347,14 +373,49 @@ body {
 .fill-destructive {
     fill: var(--destructive);
 }
+
 .fill-destructive:hover {
     fill: var(--destructive-hover);
 }
+
 .fill-destructive:active {
     fill: var(--destructive-active);
 }
+
 .fill-destructive-active {
     fill: var(--destructive-active);
+}
+
+.bg-success {
+    background-color: var(--success);
+}
+
+.bg-success:hover {
+    background-color: var(--success-hover);
+}
+
+.bg-success:active {
+    background-color: var(--success-active);
+}
+
+.bg-success-active {
+    background-color: var(--success-active);
+}
+
+.fill-success {
+    fill: var(--success);
+}
+
+.fill-success:hover {
+    fill: var(--success-hover);
+}
+
+.fill-success:active {
+    fill: var(--success-active);
+}
+
+.fill-success-active {
+    fill: var(--success-active);
 }
 
 .text-for-bg-primary {
@@ -367,6 +428,10 @@ body {
 
 .text-for-bg-destructive {
     color: var(--destructive-foreground);
+}
+
+.text-for-bg-success {
+    color: var(--success-foreground);
 }
 
 /** =============== Border =============== */
@@ -382,12 +447,15 @@ body {
 .bg-content {
     background-color: var(--content-bg);
 }
+
 .bg-content:hover {
     background-color: var(--content-bg-hover);
 }
+
 .bg-content:active {
     background-color: var(--content-bg-active);
 }
+
 .bg-content-active {
     background-color: var(--content-bg-active);
 }
@@ -399,12 +467,15 @@ body {
 .bg-content-2 {
     background-color: var(--content-2-bg);
 }
+
 .bg-content-2:hover {
     background-color: var(--content-2-bg-hover);
 }
+
 .bg-content-2:active {
     background-color: var(--content-2-bg-active);
 }
+
 .bg-content-2-active {
     background-color: var(--content-2-bg-active);
 }
@@ -412,12 +483,40 @@ body {
 .bg-content-3 {
     background-color: var(--content-3-bg);
 }
+
 .bg-content-3:hover {
     background-color: var(--content-3-bg-hover);
 }
+
 .bg-content-3:active {
     background-color: var(--content-3-bg-active);
 }
+
 .bg-content-3-active {
     background-color: var(--content-3-bg-active);
+}
+
+/** =============== POPUP =============== */
+.popup {
+    border: 1px solid var(--border);
+    box-shadow: 0.5px 0.5px 12px 0px rgba(0, 0, 0, 0.5);
+}
+
+.popup .swal2-icon.swal2-warning,
+.popup .swal2-icon-content {
+    color: hsl(48, 96%, 58%);
+    border-color: hsl(48, 96%, 58%);
+}
+
+.popup .swal2-timer-progress-bar {
+    background: var(--primary);
+}
+
+.popup .swal2-success-line-tip,
+.popup .swal2-success-line-long {
+    background-color: var(--success) !important;
+}
+
+.popup .swal2-success-ring {
+    border-color: var(--success) !important;
 }
