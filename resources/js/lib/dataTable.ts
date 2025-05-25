@@ -77,9 +77,9 @@ export const formatters = {
 
     EmailVerified: (value: string | null) => {
         if (!value) {
-            return `<span class="bg-red-600/90 text-white rounded-sm text-xs px-2 py-1">Not Verified</span>`;
+            return `<span class="bg-destructive text-for-bg-destructive rounded-sm text-xs px-2 py-1">Not Verified</span>`;
         } else {
-            return `<span class="bg-green-600/90 text-white rounded-sm text-xs px-2 py-1">Verified</span>`;
+            return `<span class="bg-success text-for-bg-success rounded-sm text-xs px-2 py-1">Verified</span>`;
         }
     },
 

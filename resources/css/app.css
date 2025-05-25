@@ -167,9 +167,9 @@
     --secondary-hover: hsl(0 0% 78%);
     --secondary-active: hsl(0 0% 68%);
     --secondary-foreground: hsl(0 0% 100%);
-    --destructive: hsl(0 80% 51%);
-    --destructive-hover: hsl(0 80% 41%);
-    --destructive-active: hsl(0 80% 31%);
+    --destructive: hsl(0 80% 40%);
+    --destructive-hover: hsl(0 80% 35%);
+    --destructive-active: hsl(0 80% 30%);
     --destructive-foreground: hsl(0 0% 100%);
     --success: hsl(120, 80%, 30%);
     --success-hover: hsl(120, 80%, 25%);
@@ -217,13 +217,13 @@
     --secondary-hover: hsl(0 0% 18%);
     --secondary-active: hsl(0 0% 15%);
     --secondary-foreground: hsl(0 0% 100%);
-    --destructive: hsl(355, 65%, 56%);
-    --destuctive-hover: hsl(355, 65%, 46%);
-    --destructive-active: hsl(355, 65%, 36%);
+    --destructive: hsl(355, 65%, 45%);
+    --destuctive-hover: hsl(355, 65%, 40%);
+    --destructive-active: hsl(355, 65%, 35%);
     --destructive-foreground: hsl(0 0% 100%);
-    --success: hsl(120, 65%, 50%);
-    --success-hover: hsl(120, 65%, 45%);
-    --success-active: hsl(120, 65%, 40%);
+    --success: hsl(120, 65%, 40%);
+    --success-hover: hsl(120, 65%, 35%);
+    --success-active: hsl(120, 65%, 30%);
     --success-foreground: hsl(0 0% 100%);
 
     --border: hsl(0 0% 10%);
