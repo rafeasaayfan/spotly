@@ -26,7 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
             <MobileNav />
 
             <Link :href="route('home')" class="hidden md:flex items-center gap-2">
-                <AppLogo />
+                <AppLogo  />
             </Link>
 
             <Link :href="route('home')" class="flex md:hidden items-center gap-2">

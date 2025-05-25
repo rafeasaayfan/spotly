@@ -5,8 +5,11 @@ import { Link } from '@inertiajs/vue3';
 
 <template>
     <footer
-        class="bg-navs border-muted bottom-0 flex h-10 shrink-0 items-center justify-between gap-2 border-t px-6
-        transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-9 md:px-4"
+        class="bg-navs border-muted fixed bottom-0 flex h-10 shrink-0 items-center justify-between gap-2 border-t px-6
+        transition-[width,height] ease-linear md:px-4 z-10
+        group-has-data-[collapsible=icon]/sidebar-wrapper:h-9
+        w-[calc(100%-16rem)] group-has-data-[collapsible=icon]/sidebar-wrapper:w-[calc(100%-3rem)]
+        group-has-data-[collapsible=offcanvas]/sidebar-wrapper:w-full"
     >
         <div class="flex items-center space-x-2">
             <Link :href="route('dashboard.index')">

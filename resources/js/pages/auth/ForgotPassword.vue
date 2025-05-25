@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import InputError from '@/components/ui/fields/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Input, InputError } from '@/components/ui/fields';
 import { Label } from '@/components/ui/label';
+
 import AuthLayout from '@/layouts/AuthLayout.vue';
+
 import { Head, useForm } from '@inertiajs/vue3';
+
 import { LoaderCircle } from 'lucide-vue-next';
 
 defineProps<{
@@ -25,10 +27,6 @@ const submit = () => {
     <AuthLayout title="Forgot password" description="Enter your email to receive a password reset link">
         <Head title="Forgot password" />
 
-        <div v-if="status" class="mb-4 text-center text-sm font-medium text-green-600">
-            {{ status }}
-        </div>
-
         <div class="space-y-6">
             <form @submit.prevent="submit">
                 <div class="grid gap-2">
@@ -45,8 +43,8 @@ const submit = () => {
                 </div>
             </form>
 
-            <div class="space-x-1 text-center text-sm text-muted-foreground">
-                <span>Or, return to</span>
+            <div class="flex items-center justify-center text-sm gap-2">
+                <span class="text-body-muted">Or, return to</span>
                 <TextLink :href="route('login')">log in</TextLink>
             </div>
         </div>
