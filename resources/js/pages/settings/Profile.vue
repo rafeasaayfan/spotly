@@ -9,7 +9,7 @@ import { type BreadcrumbItem, type SharedData, type User } from '@/types';
 
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
-import DeleteUser from '@/components/userDropdown/DeleteUser.vue';
+import DeleteUser from '@/components/user/DeleteUser.vue';
 import HeadingSmall from '@/components/headers/HeadingSmall.vue';
 
 interface Props {

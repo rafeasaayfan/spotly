@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/fields';
 import { Label } from '@/components/ui/label';
+import { LoaderCircle } from 'lucide-vue-next';
 
 const passwordInput = ref<HTMLInputElement | null>(null);
 
@@ -56,6 +57,7 @@ const closeModal = () => {
                 <DialogTrigger as-child>
                     <Button variant="destructive">Delete account</Button>
                 </DialogTrigger>
+
                 <DialogContent>
                     <form class="space-y-6" @submit="deleteUser">
                         <DialogHeader class="space-y-3">
@@ -74,11 +76,12 @@ const closeModal = () => {
 
                         <DialogFooter class="gap-2">
                             <DialogClose as-child>
-                                <Button variant="secondary" @click="closeModal"> Cancel </Button>
+                                <Button variant="secondary" @click="closeModal">Cancel</Button>
                             </DialogClose>
 
-                            <Button variant="destructive" :disabled="form.processing">
-                                <button type="submit">Delete account</button>
+                            <Button variant="destructive" type="submit" :disabled="form.processing">
+                               <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
+                                Delete account
                             </Button>
                         </DialogFooter>
                     </form>

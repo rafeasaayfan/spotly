@@ -15,8 +15,8 @@ const sidebarNavItems: NavItem[] = [
         href: '/settings/password',
     },
     {
-        title: 'Appearance',
-        href: '/settings/appearance',
+        title: 'App Settings',
+        href: '/settings/appSettings',
     },
 ];
 
@@ -30,14 +30,14 @@ const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.locati
 </script>
 
 <template>
-    <div class="flex flex-col gap-3 px-4 py-6">
-        <header class="w-full bg-card rounded-md p-2">
+    <div class="flex flex-col gap-3 px-4 py-6 h-screen">
+        <header class="w-full bg-card rounded-md p-4">
             <Heading title="Settings" description="Manage your profile and account settings" />
         </header>
 
-        <div class="grid grid-cols-5 space-y-8 md:space-y-0 lg:space-x-8 lg:space-y-0">
+        <div class="grid grid-cols-5 space-y-8 md:space-y-0 lg:space-x-8 lg:space-y-0 h-full">
 
-            <aside class="col-span-1 w-full max-w-xl lg:w-48 bg-navs py-4 px-2 rounded-md">
+            <aside class="col-span-1 w-full max-w-xl lg:w-48 bg-navs py-4 px-2 rounded-md h-full">
                 <nav class="flex flex-col space-x-0 space-y-2">
                     <Button
                         v-for="item in sidebarNavItems"
