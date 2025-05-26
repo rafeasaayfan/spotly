@@ -12,9 +12,13 @@ import {
     SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 import { footerSidebarItems as items } from '@/config/navigations';
+
+import useAuth from '@/composables/useAuth';
 import { type SharedData } from '@/types';
-import { Link, usePage } from '@inertiajs/vue3';
+
 import { Minus, Plus } from 'lucide-vue-next';
+
+import { Link, usePage } from '@inertiajs/vue3';
 import { nextTick, onMounted, ref } from 'vue';
 
 interface Props {
@@ -50,14 +54,14 @@ function toggleDropdown(title: string) {
     }
 }
 
-function isDropdownOpen(title: string) : boolean {
+function isDropdownOpen(title: string): boolean {
     return openDropdowns.value.includes(title);
 }
 
 // Initialize openDropdowns on component mount
 onMounted(() => {
-    items.forEach(section => {
-        section.items.forEach(item => {
+    items.forEach((section) => {
+        section.items.forEach((item) => {
             if (item.children && isHasChildActive(item.children)) {
                 if (!openDropdowns.value.includes(item.title)) {
                     openDropdowns.value.push(item.title);
@@ -105,55 +109,62 @@ function onAfterLeave(el: Element) {
     element.style.height = '';
     element.style.opacity = '';
 }
+
+const { can } = useAuth();
 </script>
 
 <template>
     <SidebarGroup v-for="section in items" :key="section.name" :class="` ${$props.class || ''}`">
-        <SidebarGroupContent>
+        <SidebarGroupContent v-if="section.permission ? can(section.permission) : true">
             <SidebarGroupLabel>{{ section.name }}</SidebarGroupLabel>
 
             <SidebarMenu class="cursor-pointer">
                 <SidebarMenuItem v-for="item in section.items" :key="item.title">
-                    <SidebarMenuButton
-                        as-child
-                        :is-active="item.children?.length ? false : isActiveUrl(item.href)"
-                        :is-child-active="item.children?.length ? isHasChildActive(item.children) : false"
-                        :tooltip="item.title"
-                        @click="item.children && toggleDropdown(item.title)"
-                    >
-                        <template v-if="!item.children">
-                            <Link :href="item.href">
-                                <component :is="item.icon" v-if="item.icon" />
-                                <span>{{ item.title }}</span>
-                            </Link>
-                        </template>
-
-                        <template v-else>
-                            <div>
-                                <component :is="item.icon" v-if="item.icon" />
-                                <span>{{ item.title }}</span>
-                            </div>
-                        </template>
-                    </SidebarMenuButton>
-
-                    <SidebarMenuBadge v-if="item.children?.length" :is-active="item.children ? isHasChildActive(item.children) : false">
-                        <Plus v-show="!isDropdownOpen(item.title)" class="h-3 w-3" />
-                        <Minus v-show="isDropdownOpen(item.title)" class="h-3 w-3" />
-                    </SidebarMenuBadge>
-
-                    <transition v-if="item.children?.length" name="fade-slide" @enter="onEnter" @after-enter="onAfterEnter" @leave="onLeave" @after-leave="onAfterLeave">
-                        <SidebarMenuSub
-                            class="overflow-hidden transition-all duration-300"
-                            v-show="isDropdownOpen(item.title)"
-                            ref="dropdownRef"
+                    <template v-if="item.permission ? can(item.permission) : true">
+                        <SidebarMenuButton
+                            as-child
+                            :is-active="item.children?.length ? false : isActiveUrl(item.href)"
+                            :is-child-active="item.children?.length ? isHasChildActive(item.children) : false"
+                            :tooltip="item.title"
+                            @click="item.children && toggleDropdown(item.title)"
                         >
-                            <SidebarMenuSubItem v-for="child in item.children" :key="child.title">
-                                <SidebarMenuSubButton :tooltip="child.title" :is-active="isActiveUrl(child.href)">
-                                    <Link :href="child.href" class="w-full">{{ child.title }}</Link>
-                                </SidebarMenuSubButton>
-                            </SidebarMenuSubItem>
-                        </SidebarMenuSub>
-                    </transition>
+                            <template v-if="!item.children">
+                                <Link :href="item.href">
+                                    <component :is="item.icon" v-if="item.icon" />
+                                    <span>{{ item.title }}</span>
+                                </Link>
+                            </template>
+
+                            <template v-else>
+                                <div>
+                                    <component :is="item.icon" v-if="item.icon" />
+                                    <span>{{ item.title }}</span>
+                                </div>
+                            </template>
+                        </SidebarMenuButton>
+
+                        <SidebarMenuBadge v-if="item.children?.length" :is-active="item.children ? isHasChildActive(item.children) : false">
+                            <Plus v-show="!isDropdownOpen(item.title)" class="h-3 w-3" />
+                            <Minus v-show="isDropdownOpen(item.title)" class="h-3 w-3" />
+                        </SidebarMenuBadge>
+
+                        <transition
+                            v-if="item.children?.length"
+                            name="fade-slide"
+                            @enter="onEnter"
+                            @after-enter="onAfterEnter"
+                            @leave="onLeave"
+                            @after-leave="onAfterLeave"
+                        >
+                            <SidebarMenuSub class="overflow-hidden transition-all duration-300" v-show="isDropdownOpen(item.title)" ref="dropdownRef">
+                                <SidebarMenuSubItem v-for="child in item.children" :key="child.title">
+                                    <SidebarMenuSubButton :tooltip="child.title" :is-active="isActiveUrl(child.href)">
+                                        <Link :href="child.href" class="w-full">{{ child.title }}</Link>
+                                    </SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                            </SidebarMenuSub>
+                        </transition>
+                    </template>
                 </SidebarMenuItem>
             </SidebarMenu>
         </SidebarGroupContent>

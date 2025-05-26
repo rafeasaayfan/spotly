@@ -15,14 +15,14 @@ import HeadingSmall from '@/components/headers/HeadingSmall.vue';
 import { LoaderCircle } from 'lucide-vue-next';
 
 import { toast } from '@/lib/sweetAlert';
-import { watch } from 'vue';
+import { computed, watch } from 'vue';
 
 interface Props {
     mustVerifyEmail: boolean;
     status?: string;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -50,6 +50,17 @@ watch(() => form.recentlySuccessful, (val) => {
         toast.fire({
             icon: 'success',
             title: 'Your profile infos updated successfully!',
+        });
+    }
+});
+
+const status = computed(() => props.status);
+
+watch(() => status, (val) => {
+    if (val.value == 'verification-link-sent') {
+        toast.fire({
+            icon: 'success',
+            title: 'A new verification link has been sent to your email address',
         });
     }
 });
@@ -85,13 +96,13 @@ watch(() => form.recentlySuccessful, (val) => {
                     </div>
 
                     <div v-if="mustVerifyEmail && !user.email_verified_at">
-                        <p class="-mt-4 text-sm text-muted-foreground">
+                        <p class="-mt-4 text-sm text-body-muted">
                             Your email address is unverified.
                             <Link
                                 :href="route('verification.send')"
                                 method="post"
                                 as="button"
-                                class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
+                                class="text-body cursor-pointer underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                             >
                                 Click here to resend the verification email.
                             </Link>

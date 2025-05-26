@@ -16,7 +16,7 @@ Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboa
     dashboardPagesRoutes('restaurants', RestaurantsController::class);
 
     //* Assignments
-    Route::prefix('assignments')->group(function () {
+    Route::middleware('can:assignments_access')->prefix('assignments')->group(function () {
         dashboardPagesRoutes('permissions', PermissionsController::class);
         dashboardPagesRoutes('roles', RolesController::class);
     });

@@ -30,9 +30,11 @@ export const mainSidebarItems: SidebarSection[] = [
 export const footerSidebarItems: SidebarSection[] = [
     {
         name: 'Roles & Permissions',
+        permission: 'assignments_access',
         items: [{
             title: 'Assignments',
             href: '/dashboard/assignments',
+            permission: 'assignments_access',
             icon: PercentDiamondIcon,
             children: [
                 {

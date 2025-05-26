@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import UserInfo from '@/components/user/UserInfo.vue';
+
 import type { User } from '@/types';
+import useAuth from '@/composables/useAuth';
+
 import { Link, router } from '@inertiajs/vue3';
+
 import { LogOut, Settings, LayoutGrid } from 'lucide-vue-next';
 
 interface Props {
@@ -14,6 +18,8 @@ const handleLogout = () => {
 };
 
 defineProps<Props>();
+
+const { can } = useAuth();
 </script>
 
 <template>
@@ -33,7 +39,8 @@ defineProps<Props>();
             </Link>
         </DropdownMenuItem>
 
-        <DropdownMenuItem :as-child="true">
+
+        <DropdownMenuItem :as-child="true" v-if="can('dashboard_access')">
             <Link class="flex w-full items-center gap-2 cursor-pointer" :href="route('dashboard.index')" prefetch as="button">
                 <LayoutGrid class="h-4 w-4" />
                 Dashboard

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\Response;
 
-class LanguageMiddleware
+class HandleLanguage
 {
     /**
      * Handle an incoming request.
