@@ -12,6 +12,11 @@ import SettingsLayout from '@/layouts/settings/Layout.vue';
 import DeleteUser from '@/components/user/DeleteUser.vue';
 import HeadingSmall from '@/components/headers/HeadingSmall.vue';
 
+import { LoaderCircle } from 'lucide-vue-next';
+
+import { toast } from '@/lib/sweetAlert';
+import { watch } from 'vue';
+
 interface Props {
     mustVerifyEmail: boolean;
     status?: string;
@@ -39,6 +44,15 @@ const submit = () => {
         preserveScroll: true,
     });
 };
+
+watch(() => form.recentlySuccessful, (val) => {
+    if (val) {
+        toast.fire({
+            icon: 'success',
+            title: 'Your profile infos updated successfully!',
+        });
+    }
+});
 </script>
 
 <template>
@@ -89,16 +103,10 @@ const submit = () => {
                     </div>
 
                     <div class="flex items-center justify-end gap-4">
-                        <Button :disabled="form.processing">Save</Button>
-
-                        <Transition
-                            enter-active-class="transition ease-in-out"
-                            enter-from-class="opacity-0"
-                            leave-active-class="transition ease-in-out"
-                            leave-to-class="opacity-0"
-                        >
-                            <p v-show="form.recentlySuccessful" class="text-sm text-neutral-600">Saved.</p>
-                        </Transition>
+                        <Button :disabled="form.processing">
+                            <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
+                            <span>Update</span>
+                        </Button>
                     </div>
                 </form>
             </div>

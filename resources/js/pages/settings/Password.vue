@@ -1,15 +1,21 @@
 <script setup lang="ts">
-import InputError from '@/components/ui/fields/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
+import HeadingSmall from '@/components/headers/HeadingSmall.vue';
+
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
-import HeadingSmall from '@/components/headers/HeadingSmall.vue';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Input, InputError } from '@/components/ui/fields';
 import { Label } from '@/components/ui/label';
+
 import { type BreadcrumbItem } from '@/types';
+
+import { LoaderCircle } from 'lucide-vue-next';
+
+import { toast } from '@/lib/sweetAlert';
+import { watch } from 'vue';
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
@@ -48,6 +54,15 @@ const updatePassword = () => {
         },
     });
 };
+
+watch(() => form.recentlySuccessful, (val) => {
+    if (val) {
+        toast.fire({
+            icon: 'success',
+            title: 'Your password updated successfully!',
+        });
+    }
+});
 </script>
 
 <template>
@@ -100,17 +115,11 @@ const updatePassword = () => {
                         <InputError :message="form.errors.password_confirmation" />
                     </div>
 
-                    <div class="flex items-center gap-4">
-                        <Button :disabled="form.processing">Save password</Button>
-
-                        <Transition
-                            enter-active-class="transition ease-in-out"
-                            enter-from-class="opacity-0"
-                            leave-active-class="transition ease-in-out"
-                            leave-to-class="opacity-0"
-                        >
-                            <p v-show="form.recentlySuccessful" class="text-sm text-neutral-600">Saved.</p>
-                        </Transition>
+                    <div class="flex items-center justify-end gap-4">
+                        <Button :disabled="form.processing">
+                            <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
+                            <span>Update password</span>
+                        </Button>
                     </div>
                 </form>
             </div>

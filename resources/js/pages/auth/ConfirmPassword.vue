@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import InputError from '@/components/ui/fields/InputError.vue';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Input, InputError } from '@/components/ui/fields';
 import { Label } from '@/components/ui/label';
+
 import AuthLayout from '@/layouts/AuthLayout.vue';
+
 import { Head, useForm } from '@inertiajs/vue3';
+
 import { LoaderCircle } from 'lucide-vue-next';
 
 const form = useForm({
