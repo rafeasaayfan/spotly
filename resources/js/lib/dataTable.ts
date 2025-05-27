@@ -15,8 +15,8 @@ export interface TableConditions {
     enableView?: boolean;
     enableRowsDelete?: boolean;
 
-    enablePermission?: boolean;
-    enableRole?: boolean;
+    enableAssignRoles?: boolean;
+    enableAssignPermissions?: boolean;
 }
 // The default options
 export const defaultTableConditions: TableConditions = {
@@ -33,8 +33,8 @@ export const defaultTableConditions: TableConditions = {
     enableView: true,
     enableRowsDelete: true,
 
-    enablePermission: false,
-    enableRole: false,
+    enableAssignRoles: false,
+    enableAssignPermissions: false,
 };
 
 // Formatters.js أو ضمن نفس ملف lib/composables

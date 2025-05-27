@@ -16,11 +16,11 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const columns = [
-{ key: 'id', label: 'Id' },
-{ key: 'name', label: 'Name' },
-{ key: 'guard_name', label: 'Guard Name' },
-{ key: 'description', label: 'Description' },
-{ key: 'created_at', label: 'Created At' },
+    { key: 'id', label: 'Id' },
+    { key: 'name', label: 'Name' },
+    { key: 'guard_name', label: 'Guard Name' },
+    { key: 'description', label: 'Description' },
+    { key: 'created_at', label: 'Created At' },
 ];
 
 const props = defineProps<{
@@ -29,6 +29,7 @@ const props = defineProps<{
 
 const tableConditions = {
     ...defaultTableConditions,
+    enableAssignPermissions: true,
 };
 </script>
 
@@ -36,11 +37,6 @@ const tableConditions = {
     <Head title="Roles" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
-        <DataTable
-            :table-data="props.roles"
-            :columns="columns"
-            route-name="dashboard.roles"
-            :table-conditions="tableConditions"
-        />
+        <DataTable :table-data="props.roles" :columns="columns" route-name="dashboard.roles" :table-conditions="tableConditions" />
     </DashboardLayout>
 </template>

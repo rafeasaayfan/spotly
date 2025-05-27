@@ -22,7 +22,7 @@ const emit = defineEmits(['update:modelValue'])
             @input="emit('update:modelValue', $event.target.value)" v-bind="$attrs" :class="cn(
                 'text-sm rounded-md px-3 py-3 duration-300 focus:border-blue-900 dark:focus:border-blue-600',
                 'placeholder:text-slate-800 dark:placeholder:text-slate-200 text-slate-900 dark:text-slate-100',
-                'w-full bg-slate-300 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border-none',
+                'w-full bg-slate-300 hover:bg-slate-300 dark:bg-slate-950 dark:hover:bg-slate-950 border-none',
                 props.class
             )
             " rows="5">

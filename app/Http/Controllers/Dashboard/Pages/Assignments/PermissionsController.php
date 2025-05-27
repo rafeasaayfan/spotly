@@ -95,7 +95,7 @@ class PermissionsController extends Controller
         $data->update($validated);
         $data->save();
 
-        return redirect()->route('dashboard.roles.index')->with('success', 'Role created successfully');
+        return redirect()->route('dashboard.permissions.index')->with('success', 'Role created successfully');
     }
 
     /**
@@ -118,13 +118,13 @@ class PermissionsController extends Controller
      */
     public function assignment(string $id)
     {
-        $permission = Permission::with('roles')->findOrFail($id);
+        $attachedRoles = Permission::with('roles')->findOrFail($id);
         $availableRoles = Role::whereDoesntHave('permissions', function ($query) use ($id) {
             $query->where('permissions.id', $id);
         })->get();
 
-        return Inertia::render('dashboard/pages/assignments/permissions/actions/Edit', [
-            'data' => $permission,
+        return Inertia::render('dashboard/pages/assignments/permissions/actions/AssignRoles', [
+            'attachedRoles' => $attachedRoles,
             'availableRoles' => $availableRoles,
         ]);
     }
@@ -136,7 +136,7 @@ class PermissionsController extends Controller
     {
         $validated = $request->validate([
             'action' => 'required|string|in:add,delete',
-            'id' => 'required|string|exists:roles,id',
+            'id' => 'required|integer|exists:roles,id',
         ]);
 
         $permission = Permission::findOrFail($id);

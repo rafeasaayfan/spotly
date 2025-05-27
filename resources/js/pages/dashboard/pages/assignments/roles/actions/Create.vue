@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import { Input, Textarea } from '@/components/ui/fields';
+import { Input, InputError, Textarea } from '@/components/ui/fields';
+
+import Heading from '@/components/headers/Heading.vue';
 import DashboardLayout from '@/layouts/DashboardLayout.vue';
+
 import { type BreadcrumbItem } from '@/types';
+
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { ArrowBigLeft } from 'lucide-vue-next';
+
+import { ArrowBigLeft, LoaderCircle } from 'lucide-vue-next';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -17,24 +22,12 @@ function submit() {
     form.post(route(`dashboard.roles.store`));
 }
 
-const columns = {
-    name: {
-        type: 'text',
-        label: 'Name',
-    },
-    guard_name: {
-        type: 'text',
-        label: 'Guard Name',
-    },
-    description: {
-        type: 'textarea',
-        label: 'Description',
-    },
-};
-
-const form = useForm<Record<string, string | File | null>>(
-    Object.fromEntries(Object.keys(columns).map((key) => [key, '']))
-);
+// const form = useForm<Record<string, string | File | null>>(Object.fromEntries(Object.keys(columns).map((key) => [key, ''])));
+const form = useForm({
+    name: '',
+    guard_name: '',
+    description: '',
+});
 </script>
 
 <template>
@@ -42,35 +35,43 @@ const form = useForm<Record<string, string | File | null>>(
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <div class="w-full p-4">
-            <Link :href="route('dashboard.roles.index')"
-                class="w-fit py-1 px-2 rounded flex items-center gap-1 cursor-pointer bg-blue-600/30 hover:bg-blue-600/50">
-                <ArrowBigLeft class="size-4" />
-                <p class="text-semibold text-sm">Go Back</p>
+            <Link :href="route('dashboard.roles.index')">
+                <Button variant="secondary" size="sm">
+                    <ArrowBigLeft class="size-4" />
+                    <p>Go Back</p>
+                </Button>
             </Link>
         </div>
 
-        <div class="m-4 flex flex-col gap-3 rounded-md border bg-zinc-950 px-8 py-4 shadow-md">
-            <h3>Create new role</h3>
+        <div class="p-4 mx-4 bg-card rounded-md shadow-md">
+            <Heading title="Create new role" description="Create a new role for your application." />
+        </div>
 
+        <div class="m-4 flex flex-col gap-3 rounded-md">
             <form class="grid gap-4 lg:grid-cols-2" @submit.prevent="submit">
-                <div v-for="(config, field) in columns" :key="field">
-                    <label class="mb-1 block font-medium">{{ config.label }}</label>
+                <div class="grid gap-1">
+                    <Label for="name">Name</Label>
+                    <Input id="name" class="mt-1 block w-full" v-model="form.name" required autocomplete="name" placeholder="Role name" />
+                    <InputError class="mt-2" :message="form.errors.name" />
+                </div>
 
-                    <template v-if="config.type === 'text' || config.type === 'email' || config.type === 'password'">
-                        <Input :type="config.type" v-model="form[field]" class="input" />
-                    </template>
+                <div class="grid gap-1">
+                    <Label for="guard_name">Guard Name</Label>
+                    <Input id="guard_name" class="mt-1 block w-full" v-model="form.guard_name" required autocomplete="name" placeholder="Guard name" />
+                    <InputError class="mt-2" :message="form.errors.guard_name" />
+                </div>
 
-                    <template v-if="config.type === 'textarea'">
-                        <Textarea name="" id="" />
-                    </template>
-
-                    <div v-if="form.errors[field]" class="mt-1 text-sm text-red-500">
-                        {{ form.errors[field] }}
-                    </div>
+                <div class="grid gap-1 col-span-2">
+                    <Label for="description">Description</Label>
+                    <Textarea id="description" class="mt-1 block w-full" v-model="form.description" required placeholder="Role description" />
+                    <InputError class="mt-2" :message="form.errors.description" />
                 </div>
 
                 <div class="flex justify-end lg:col-span-2">
-                    <Button :disabled="form.processing">Submit</Button>
+                    <Button type="submit" :disabled="form.processing">
+                        <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
+                        <span>Create</span>
+                    </Button>
                 </div>
             </form>
         </div>

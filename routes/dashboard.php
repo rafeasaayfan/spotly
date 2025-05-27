@@ -17,8 +17,15 @@ Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboa
 
     //* Assignments
     Route::middleware('can:assignments_access')->prefix('assignments')->group(function () {
+        // Permissions
         dashboardPagesRoutes('permissions', PermissionsController::class);
+        Route::get('permissions/{id}/assign', [PermissionsController::class, 'assignment'])->name('permissions.assignRoles');
+        Route::post('permissions/{id}/storeAssignments', [PermissionsController::class, 'storeAssignments'])->name('permissions.storeAssignments');
+
+        // Roles
         dashboardPagesRoutes('roles', RolesController::class);
+        Route::get('roles/{id}/assign', [RolesController::class, 'assignment'])->name('roles.assignPermissions');
+        Route::post('roles/{id}/storeAssignments', [RolesController::class, 'storeAssignments'])->name('roles.storeAssignments');
     });
 });
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ActionDeleteBtn, ActionEditBtn, ActionViewBtn, Chevron, Table, Tbody, Td, Th, Thead, Tr } from '@/components/ui/table';
+import { ActionDeleteBtn, ActionEditBtn, ActionViewBtn, ActionAssignmentsBtn, Chevron, Table, Tbody, Td, Th, Thead, Tr } from '@/components/ui/table';
 import Checkbox from '../ui/fields/Checkbox.vue';
 import { Image } from '../ui/image';
 
@@ -15,7 +15,7 @@ interface TableProps {
     toggleSelectAll: (value: boolean) => void;
     allSelected: boolean;
     selectedIds: number[];
-    handleAction: (action: 'view' | 'edit' | 'delete', idOrIds: number | number[]) => Promise<void>;
+    handleAction: (action: 'view' | 'edit' | 'delete' | 'assignRoles' | 'assignPermissions', idOrIds: number | number[]) => Promise<void>;
     applyFilters: (overrides: Record<string, any>) => void;
     filters: Record<string, any>;
     tableConditions: TableConditions;
@@ -82,6 +82,8 @@ const props = defineProps<TableProps>();
                         <div class="flex items-center justify-end gap-2">
                             <ActionEditBtn v-if="props.tableConditions.enableEdit" @click="handleAction('edit', row.id)" />
                             <ActionViewBtn v-if="props.tableConditions.enableView" @click="handleAction('view', row.id)" />
+                            <ActionAssignmentsBtn v-if="props.tableConditions.enableAssignRoles" @click="handleAction('assignRoles', row.id)" />
+                            <ActionAssignmentsBtn v-if="props.tableConditions.enableAssignPermissions" @click="handleAction('assignPermissions', row.id)" />
                             <ActionDeleteBtn v-if="props.tableConditions.enableDelete" @click="handleAction('delete', row.id)" />
                         </div>
                     </Td>

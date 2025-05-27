@@ -118,14 +118,14 @@ class RolesController extends Controller
      */
     public function assignment(string $id)
     {
-        $role = Role::with('permissions')->findOrFail($id);
-        $adding = Permission::whereDoesntHave('roles', function ($query) use ($id) {
+        $attachedPermissions = Role::with('permissions')->findOrFail($id);
+        $availablePermissions = Permission::whereDoesntHave('roles', function ($query) use ($id) {
             $query->where('roles.id', $id);
         })->get();
 
-        return Inertia::render('dashboard/pages/assignments/permissions/actions/Edit', [
-            'data' => $role,
-            'adding' => $adding,
+        return Inertia::render('dashboard/pages/assignments/roles/actions/AssignPermissions', [
+            'attachedPermissions' => $attachedPermissions,
+            'availablePermissions' => $availablePermissions,
         ]);
     }
 
@@ -136,8 +136,9 @@ class RolesController extends Controller
     {
         $validated = $request->validate([
             'action' => 'required|string|in:add,delete',
-            'id' => 'required|string|exists:permissions,id',
+            'id' => 'required|integer|exists:permissions,id',
         ]);
+
 
         $role = Role::findOrFail($id);
 

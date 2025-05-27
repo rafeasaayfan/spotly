@@ -6,7 +6,7 @@ export function useTableActions(
     selectedIds = ref<number[]>([]),
     routeName: string,
 ) {
-    async function handleAction(action: 'delete' | 'edit' | 'view', idOrIds: number | number[]) {
+    async function handleAction(action: 'delete' | 'edit' | 'view' | 'assignRoles' | 'assignPermissions', idOrIds: number | number[]) {
         switch (action) {
             case 'delete': {
                 const ids = Array.isArray(idOrIds) ? idOrIds : [idOrIds];
@@ -55,6 +55,26 @@ export function useTableActions(
                 }
 
                 router.get(route(`${routeName}.show`, idOrIds));
+                break;
+            }
+
+            case 'assignRoles': {
+                if (typeof idOrIds !== 'number') {
+                    toast.fire({ icon: 'error', title: 'Assign roles action requires a single ID!' });
+                    return;
+                }
+
+                router.get(route(`${routeName}.assignRoles`, idOrIds));
+                break;
+            }
+
+            case 'assignPermissions': {
+                if (typeof idOrIds !== 'number') {
+                    toast.fire({ icon: 'error', title: 'Assign permissions action requires a single ID!' });
+                    return;
+                }
+
+                router.get(route(`${routeName}.assignPermissions`, idOrIds));
                 break;
             }
 
