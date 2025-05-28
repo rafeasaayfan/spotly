@@ -1,12 +1,12 @@
+import { confirmDialog, toast } from '@/lib/sweetAlert';
 import { router } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import { confirmDialog, toast } from '@/lib/sweetAlert';
 
-export function useTableActions(
-    selectedIds = ref<number[]>([]),
-    routeName: string,
-) {
-    async function handleAction(action: 'delete' | 'edit' | 'view' | 'assignRoles' | 'assignPermissions', idOrIds: number | number[]) {
+export function useTableActions(selectedIds = ref<number[]>([]), routeName: string) {
+    async function handleAction(
+        action: 'delete' | 'edit' | 'view' | 'assignRoles' | 'assignPermissions' | 'usersAssignments',
+        idOrIds: number | number[],
+    ) {
         switch (action) {
             case 'delete': {
                 const ids = Array.isArray(idOrIds) ? idOrIds : [idOrIds];
@@ -33,7 +33,7 @@ export function useTableActions(
                         onError: (errors) => {
                             console.error('Deletion failed:', errors);
                         },
-                    }
+                    },
                 );
                 break;
             }
@@ -75,6 +75,16 @@ export function useTableActions(
                 }
 
                 router.get(route(`${routeName}.assignPermissions`, idOrIds));
+                break;
+            }
+
+            case 'usersAssignments': {
+                if (typeof idOrIds !== 'number') {
+                    toast.fire({ icon: 'error', title: 'Assign permissions action requires a single ID!' });
+                    return;
+                }
+
+                router.get(route(`${routeName}.assignment`, idOrIds));
                 break;
             }
 

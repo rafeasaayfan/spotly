@@ -84,7 +84,7 @@ function submit(action: 'delete' | 'add', permissionId: number, roleId: number) 
                             </div>
                         </template>
 
-                        <div v-else class="bg-muted text-for-bg-muted rounded-md p-2">No roles attached</div>
+                        <div v-else class="bg-muted text-for-bg-muted rounded-md p-2 text-center">No roles attached</div>
                     </div>
                 </div>
 
@@ -106,7 +106,7 @@ function submit(action: 'delete' | 'add', permissionId: number, roleId: number) 
                                 </Button>
                             </div>
                         </template>
-                        <div v-else class="bg-muted text-for-bg-muted rounded-md p-2">No roles availabe</div>
+                        <div v-else class="bg-muted text-for-bg-muted rounded-md p-2 text-center">No roles availabe</div>
                     </div>
                 </div>
             </div>

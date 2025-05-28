@@ -10,33 +10,38 @@ import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Roles',
-        href: '/dashboard/assignments/roles',
+        title: 'Users assignments',
+        href: '/dashboard/assignments/usersAssignments',
     },
 ];
 
 const columns = [
     { key: 'id', label: 'Id' },
     { key: 'name', label: 'Name' },
-    { key: 'guard_name', label: 'Guard Name' },
-    { key: 'description', label: 'Description' },
-    { key: 'created_at', label: 'Created At' },
+    { key: 'email', label: 'Email' },
+    { key: 'roles_name', label: 'Role' },
+    { key: 'permissions_name', label: 'Permission' },
 ];
 
 const props = defineProps<{
-    roles: DataTableProps;
+    data: DataTableProps;
 }>();
 
 const tableConditions = {
     ...defaultTableConditions,
-    enableAssignPermissions: true,
+    enableCreate: false,
+    enableEdit: false,
+    enableView: false,
+    enableDelete: false,
+    enableRowsDelete: false,
+    enableUsersAssignments: true,
 };
 </script>
 
 <template>
-    <Head title="Roles" />
+    <Head title="Users assignments" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
-        <DataTable :table-data="props.roles" :columns="columns" route-name="dashboard.roles" :table-conditions="tableConditions" />
+        <DataTable :table-data="props.data" :columns="columns" route-name="dashboard.usersAssignments" :table-conditions="tableConditions" />
     </DashboardLayout>
 </template>

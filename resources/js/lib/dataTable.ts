@@ -17,6 +17,7 @@ export interface TableConditions {
 
     enableAssignRoles?: boolean;
     enableAssignPermissions?: boolean;
+    enableUsersAssignments?: boolean;
 }
 // The default options
 export const defaultTableConditions: TableConditions = {
@@ -35,6 +36,7 @@ export const defaultTableConditions: TableConditions = {
 
     enableAssignRoles: false,
     enableAssignPermissions: false,
+    enableUsersAssignments: false,
 };
 
 // Formatters.js أو ضمن نفس ملف lib/composables
@@ -89,5 +91,31 @@ export const formatters = {
             style: 'currency',
             currency: currency,
         }).format(value);
+    },
+
+    shouldSplit: (key: string, value: string): boolean => {
+        // 1. Find the index of the LAST underscore
+        const lastUnderscoreIndex = key.lastIndexOf('_');
+
+        if (lastUnderscoreIndex === -1 || lastUnderscoreIndex === 0 || lastUnderscoreIndex === key.length - 1) {
+            return false;
+        }
+
+        const prefix = key.substring(0, lastUnderscoreIndex);
+
+        const isLikelyPlural = prefix.endsWith('s') || prefix.endsWith('es') || prefix.endsWith('ies');
+
+        return isLikelyPlural || ((typeof value === 'string' && value.includes(',')) || Array.isArray(value));
+    },
+
+    splitAndStyle: (value: string): string[] => {
+        if (typeof value === 'string') {
+            return value
+                .split(',')
+                .map((v) => v.trim())
+                .filter(Boolean);
+        }
+
+        return [];
     },
 };

@@ -5,25 +5,28 @@ import { HomeIcon, LayoutGrid, PercentDiamondIcon, UsersIcon } from 'lucide-vue-
 export const mainSidebarItems: SidebarSection[] = [
     {
         name: 'Platform',
-        items: [{
-            title: 'Dashboard',
-            href: '/dashboard',
-            icon: LayoutGrid,
-        }]
+        items: [
+            {
+                title: 'Dashboard',
+                href: '/dashboard',
+                icon: LayoutGrid,
+            },
+        ],
     },
     {
         name: 'Web',
-        items: [{
-            title: 'Users',
-            href: '/dashboard/users',
-            icon: UsersIcon,
-        },
-        {
-            title: 'Restaurants',
-            href: '/dashboard/restaurants',
-            icon: HomeIcon,
-        }
-    ],
+        items: [
+            {
+                title: 'Users',
+                href: '/dashboard/users',
+                icon: UsersIcon,
+            },
+            {
+                title: 'Restaurants',
+                href: '/dashboard/restaurants',
+                icon: HomeIcon,
+            },
+        ],
     },
 ];
 
@@ -31,22 +34,28 @@ export const footerSidebarItems: SidebarSection[] = [
     {
         name: 'Roles & Permissions',
         permission: 'assignments_access',
-        items: [{
-            title: 'Assignments',
-            href: '/dashboard/assignments',
-            permission: 'assignments_access',
-            icon: PercentDiamondIcon,
-            children: [
-                {
-                    title: 'Permissions',
-                    href: '/dashboard/assignments/permissions',
-                },
-                {
-                    title: 'Roles',
-                    href: '/dashboard/assignments/roles',
-                },
-            ]
-        }],
+        items: [
+            {
+                title: 'Assignments',
+                href: '/dashboard/assignments',
+                permission: 'assignments_access',
+                icon: PercentDiamondIcon,
+                children: [
+                    {
+                        title: 'Permissions',
+                        href: '/dashboard/assignments/permissions',
+                    },
+                    {
+                        title: 'Roles',
+                        href: '/dashboard/assignments/roles',
+                    },
+                    {
+                        title: 'Users assignments',
+                        href: '/dashboard/assignments/usersAssignments',
+                    },
+                ],
+            },
+        ],
     },
 ];
 

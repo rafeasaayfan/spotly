@@ -11,7 +11,7 @@ import { type BreadcrumbItem } from '@/types';
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Permissions',
-        href: '/dashboard/permissions',
+        href: '/dashboard/assignments/permissions',
     },
 ];
 

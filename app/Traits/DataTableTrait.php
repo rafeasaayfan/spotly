@@ -155,8 +155,20 @@ trait DataTableTrait
                         continue;
                     }
 
-                    // Flatten the relation field to the parent item
-                    $item->setAttribute("{$relation}_{$field}", $item->$relation->$field ?? null);
+                    $relationValue = $item->$relation;
+
+
+                    if ($relationValue instanceof \Illuminate\Support\Collection) {
+                        $flattenedValue = $relationValue->pluck($field)->filter()->implode(', ');
+                    }
+                    // If it's a single model (hasOne, belongsTo)
+                    elseif ($relationValue instanceof \Illuminate\Database\Eloquent\Model) {
+                        $flattenedValue = $relationValue->$field ?? null;
+                    } else {
+                        $flattenedValue = null;
+                    }
+
+                    $item->setAttribute("{$relation}_{$field}", $flattenedValue);
 
                     unset($item->$relation);
                 }

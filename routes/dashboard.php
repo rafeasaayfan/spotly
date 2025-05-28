@@ -3,6 +3,7 @@
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\Pages\Assignments\PermissionsController;
 use App\Http\Controllers\Dashboard\Pages\Assignments\RolesController;
+use App\Http\Controllers\Dashboard\Pages\Assignments\UsersAssignmentsController;
 use App\Http\Controllers\Dashboard\Pages\RestaurantsController;
 use App\Http\Controllers\Dashboard\Pages\UsersController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,14 @@ Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboa
         dashboardPagesRoutes('roles', RolesController::class);
         Route::get('roles/{id}/assign', [RolesController::class, 'assignment'])->name('roles.assignPermissions');
         Route::post('roles/{id}/storeAssignments', [RolesController::class, 'storeAssignments'])->name('roles.storeAssignments');
+
+        // Users assignments
+        Route::prefix('usersAssignments')->group(function () {
+            Route::get('/', [UsersAssignmentsController::class, 'index'])->name('usersAssignments.index');
+
+            Route::get('/{id}/assign', [UsersAssignmentsController::class, 'assignment'])->name('usersAssignments.assignment');
+            Route::post('/storeAssignments/{id}', [UsersAssignmentsController::class, 'storeAssignments'])->name('usersAssignments.storeAssignments');
+        });
     });
 });
 
