@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
             'name' => 'Admin',
-            'email' => 'rafe3souayfan@gmail.com',
+            'email' => 'bachirmohamad96@gmail.com',
         ])->assignRole('admin');
     }
 }
