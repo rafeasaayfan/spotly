@@ -1,5 +1,5 @@
 import { type SidebarSection } from '@/types';
-import { HomeIcon, LayoutGrid, PercentDiamondIcon, UsersIcon } from 'lucide-vue-next';
+import { LayoutGrid, PercentDiamondIcon, UsersIcon } from 'lucide-vue-next';
 
 //? Sidebar Content
 export const mainSidebarItems: SidebarSection[] = [
@@ -20,11 +20,6 @@ export const mainSidebarItems: SidebarSection[] = [
                 title: 'Users',
                 href: '/dashboard/users',
                 icon: UsersIcon,
-            },
-            {
-                title: 'Restaurants',
-                href: '/dashboard/restaurants',
-                icon: HomeIcon,
             },
         ],
     },

@@ -4,7 +4,6 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\Pages\Assignments\PermissionsController;
 use App\Http\Controllers\Dashboard\Pages\Assignments\RolesController;
 use App\Http\Controllers\Dashboard\Pages\Assignments\UsersAssignmentsController;
-use App\Http\Controllers\Dashboard\Pages\RestaurantsController;
 use App\Http\Controllers\Dashboard\Pages\UsersController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,8 +12,6 @@ Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboa
 
     //* Users
     dashboardPagesRoutes('users', UsersController::class);
-    //* Restaurants
-    dashboardPagesRoutes('restaurants', RestaurantsController::class);
 
     //* Assignments
     Route::middleware('can:assignments_access')->prefix('assignments')->group(function () {
