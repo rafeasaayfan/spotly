@@ -52,7 +52,7 @@ class PermissionsController extends Controller
 
         $permission->save();
 
-        return redirect()->route('dashboard.permissions.index')->with('success', 'Permission created successfully');
+        return redirect()->route('dashboard.permissions.index')->with('message', 'Permission created successfully');
     }
 
     /**
@@ -95,7 +95,7 @@ class PermissionsController extends Controller
         $data->update($validated);
         $data->save();
 
-        return redirect()->route('dashboard.permissions.index')->with('success', 'Role created successfully');
+        return redirect()->route('dashboard.permissions.index')->with('message', 'Role created successfully');
     }
 
     /**
@@ -110,7 +110,7 @@ class PermissionsController extends Controller
 
         Permission::destroy($validated['ids']);
 
-        return redirect()->back()->with('success', __('Permission(s) deleted successfully.'));
+        return redirect()->back()->with('message', __('Permission(s) deleted successfully.'));
     }
 
     /**

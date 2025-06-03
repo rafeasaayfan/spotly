@@ -52,7 +52,7 @@ class RolesController extends Controller
 
         $role->save();
 
-        return redirect()->route('dashboard.roles.index')->with('success', 'Role created successfully');
+        return redirect()->route('dashboard.roles.index')->with('message', 'Role created successfully');
     }
 
     /**
@@ -95,7 +95,7 @@ class RolesController extends Controller
         $data->update($validated);
         $data->save();
 
-        return redirect()->route('dashboard.roles.index')->with('success', 'Role created successfully');
+        return redirect()->route('dashboard.roles.index')->with('message', 'Role created successfully');
     }
 
     /**
@@ -110,7 +110,7 @@ class RolesController extends Controller
 
         Role::destroy($validated['ids']);
 
-        return redirect()->back()->with('success', __('Role(s) deleted successfully.'));
+        return redirect()->back()->with('message', __('Role(s) deleted successfully.'));
     }
 
     /**

@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Http\Requests\Dashboard\Pages\Users\StoreUserRequest;
+use App\Http\Requests\Dashboard\Pages\Users\UpdateUserRequest;
 
 class UsersController extends Controller
 {
@@ -20,8 +22,15 @@ class UsersController extends Controller
         $query = User::query();
 
         $columnsSearching = ['name', 'email'];
+        $columnsSelection = [];
+        $relations = [];
 
-        $data = $this->dataTable($query, $request, $columnsSearching);
+        $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
+
+        // $data->transform(function ($item) {
+        //    $item->image = $item->getFirstMediaUrl('image');
+        //    return $item;
+        // });
 
         return Inertia::render('dashboard/pages/users/Users', [
             'users' => $data,
@@ -39,19 +48,21 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+        $validated = $request->validated();
+        // unset($validated['image']);
 
         $user = new User($validated);
-        $user->password = bcrypt($request->password);
+
+        // if ($request->hasFile('image') && $request->file('image')->isValid()) {
+        //    $user->addMediaFromRequest('image')
+        //        ->toMediaCollection('image');
+        // }
+
         $user->save();
 
-        return redirect()->route('dashboard.users.index')->with('success', 'User created successfully');
+        return redirect()->route('dashboard.users.index')->with('message', 'User created successfully');
     }
 
     /**
@@ -60,6 +71,7 @@ class UsersController extends Controller
     public function show(string $id)
     {
         $user = User::findOrFail($id);
+        // $user->image = $user->getFirstMediaUrl('image');
 
         return Inertia::render('dashboard/pages/users/actions/View', [
             'data' => $user,
@@ -73,34 +85,33 @@ class UsersController extends Controller
     {
         $user = User::findOrFail($id);
 
+        // $user->image = $user->getFirstMediaUrl('image');
+
         return Inertia::render('dashboard/pages/users/actions/Edit', [
             'data' => $user,
+
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        $data = User::findOrFail($id);
+        $validated = $request->validated();
+        // unset($validated['image']);
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $id,
-            'password' => 'nullable|string|min:8|confirmed',
-        ]);
+        $user->fill($validated);
 
-        if ($request->has('password') && $validated['password']) {
-            $validated['password'] = bcrypt($validated['password']);
-        } else {
-            // Remove password from the data if it's not provided
-            unset($validated['password']);
-        }
+        // if ($request->hasFile('image') && $request->file('image')->isValid()) {
+        //    $user->clearMediaCollection('image');
+        //    $user->addMediaFromRequest('image')
+        //        ->toMediaCollection('image');
+        // }
 
-        $data->update($validated);
+        $user->save();
 
-        return redirect()->route('dashboard.users.index')->with('success', 'User updated successfully');
+        return redirect()->route('dashboard.users.index')->with('message', 'User updated successfully');
     }
 
     /**
@@ -115,6 +126,6 @@ class UsersController extends Controller
 
         User::destroy($validated['ids']);
 
-        return redirect()->back()->with('success', __('User(s) deleted successfully.'));
+        return redirect()->back()->with('message', __('User(s) deleted successfully.'));
     }
 }

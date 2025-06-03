@@ -6,7 +6,10 @@ import { Head } from '@inertiajs/vue3';
 
 import { type DataTableProps } from '@/composables/dataTable/useDataTable';
 import { defaultTableConditions } from '@/lib/dataTable';
+import { toast } from '@/lib/sweetAlert';
 import { type BreadcrumbItem } from '@/types';
+
+import { watchEffect } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -19,13 +22,23 @@ const columns = [
     { key: 'id', label: 'ID' },
     { key: 'name', label: 'Name' },
     { key: 'email', label: 'Email' },
-    { key: 'email_verified_at', label: 'Email Verified' },
+    { key: 'email_verified_at', label: 'Verified' },
     { key: 'created_at', label: 'Created At' },
 ];
 
 const props = defineProps<{
     users: DataTableProps;
+    flash?: {
+        message?: string;
+    };
 }>();
+
+watchEffect(() => {
+    const message = props.flash?.message;
+    if (message) {
+        toast.fire({ icon: 'success', title: message });
+    }
+});
 
 const tableConditions = {
     ...defaultTableConditions,

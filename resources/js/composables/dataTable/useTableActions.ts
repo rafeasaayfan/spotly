@@ -28,7 +28,6 @@ export function useTableActions(selectedIds = ref<number[]>([]), routeName: stri
                         preserveState: true, // Preserve current state including filters
                         onSuccess: () => {
                             selectedIds.value = [];
-                            toast.fire({ icon: 'success', title: 'Deleted successfully!' });
                         },
                         onError: (errors) => {
                             console.error('Deletion failed:', errors);

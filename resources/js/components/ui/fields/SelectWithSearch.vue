@@ -5,7 +5,7 @@ import { ArrowBigDownDash, ArrowBigUpDash } from 'lucide-vue-next';
 
 const props = defineProps<{
   modelValue: string | number | File | null
-  options: Array<{ label: string; value: string | number }>
+  options?: Array<{ label: string; value: string | number }>
   placeholder?: string
   class?: string
   name?: string
@@ -18,12 +18,12 @@ const emit = defineEmits<{
 
 const isOpen = ref(false)
 const search = ref('')
-const selected = computed(() => props.options.find(option => option.value === props.modelValue)?.label || '')
+const selected = computed(() => props.options?.find(option => option.value === props.modelValue)?.label || '')
 
 const selectRef = ref<HTMLElement | null>(null)
 
 const filteredOptions = computed(() =>
-  props.options.filter(option =>
+  props.options?.filter(option =>
     option.label.toLowerCase().includes(search.value.toLowerCase())
   )
 )
@@ -80,7 +80,7 @@ function toggleDropdown() {
         class="w-full p-2 text-sm bg-slate-200 dark:bg-slate-950 border-b border-blue-700 shadow-lg focus:outline-none"
       />
 
-      <div v-if="filteredOptions.length === 0" class="p-2 text-sm text-slate-500">
+      <div v-if="filteredOptions?.length === 0" class="p-2 text-sm text-slate-500">
         No options found.
       </div>
 

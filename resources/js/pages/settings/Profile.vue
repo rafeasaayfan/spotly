@@ -7,10 +7,10 @@ import { Label } from '@/components/ui/label';
 
 import { type BreadcrumbItem, type SharedData, type User } from '@/types';
 
+import HeadingSmall from '@/components/headers/HeadingSmall.vue';
+import DeleteUser from '@/components/user/DeleteUser.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
-import DeleteUser from '@/components/user/DeleteUser.vue';
-import HeadingSmall from '@/components/headers/HeadingSmall.vue';
 
 import { LoaderCircle } from 'lucide-vue-next';
 
@@ -45,25 +45,31 @@ const submit = () => {
     });
 };
 
-watch(() => form.recentlySuccessful, (val) => {
-    if (val) {
-        toast.fire({
-            icon: 'success',
-            title: 'Your profile infos updated successfully!',
-        });
-    }
-});
+watch(
+    () => form.recentlySuccessful,
+    (val) => {
+        if (val) {
+            toast.fire({
+                icon: 'success',
+                title: 'Your profile infos updated successfully!',
+            });
+        }
+    },
+);
 
 const status = computed(() => props.status);
 
-watch(() => status, (val) => {
-    if (val.value == 'verification-link-sent') {
-        toast.fire({
-            icon: 'success',
-            title: 'A new verification link has been sent to your email address',
-        });
-    }
-});
+watch(
+    () => status,
+    (val) => {
+        if (val.value == 'verification-link-sent') {
+            toast.fire({
+                icon: 'success',
+                title: 'A new verification link has been sent to your email address',
+            });
+        }
+    },
+);
 </script>
 
 <template>
@@ -96,7 +102,7 @@ watch(() => status, (val) => {
                     </div>
 
                     <div v-if="mustVerifyEmail && !user.email_verified_at">
-                        <p class="-mt-4 text-sm text-body-muted">
+                        <p class="text-body-muted -mt-4 text-sm">
                             Your email address is unverified.
                             <Link
                                 :href="route('verification.send')"

@@ -177,4 +177,32 @@ trait DataTableTrait
             return $item;
         });
     }
+
+    /**
+     * Create and edit relations data in return
+     *
+     * @param string $model
+     * @param (array | string) $selectedCols
+     * @return array
+     */
+    protected function getRelation(string $model, array|string $selectedCols = 'all')
+    {
+        // $alias = Str::plural(Str::lower($model));
+
+        $modelClass = "\\App\\Models\\" . ucfirst($model);
+
+        if (!class_exists($modelClass)) {
+            return collect();
+        }
+
+        if ($selectedCols === 'all') {
+            return $modelClass::all();
+        }
+
+        if (is_array($selectedCols)) {
+            return $modelClass::select(['id', ...$selectedCols])->get();
+        }
+
+        return $modelClass::select(['id', $selectedCols])->get();
+    }
 }

@@ -7,14 +7,16 @@ use App\Models\{{ model }};
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use {{ requestNamespace }}\Store{{ model }}Request;
+use {{ requestNamespace }}\Update{{ model }}Request;
 
-class {{ controller }} extends Controller
+class {{ controllerName }} extends Controller
 {
     use DataTableTrait;
 
     /**
      * Display a listing of the resource.
-    */
+     */
     public function index(Request $request)
     {
         $query = {{ model }}::query();
@@ -25,10 +27,10 @@ class {{ controller }} extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
-        $data->transform(function ($item) {
-            $item->image = $item->getFirstMediaUrl('image');
-            return $item;
-        });
+        // $data->transform(function ($item) {
+        //    $item->image = $item->getFirstMediaUrl('image');
+        //    return $item;
+        // });
 
         return Inertia::render('dashboard/pages/{{ folder }}/{{ pluralModel }}', [
             '{{ pluralVariable }}' => $data,
@@ -40,42 +42,31 @@ class {{ controller }} extends Controller
      */
     public function create()
     {
-        {{ relationsSelects }}
+        {{ createEditrelations }}
 
         return Inertia::render('dashboard/pages/{{ folder }}/actions/Create', [
-            {{ relationsReturn }}
+            {{ createEditrelationsReturn }}
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Store{{ model }}Request $request)
     {
-        $validated = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-            'image' => 'required|image|mimes:jpg,jpeg,png,gif,svg|max:2048',
-            'name' => 'required|string|max:255',
-            'email' => 'nullable|email|max:255|unique:{{ pluralVariable }},email',
-            'phone_number' => 'required|max:255|unique:{{ pluralVariable }},phone_number',
-            'country' => 'required|max:255',
-            'city' => 'required|max:255',
-            'open_start' => 'nullable|date_format:H:i',
-            'close_start' => 'nullable|date_format:H:i',
-        ]);
-
-        unset($validated['image']);
+        $validated = $request->validated();
+        // unset($validated['image']);
 
         ${{ modelVariable }} = new {{ model }}($validated);
 
-        if ($request->hasFile('image') && $request->file('image')->isValid()) {
-            ${{ modelVariable }}->addMediaFromRequest('image')
-                ->toMediaCollection('image');
-        }
+        // if ($request->hasFile('image') && $request->file('image')->isValid()) {
+        //    ${{ modelVariable }}->addMediaFromRequest('image')
+        //        ->toMediaCollection('image');
+        // }
 
         ${{ modelVariable }}->save();
 
-        return redirect()->route('dashboard.{{ folder }}.index')->with('success', '{{ model }} created successfully');
+        return redirect()->route('dashboard.{{ folder }}.index')->with('message', '{{ model }} created successfully');
     }
 
     /**
@@ -84,7 +75,7 @@ class {{ controller }} extends Controller
     public function show(string $id)
     {
         ${{ modelVariable }} = {{ model }}::findOrFail($id);
-        ${{ modelVariable }}->image = ${{ modelVariable }}->getFirstMediaUrl('image');
+        // ${{ modelVariable }}->image = ${{ modelVariable }}->getFirstMediaUrl('image');
 
         return Inertia::render('dashboard/pages/{{ folder }}/actions/View', [
             'data' => ${{ modelVariable }},
@@ -97,21 +88,35 @@ class {{ controller }} extends Controller
     public function edit(string $id)
     {
         ${{ modelVariable }} = {{ model }}::findOrFail($id);
-        {{ relationsSelects }}
-        ${{ modelVariable }}->image = ${{ modelVariable }}->getFirstMediaUrl('image');
+        {{ createEditrelations }}
+
+        // ${{ modelVariable }}->image = ${{ modelVariable }}->getFirstMediaUrl('image');
 
         return Inertia::render('dashboard/pages/{{ folder }}/actions/Edit', [
             'data' => ${{ modelVariable }},
-            {{ relationsReturn }}
+            {{ createEditrelationsReturn }}
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Update{{ model }}Request $request, {{ model }} ${{ modelVariable }})
     {
-        // implement update logic here...
+        $validated = $request->validated();
+        // unset($validated['image']);
+
+        ${{ modelVariable }}->fill($validated);
+
+        // if ($request->hasFile('image') && $request->file('image')->isValid()) {
+        //    ${{ modelVariable }}->clearMediaCollection('image');
+        //    ${{ modelVariable }}->addMediaFromRequest('image')
+        //        ->toMediaCollection('image');
+        // }
+
+        ${{ modelVariable }}->save();
+
+        return redirect()->route('dashboard.{{ folder }}.index')->with('message', '{{ model }} updated successfully');
     }
 
     /**
@@ -126,6 +131,6 @@ class {{ controller }} extends Controller
 
         {{ model }}::destroy($validated['ids']);
 
-        return redirect()->back()->with('success', __('{{ model }}(s) deleted successfully.'));
+        return redirect()->back()->with('message', __('{{ model }}(s) deleted successfully.'));
     }
 }
