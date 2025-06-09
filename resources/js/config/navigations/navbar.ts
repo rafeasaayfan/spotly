@@ -1,18 +1,35 @@
 import { type NavItem } from '@/types';
-import { Home } from 'lucide-vue-next';
+import { HelpCircle, Home, Mail, PlayCircle, Rocket, Users } from 'lucide-vue-next';
 
 export const navbarItems: NavItem[] = [
     {
-        title: 'Home',
-        href: '/home',
+        title: 'Hero',
+        href: '#hero',
         icon: Home,
     },
     {
-        title: 'About',
-        href: '/about',
+        title: 'Why Spotly',
+        href: '#why-spotly',
+        icon: HelpCircle,
     },
     {
-        title: 'Contact',
-        href: '/contact',
+        title: 'How Work',
+        href: '#how-it-works',
+        icon: PlayCircle,
+    },
+    {
+        title: 'Get Started',
+        href: '#get-started',
+        icon: Rocket,
+    },
+    {
+        title: 'About Us',
+        href: '#about-us',
+        icon: Users,
+    },
+    {
+        title: 'Contact Us',
+        href: '#contact-us',
+        icon: Mail,
     },
 ];

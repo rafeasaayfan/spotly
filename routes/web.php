@@ -15,14 +15,8 @@ Route::get('/setLang/{lang}', function ($lang = null) {
 Route::middleware([HandleLanguage::class])->group(function () {
 
     Route::get('/', function () {
-        return Inertia::render('Landing');
+        return Inertia::render('landing/Landing');
     })->name('landing');
-
-    Route::middleware(['auth', 'verified'])->group(function () {
-        Route::get('/home', function () {
-            return Inertia::render('Home');
-        })->name('home');
-    });
 
     require __DIR__ . '/dashboard.php';
     require __DIR__ . '/settings.php';

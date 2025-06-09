@@ -1,31 +1,40 @@
-<script setup>
+<script setup lang="ts">
 import { cn } from '@/lib/utils'
+import { useVModel } from '@vueuse/core'
+import type { HTMLAttributes } from 'vue'
 
-const props = defineProps({
-    name: { type: String, default: '' },
-    modelValue: { type: String, default: '' },
-    id: { type: String, default: '' },
-    label: { type: String, default: '' },
-    disabled: { type: Boolean, default: false },
+const props = defineProps<{
+  modelValue?: string | number
+  disabled?: boolean
+  defaultValue?: string | number | null
+  class?: HTMLAttributes['class']
+}>()
+
+const emits = defineEmits<{
+  (e: 'update:modelValue', payload: string | number): void
+}>()
+
+const modelValue = useVModel(props, 'modelValue', emits, {
+  passive: true,
+  defaultValue: props.defaultValue ?? undefined,
 })
-
-const emit = defineEmits(['update:modelValue'])
 </script>
 
 <template>
-    <div>
-        <label v-if="label" :for="id || name" class="block text-sm text-slate-950/75 dark:text-slate-100/75 mb-1">
-            {{ label }}
-        </label>
-
-        <textarea :id="id || name" :name="name" :disabled="disabled" :value="modelValue"
-            @input="emit('update:modelValue', $event.target.value)" v-bind="$attrs" :class="cn(
-                'text-sm rounded-md px-3 py-3 duration-300 focus:border-blue-900 dark:focus:border-blue-600',
-                'placeholder:text-slate-800 dark:placeholder:text-slate-200 text-slate-900 dark:text-slate-100',
-                'w-full bg-slate-300 hover:bg-slate-300 dark:bg-slate-950 dark:hover:bg-slate-950 border-none',
-                props.class
-            )
-            " rows="5">
-        </textarea>
-    </div>
+  <div>
+    <textarea
+      v-model="modelValue"
+      v-bind="$attrs"
+      :disabled="disabled"
+      :class="cn(
+        'text-sm rounded-md px-3 py-3 duration-300 active:scale-99 focus:outline-none',
+        'placeholder:text-slate-950/50 dark:placeholder:text-slate-100/40 text-active',
+        'w-full border-none bg-gray-200 dark:bg-gray-900',
+        'focus:ring active:ring-blue-600 focus:ring-blue-600/90',
+        'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
+        props.class
+      )"
+      rows="5"
+    ></textarea>
+  </div>
 </template>

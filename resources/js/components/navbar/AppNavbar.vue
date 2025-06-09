@@ -8,7 +8,8 @@ import AppearenceBtn from '@/components/appearance/AppearanceBtn.vue';
 import LanguagesMenu from '@/components/languages/Languages.vue';
 import MobileNav from './content/MobileNav.vue';
 import DesktopNav from './content/DesktopNav.vue';
-import AuthAvatar from '@/components/AuthAvatar.vue';
+import { onMounted, onUnmounted, ref } from 'vue';
+// import AuthAvatar from '@/components/AuthAvatar.vue';
 
 interface Props {
     breadcrumbs?: BreadcrumbItem[];
@@ -17,19 +18,35 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
 });
+
+const scrolled = ref(false);
+
+const handleScroll = () => {
+  scrolled.value = window.scrollY > 16;
+};
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
 </script>
 
 <template>
-    <div class="bg-navs border-b border-muted">
-        <div class="mx-auto flex h-16 items-center px-4 md:max-w-7xl justify-between">
+    <div :class="scrolled ? 'fixed w-full pt-0 backdrop-blur-lg mt-0 bg-black/5 dark:bg-white/5' : ' mt-2'"
+    class="transition-all duration-300 z-20">
+        <div :class="scrolled ? 'px-4' : 'px-4 md:px-10'"
+            class="mx-auto flex h-16 items-center md:max-w-7xl justify-between">
             <!-- Mobile Menu -->
             <MobileNav />
 
-            <Link :href="route('home')" class="hidden md:flex items-center gap-2">
+            <Link :href="route('landing')" class="hidden md:flex items-center gap-2">
                 <AppLogo  />
             </Link>
 
-            <Link :href="route('home')" class="flex md:hidden items-center gap-2">
+            <Link :href="route('landing')" class="flex md:hidden items-center gap-2">
                 <AppLogoIcon class="size-16" />
             </Link>
 
@@ -45,7 +62,7 @@ const props = withDefaults(defineProps<Props>(), {
                     <LanguagesMenu />
                 </div>
 
-                <AuthAvatar />
+                <!-- <AuthAvatar /> -->
             </div>
         </div>
     </div>

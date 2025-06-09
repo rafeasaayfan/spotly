@@ -1,22 +1,23 @@
 <script setup lang="ts">
 // import AppLogoIcon from '@/components/logo/AppLogoIcon.vue';
-import LanguagesMenu from '@/components/languages/Languages.vue';
 import AppearanceTabs from '@/components/appearance/AppearanceTabs.vue';
+import LanguagesMenu from '@/components/languages/Languages.vue';
+
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+
+import { useNavigation } from '@/composables/navigation/useNavigation';
 import { navbarItems } from '@/config/navigations';
 import type { SharedData } from '@/types';
+
 import { Link, usePage } from '@inertiajs/vue3';
 import { Menu } from 'lucide-vue-next';
-import { computed } from 'vue';
 
 const page = usePage<SharedData>();
 
-const isCurrentRoute = computed(() => (url: string) => page.url === url);
+const { setupScrollTracking, scrollToSection, activeNavStyle } = useNavigation(navbarItems);
 
-const activeItemStyles = computed(
-    () => (url: string) => (isCurrentRoute.value(url) ? 'bg-content-3-active text-active' : ''),
-);
+setupScrollTracking();
 </script>
 
 <template>
@@ -31,23 +32,35 @@ const activeItemStyles = computed(
             <SheetContent :side="page.props.lang == 'ar' ? 'right' : 'left'" class="w-[260px] md:w-[320px]">
                 <SheetTitle class="sr-only">Navigation Menu</SheetTitle>
 
-                <SheetHeader class="flex border-b border-muted pb-10">
+                <SheetHeader class="border-muted flex border-b pb-10">
                     <!-- <AppLogoIcon class="size-12 bg-red-500" /> -->
                 </SheetHeader>
 
-                <div class="flex h-full flex-1 flex-col justify-between space-y-4 py-3 px-4">
+                <div class="flex h-full flex-1 flex-col justify-between space-y-4 px-4 py-3">
                     <nav class="space-y-2">
-                        <Link
-                            v-for="item in navbarItems"
-                            :key="item.title"
-                            :href="item.href"
-                            class="bg-content-3 flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium"
-                            :class="activeItemStyles(item.href)"
-                            :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'"
-                        >
-                            <component v-if="item.icon" :is="item.icon" class="h-5 w-5" />
-                            {{ item.title }}
-                        </Link>
+                        <template v-for="item in navbarItems" :key="item.title">
+                            <button
+                                v-if="item.href.startsWith('#')"
+                                @click="scrollToSection(item.href)"
+                                class="w-full bg-content-3 flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium"
+                                :class="activeNavStyle(item.href)"
+                                :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'"
+                            >
+                                <component v-if="item.icon" :is="item.icon" class="h-5 w-5" />
+                                {{ item.title }}
+                            </button>
+
+                            <Link
+                                v-else
+                                :href="item.href"
+                                class="bg-content-3 flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium"
+                                :class="activeNavStyle(item.href)"
+                                :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'"
+                            >
+                                <component v-if="item.icon" :is="item.icon" class="h-5 w-5" />
+                                {{ item.title }}
+                            </Link>
+                        </template>
                     </nav>
 
                     <div class="flex flex-col gap-3">

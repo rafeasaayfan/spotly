@@ -209,17 +209,17 @@
     --content-3-bg-hover: hsl(0 0% 9%);
     --content-3-bg-active: hsl(0 0% 12%);
 
-    --primary: hsl(220 65% 50%);
-    --primary-hover: hsl(220 65% 45%);
-    --primary-active: hsl(220 65% 40%);
+    --primary: hsl(221, 83%, 50%);
+    --primary-hover: hsl(221 83% 45%);
+    --primary-active: hsl(221 83% 40%);
     --primary-foreground: hsl(0 0% 100%);
     --secondary: hsl(0 0% 22%);
     --secondary-hover: hsl(0 0% 18%);
     --secondary-active: hsl(0 0% 15%);
     --secondary-foreground: hsl(0 0% 100%);
-    --destructive: hsl(355, 65%, 45%);
-    --destuctive-hover: hsl(355, 65%, 40%);
-    --destructive-active: hsl(355, 65%, 35%);
+    --destructive: hsl(0, 74%, 40%);
+    --destuctive-hover: hsl(0, 74%, 38%);
+    --destructive-active: hsl(0, 74%, 32%);
     --destructive-foreground: hsl(0 0% 100%);
     --success: hsl(120, 65%, 40%);
     --success-hover: hsl(120, 65%, 35%);
@@ -287,6 +287,16 @@ body {
 
 .text-active-link-2 {
     color: var(--foreground-active-link-2);
+}
+
+.stroke-body-muted {
+    stroke: var(--foreground-muted);
+}
+.stroke-body-muted:hover {
+    stroke: var(--foreground-hover);
+}
+.stroke-body-muted:active {
+    stroke: var(--foreground-active);
 }
 
 /** =============== Buttons || Nice colors =============== */
