@@ -5,10 +5,10 @@ import { onMounted } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import AboutUs from './sections/AboutUs.vue';
 import ContactUs from './sections/ContactUs.vue';
+import GetStarted from './sections/GetStarted.vue';
 import Hero from './sections/Hero.vue';
 import HowItWork from './sections/HowItWork.vue';
 import WhySpotly from './sections/WhySpotly.vue';
-import GetStarted from './sections/GetStarted.vue';
 
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -16,6 +16,39 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 onMounted(() => {
+    // --- Section Title Underline Animation ---
+    gsap.utils.toArray<HTMLElement>('.section-title-underline').forEach((title) => {
+        ScrollTrigger.create({
+            trigger: title,
+            start: 'top 85%',
+            onEnter: () => {
+                gsap.to(title, {
+                    '--underline-width': '60%',
+                    duration: 0.4,
+                    ease: 'expo.out',
+                });
+            },
+            once: true,
+        });
+    });
+
+    // --- Landing Cards Animation ---
+    gsap.utils.toArray<HTMLElement>('.cards-landing-animation').forEach((card, i) => {
+        gsap.from(card, {
+            opacity: 0,
+            y: 50,
+            scale: 0.95,
+            duration: 0.3,
+            delay: i * 0.15,
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 85%',
+                toggleActions: 'play none none none',
+                once: true,
+            },
+        });
+    });
+
     ScrollTrigger.refresh();
 
     window.addEventListener('resize', () => {
@@ -43,11 +76,6 @@ onMounted(() => {
 </template>
 
 <style>
-:root {
-    --subtle-line-dark: #282828;
-    --subtle-line-light: #5a5a5a;
-}
-
 .gradient-text {
     background: linear-gradient(50deg, var(--primary), var(--destructive)) !important;
     -webkit-background-clip: text !important;
@@ -93,7 +121,6 @@ onMounted(() => {
     display: inline-block;
     padding-bottom: 8px;
 }
-
 .section-title-underline::after {
     content: '';
     position: absolute;
@@ -106,19 +133,6 @@ onMounted(() => {
     border-radius: 2px;
     transition: width 0.5s ease-out;
 }
-
-.feature-card:hover {
-    transform: translateY(-5px) scale(1.02) !important;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3) !important;
-}
-
-.animated-line {
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 1000;
-}
-
-/* .pulsating-element class was used previously, now using .pulsating-block for clarity */
-/* GSAP directly animates .pulsating-block elements */
 
 ::-webkit-scrollbar {
     width: 8px;

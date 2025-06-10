@@ -11,7 +11,7 @@ onMounted(() => {
             opacity: 0,
             y: 30,
             stagger: 0.2,
-            duration: 0.8,
+            duration: 0.4,
             scrollTrigger: {
                 trigger: aboutContent,
                 start: 'top 80%',
@@ -24,7 +24,7 @@ onMounted(() => {
     gsap.utils.toArray<SVGElement>('#about-svg-lines .animated-line').forEach((line, i) => {
         gsap.to(line, {
             strokeDashoffset: 0,
-            duration: 2.5,
+            duration: 1.5,
             delay: 0.2 + i * 0.3,
             ease: 'power2.inOut',
             scrollTrigger: {
@@ -41,7 +41,7 @@ onMounted(() => {
 <template>
     <section id="about-us" class="py-22 px-4">
         <div class="mx-auto max-w-4xl text-center">
-            <h2 class="section-title section-title-underline mb-14 text-3xl sm:text-4xl md:text-4xl lg:text-5xl font-bold">About <span class="gradient-text">Us</span></h2>
+            <h2 class="section-title section-title-underline text-active mb-16 text-3xl sm:text-4xl md:text-4xl lg:text-5xl font-bold">About <span class="gradient-text">Us</span></h2>
 
             <div class="about-content space-y-4 text-lg leading-relaxed text-body-muted">
                 <p>

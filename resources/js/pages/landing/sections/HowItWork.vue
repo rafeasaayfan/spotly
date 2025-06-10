@@ -19,7 +19,7 @@ onMounted(() => {
                 },
                 {
                     scaleY: 1,
-                    duration: 1.5,
+                    duration: 1.2,
                     ease: 'power2.inOut',
                     scrollTrigger: {
                         trigger: '.timeline',
@@ -45,7 +45,7 @@ onMounted(() => {
                     opacity: 1,
                     y: 0,
                     scale: 1,
-                    duration: 0.5,
+                    duration: 0.3,
                     delay: index * 0.1,
                     ease: 'power3.out',
                     scrollTrigger: {
@@ -83,16 +83,19 @@ const steps = [
 </script>
 
 <template>
-    <section id="how-it-works" class="py-22 px-4">
+    <section id="how-it-works" class="px-4 py-22">
         <div class="mx-auto">
-            <h2 class="section-title section-title-underline mb-16 text-center text-3xl sm:text-4xl md:text-4xl lg:text-5xl font-bold">
-                How <span class="gradient-text">Spotly</span> Works
-            </h2>
+            <div class="w-full mb-16 flex flex-col items-start gap-3">
+                <h2 class="section-title section-title-underline text-active text-3xl font-bold sm:text-4xl md:text-4xl lg:text-5xl">
+                    How <span class="gradient-text">Spotly</span> Works
+                </h2>
+                <p class="text-body-muted">The Steps to create your webiste</p>
+            </div>
 
             <div class="timeline relative min-h-[800px]">
                 <!-- Rounded circle -->
-                <div class="relative top-0 left-0 z-10 hidden w-fit md:left-1/2 md:block">
-                    <p class="-ml-2 h-4 w-4 rounded-full bg-blue-700"></p>
+                <div class="relative top-0 start-0 z-10 hidden w-fit md:start-1/2 md:block">
+                    <p class="-ms-2 h-4 w-4 rounded-full bg-blue-700"></p>
                 </div>
                 <!-- Timeline line -->
                 <div

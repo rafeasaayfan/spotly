@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
 const scrolled = ref(false);
 
 const handleScroll = () => {
-  scrolled.value = window.scrollY > 16;
+  scrolled.value = window.scrollY > 2;
 };
 
 onMounted(() => {
@@ -35,10 +35,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div :class="scrolled ? 'fixed w-full pt-0 backdrop-blur-lg mt-0 bg-black/5 dark:bg-white/5' : ' mt-2'"
-    class="transition-all duration-300 z-20">
+    <div :class="scrolled ? ' pt-0 backdrop-blur-lg mt-0 bg-black/5 dark:bg-white/5' : ' mt-2'"
+    class="fixed w-full transition-all duration-300 z-20">
         <div :class="scrolled ? 'px-4' : 'px-4 md:px-10'"
-            class="mx-auto flex h-16 items-center md:max-w-7xl justify-between">
+            class="mx-auto flex h-16 items-center md:max-w-7xl justify-between transition-all duration-300">
             <!-- Mobile Menu -->
             <MobileNav />
 

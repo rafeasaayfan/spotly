@@ -18,7 +18,7 @@ onMounted(() => {
             opacity: 0.8,
             scale: 1.05,
             transformOrigin: 'center center',
-            duration: 2.5,
+            duration: 2,
             repeat: -1,
             yoyo: true,
             ease: 'sine.inOut',
@@ -30,7 +30,7 @@ onMounted(() => {
     gsap.to('#floating-cart', {
         y: 3,
         rotation: 2,
-        duration: 3,
+        duration: 2,
         repeat: -1,
         yoyo: true,
         ease: 'sine.inOut',
@@ -47,16 +47,23 @@ onMounted(() => {
             gsap.to(heroSvg, {
                 x: -x,
                 y: -y,
-                duration: 1.2,
+                duration: 1,
                 ease: 'power3.out',
             });
         });
     }
 });
+
+const scrollToSection = (id: string) => {
+    const el = document.querySelector(id);
+    if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+    }
+};
 </script>
 
 <template>
-    <section id="hero" class="relative flex min-h-[650px] w-full flex-col items-center justify-center overflow-hidden text-center md:px-4">
+    <section id="hero" class="relative flex min-h-[650px] w-full flex-col items-center justify-center overflow-hidden text-center md:px-4 pt-15 pb-22">
         <svg class="hero-bg-svg absolute top-0 left-0 z-0 h-full w-full overflow-hidden" preserveAspectRatio="xMidYMid slice" viewBox="0 0 100 100">
             <defs>
                 <!-- Professional grid pattern -->
@@ -155,22 +162,29 @@ onMounted(() => {
 
         <!-- Content -->
         <div
-            class="relative z-10 flex min-h-[650px] w-full flex-col items-center justify-center rounded-md bg-black/3 backdrop-blur-[2px] dark:bg-white/2 px-4 lg:px-0"
+            class="relative z-10 flex min-h-[650px] w-full flex-col items-center justify-center rounded-md bg-black/3 px-4 backdrop-blur-[2px] lg:px-0 dark:bg-white/2"
         >
-            <h1 id="hero-title" class="text-active mb-6 font-bold text-3xl sm:text-4xl md:text-4xl lg:text-7xl">
+            <h1 id="hero-title" class="text-active mb-6 text-3xl font-bold sm:text-4xl md:text-4xl lg:text-7xl">
                 <span class="gradient-text">Spotly</span> - Build Your <br class="hidden md:block" />
                 Digital Presence, <span class="">Effortlessly</span>
             </h1>
-            <p id="hero-subtitle-main" class="mx-auto text-center mb-10 max-w-3xl sm:text-lg md:text-xl">
+            <p id="hero-subtitle-main" class="mx-auto mb-10 max-w-3xl text-center sm:text-lg md:text-xl">
                 Start your online business easily with Spotly. No need to pay expensive setup fees or buy a domain and hosting. For only $10/month,
                 you get a full, professional website. It’s simple, fast, and saves you money. Begin your journey to success today!
             </p>
-            <Button id="hero-cta" class="glow-button z-20" size="lg"> Get Started Now </Button>
+            <Button @click="scrollToSection('#get-started')" id="hero-cta" class="glow-button z-20" size="lg"> Get Started Now </Button>
 
             <div class="absolute bottom-0 flex w-full items-center justify-center pb-8">
-                <svg class="animate-bounce" fill="var(--foreground-muted)" enable-background="new 0 0 50 50" width="20" version="1.1" viewBox="0 0 50 50">
-                    <rect fill="none" height="50" width="50"/>
-                    <polygon points="47.25,15 45.164,12.914 25,33.078 4.836,12.914 2.75,15 25,37.25 "/>
+                <svg
+                    class="animate-bounce"
+                    fill="var(--foreground-muted)"
+                    enable-background="new 0 0 50 50"
+                    width="20"
+                    version="1.1"
+                    viewBox="0 0 50 50"
+                >
+                    <rect fill="none" height="50" width="50" />
+                    <polygon points="47.25,15 45.164,12.914 25,33.078 4.836,12.914 2.75,15 25,37.25 " />
                 </svg>
             </div>
         </div>

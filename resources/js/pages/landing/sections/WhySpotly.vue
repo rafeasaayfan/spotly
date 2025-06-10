@@ -1,44 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
-
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { CircleDollarSign, Shield, Star, TimerOffIcon } from 'lucide-vue-next';
-
-onMounted(() => {
-    // --- Section Title Underline Animation ---
-    gsap.utils.toArray<HTMLElement>('.section-title-underline').forEach((title) => {
-        ScrollTrigger.create({
-            trigger: title,
-            start: 'top 85%',
-            onEnter: () => {
-                gsap.to(title, {
-                    '--underline-width': '60%',
-                    duration: 0.8,
-                    ease: 'expo.out',
-                });
-            },
-            once: true,
-        });
-    });
-
-    // --- Feature Cards Animation (Why Spotly) ---
-    gsap.utils.toArray<HTMLElement>('.feature-card').forEach((card, i) => {
-        gsap.from(card, {
-            opacity: 0,
-            y: 50,
-            scale: 0.95,
-            duration: 0.6,
-            delay: i * 0.15,
-            scrollTrigger: {
-                trigger: card,
-                start: 'top 85%',
-                toggleActions: 'play none none none',
-                once: true,
-            },
-        });
-    });
-});
 
 const cards = [
     {
@@ -74,11 +35,11 @@ const cards = [
 <template>
     <section id="why-spotly" class="py-22 px-4">
         <div class="mx-auto text-center">
-            <div class="w-full flex flex-col items-center justify-center gap-4 mb-14">
+            <div class="w-full flex flex-col items-center justify-center gap-3 mb-16">
                 <h2 class="section-title section-title-underline text-active text-3xl sm:text-4xl md:text-4xl lg:text-5xl font-bold">
                     Why Choose <span class="gradient-text">Spotly</span>?
                 </h2>
-                <p class="max-w-3xl">
+                <p class="max-w-3xl text-body-muted">
                     Spotly is engineered for simplicity and power, offering an unbeatable value proposition. Launch your online venture without
                     breaking the bank or your patience.
                 </p>
@@ -88,7 +49,7 @@ const cards = [
                 <div
                     v-for="card in cards"
                     :key="card.title"
-                    class="feature-card border-muted flex flex-col items-center justify-center gap-6 rounded-md border bg-black/5 p-6 backdrop-blur transition-all duration-300 dark:bg-white/5"
+                    class="cards-landing-animation feature-card border-muted flex flex-col items-center justify-center gap-6 rounded-md border bg-black/5 p-6 backdrop-blur transition-all duration-300 dark:bg-white/5"
                 >
                     <div class="flex flex-col items-center justify-center gap-4">
                         <component :is="card.icon" class="size-15" :class="card.color" />
@@ -106,3 +67,9 @@ const cards = [
         </div>
     </section>
 </template>
+
+<style scoped>
+.feature-card:hover {
+    transform: translateY(-2px) scale(1.02) !important;
+}
+</style>

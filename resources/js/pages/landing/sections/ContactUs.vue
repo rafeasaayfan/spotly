@@ -14,7 +14,7 @@ onMounted(() => {
         gsap.from(input, {
             opacity: 0,
             x: -40,
-            duration: 0.5,
+            duration: 0.3,
             delay: i * 0.1,
             scrollTrigger: {
                 trigger: input,
@@ -27,8 +27,8 @@ onMounted(() => {
     gsap.from("#contact-form button[type='submit']", {
         opacity: 0,
         scale: 0.8,
-        duration: 0.6,
-        delay: 0.4,
+        duration: 0.4,
+        delay: 0.2,
         scrollTrigger: {
             trigger: "#contact-form button[type='submit']",
             start: 'top 95%',
@@ -56,11 +56,11 @@ onMounted(() => {
 <template>
     <section id="contact-us" class="py-22 px-0 md:px-4">
         <div class="px-4 mx-auto text-center flex flex-col items-center justify-center min-h-[650px] bg-black/3 backdrop-blur-[2px] dark:bg-white/2 rounded-md">
-            <div class="flex flex-col gap-2 mb-14">
-                <h2 class="section-title section-title-underline text-3xl sm:text-4xl md:text-4xl lg:text-5xl font-bold">
+            <div class="flex flex-col gap-3 mb-16">
+                <h2 class="section-title section-title-underline text-active text-3xl sm:text-4xl md:text-4xl lg:text-5xl font-bold">
                     Get In <span class="gradient-text">Touch</span>
                 </h2>
-                <p class="mb-8 text-lg text-gray-400">Have questions or ready to start your Spotly journey? We'd love to hear from you!</p>
+                <p class="text-body-muted">Have questions or ready to start your Spotly journey? We'd love to hear from you!</p>
             </div>
 
             <form id="contact-form" class="space-y-6 min-w-full md:min-w-2xl lg:min-w-4xl max-w-full">
