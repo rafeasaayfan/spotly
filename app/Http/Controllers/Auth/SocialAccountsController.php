@@ -48,6 +48,6 @@ class SocialAccountsController extends Controller
 
         Auth::login($user);
 
-        return redirect()->intended(route('home', absolute: false));
+        return redirect()->intended(route('landing', absolute: false));
     }
 }

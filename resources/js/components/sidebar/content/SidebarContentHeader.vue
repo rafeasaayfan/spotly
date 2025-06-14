@@ -12,7 +12,7 @@ import AppLogo from '@/components/logo/AppLogo.vue';
     <SidebarMenu>
         <SidebarMenuItem>
             <SidebarMenuButton size="lg" as-child class="flex items-center justify-center">
-                <Link :href="route('home')">
+                <Link :href="route('landing')">
                     <AppLogo />
                 </Link>
             </SidebarMenuButton>

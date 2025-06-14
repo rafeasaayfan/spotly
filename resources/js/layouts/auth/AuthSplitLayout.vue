@@ -36,7 +36,7 @@ defineProps<{
 
         <div class="lg:p-8">
             <div class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-                <Link :href="route('home')" class="relative z-20 flex lg:hidden h-full items-center justify-center gap-2 font-medium">
+                <Link :href="route('landing')" class="relative z-20 flex lg:hidden h-full items-center justify-center gap-2 font-medium">
                     <AppLogoIcon class="size-24 fill-current" />
                 </Link>
 
