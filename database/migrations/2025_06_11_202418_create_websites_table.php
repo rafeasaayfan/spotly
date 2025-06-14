@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('websites', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('website_type_id')->nullable()->constrained('website_types')->onDelete('set null');
+            $table->foreignId('approved_or_denied_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->string('name')->unique();
+            $table->string('subdomain')->unique();
+            $table->string('logo');
+            $table->text('description');
+            $table->string('country')->nullable();
+            $table->string('address');
+            $table->string('phone_number');
+            $table->enum('status', ['pending', 'denied', 'approved'])->default('pending');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('websites');
+    }
+};

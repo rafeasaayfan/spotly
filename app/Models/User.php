@@ -46,4 +46,44 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the website types created by the user.
+     */
+    public function websiteTypes()
+    {
+        return $this->hasMany(WebsiteType::class, 'created_by');
+    }
+
+    /**
+     * Get the website of the user.
+     */
+    public function website()
+    {
+        return $this->hasOne(Website::class, 'owner_id');
+    }
+
+    /**
+     * Get the websites that reviewed by the user.
+     */
+    public function reviewedWebsites()
+    {
+        return $this->hasMany(Website::class, 'approved_or_denied_by');
+    }
+
+    /**
+     * Get the website colors created by the admins.
+     */
+    public function websiteColors()
+    {
+        return $this->hasMany(WebsiteColor::class, 'created_by')->where('is_custom', false);
+    }
+
+    /**
+     * Get the website colors that are custom and created by the user.
+     */
+    public function customWebsiteColors()
+    {
+        return $this->hasMany(WebsiteColor::class, 'created_by')->where('is_custom', true);
+    }
 }
