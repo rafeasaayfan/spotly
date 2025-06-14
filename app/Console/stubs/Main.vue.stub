@@ -21,6 +21,11 @@ const columns = [
 {{ columns }}
 ];
 
+const filter = [
+{{ filterCols }}
+];
+
+
 const props = defineProps<{
     {{ slug }}: DataTableProps;
     flash?: {
@@ -46,6 +51,7 @@ const tableConditions = {
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <DataTable
             :table-data="props.{{ slug }}"
+            :filter="filter"
             :columns="columns"
             route-name="dashboard.{{ slug }}"
             :table-conditions="tableConditions"

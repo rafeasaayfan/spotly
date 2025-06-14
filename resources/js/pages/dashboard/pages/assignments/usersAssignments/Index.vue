@@ -41,6 +41,7 @@ watchEffect(() => {
 
 const tableConditions = {
     ...defaultTableConditions,
+    enableFilter: false,
     enableCreate: false,
     enableEdit: false,
     enableView: false,
@@ -54,6 +55,6 @@ const tableConditions = {
     <Head title="Users assignments" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
-        <DataTable :table-data="props.data" :columns="columns" route-name="dashboard.usersAssignments" :table-conditions="tableConditions" />
+        <DataTable :tableData="props.data" :columns="columns" routeName="dashboard.usersAssignments" :tableConditions="tableConditions" />
     </DashboardLayout>
 </template>

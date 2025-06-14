@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 import { ArrowBigDownDash, ArrowBigUpDash } from 'lucide-vue-next';
 
 const props = defineProps<{
-  modelValue: string | number | File | null
+  modelValue: string | number | null
   options?: Array<{ label: string; value: string | number }>
   placeholder?: string
   class?: string
@@ -57,7 +57,7 @@ function toggleDropdown() {
   <div ref="selectRef" class="relative w-full" :class="props.class">
     <button
       type="button"
-      class="w-full text-start border border-muted bg-slate-300 hover:bg-slate-200 dark:bg-slate-950 dark:hover:bg-slate-950 text-sm p-2 rounded-md cursor-pointer"
+      class="w-full text-start border border-muted bg-gray-200 dark:bg-gray-900 text-sm p-2 rounded-md cursor-pointer"
       @click="toggleDropdown"
     >
       <div class="flex items-center justify-between">

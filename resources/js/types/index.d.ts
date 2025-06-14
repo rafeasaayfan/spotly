@@ -44,4 +44,12 @@ export interface User {
     updated_at: string;
 }
 
+export interface Filter {
+    key: string;
+    label: string;
+    type: string;
+    placeholder?: string;
+    options?: Array<{value: string, label: string}>;
+}
+
 export type BreadcrumbItemType = BreadcrumbItem;

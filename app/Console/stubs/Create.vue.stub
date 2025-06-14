@@ -5,10 +5,10 @@ const props = defineProps<{
 {{ props }}
 }>();
 
-const mappedOrders = props.orders.map((order) => ({
-    value: order.id,
-    label: order.delivery_address,
-}));
+//const mappedOrders = props.orders.map((order) => ({
+//    value: order.id,
+ //   label: order.delivery_address,
+//}));
 
 const columns = [
 {{ columns }}

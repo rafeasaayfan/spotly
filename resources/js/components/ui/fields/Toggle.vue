@@ -41,10 +41,10 @@ const isRTL = computed(() => page.props.lang === 'ar')
   >
     <button
       :class="[
-        'relative flex items-center w-8 h-5 rounded-full border cursor-pointer transition-all ease-in-out duration-150 active:scale-95',
+        'relative flex items-center w-8 h-5 rounded-full border cursor-pointer transition-all ease-in-out duration-150 active:scale-96',
         toggleChecked
           ? 'bg-primary border-muted'
-          : 'bg-slate-300 hover:bg-slate-200 dark:bg-slate-950 dark:hover:bg-slate-900 border-muted'
+          : 'bg-gray-200 dark:bg-gray-900 hover:bg-gray-300 dark:hover:bg-gray-950 border-muted'
       ]"
     >
       <div

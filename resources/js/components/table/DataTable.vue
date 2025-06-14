@@ -11,9 +11,11 @@ import Meta from '@/components/pagination/Meta.vue';
 import { useDataTable, type Column, type DataTableProps } from '@/composables/dataTable/useDataTable';
 import { useTableActions } from '@/composables/dataTable/useTableActions';
 import { type TableConditions } from '@/lib/dataTable';
+import { type Filter } from '@/types';
 
 const props = defineProps<{
     tableData: DataTableProps;
+    filter?: Filter[];
     columns: Column[];
     routeName: string;
     tableConditions: TableConditions;
@@ -58,6 +60,7 @@ const { handleAction } = useTableActions(selectedIds, props.routeName);
         <!-- Table header with search and column visibility -->
         <TableHeader
             :columns="props.columns"
+            :filter="props.filter"
             :applyFilters="applyFilters"
             :columnsVisibility="columnsVisibility"
             :updateColumnVisibility="updateColumnVisibility"
@@ -81,7 +84,7 @@ const { handleAction } = useTableActions(selectedIds, props.routeName);
             :filters="filters"
             :tableConditions="tableConditions"
         />
-        
+
         <!-- Table footer with pagination -->
         <div class="flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center gap-3">

@@ -117,10 +117,14 @@ trait DataTableTrait
     {
         foreach ($filters as $key => $value) {
             // Special handling for email verification status
-            if ($key === 'email_verified') {
-                $value === 'verified'
-                    ? $query->whereNotNull('email_verified_at')
-                    : $query->whereNull('email_verified_at');
+            if ($value === 'empty' || $value === 'notEmpty') {
+                $value === 'notEmpty'
+                    ? $query->whereNotNull($key)
+                    : $query->whereNull($key);
+                continue;
+            }
+
+            if($value === 'all' || $value === null) {
                 continue;
             }
 

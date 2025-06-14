@@ -7,18 +7,22 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/fields';
-import { type Column } from '@/composables/dataTable/useDataTable';
-import { Link } from '@inertiajs/vue3';
-import { Search, Settings } from 'lucide-vue-next';
-import { ref, watch } from 'vue';
+import { Input, Toggle } from '@/components/ui/fields';
 import { Button } from '../ui/button';
-import { Toggle } from '../ui/fields';
 
+import { Link, useForm } from '@inertiajs/vue3';
+import { Filter as FilterIcon, Search, Settings } from 'lucide-vue-next';
+import { ref, watch } from 'vue';
+
+import FilterContent from './actions/Filter.vue';
+
+import { type Column } from '@/composables/dataTable/useDataTable';
 import { type TableConditions } from '@/lib/dataTable';
+import { type Filter } from '@/types';
 
 interface HeaderProps {
     columns: Column[];
+    filter?: Filter[];
     applyFilters: (overrides: Record<string, any>) => void;
     updateColumnVisibility: (key: string, value: boolean) => void;
     columnsVisibility: Record<string, boolean>;
@@ -45,6 +49,13 @@ watch(
 watch(localSearch, (val) => {
     props.applyFilters({ search: val, page: 1 });
 });
+
+// Form for filter inputs
+const form = useForm(Object.fromEntries((props.filter ?? []).map((column) => [column.key, ''])));
+
+function setFormData(key: string, value: any) {
+    form[key] = value;
+}
 </script>
 
 <template>
@@ -79,7 +90,8 @@ watch(localSearch, (val) => {
 
                     <DropdownMenuGroup class="gap-2">
                         <Toggle
-                            v-for="column in props.columns" :key="column.key"
+                            v-for="column in props.columns"
+                            :key="column.key"
                             :label="column.label"
                             :modelValue="columnsVisibility[column.key]"
                             @update:modelValue="(val) => updateColumnVisibility(column.key, val)"
@@ -90,6 +102,24 @@ watch(localSearch, (val) => {
         </div>
 
         <div class="flex items-center gap-2">
+            <DropdownMenu v-if="tableConditions.enableFilter">
+                <DropdownMenuTrigger :as-child="true">
+                    <Button variant="ghost" size="icon" class="relative flex cursor-pointer items-center justify-center rounded-md">
+                        <FilterIcon class="size-5" />
+                    </Button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent align="end" class="w-48" v-show="true">
+                    <DropdownMenuShortcut>Filter options</DropdownMenuShortcut>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuGroup>
+                        <FilterContent :filter="props.filter" :applyFilters="props.applyFilters" :form="form" :setFormData="setFormData" />
+                    </DropdownMenuGroup>
+                </DropdownMenuContent>
+            </DropdownMenu>
+
             <Link v-if="props.selectedIds.length === 0 && props.tableConditions.enableCreate" :href="route(props.routeName + '.create')">
                 <Button>Create</Button>
             </Link>

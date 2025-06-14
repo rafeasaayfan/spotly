@@ -26,16 +26,19 @@ class RSDataTable extends Command
 
         $mainColumns = $this->handleColumns();
 
-        $createEditColumns = $this->handleCreateEditColumns($name);
+        $createEditColumns = $this->handleCreateEditColumns();
+        $createEditHref = $this->ask('enter the href for the action pages', $name);
+
+        $filterCols = $this->handleFilterCols();
 
         $mainFile = "$basePath/" . ucfirst($name) . ".vue";
         $createFile = "$actionsPath/Create.vue";
         $editFile = "$actionsPath/Edit.vue";
         $viewFile = "$actionsPath/View.vue";
 
-        file_put_contents($mainFile, $this->getStubContent('Main.vue.stub', $name, $mainColumns));
-        file_put_contents($createFile, $this->getStubContent('Create.vue.stub', $name, $createEditColumns));
-        file_put_contents($editFile, $this->getStubContent('Edit.vue.stub', $name, $createEditColumns));
+        file_put_contents($mainFile, $this->getStubContent('Main.vue.stub', $name, $mainColumns, $filterCols));
+        file_put_contents($createFile, $this->getStubContent('Create.vue.stub', $name, $createEditColumns, '', $createEditHref));
+        file_put_contents($editFile, $this->getStubContent('Edit.vue.stub', $name, $createEditColumns, '', $createEditHref));
         file_put_contents($viewFile, $this->getStubContent('View.vue.stub', $name));
 
         $this->info("✅ Created Vue DataTable page for '{$name}' at 'resources/js/{$path}/{$name}'");
@@ -98,7 +101,7 @@ class RSDataTable extends Command
         return collect($columnsArray)->map(fn($col) => "{ key: '{$col['key']}', label: '{$col['label']}' },")->implode("\n");
     }
 
-    protected function handleCreateEditColumns($name = '')
+    protected function handleCreateEditColumns()
     {
         $columns = [];
 
@@ -109,7 +112,7 @@ class RSDataTable extends Command
             if (!$key || strtolower($key) === 'done') break;
 
             $label = $this->ask('Label (e.g., Name)');
-            $type = $this->ask('Type (text, number, textarea, select, select_with_search)');
+            $type = $this->ask('Type (text, number, textarea, select, select_with_search ...)');
             $required = $this->confirm('Is this field required?', true);
             $placeholder = $this->ask('enter the placeholder', '');
 
@@ -168,14 +171,62 @@ class RSDataTable extends Command
         })->implode("\n");
     }
 
-    protected function getStubContent(string $stubName, string $name, string $columns = ''): string
+    protected function handleFilterCols()
+    {
+        $filter = [];
+
+        $this->info("Enter your columns of to make filter by it.");
+
+        while (true) {
+            $key = $this->ask('Key (e.g., name)');
+            if (!$key || strtolower($key) === 'done') break;
+
+            $label = $this->ask('Label (e.g., Name)');
+            $type = $this->ask('Type (text, number, textarea, select, select_with_search ...)');
+            $placeholder = $this->ask('enter the placeholder', '');
+
+            $options = [];
+            if (in_array($type, ['select', 'select_with_search'])) {
+                $opts = $this->ask('Enter options (value:label, comma separated)', '');
+                foreach (explode(',', $opts) as $opt) {
+                    if (str_contains($opt, ':')) {
+                        [$val, $lab] = array_map('trim', explode(':', $opt));
+                        $options[] = ['value' => $val, 'label' => $lab];
+                    }
+                }
+            }
+
+            $filter[] = [
+                'label' => trim($label),
+                'key' => trim($key),
+                'type' => trim($type),
+                'options' => $options ?? null,
+                'placeholder' => $placeholder ?? null
+            ];
+        }
+
+        return collect($filter)->map(function ($col) {
+            $line = "{ key: '{$col['key']}', label: '{$col['label']}', type: '{$col['type']}'";
+
+            if (!empty($col['options'])) {
+                $line .= ", options: " . json_encode($col['options']);
+            }
+
+            if (!empty($col['relation'])) {
+                $line .= ", relation: props.{$col['relation']}";
+            }
+
+            $line .= " },";
+            return $line;
+        })->implode("\n");
+    }
+
+    protected function getStubContent(string $stubName, string $name, string $columns = '', string $filterCols = '', string $createEditHref = ''): string
     {
         $stubPath = app_path("Console/stubs/{$stubName}");
         if (!file_exists($stubPath)) return "<template><div>Missing stub: {$stubName}</div></template>";
 
         $content = file_get_contents($stubPath);
-
-        $href = $this->ask('enter the href', $name);
 
         if ($stubName === 'Create.vue.stub') {
             $propsCode = '';
@@ -186,7 +237,7 @@ class RSDataTable extends Command
                 '{{ slug }}' => $name,
                 '{{ columns }}' => $columns,
                 '{{ props }}' => $propsCode,
-                '{{ href }}' => $href,
+                '{{ href }}' => $createEditHref ?? $name,
             ];
         } elseif ($stubName === 'Edit.vue.stub') {
             $propsCode = "data: Record<string, any>;";
@@ -195,18 +246,19 @@ class RSDataTable extends Command
                 '{{ slug }}' => strtolower($name),
                 '{{ columns }}' => $columns,
                 '{{ props }}' => $propsCode,
-                '{{ href }}' => $href,
+                '{{ href }}' => $createEditHref ?? $name,
             ];
         } elseif ($stubName === 'View.vue.stub') {
             $replacements = [
                 '{{ slug }}' => strtolower($name),
-                '{{ href }}' => $href,
+                '{{ href }}' => $createEditHref ?? $name,
             ];
         } else {
             $replacements = [
                 '{{ Title }}' => str_replace('_', ' ', ucfirst($name)),
                 '{{ slug }}' => $name,
                 '{{ columns }}' => $columns,
+                '{{ filterCols }}' => $filterCols,
             ];
         }
 

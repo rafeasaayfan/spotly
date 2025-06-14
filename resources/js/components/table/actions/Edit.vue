@@ -9,6 +9,7 @@ import { type BreadcrumbItem } from '@/types';
 
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
+import { Label } from '@/components/ui/label';
 import { ArrowBigLeft, LoaderCircle } from 'lucide-vue-next';
 
 const props = defineProps<{
@@ -18,6 +19,7 @@ const props = defineProps<{
         label: string;
         type: string;
         placeholder?: string;
+        relation?: Array<{ value: string | number; label: string }>;
         options?: Array<{ label: string; value: string | number }>;
         required?: boolean;
     }>;
@@ -28,7 +30,7 @@ const props = defineProps<{
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: props.table.charAt(0).toUpperCase() + props.table.slice(1),
-        href: `/dashboard/${props.href? props.href : props.table}`,
+        href: `/dashboard/${props.href ? props.href : props.table}`,
     },
 ];
 
@@ -39,22 +41,6 @@ function submit() {
 const form = useForm({
     ...props.data,
 });
-
-function fieldType(type: string): string {
-    if (type in ['text', 'email', 'number']) {
-        return 'input';
-    } else if (type === 'textarea') {
-        return 'textarea';
-    } else if (type === 'select') {
-        return 'select';
-    } else if (type === 'select_with_search') {
-        return 'select_with_search';
-    } else if (type === 'file') {
-        return 'file';
-    } else {
-        return 'input';
-    }
-}
 </script>
 
 <template>
@@ -76,27 +62,20 @@ function fieldType(type: string): string {
 
         <div class="m-4 flex flex-col gap-3 rounded-md">
             <form class="grid gap-4 lg:grid-cols-2" @submit.prevent="submit">
-                <div
-                    class="grid gap-1"
-                    :class="fieldType(column.type) === 'textarea' ? 'col-span-2' : ''"
-                    v-for="(column, index) in props.columns"
-                    :key="index"
-                >
+                <div class="grid gap-1" :class="column.type === 'textarea' ? 'col-span-2' : ''" v-for="(column, index) in props.columns" :key="index">
                     <Label :for="column.label">{{ column.label.charAt(0).toUpperCase() + column.label.slice(1) }}</Label>
 
                     <Input
-                        v-if="fieldType(column.type) === 'input'"
+                        v-if="column.type === 'text' || column.type === 'email' || column.type === 'number' || column.type === 'password'"
                         v-model="form[column.key]"
-                        :placeholder="column.placeholder ?? column.label"
                         :type="column.type"
                         :id="column.label"
                         class="mt-1 block w-full"
-                        :required="column.required"
                         :autocomplete="column.type"
                     />
 
                     <Select
-                        v-if="fieldType(column.type) === 'select'"
+                        v-if="column.type === 'select'"
                         :id="column.label"
                         class="mt-1 block w-full"
                         v-model="form[column.key]"
@@ -107,7 +86,7 @@ function fieldType(type: string): string {
                     </Select>
 
                     <Textarea
-                        v-if="fieldType(column.type) === 'textarea'"
+                        v-if="column.type === 'textarea'"
                         :id="column.label"
                         v-model="form[column.key]"
                         class="mt-1 block w-full"
@@ -116,7 +95,7 @@ function fieldType(type: string): string {
                     />
 
                     <File
-                        v-if="fieldType(column.type) === 'file'"
+                        v-if="column.type === 'file'"
                         class="mt-1 block w-full"
                         :id="column.label"
                         v-model="form[column.key]"
@@ -125,14 +104,14 @@ function fieldType(type: string): string {
                     />
 
                     <SelectWithSearch
-                        v-if="fieldType(column.type) === 'select_with_search'"
+                        v-if="column.type === 'select_with_search'"
                         :id="column.label"
                         class="mt-1 block w-full"
                         v-model="form[column.key]"
                         :required="column.required"
                         :placeholder="column.label"
                         :options="
-                            column.options?.map((option) => ({
+                            column.relation?.map((option) => ({
                                 label: option.label ?? option,
                                 value: option.value ?? option,
                             }))

@@ -42,6 +42,7 @@ watchEffect(() => {
 const tableConditions = {
     ...defaultTableConditions,
     enableAssignPermissions: true,
+    enableFilter: false,
 };
 </script>
 
@@ -49,6 +50,6 @@ const tableConditions = {
     <Head title="Roles" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
-        <DataTable :table-data="props.roles" :columns="columns" route-name="dashboard.roles" :table-conditions="tableConditions" />
+        <DataTable :tableData="props.roles" :columns="columns" routeName="dashboard.roles" :tableConditions="tableConditions" />
     </DashboardLayout>
 </template>

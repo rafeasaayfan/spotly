@@ -70,7 +70,7 @@ const src = props.src;
     <div v-else class="relative">
       <label
         class="relative flex items-center justify-center w-full text-sm cursor-pointer
-          bg-slate-300 hover:bg-slate-200 dark:bg-slate-950 dark:hover:bg-slate-950
+          bg-gray-200 dark:bg-gray-900
           rounded-md border border-muted active:scale-105 transition-all focus:ring active:ring-blue-800 focus:ring-blue-800/50"
       >
         <input
