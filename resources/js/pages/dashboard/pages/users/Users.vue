@@ -31,9 +31,9 @@ const filter = [
         label: 'Verification',
         type: 'select',
         options: [
-            { value: 'value', label: 'all label' },
-            { value: 'value', label: 'notEmpty label' },
-            { value: 'value', label: 'Empty label' },
+            { value: 'all', label: 'All' },
+            { value: 'notEmpty', label: 'Verified' },
+            { value: 'Empty', label: 'Not verified' },
         ],
     },
 ];
