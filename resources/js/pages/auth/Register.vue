@@ -6,7 +6,7 @@ import { Input, InputError } from '@/components/ui/fields';
 import { Label } from '@/components/ui/label';
 import SocialAuth from './SocialAuth.vue';
 
-import AuthBase from '@/layouts/AuthLayout.vue';
+import AuthLayout from '@/layouts/AuthLayout.vue';
 
 import { Head, useForm } from '@inertiajs/vue3';
 
@@ -27,7 +27,7 @@ const submit = () => {
 </script>
 
 <template>
-    <AuthBase title="Create an account" description="Enter your details below to create your account">
+    <AuthLayout title="Create an account" description="Enter your details below to create your account">
         <Head title="Register" />
 
         <form @submit.prevent="submit" class="flex flex-col gap-6">
@@ -85,5 +85,5 @@ const submit = () => {
         </form>
 
         <SocialAuth />
-    </AuthBase>
+    </AuthLayout>
 </template>

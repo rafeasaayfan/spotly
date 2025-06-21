@@ -9,6 +9,8 @@ use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
+use function Laravel\Prompts\error;
+
 class PermissionsController extends Controller
 {
     use DataTableTrait;
@@ -34,7 +36,7 @@ class PermissionsController extends Controller
      */
     public function create()
     {
-        return Inertia::render('dashboard/pages/assignments/permissions/actions/Create');
+        //
     }
 
     /**
@@ -49,7 +51,6 @@ class PermissionsController extends Controller
         ]);
 
         $permission = new Permission($validated);
-
         $permission->save();
 
         return redirect()->route('dashboard.permissions.index')->with('message', 'Permission created successfully');
@@ -62,8 +63,8 @@ class PermissionsController extends Controller
     {
         $permission = Permission::findOrFail($id);
 
-        return Inertia::render('dashboard/pages/assignments/permissions/actions/View', [
-            'data' => $permission,
+        return response()->json([
+            'data' => $permission
         ]);
     }
 
@@ -74,8 +75,8 @@ class PermissionsController extends Controller
     {
         $permission = Permission::findOrFail($id);
 
-        return Inertia::render('dashboard/pages/assignments/permissions/actions/Edit', [
-            'data' => $permission,
+        return response()->json([
+            'data' => $permission
         ]);
     }
 
@@ -93,9 +94,8 @@ class PermissionsController extends Controller
         ]);
 
         $data->update($validated);
-        $data->save();
 
-        return redirect()->route('dashboard.permissions.index')->with('message', 'Role created successfully');
+        return redirect()->route('dashboard.permissions.index')->with('message', 'Permission updated successfully');
     }
 
     /**
@@ -123,7 +123,7 @@ class PermissionsController extends Controller
             $query->where('permissions.id', $id);
         })->get();
 
-        return Inertia::render('dashboard/pages/assignments/permissions/actions/AssignRoles', [
+        return response()->json([
             'attachedRoles' => $attachedRoles,
             'availableRoles' => $availableRoles,
         ]);
@@ -140,16 +140,14 @@ class PermissionsController extends Controller
         ]);
 
         $permission = Permission::findOrFail($id);
-
         $role = Role::findOrFail($validated['id']);
 
         if ($validated['action'] === 'add') {
             $role->givePermissionTo($permission);
-            return redirect()->back()->with('success', 'Permission assigned to role successfully.');
-
+            return redirect()->back()->with('message', 'Role assigned to permission successfully.');
         } else {
             $role->revokePermissionTo($permission);
-            return redirect()->back()->with('success', 'Permission revoked from role successfully.');
+            return redirect()->back()->with('message', 'Role revoked from Permission successfully.');
         }
     }
 }

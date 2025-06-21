@@ -15,7 +15,7 @@ const languages = [
 </script>
 
 <template>
-    <div class="bg-card inline-flex gap-2 rounded-md p-1">
+    <div class="bg-card inline-flex gap-2 rounded-md p-1 max-w-full overflow-x-auto">
         <button
             v-for="lang in languages"
             :key="lang.value"

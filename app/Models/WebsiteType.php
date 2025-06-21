@@ -8,10 +8,6 @@ class WebsiteType extends Model
 {
     protected $fillable = ['created_by', 'type', 'is_active'];
 
-    protected $casts = [
-        'is_active' => 'boolean',
-    ];
-
     /**
      * Get the user that created the website type.
      */

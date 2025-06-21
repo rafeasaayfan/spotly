@@ -18,9 +18,9 @@ defineProps<{
 </script>
 
 <template>
-    <div class="relative grid h-dvh flex-col items-center justify-center px-8 sm:px-0 lg:max-w-none lg:grid-cols-2 lg:px-0">
+    <div class="relative grid h-screen flex-col items-center justify-center px-4 sm:px-0 lg:max-w-none lg:grid-cols-2 lg:px-0">
         <div class="border-muted relative hidden h-full flex-col border-e p-10 lg:flex items-center justify-center">
-            <div class="bg-navs absolute inset-0" />
+            <div class="bg-nav absolute inset-0" />
             <div class="border border-muted rounded-full relative z-20 size-100
                 flex flex-col items-center justify-center gap-2 font-medium bg-body pb-10">
                 <AppLogoIcon class="size-86 fill-current" />
@@ -34,9 +34,9 @@ defineProps<{
             </div> -->
         </div>
 
-        <div class="lg:p-8">
+        <div class="pb-5 lg:p-8">
             <div class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-                <Link :href="route('landing')" class="relative z-20 flex lg:hidden h-full items-center justify-center gap-2 font-medium">
+                <Link :href="route('landing')" class="relative z-20 flex lg:hidden h-full items-center justify-center gap-2 font-medium bg-nav rounded-b-md">
                     <AppLogoIcon class="size-24 fill-current" />
                 </Link>
 
@@ -44,6 +44,7 @@ defineProps<{
                     <h1 class="text-active text-xl font-medium tracking-tight" v-if="title">{{ title }}</h1>
                     <p class="text-body-muted text-sm" v-if="description">{{ description }}</p>
                 </div>
+
                 <slot />
             </div>
         </div>

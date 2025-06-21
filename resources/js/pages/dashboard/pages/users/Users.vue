@@ -30,10 +30,11 @@ const filter = [
         key: 'email_verified_at',
         label: 'Verification',
         type: 'select',
+        placeholder: 'Select verification status',
         options: [
             { value: 'all', label: 'All' },
+            { value: 'empty', label: 'Not verified' },
             { value: 'notEmpty', label: 'Verified' },
-            { value: 'Empty', label: 'Not verified' },
         ],
     },
 ];
@@ -61,6 +62,6 @@ const tableConditions = {
     <Head title="Users" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
-        <DataTable :table-data="props.users" :filter="filter" :columns="columns" route-name="dashboard.users" :table-conditions="tableConditions" />
+        <DataTable :table-data="props.users" :filter="filter" :columns="columns" route-name="dashboard.users" :table-conditions="tableConditions" path="users" />
     </DashboardLayout>
 </template>

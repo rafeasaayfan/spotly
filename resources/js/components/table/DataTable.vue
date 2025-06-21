@@ -19,6 +19,7 @@ const props = defineProps<{
     columns: Column[];
     routeName: string;
     tableConditions: TableConditions;
+    path: string;
 }>();
 
 // Manage selected rows
@@ -36,7 +37,7 @@ const filteredCols = computed(() => {
     return props.columns.filter((column) => columnsVisibility.value[column.key] !== false);
 });
 
-const meta = createPaginationMeta(props.tableData);
+const meta = computed(() => createPaginationMeta(props.tableData));
 
 function toggleRowSelection(id: number, checked: boolean) {
     if (checked) {
@@ -56,7 +57,7 @@ const { handleAction } = useTableActions(selectedIds, props.routeName);
 </script>
 
 <template>
-    <div class="flex flex-col gap-4 p-4">
+    <div class="flex flex-col m-4 border border-muted rounded-md">
         <!-- Table header with search and column visibility -->
         <TableHeader
             :columns="props.columns"
@@ -69,6 +70,7 @@ const { handleAction } = useTableActions(selectedIds, props.routeName);
             :search="filters.search"
             :handleAction="handleAction"
             :tableConditions="tableConditions"
+            :path="props.path"
         />
 
         <!-- Table content -->
@@ -83,18 +85,20 @@ const { handleAction } = useTableActions(selectedIds, props.routeName);
             :applyFilters="applyFilters"
             :filters="filters"
             :tableConditions="tableConditions"
+            :path="props.path"
+            :routeName="props.routeName"
         />
 
         <!-- Table footer with pagination -->
-        <div class="flex flex-wrap items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
+        <div class="flex flex-col-reverse sm:flex-row flex-wrap items-center justify-between gap-4 p-3">
+            <div class="flex items-center gap-3 flex-wrap">
                 <TableLimit
                     :applyFilters="applyFilters"
-                    :selectedLimit="filters.limit ?? 10"
+                    :selectedLimit="Number(filters.limit ?? 10)"
                     :links="props.tableData.links"
                     :tableConditions="tableConditions"
                 />
-                <Meta :meta="meta" />
+                <Meta :meta="meta.value" />
             </div>
 
             <Pagination

@@ -134,39 +134,40 @@
 
 :root {
     --background: hsl(0 0% 100%);
-    /* --secondary-background: hsl(0 0% 94%); */
-    --secondary-background: #ebebeb;
+    --secondary-background: hsl(0 0% 97%);
 
-    --foreground: hsl(0 0% 4%);
+    --foreground: hsl(0 0% 16%);
     --foreground-muted: hsl(0 0% 25%);
     --foreground-hover: hsl(0 0% 10%);
     --foreground-active: hsl(0 0% 0%);
     --foreground-active-link: hsl(216 80% 30%);
     --foreground-active-link-2: hsl(0 72% 51%);
 
-    --card: hsl(0 0% 98%);
+    --card: hsl(0 0% 96%);
 
-    --popover: hsl(0 0% 98%);
+    --field: hsl(221, 39%, 85%);
 
-    --content-bg: hsl(0 0% 92%);
-    --content-bg-hover: hsl(0 0% 90%);
-    --content-bg-active: hsl(0 0% 89%);
+    --popover: hsl(0 0% 96%);
+
+    --content-bg: hsl(240, 5%, 92%);
+    --content-bg-hover: hsl(240, 5%, 86%, 0.8);
+    --content-bg-active: hsl(240, 5%, 82%, 0.8);
 
     --content-2-bg: transparent;
-    --content-2-bg-hover: hsl(0 0% 97%);
-    --content-2-bg-active: hsl(0 0% 100%);
+    --content-2-bg-hover: hsl(240, 5%, 92%);
+    --content-2-bg-active: hsl(240, 5%, 82%, 0.8);
 
     --content-3-bg: transparent;
-    --content-3-bg-hover: hsl(0 0% 91%);
-    --content-3-bg-active: hsl(0 0% 98%);
+    --content-3-bg-hover: hsl(0 0% 96%);
+    --content-3-bg-active: hsl(0 0% 93%);
 
     --primary: hsl(216 80% 30%);
     --primary-hover: hsl(216 80% 25%);
     --primary-active: hsl(216 80% 20%);
     --primary-foreground: hsl(0 0% 100%);
-    --secondary: hsl(0 0% 88%);
-    --secondary-hover: hsl(0 0% 78%);
-    --secondary-active: hsl(0 0% 68%);
+    --secondary: hsl(0 0% 40%);
+    --secondary-hover: hsl(0 0% 35%);
+    --secondary-active: hsl(0 0% 30%);
     --secondary-foreground: hsl(0 0% 100%);
     --destructive: hsl(0 80% 40%);
     --destructive-hover: hsl(0 80% 35%);
@@ -177,47 +178,45 @@
     --success-active: hsl(120, 80%, 20%);
     --success-foreground: hsl(0 0% 100%);
 
-    --border: hsl(0 0% 85%);
-    --border-primary: hsl(216 80% 80%);
-
-    --input: hsl(0 0% 89.8%);
+    --border: hsl(0 0% 88%);
 }
 
 .dark {
-    --background: hsl(0 0% 0%);
-    /* --secondary-background: hsl(0 0% 4%); */
-    --secondary-background: #141414;
+    --background: hsl(0, 0%, 0%);
+    --secondary-background: hsl(0, 0%, 3%);
 
-    --foreground: hsl(0 0% 80%);
+    --foreground: hsl(0 0% 78%);
     --foreground-muted: hsl(0 0% 50%);
     --foreground-hover: hsl(0 0% 95%);
     --foreground-active: hsl(0 0% 100%);
     --foreground-active-link: hsl(220 60% 50%);
     --foreground-active-link-2: hsl(355, 78%, 56%);
 
-    --card: hsl(0 0% 6%);
+    --card: hsl(0 0% 4%);
 
-    --popover: hsl(0 0% 2%);
+    --field: hsl(221, 39%, 11%);
 
-    --content-bg: hsl(0 0% 8%);
-    --content-bg-hover: hsl(0 0% 15%);
-    --content-bg-active: hsl(0 0% 18%);
+    --popover: hsl(0 0% 4%);
+
+    --content-bg: hsl(240, 5%, 7%, 0.8);
+    --content-bg-hover: hsl(240, 5%, 10%, 0.8);
+    --content-bg-active: hsl(240, 5%, 15%, 0.8);
 
     --content-2-bg: transparent;
-    --content-2-bg-hover: hsl(0 0% 2%);
-    --content-2-bg-active: hsl(0 0% 0%);
+    --content-2-bg-hover: hsl(240, 5%, 10%, 0.8);
+    --content-2-bg-active: hsl(240, 5%, 15%, 0.8);
 
     --content-3-bg: transparent;
-    --content-3-bg-hover: hsl(0 0% 9%);
-    --content-3-bg-active: hsl(0 0% 12%);
+    --content-3-bg-hover: hsl(0 0% 3%);
+    --content-3-bg-active: hsl(0 0% 6%);
 
     --primary: hsl(221, 83%, 50%);
     --primary-hover: hsl(221 83% 45%);
     --primary-active: hsl(221 83% 40%);
     --primary-foreground: hsl(0 0% 100%);
-    --secondary: hsl(0 0% 22%);
-    --secondary-hover: hsl(0 0% 18%);
-    --secondary-active: hsl(0 0% 15%);
+    --secondary: hsl(0 0% 30%);
+    --secondary-hover: hsl(0 0% 25%);
+    --secondary-active: hsl(0 0% 20%);
     --secondary-foreground: hsl(0 0% 100%);
     --destructive: hsl(0, 74%, 40%);
     --destuctive-hover: hsl(0, 74%, 38%);
@@ -228,10 +227,7 @@
     --success-active: hsl(120, 65%, 30%);
     --success-foreground: hsl(0 0% 100%);
 
-    --border: hsl(0 0% 10%);
-    --border-primary: hsl(220 60% 15%);
-
-    --input: hsl(217, 33%, 1%);
+    --border: hsl(0, 0%, 5%);
 }
 
 body {
@@ -244,7 +240,7 @@ body {
     background-color: var(--background);
 }
 
-.bg-navs {
+.bg-nav {
     background-color: var(--secondary-background);
 }
 
@@ -256,8 +252,8 @@ body {
     background-color: var(--popover);
 }
 
-.bg-input {
-    background-color: var(--input);
+.bg-field {
+    background-color: var(--field);
 }
 
 /** =============== Text =============== */
@@ -451,10 +447,6 @@ body {
 /** =============== Border =============== */
 .border-muted {
     border-color: var(--border);
-}
-
-.border-primary {
-    border-color: var(--border-primary);
 }
 
 /** =============== Content Bg Action =============== */

@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { cn } from '@/lib/utils'
-import { X } from 'lucide-vue-next'
 import {
-  DialogClose,
   DialogContent,
   type DialogContentEmits,
   type DialogContentProps,
@@ -32,18 +30,14 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
       v-bind="forwarded"
       :class="
         cn(
-          'bg-card data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border border-muted p-6 shadow-lg duration-200 sm:max-w-lg',
+          'bg-popover z-50 grid rounded-lg border border-muted py-3 shadow-lg transition-all duration-100 ease-in-out',
+          'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
+          'w-full max-w-[calc(100%-1rem)] sm:max-w-lg md:max-w-xl lg:max-w-2xl min-h-20',
+          'fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]',
           props.class,
         )"
     >
       <slot />
-
-      <!-- <DialogClose
-        class="bg-content size-7 flex items-center justify-center rounded-full cursor-pointer data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 opacity-80 transition-opacity hover:opacity-100 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
-      >
-        <X />
-        <span class="sr-only">Close</span>
-      </DialogClose> -->
     </DialogContent>
   </DialogPortal>
 </template>

@@ -57,7 +57,7 @@ function toggleDropdown() {
   <div ref="selectRef" class="relative w-full" :class="props.class">
     <button
       type="button"
-      class="w-full text-start border border-muted bg-gray-200 dark:bg-gray-900 text-sm p-2 rounded-md cursor-pointer"
+      class="w-full text-start border border-muted bg-field text-sm p-2 rounded-md cursor-pointer"
       @click="toggleDropdown"
     >
       <div class="flex items-center justify-between">
@@ -71,13 +71,13 @@ function toggleDropdown() {
 
     <div
       v-if="isOpen"
-      class="dropdown-scrollbar absolute mt-1 z-50 w-full bg-white dark:bg-slate-900 border border-muted rounded-md shadow-lg max-h-60 overflow-auto"
+      class="dropdown-scrollbar absolute mt-1 z-50 p-2 w-full bg-field border border-muted rounded-md shadow-lg max-h-60 overflow-auto"
     >
       <input
         v-model="search"
         type="text"
         placeholder="Search..."
-        class="w-full p-2 text-sm bg-slate-200 dark:bg-slate-950 border-b border-blue-700 shadow-lg focus:outline-none"
+        class="w-full p-2 text-sm bg-field border-b border-gray-400 dark:border-gray-700 mb-2 focus:outline-none"
       />
 
       <div v-if="filteredOptions?.length === 0" class="p-2 text-sm text-slate-500">

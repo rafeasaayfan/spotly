@@ -11,110 +11,21 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
-import { footerSidebarItems as items } from '@/config/navigations';
 
+import { footerSidebarItems } from '@/config/navigations';
 import useAuth from '@/composables/useAuth';
-import { type SharedData } from '@/types';
 
 import { Minus, Plus } from 'lucide-vue-next';
+import { Link } from '@inertiajs/vue3';
+import { useSidebarNavigation } from '@/composables/navigation/useNavigation';
 
-import { Link, usePage } from '@inertiajs/vue3';
-import { nextTick, onMounted, ref } from 'vue';
-
-interface Props {
-    // items: NavItem[];
-    class?: string;
-}
-
-const page = usePage<SharedData>();
-
-defineProps<Props>();
-
-// Track which dropdowns are open
-const openDropdowns = ref<string[]>([]);
-
-function isActiveUrl(href: string): boolean {
-    // if(href === '/dashboard') {
-    //     return href === page.url;
-    // }
-    return href === page.url || page.url.startsWith(href);
-}
-
-function isHasChildActive(children: Array<{ href: string }>): boolean {
-    return children.some((child) => {
-        return child.href === page.url || page.url.startsWith(child.href);
-    });
-}
-
-function toggleDropdown(title: string) {
-    if (openDropdowns.value.includes(title)) {
-        openDropdowns.value = openDropdowns.value.filter((t) => t !== title);
-    } else {
-        openDropdowns.value.push(title);
-    }
-}
-
-function isDropdownOpen(title: string): boolean {
-    return openDropdowns.value.includes(title);
-}
-
-// Initialize openDropdowns on component mount
-onMounted(() => {
-    items.forEach((section) => {
-        section.items.forEach((item) => {
-            if (item.children && isHasChildActive(item.children)) {
-                if (!openDropdowns.value.includes(item.title)) {
-                    openDropdowns.value.push(item.title);
-                }
-            }
-        });
-    });
-});
-
-function onEnter(el: Element) {
-    const element = el as HTMLElement;
-
-    element.style.height = '0';
-    element.style.opacity = '0';
-    nextTick(() => {
-        element.style.transition = 'all 0.3s ease';
-        element.style.height = el.scrollHeight + 'px';
-        element.style.opacity = '1';
-    });
-}
-
-function onAfterEnter(el: Element) {
-    const element = el as HTMLElement;
-
-    element.style.height = '';
-    element.style.opacity = '';
-}
-
-function onLeave(el: Element) {
-    const element = el as HTMLElement;
-
-    element.style.height = el.scrollHeight + 'px';
-
-    // Force reflow to apply the height before collapsing
-    void element.offsetHeight;
-
-    element.style.transition = 'all 0.2s ease';
-    element.style.height = '0';
-    element.style.opacity = '0';
-}
-
-function onAfterLeave(el: Element) {
-    const element = el as HTMLElement;
-
-    element.style.height = '';
-    element.style.opacity = '';
-}
+const { isActiveUrl, isHasChildActive, toggleDropdown, isDropdownOpen, onEnter, onAfterEnter, onLeave, onAfterLeave } = useSidebarNavigation(footerSidebarItems);
 
 const { can } = useAuth();
 </script>
 
 <template>
-    <SidebarGroup v-for="section in items" :key="section.name" :class="` ${$props.class || ''}`">
+    <SidebarGroup v-for="section in footerSidebarItems" :key="section.name">
         <SidebarGroupContent v-if="section.permission ? can(section.permission) : true">
             <SidebarGroupLabel>{{ section.name }}</SidebarGroupLabel>
 

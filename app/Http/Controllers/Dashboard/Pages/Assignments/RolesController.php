@@ -34,7 +34,7 @@ class RolesController extends Controller
      */
     public function create()
     {
-        return Inertia::render('dashboard/pages/assignments/roles/actions/Create');
+        //
     }
 
     /**
@@ -49,7 +49,6 @@ class RolesController extends Controller
         ]);
 
         $role = new Role($validated);
-
         $role->save();
 
         return redirect()->route('dashboard.roles.index')->with('message', 'Role created successfully');
@@ -62,8 +61,8 @@ class RolesController extends Controller
     {
         $role = Role::findOrFail($id);
 
-        return Inertia::render('dashboard/pages/assignments/roles/actions/View', [
-            'data' => $role,
+        return response()->json([
+            'data' => $role
         ]);
     }
 
@@ -74,8 +73,8 @@ class RolesController extends Controller
     {
         $role = Role::findOrFail($id);
 
-        return Inertia::render('dashboard/pages/assignments/roles/actions/Edit', [
-            'data' => $role,
+        return response()->json([
+            'data' => $role
         ]);
     }
 
@@ -93,7 +92,6 @@ class RolesController extends Controller
         ]);
 
         $data->update($validated);
-        $data->save();
 
         return redirect()->route('dashboard.roles.index')->with('message', 'Role created successfully');
     }
@@ -123,7 +121,7 @@ class RolesController extends Controller
             $query->where('roles.id', $id);
         })->get();
 
-        return Inertia::render('dashboard/pages/assignments/roles/actions/AssignPermissions', [
+        return response()->json([
             'attachedPermissions' => $attachedPermissions,
             'availablePermissions' => $availablePermissions,
         ]);
@@ -139,18 +137,15 @@ class RolesController extends Controller
             'id' => 'required|integer|exists:permissions,id',
         ]);
 
-
         $role = Role::findOrFail($id);
-
         $permission = Permission::findOrFail($validated['id']);
 
         if ($validated['action'] === 'add') {
             $role->givePermissionTo($permission);
-            return redirect()->back()->with('success', 'Permission assigned to role successfully.');
-
+            return redirect()->back()->with('message', 'Permission assigned to role successfully.');
         } else {
             $role->revokePermissionTo($permission);
-            return redirect()->back()->with('success', 'Permission revoked from role successfully.');
+            return redirect()->back()->with('message', 'Permission revoked from role successfully.');
         }
     }
 }

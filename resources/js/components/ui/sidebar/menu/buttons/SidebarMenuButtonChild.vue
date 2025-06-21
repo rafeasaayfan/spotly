@@ -19,8 +19,6 @@ const props = withDefaults(defineProps<SidebarMenuButtonProps>(), {
   size: 'default',
   active: 'default'
 })
-
-
 </script>
 
 <template>

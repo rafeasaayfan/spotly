@@ -5,9 +5,9 @@ const props = defineProps<{
 {{ props }}
 }>();
 
-//const mappedOrders = props.orders.map((order) => ({
-  //  value: order.id,
-    //label: order.delivery_address,
+//const mappedProps = props.orders.map((item) => ({
+//    value: item.id,
+ //   label: item.name,
 //}));
 
 const columns = [
@@ -16,5 +16,5 @@ const columns = [
 </script>
 
 <template>
-    <Edit :data="props.data" :columns="columns" table="{{ slug }}" href="{{ href }}" />
+    <Edit :data="props.data" :columns="columns" table="{{ slug }}" />
 </template>

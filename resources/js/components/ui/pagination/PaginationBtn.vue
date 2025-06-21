@@ -16,7 +16,7 @@ const props = defineProps<{
         'bg-content',
         'text-body-muted text-sm',
         'w-8 h-8 rounded-md flex items-center justify-center cursor-pointer',
-        {'bg-content-active text-active font-semibold': active},
+        {'bg-content-active text-active font-bold -translate-y-[0.5px]': active},
         props.class,
       )
     "

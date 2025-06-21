@@ -12,7 +12,6 @@ const props = defineProps<{
     data-slot="tbody"
     :class="
       cn(
-        'divide-y divide-slate-500/10 dark:divide-slate-600/10',
         props.class,
       )
     "

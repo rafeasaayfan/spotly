@@ -13,21 +13,26 @@ class RSDataTable extends Command
 
     public function handle()
     {
-        $name = $this->ask("Enter the name of the vue folder (like users)");
+        $name = $this->ask("Enter the name of the vue folder that have the table and actions page (like users)");
         $Name = ucfirst($name); // Users
-        $model = \Illuminate\Support\Str::singular($Name); // User
 
-        $path = $this->ask("Enter the path to this folder", 'dashboard/pages');
-        if (!$path) $path = 'dashboard/pages';
+        $model = $this->ask("Enter the name of the Model (like User)");
+        if (!$model) $model = \Illuminate\Support\Str::singular($Name); // User
 
-        $basePath = resource_path("js/pages/{$path}/{$name}");
+
+        $parentPath = $this->ask("Enter the parent path to this folder", 'dashboard/pages');
+        $path = $this->ask("Enter the path inside the parent path (like users or assignments/role)", $name);
+        if (!$path) $path = $name;
+        if (!$parentPath) $parentPath = 'dashboard/pages';
+
+        $basePath = resource_path("js/pages/{$parentPath}/{$path}");
         $actionsPath = "$basePath/actions";
         @mkdir($actionsPath, 0777, true);
 
         $mainColumns = $this->handleColumns();
 
         $createEditColumns = $this->handleCreateEditColumns();
-        $createEditHref = $this->ask('enter the href for the action pages', $name);
+        $viewColumns = $this->handleViewColumns();
 
         $filterCols = $this->handleFilterCols();
 
@@ -36,10 +41,10 @@ class RSDataTable extends Command
         $editFile = "$actionsPath/Edit.vue";
         $viewFile = "$actionsPath/View.vue";
 
-        file_put_contents($mainFile, $this->getStubContent('Main.vue.stub', $name, $mainColumns, $filterCols));
-        file_put_contents($createFile, $this->getStubContent('Create.vue.stub', $name, $createEditColumns, '', $createEditHref));
-        file_put_contents($editFile, $this->getStubContent('Edit.vue.stub', $name, $createEditColumns, '', $createEditHref));
-        file_put_contents($viewFile, $this->getStubContent('View.vue.stub', $name));
+        file_put_contents($mainFile, $this->getStubContent('Main.vue.stub', $name, $mainColumns, $filterCols, $path));
+        file_put_contents($createFile, $this->getStubContent('Create.vue.stub', $name, $createEditColumns, ''));
+        file_put_contents($editFile, $this->getStubContent('Edit.vue.stub', $name, $createEditColumns, ''));
+        file_put_contents($viewFile, $this->getStubContent('View.vue.stub', $name, $viewColumns));
 
         $this->info("✅ Created Vue DataTable page for '{$name}' at 'resources/js/{$path}/{$name}'");
 
@@ -221,7 +226,34 @@ class RSDataTable extends Command
         })->implode("\n");
     }
 
-    protected function getStubContent(string $stubName, string $name, string $columns = '', string $filterCols = '', string $createEditHref = ''): string
+    protected function handleViewColumns()
+    {
+        $viewCols = [];
+
+        $this->info("Enter the columns of the view modal.");
+
+        while (true) {
+            $key = $this->ask('Key (e.g., name)');
+            if (!$key || strtolower($key) === 'done') break;
+
+            $label = $this->ask('Label (e.g., Name)');
+            $type = $this->ask('Type (image, datetime, date, highlight ...)');
+
+            $viewCols[] = [
+                'label' => trim($label),
+                'key' => trim($key),
+                'type' => trim($type),
+            ];
+        }
+
+        return collect($viewCols)->map(function ($col) {
+            $line = "{ key: '{$col['key']}', label: '{$col['label']}', type: '{$col['type']}'";
+            $line .= " },";
+            return $line;
+        })->implode("\n");
+    }
+
+    protected function getStubContent(string $stubName, string $name, string $columns = '', string $filterCols = '', string $path = ''): string
     {
         $stubPath = app_path("Console/stubs/{$stubName}");
         if (!file_exists($stubPath)) return "<template><div>Missing stub: {$stubName}</div></template>";
@@ -237,7 +269,6 @@ class RSDataTable extends Command
                 '{{ slug }}' => $name,
                 '{{ columns }}' => $columns,
                 '{{ props }}' => $propsCode,
-                '{{ href }}' => $createEditHref ?? $name,
             ];
         } elseif ($stubName === 'Edit.vue.stub') {
             $propsCode = "data: Record<string, any>;";
@@ -246,12 +277,11 @@ class RSDataTable extends Command
                 '{{ slug }}' => strtolower($name),
                 '{{ columns }}' => $columns,
                 '{{ props }}' => $propsCode,
-                '{{ href }}' => $createEditHref ?? $name,
             ];
         } elseif ($stubName === 'View.vue.stub') {
             $replacements = [
                 '{{ slug }}' => strtolower($name),
-                '{{ href }}' => $createEditHref ?? $name,
+                '{{ columns }}' => $columns,
             ];
         } else {
             $replacements = [
@@ -259,6 +289,7 @@ class RSDataTable extends Command
                 '{{ slug }}' => $name,
                 '{{ columns }}' => $columns,
                 '{{ filterCols }}' => $filterCols,
+                '{{ path }}' => $path,
             ];
         }
 
@@ -334,9 +365,9 @@ class RSDataTable extends Command
     protected function askForRelationsCreateEditShow(): array
     {
         $relations = [];
+        $this->comment("Create and Edit relation controller functions.");
 
         while (true) {
-            $this->comment("Create and Edit relation controller functions.");
             $relation = $this->ask("Enter a relation model (e.g., role), or leave empty/done to finish");
 
             if (empty($relation) || strtolower($relation) === 'done') {

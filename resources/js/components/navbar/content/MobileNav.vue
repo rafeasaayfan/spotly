@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // import AppLogoIcon from '@/components/logo/AppLogoIcon.vue';
 import AppearanceTabs from '@/components/appearance/AppearanceTabs.vue';
-import LanguagesMenu from '@/components/languages/Languages.vue';
+import LanguagesTabs from '@/components/languages/LanguagesTabs.vue';
 
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
@@ -40,7 +40,7 @@ setupScrollTracking();
                     <nav class="space-y-2">
                         <template v-for="item in navbarItems" :key="item.title">
                             <button
-                                v-if="item.href.startsWith('#')"
+                                v-if="item.href?.startsWith('#')"
                                 @click="scrollToSection(item.href)"
                                 class="w-full bg-content-3 flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium"
                                 :class="activeNavStyle(item.href)"
@@ -52,7 +52,7 @@ setupScrollTracking();
 
                             <Link
                                 v-else
-                                :href="item.href"
+                                :href="item.href ?? ''"
                                 class="bg-content-3 flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium"
                                 :class="activeNavStyle(item.href)"
                                 :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'"
@@ -64,9 +64,7 @@ setupScrollTracking();
                     </nav>
 
                     <div class="flex flex-col gap-3">
-                        <div class="px-8">
-                            <LanguagesMenu />
-                        </div>
+                        <LanguagesTabs />
                         <AppearanceTabs />
                     </div>
                 </div>

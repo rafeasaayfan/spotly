@@ -3,12 +3,15 @@ import AppLogoIcon from './logo/AppLogoIcon.vue';
 import { Input } from './ui/fields';
 
 import { navbarItems } from '@/config/navigations';
+import { useNavigation } from '@/composables/navigation/useNavigation';
 
 import { Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 import { Facebook, Instagram } from 'lucide-vue-next';
 import { Button } from './ui/button';
+
+const { scrollToSection } = useNavigation(navbarItems);
 
 const email = ref('');
 const subscribe = () => {
@@ -39,17 +42,17 @@ const subscribe = () => {
                         <div class="flex flex-col gap-3">
                             <h3 class="text-body font-semibold">Quick Links</h3>
                             <div class="flex flex-col gap-2 ps-2">
-                                <Link
+                                <p
                                     v-for="(item, index) in navbarItems"
                                     :key="index"
-                                    :href="item.href"
-                                    class="text-body-muted flex items-center gap-2 transition-all duration-100 hover:font-medium"
+                                    @click="scrollToSection(item.href ?? '')"
+                                    class="cursor-pointer text-body-muted flex items-center gap-2 transition-all duration-100 hover:font-medium"
                                 >
                                     <component v-if="item.icon" :is="item.icon" class="h-4 w-4" />
                                     <span>
                                         {{ item.title }}
                                     </span>
-                                </Link>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -77,7 +80,7 @@ const subscribe = () => {
                             <div class="flex flex-col gap-3">
                                 <h3 class="text-body font-semibold">Subscribe to Newsletter</h3>
                                 <form @submit.prevent="subscribe" class="flex flex-col gap-2">
-                                    <Input v-model="email" type="email" placeholder="Enter your email" class="bg-transparent" />
+                                    <Input v-model="email" type="email" placeholder="Enter your email" />
                                     <Button type="submit" class=""> Subscribe </Button>
                                 </form>
                             </div>

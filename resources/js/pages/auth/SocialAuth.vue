@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Button } from '@/components/ui/button';
 import { LoaderCircle } from 'lucide-vue-next';
 import { ref } from 'vue';
 
@@ -12,11 +13,11 @@ const submit = () => {
 </script>
 
 <template>
-    <form @submit.prevent="submit" class="flex items-center gap-3">
-        <button type="submit" :disabled="loading"
-            class="size-10 flex items-center justify-center rounded-full bg-zinc-800/40 hover:bg-zinc-700/40 cursor-pointer">
+    <form @submit.prevent="submit" class="flex items-center gap-3 pt-3">
+        <Button variant="ghost" type="submit" :disabled="loading"
+            class="size-11 rounded-xl">
             <span v-if="loading">
-                <LoaderCircle class="h-5 w-5 animate-spin" />
+                <LoaderCircle class="size-5 animate-spin" />
             </span>
             <svg
                 v-if="!loading"
@@ -86,6 +87,6 @@ const submit = () => {
                 <g />
                 <g />
             </svg>
-        </button>
+        </Button>
     </form>
 </template>

@@ -10,7 +10,7 @@ use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-class UsersAssignmentsController extends Controller
+class UserAssignmentsController extends Controller
 {
     use DataTableTrait;
 
@@ -26,7 +26,7 @@ class UsersAssignmentsController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
-        return Inertia::render('dashboard/pages/assignments/usersAssignments/Index', [
+        return Inertia::render('dashboard/pages/assignments/userAssignments/Index', [
             'data' => $data,
         ]);
     }
@@ -46,7 +46,7 @@ class UsersAssignmentsController extends Controller
             $query->where('users.id', $id);
         })->get();
 
-        return Inertia::render('dashboard/pages/assignments/usersAssignments/actions/Assignments', [
+        return response()->json([
             'attached' => $attached,
             'availablePermissions' => $availablePermissions,
             'availableRoles' => $availableRoles,
@@ -93,6 +93,6 @@ class UsersAssignmentsController extends Controller
                 return redirect()->back()->with('error', 'Invalid assignment type.');
         }
 
-        return redirect()->back()->with('success', $message);
+        return redirect()->back()->with('message', $message);
     }
 }

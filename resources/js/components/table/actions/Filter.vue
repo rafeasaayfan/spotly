@@ -25,10 +25,17 @@ function submit() {
     props.applyFilters({ filter: props.form.data() });
 }
 
+const isResetting = ref(false)
+
 function resetForm() {
     filterForm.value = Object.fromEntries((props.filter ?? []).map((column) => [column.key, '']));
 
-    props.form.reset();
+    isResetting.value = true
+
+    setTimeout(() => {
+        props.form.reset()
+        isResetting.value = false
+    }, 500)
 
     nextTick(() => {
         submit();
@@ -114,8 +121,8 @@ watch(filterForm, (newVal) => {
         </div>
 
         <div class="mt mt-1 flex justify-end">
-            <Button variant="secondary" size="sm" type="button" :disabled="props.form.processing" @click="resetForm()">
-                <LoaderCircle v-if="props.form.processing" class="h-4 w-4 animate-spin" />
+            <Button variant="secondary" size="sm" type="button" :disabled="isResetting" @click="resetForm()">
+                <LoaderCircle v-if="isResetting" class="h-4 w-4 animate-spin" />
                 <span v-else>Reset</span>
             </Button>
         </div>

@@ -4,8 +4,12 @@ import View from '@/components/table/actions/View.vue';
 const props = defineProps<{
     data: Record<string, any>;
 }>();
+
+const columns = [
+{{ columns }}
+];
 </script>
 
 <template>
-    <View :data="props.data" table="{{ slug }}" href="{{ href }}" />
+    <View :data="props.data" :columns="columns" />
 </template>

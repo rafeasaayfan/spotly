@@ -13,5 +13,5 @@ const columns = [
 </script>
 
 <template>
-    <Edit :data="props.data" :columns="columns" table="permissions" href="assignments/permissions" />
+    <Edit :data="props.data" :columns="columns" table="permissions" />
 </template>

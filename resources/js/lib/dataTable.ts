@@ -17,7 +17,7 @@ export interface TableConditions {
 
     enableAssignRoles?: boolean;
     enableAssignPermissions?: boolean;
-    enableUsersAssignments?: boolean;
+    enableUserAssignments?: boolean;
 }
 // The default options
 export const defaultTableConditions: TableConditions = {
@@ -36,7 +36,7 @@ export const defaultTableConditions: TableConditions = {
 
     enableAssignRoles: false,
     enableAssignPermissions: false,
-    enableUsersAssignments: false,
+    enableUserAssignments: false,
 };
 
 // Formatters.js أو ضمن نفس ملف lib/composables

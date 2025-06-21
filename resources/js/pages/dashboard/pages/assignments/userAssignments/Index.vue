@@ -12,8 +12,8 @@ import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Users assignments',
-        href: '/dashboard/assignments/usersAssignments',
+        title: 'User assignments',
+        href: '/dashboard/assignments/userAssignments',
     },
 ];
 
@@ -47,14 +47,14 @@ const tableConditions = {
     enableView: false,
     enableDelete: false,
     enableRowsDelete: false,
-    enableUsersAssignments: true,
+    enableUserAssignments: true,
 };
 </script>
 
 <template>
-    <Head title="Users assignments" />
+    <Head title="User assignments" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
-        <DataTable :tableData="props.data" :columns="columns" routeName="dashboard.usersAssignments" :tableConditions="tableConditions" />
+        <DataTable :tableData="props.data" :columns="columns" routeName="dashboard.userAssignments" :tableConditions="tableConditions" path="assignments/userAssignments" />
     </DashboardLayout>
 </template>

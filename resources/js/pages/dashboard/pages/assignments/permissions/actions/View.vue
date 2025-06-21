@@ -7,5 +7,5 @@ const props = defineProps<{
 </script>
 
 <template>
-    <View :data="props.data" table="permissions" href="assignments/permissions" />
+    <View :data="props.data" />
 </template>

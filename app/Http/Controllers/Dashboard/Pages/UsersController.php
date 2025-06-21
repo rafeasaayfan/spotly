@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\Users\StoreUserRequest;
 use App\Http\Requests\Dashboard\Pages\Users\UpdateUserRequest;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
@@ -22,8 +23,10 @@ class UsersController extends Controller
         $query = User::query();
 
         $columnsSearching = ['name', 'email'];
+        $columnsSelection = [];
+        $relations = [];
 
-        $data = $this->dataTable($query, $request, $columnsSearching);
+        $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
         return Inertia::render('dashboard/pages/users/Users', [
             'users' => $data,
@@ -35,7 +38,7 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return Inertia::render('dashboard/pages/users/actions/Create');
+        //
     }
 
     /**
@@ -43,11 +46,11 @@ class UsersController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        $validated = $request->validated();
-
-        $user = new User($validated);
-
-        $user->save();
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
 
         return redirect()->route('dashboard.users.index')->with('message', 'User created successfully');
     }
@@ -59,8 +62,8 @@ class UsersController extends Controller
     {
         $user = User::findOrFail($id);
 
-        return Inertia::render('dashboard/pages/users/actions/View', [
-            'data' => $user,
+        return response()->json([
+            'data' => $user
         ]);
     }
 
@@ -71,9 +74,8 @@ class UsersController extends Controller
     {
         $user = User::findOrFail($id);
 
-        return Inertia::render('dashboard/pages/users/actions/Edit', [
-            'data' => $user,
-
+        return response()->json([
+            'data' => $user
         ]);
     }
 
@@ -82,11 +84,15 @@ class UsersController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $validated = $request->validated();
+        $data = $request->validated();
 
-        $user->fill($validated);
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        } else {
+            unset($data['password']);
+        }
 
-        $user->save();
+        $user->update($data);
 
         return redirect()->route('dashboard.users.index')->with('message', 'User updated successfully');
     }

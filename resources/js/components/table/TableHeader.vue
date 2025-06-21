@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Dialog, DialogScrollContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -10,7 +11,7 @@ import {
 import { Input, Toggle } from '@/components/ui/fields';
 import { Button } from '../ui/button';
 
-import { Link, useForm } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 import { Filter as FilterIcon, Search, Settings } from 'lucide-vue-next';
 import { ref, watch } from 'vue';
 
@@ -19,6 +20,7 @@ import FilterContent from './actions/Filter.vue';
 import { type Column } from '@/composables/dataTable/useDataTable';
 import { type TableConditions } from '@/lib/dataTable';
 import { type Filter } from '@/types';
+import Modal from './actions/Modal.vue';
 
 interface HeaderProps {
     columns: Column[];
@@ -29,8 +31,9 @@ interface HeaderProps {
     routeName: string;
     selectedIds: number[];
     search?: string;
-    handleAction: (action: 'view' | 'edit' | 'delete', idOrIds: number | number[]) => Promise<void>;
+    handleAction: (action: 'delete', idOrIds: number | number[]) => Promise<void>;
     tableConditions: TableConditions;
+    path: string;
 }
 
 const props = defineProps<HeaderProps>();
@@ -59,7 +62,7 @@ function setFormData(key: string, value: any) {
 </script>
 
 <template>
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex items-center justify-between gap-4 flex-wrap p-3">
         <div class="flex items-center gap-2">
             <div class="relative" v-if="props.tableConditions.enableSearch">
                 <Input
@@ -109,7 +112,7 @@ function setFormData(key: string, value: any) {
                     </Button>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end" class="w-48" v-show="true">
+                <DropdownMenuContent align="end" class="w-48">
                     <DropdownMenuShortcut>Filter options</DropdownMenuShortcut>
 
                     <DropdownMenuSeparator />
@@ -120,9 +123,20 @@ function setFormData(key: string, value: any) {
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            <Link v-if="props.selectedIds.length === 0 && props.tableConditions.enableCreate" :href="route(props.routeName + '.create')">
-                <Button>Create</Button>
-            </Link>
+            <Dialog v-if="props.selectedIds.length === 0 && props.tableConditions.enableCreate">
+                <DialogTrigger as-child>
+                    <Button>Create</Button>
+                </DialogTrigger>
+
+                <DialogScrollContent>
+                    <DialogHeader>
+                        <DialogTitle>Create</DialogTitle>
+                        <DialogDescription class="sr-only"> No description provided. </DialogDescription>
+                    </DialogHeader>
+
+                    <Modal action="create" :path="props.path" :routeName="props.routeName" />
+                </DialogScrollContent>
+            </Dialog>
 
             <Button
                 variant="destructive"

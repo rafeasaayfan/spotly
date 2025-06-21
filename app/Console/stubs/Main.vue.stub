@@ -13,7 +13,7 @@ import { type BreadcrumbItem } from '@/types';
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: '{{ Title }}',
-        href: '/dashboard/{{ slug }}',
+        href: '/dashboard/{{ path }}',
     },
 ];
 
@@ -50,11 +50,12 @@ const tableConditions = {
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <DataTable
-            :table-data="props.{{ slug }}"
+            :tableData="props.{{ slug }}"
             :filter="filter"
             :columns="columns"
-            route-name="dashboard.{{ slug }}"
-            :table-conditions="tableConditions"
+            routeName="dashboard.{{ slug }}"
+            :tableConditions="tableConditions"
+            path={{ path }}
         />
     </DashboardLayout>
 </template>

@@ -1,14 +1,14 @@
 <script setup lang="ts">
+import AppearenceBtn from '@/components/appearance/AppearanceBtn.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import LanguagesMenu from '@/components/languages/Languages.vue';
 import AppLogo from '@/components/logo/AppLogo.vue';
 import AppLogoIcon from '@/components/logo/AppLogoIcon.vue';
 import type { BreadcrumbItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import AppearenceBtn from '@/components/appearance/AppearanceBtn.vue';
-import LanguagesMenu from '@/components/languages/Languages.vue';
-import MobileNav from './content/MobileNav.vue';
-import DesktopNav from './content/DesktopNav.vue';
 import { onMounted, onUnmounted, ref } from 'vue';
+import DesktopNav from './content/DesktopNav.vue';
+import MobileNav from './content/MobileNav.vue';
 // import AuthAvatar from '@/components/AuthAvatar.vue';
 
 interface Props {
@@ -22,31 +22,32 @@ const props = withDefaults(defineProps<Props>(), {
 const scrolled = ref(false);
 
 const handleScroll = () => {
-  scrolled.value = window.scrollY > 2;
+    scrolled.value = window.scrollY > 2;
 };
 
 onMounted(() => {
-  window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll);
 });
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
+    window.removeEventListener('scroll', handleScroll);
 });
 </script>
 
 <template>
-    <div :class="scrolled ? ' pt-0 backdrop-blur-lg mt-0 bg-black/5 dark:bg-white/5' : ' mt-2'"
-    class="fixed w-full transition-all duration-300 z-20">
-        <div :class="scrolled ? 'px-4' : 'px-4 md:px-10'"
-            class="mx-auto flex h-16 items-center md:max-w-7xl justify-between transition-all duration-300">
+    <div :class="scrolled ? 'mt-0 bg-black/5 pt-0 backdrop-blur-lg dark:bg-white/5' : 'mt-2'" class="fixed z-20 w-full transition-all duration-300">
+        <div
+            :class="scrolled ? 'px-4' : 'px-4 md:px-10'"
+            class="mx-auto flex h-16 items-center justify-between transition-all duration-300 md:max-w-7xl"
+        >
             <!-- Mobile Menu -->
             <MobileNav />
 
-            <Link :href="route('landing')" class="hidden md:flex items-center gap-2">
-                <AppLogo  />
+            <Link :href="route('landing')" class="hidden items-center gap-2 md:flex">
+                <AppLogo />
             </Link>
 
-            <Link :href="route('landing')" class="flex md:hidden items-center gap-2">
+            <Link :href="route('landing')" class="flex items-center gap-2 md:hidden">
                 <AppLogoIcon class="size-16" />
             </Link>
 
@@ -62,7 +63,7 @@ onUnmounted(() => {
                     <LanguagesMenu />
                 </div>
 
-                <!-- <AuthAvatar /> -->
+                <AuthAvatar />
             </div>
         </div>
     </div>

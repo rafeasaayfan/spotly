@@ -161,7 +161,6 @@ trait DataTableTrait
 
                     $relationValue = $item->$relation;
 
-
                     if ($relationValue instanceof \Illuminate\Support\Collection) {
                         $flattenedValue = $relationValue->pluck($field)->filter()->implode(', ');
                     }

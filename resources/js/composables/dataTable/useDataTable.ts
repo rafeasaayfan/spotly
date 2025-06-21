@@ -1,5 +1,5 @@
 import { router } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 
 export interface DataTableProps {
     data: Record<string, any>[];
@@ -20,6 +20,11 @@ export interface Column {
     key: string;
     label: string;
     visible?: boolean;
+    type?: string;
+    placeholder?: string;
+    relation?: Array<{ value: string | number; label: string }>;
+    options?: Array<{ value: string | number; label: string }>;
+    required?: boolean;
 }
 
 export interface FilterOptions {
@@ -41,9 +46,9 @@ export interface DataTableOptions {
 }
 
 export function useDataTable(options: DataTableOptions) {
-    const query = route().queryParams
+    const query = route().queryParams;
 
-    const filters = <FilterOptions>({
+    const filters = reactive<FilterOptions>({
         search: '',
         filter: {},
         sort_by: 'id',

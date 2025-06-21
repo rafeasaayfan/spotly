@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
-import { usePage } from '@inertiajs/vue3';
-import { SharedData } from '@/types';
-
-const page = usePage<SharedData>();
 
 const props = defineProps<{
   class?: HTMLAttributes['class']
@@ -16,8 +12,7 @@ const props = defineProps<{
     data-slot="th"
     :class="
       cn(
-        'py-2 min-w-10 border-muted rounded-md',
-        page.props.lang == 'ar' ? 'text-right border-l px-3' : 'text-left border-r px-3',
+        'py-2 min-w-10 border-muted text-start border-s px-3 bg-nav',
         props.class,
       )
     "

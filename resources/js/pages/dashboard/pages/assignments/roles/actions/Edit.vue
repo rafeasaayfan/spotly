@@ -13,5 +13,5 @@ const columns = [
 </script>
 
 <template>
-    <Edit :data="props.data" :columns="columns" table="roles" href="assignments/roles" />
+    <Edit :data="props.data" :columns="columns" table="roles" />
 </template>

@@ -9,5 +9,5 @@ const columns = [
 </script>
 
 <template>
-    <Create :columns="columns" table="roles" href="assignments/roles" />
+    <Create :columns="columns" table="roles" />
 </template>

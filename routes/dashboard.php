@@ -3,8 +3,9 @@
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\Pages\Assignments\PermissionsController;
 use App\Http\Controllers\Dashboard\Pages\Assignments\RolesController;
-use App\Http\Controllers\Dashboard\Pages\Assignments\UsersAssignmentsController;
+use App\Http\Controllers\Dashboard\Pages\Assignments\UserAssignmentsController;
 use App\Http\Controllers\Dashboard\Pages\UsersController;
+use App\Http\Controllers\Dashboard\Pages\WebsiteTypesController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboard')->name('dashboard.')->group(function () {
@@ -12,6 +13,8 @@ Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboa
 
     //* Users
     dashboardPagesRoutes('users', UsersController::class);
+    //* Website types
+    dashboardPagesRoutes('websiteTypes', WebsiteTypesController::class);
 
     //* Assignments
     Route::middleware('can:assignments_access')->prefix('assignments')->group(function () {
@@ -27,10 +30,10 @@ Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboa
 
         // Users assignments
         Route::prefix('usersAssignments')->group(function () {
-            Route::get('/', [UsersAssignmentsController::class, 'index'])->name('usersAssignments.index');
+            Route::get('/', [UserAssignmentsController::class, 'index'])->name('usersAssignments.index');
 
-            Route::get('/{id}/assign', [UsersAssignmentsController::class, 'assignment'])->name('usersAssignments.assignment');
-            Route::post('/storeAssignments/{id}', [UsersAssignmentsController::class, 'storeAssignments'])->name('usersAssignments.storeAssignments');
+            Route::get('/{id}/assign', [UserAssignmentsController::class, 'assignment'])->name('usersAssignments.assignment');
+            Route::post('/storeAssignments/{id}', [UserAssignmentsController::class, 'storeAssignments'])->name('usersAssignments.storeAssignments');
         });
     });
 });
