@@ -161,7 +161,7 @@ class RSDataTable extends Command
         }
 
         return collect($columns)->map(function ($col) {
-            $line = "{ key: '{$col['key']}', label: '{$col['label']}', type: '{$col['type']}', required: " . ($col['required'] ? 'true' : 'false');
+            $line = "{ key: '{$col['key']}', label: '{$col['label']}', type: '{$col['type']}', placeholder: '{$col['placeholder']}', required: " . ($col['required'] ? 'true' : 'false');
 
             if (!empty($col['options'])) {
                 $line .= ", options: " . json_encode($col['options']);
@@ -274,13 +274,13 @@ class RSDataTable extends Command
             $propsCode = "data: Record<string, any>;";
 
             $replacements = [
-                '{{ slug }}' => strtolower($name),
+                '{{ slug }}' => $name,
                 '{{ columns }}' => $columns,
                 '{{ props }}' => $propsCode,
             ];
         } elseif ($stubName === 'View.vue.stub') {
             $replacements = [
-                '{{ slug }}' => strtolower($name),
+                '{{ slug }}' => $name,
                 '{{ columns }}' => $columns,
             ];
         } else {

@@ -33,7 +33,9 @@ function updateValue(event: Event) {
             props.class
         )
             ">
-            <option disabled value="" class="text-xs text-body-muted">{{ props.option ?? 'Select an option' }}</option>
+            <option disabled value="" selected hidden>
+                {{ props.option ?? 'Select an option' }}
+            </option>
             <slot />
         </select>
 

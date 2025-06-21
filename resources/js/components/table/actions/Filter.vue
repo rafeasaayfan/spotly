@@ -58,7 +58,7 @@ watch(filterForm, (newVal) => {
 <template>
     <form class="grid grid-cols-1 gap-5" @submit.prevent="submit" enctype="multipart/form-data">
         <div class="grid gap-1" v-for="(column, index) in props.filter" :key="index">
-            <Label :for="column.label">{{ column.label.charAt(0).toUpperCase() + column.label.slice(1) }}</Label>
+            <Label class="text-xs" :for="column.label">{{ column.label.charAt(0).toUpperCase() + column.label.slice(1) }}</Label>
 
             <Input
                 v-if="column.type === 'text' || column.type === 'email' || column.type === 'number' || column.type === 'password'"
@@ -74,7 +74,7 @@ watch(filterForm, (newVal) => {
             <Select
                 v-if="column.type === 'select'"
                 :id="column.label"
-                class="mt-1 block w-full"
+                class="mt-1 block w-full p-1"
                 v-model="filterForm[column.key]"
                 :option="column.placeholder ?? null"
                 :placeholder="column.placeholder ?? column.label"

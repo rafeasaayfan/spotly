@@ -54,6 +54,7 @@ function submit() {
                 v-model="form[column.key]"
                 :type="column.type"
                 :id="column.label"
+                :placeholder="column.placeholder"
                 class="mt-1 block w-full"
                 :autocomplete="column.type"
             />
@@ -76,6 +77,7 @@ function submit() {
                 class="mt-1 block w-full"
                 :placeholder="column.placeholder ?? column.label"
                 :required="column.required"
+                :maxlength="column.maxlength"
             />
 
             <File

@@ -38,6 +38,7 @@ function submit() {
                 v-if="column.type && ['text', 'email', 'password', 'time', 'datetime', 'date', 'tel', 'number'].includes(column.type)"
                 v-model="form[column.key]"
                 :type="column.type"
+                :placeholder="column.placeholder"
                 :id="column.label"
                 class="mt-1 block w-full"
                 :autocomplete="column.type"
@@ -62,6 +63,7 @@ function submit() {
                 class="mt-1 block w-full"
                 :placeholder="column.placeholder ?? column.label"
                 :required="column.required"
+                :maxlength="column.maxlength"
             />
 
             <File

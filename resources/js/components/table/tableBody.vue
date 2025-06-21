@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Dialog, DialogDescription, DialogHeader, DialogScrollContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ActionAssignmentsBtn, ActionDeleteBtn, ActionEditBtn, ActionViewBtn, Tbody, Td, Tr } from '@/components/ui/table';
-import { Checkbox } from '../ui/fields';
+import { Checkbox, Toggle } from '../ui/fields';
 import { Image } from '../ui/image';
 import Modal from './actions/Modal.vue';
 
@@ -9,6 +9,7 @@ import { Inbox } from 'lucide-vue-next';
 
 import { type Column } from '@/composables/dataTable/useDataTable';
 import { formatters, type TableConditions } from '@/lib/dataTable';
+import { useForm } from '@inertiajs/vue3';
 
 const props = defineProps<{
     columns: Column[];
@@ -20,6 +21,14 @@ const props = defineProps<{
     routeName: string;
     handleAction: (action: 'delete', idOrIds: number | number[]) => Promise<void>;
 }>();
+
+function toggleUpdate(key: string, value: boolean, id: number) {
+    const form = useForm({ [key]: value });
+
+    form.patch(route(`${props.routeName}.${key}`, id), {
+        preserveScroll: true,
+    });
+}
 </script>
 
 <template>
@@ -34,16 +43,16 @@ const props = defineProps<{
             </Td>
 
             <Td v-for="column in props.columns" :key="column.key">
-                <template v-if="column.key === 'image'">
+                <template v-if="column.type === 'image'">
                     <Image v-if="row[column.key]" :src="row[column.key]" alt="Image" class="h-12 w-12 !rounded-full object-cover" />
                 </template>
                 <template v-else-if="column.key === 'email_verified_at'">
                     <span v-html="formatters.EmailVerified(row[column.key])"></span>
                 </template>
-                <template v-else-if="column.key === 'created_at'">
+                <template v-else-if="column.type === 'date'">
                     {{ formatters.date(row[column.key], 'short') }}
                 </template>
-                <template v-else-if="formatters.shouldSplit(column.key, row[column.key])">
+                <template v-else-if="column.type === 'highlight'">
                     <div class="flex flex-wrap gap-1">
                         <span
                             v-for="(item, index) in formatters.splitAndStyle(row[column.key])"
@@ -53,6 +62,18 @@ const props = defineProps<{
                             {{ item }}
                         </span>
                     </div>
+                </template>
+                <template v-else-if="column.type === 'toggle'">
+                    <Toggle
+                        :modelValue="row[column.key] === 1"
+                        @update:modelValue="(val) => toggleUpdate(column.key, val, row.id)"
+                    />
+                </template>
+                <template v-else-if="column.type === 'boolean'">
+                    {{ formatters.boolean(row[column.key]) }}
+                </template>
+                <template v-else-if="column.type === 'status'">
+                    {{ formatters.status(row[column.key]) }}
                 </template>
                 <template v-else>
                     {{ row[column.key] }}
@@ -97,7 +118,7 @@ const props = defineProps<{
     </Tbody>
 
     <Tbody v-else>
-        <Tr class="w-full text-body-muted w-3 text-sm">
+        <Tr class="text-body-muted w-3 w-full text-sm">
             <Td colspan="20">
                 <div class="flex w-full flex-col items-center justify-center gap-2 py-3">
                     <Inbox class="size-10" />

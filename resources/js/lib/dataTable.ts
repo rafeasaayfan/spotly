@@ -39,17 +39,9 @@ export const defaultTableConditions: TableConditions = {
     enableUserAssignments: false,
 };
 
-// Formatters.js أو ضمن نفس ملف lib/composables
 export const formatters = {
     // Boolean formatter (Yes/No)
     boolean: (value: any) => (value ? 'Yes' : 'No'),
-
-    // Toggle formatter (active/inactive with icon or color class)
-    toggle: (value: boolean) => {
-        return value
-            ? `<span style="color:green; font-weight:bold">✔ Active</span>`
-            : `<span style="color:red; font-weight:bold">✖ Inactive</span>`;
-    },
 
     // Status formatter with color
     status: (value: string) => {

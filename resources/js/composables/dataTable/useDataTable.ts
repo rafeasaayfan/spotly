@@ -25,6 +25,7 @@ export interface Column {
     relation?: Array<{ value: string | number; label: string }>;
     options?: Array<{ value: string | number; label: string }>;
     required?: boolean;
+    maxlength?: number;
 }
 
 export interface FilterOptions {
