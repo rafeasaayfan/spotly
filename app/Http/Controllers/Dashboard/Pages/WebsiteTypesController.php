@@ -22,7 +22,7 @@ class WebsiteTypesController extends Controller
     {
         $query = WebsiteType::query();
 
-        $columnsSearching = ['type', 'user_name'];
+        $columnsSearching = ['user_name', 'type'];
         $columnsSelection = [];
         $relations = ['user_name'];
 
@@ -38,7 +38,7 @@ class WebsiteTypesController extends Controller
      */
     public function create()
     {
-        return Inertia::render('dashboard/pages/websiteTypes/actions/Create');
+        //
     }
 
     /**
@@ -48,13 +48,15 @@ class WebsiteTypesController extends Controller
     {
         $validated = $request->validated();
 
-        $websiteType = new WebsiteType($validated);
+        $created_by = Auth::id();
+        if (!$created_by) return;
 
-        $websiteType->created_by = Auth::user()->id;
+        $websiteType = new WebsiteType($validated);
+        $websiteType->created_by = $created_by;
 
         $websiteType->save();
 
-        return redirect()->route('dashboard.websiteTypes.index')->with('message', 'WebsiteType created successfully');
+        return redirect()->route('dashboard.websiteTypes.index')->with('message', 'Website type created successfully');
     }
 
     /**
@@ -62,9 +64,10 @@ class WebsiteTypesController extends Controller
      */
     public function show(string $id)
     {
-        $websiteType = WebsiteType::findOrFail($id);
+        $result = WebsiteType::with('user')->findOrFail($id);
+        $websiteType = $this->flattenRelationData($result, ['user_name']);
 
-        return Inertia::render('dashboard/pages/websiteTypes/actions/View', [
+        return response()->json([
             'data' => $websiteType,
         ]);
     }
@@ -76,7 +79,7 @@ class WebsiteTypesController extends Controller
     {
         $websiteType = WebsiteType::findOrFail($id);
 
-        return Inertia::render('dashboard/pages/websiteTypes/actions/Edit', [
+        return response()->json([
             'data' => $websiteType,
         ]);
     }
@@ -90,11 +93,9 @@ class WebsiteTypesController extends Controller
 
         $websiteType->fill($validated);
 
-        $websiteType->updated_by = Auth::user()->id;
-
         $websiteType->save();
 
-        return redirect()->route('dashboard.websiteTypes.index')->with('message', 'WebsiteType updated successfully');
+        return redirect()->route('dashboard.websiteTypes.index')->with('message', 'Website type updated successfully');
     }
 
     /**
@@ -104,11 +105,31 @@ class WebsiteTypesController extends Controller
     {
         $validated = $request->validate([
             'ids' => 'required|array',
-            'ids.*' => 'integer|exists:websiteTypes,id',
+            'ids.*' => 'integer|exists:website_types,id',
         ]);
 
         WebsiteType::destroy($validated['ids']);
 
-        return redirect()->back()->with('message', __('WebsiteType(s) deleted successfully.'));
+        return redirect()->back()->with('message', __('Website type(s) deleted successfully.'));
+    }
+
+    // Toggle active status
+    public function toggleActive(Request $request, $id)
+    {
+        $websiteType = WebsiteType::findOrFail($id);
+
+        $validated = $request->validate([
+            'is_active' => 'required|boolean',
+        ]);
+
+        $websiteType->update([
+            'is_active' => $validated['is_active'],
+        ]);
+
+        $message = $validated['is_active']
+            ? 'Website type activated successfully.'
+            : 'Website type deactivated successfully.';
+
+        return redirect()->back()->with('message', $message);
     }
 }

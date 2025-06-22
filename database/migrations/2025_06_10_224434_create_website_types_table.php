@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('website_types', function (Blueprint $table) {
             $table->id();
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
-            $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
             $table->string('type')->unique();
             $table->text('description');
             $table->boolean('is_active')->default(false);

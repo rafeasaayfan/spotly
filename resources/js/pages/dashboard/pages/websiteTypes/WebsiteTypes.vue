@@ -21,20 +21,18 @@ const columns = [
     { key: 'id', label: 'ID' },
     { key: 'user_name', label: 'Created By' },
     { key: 'type', label: 'Type' },
-    { key: 'is_active', label: 'Active' },
-    { key: 'created_at', label: 'Created At' },
-    { key: 'updated_at', label: 'Updated At' },
+    { key: 'description', label: 'Description' },
+    { key: 'is_active', label: 'Is Active', type: 'toggle' },
 ];
 
 const filter = [
     {
         key: 'is_active',
-        label: 'Active',
+        label: 'Is Active',
         type: 'select',
         options: [
-            { value: 'all', label: 'All' },
-            { value: '0', label: 'No' },
-            { value: '1', label: 'Yes' },
+            { value: '0', label: 'Inactive' },
+            { value: '1', label: 'Active' },
         ],
     },
 ];
@@ -63,11 +61,12 @@ const tableConditions = {
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <DataTable
-            :table-data="props.websiteTypes"
+            :tableData="props.websiteTypes"
             :filter="filter"
             :columns="columns"
-            route-name="dashboard.websiteTypes"
-            :table-conditions="tableConditions"
+            routeName="dashboard.websiteTypes"
+            :tableConditions="tableConditions"
+            path="websiteTypes"
         />
     </DashboardLayout>
 </template>

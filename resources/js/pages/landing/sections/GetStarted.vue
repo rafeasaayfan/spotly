@@ -2,7 +2,7 @@
 import { Link } from '@inertiajs/vue3';
 import { onMounted, onUnmounted, ref } from 'vue';
 
-import { CheckCircle, Palette, ShoppingCart, Utensils } from 'lucide-vue-next';
+import { CheckCircle, Palette, ShoppingCart, Utensils, CircleHelp } from 'lucide-vue-next';
 
 const scrollContainer = ref<HTMLElement | null>(null);
 let direction = 1; // 1 = forward, -1 = backward
@@ -41,26 +41,23 @@ onUnmounted(() => {
     }
 });
 
-const types = [
-    {
-        title: 'E-commerce',
-        description: 'Sell products online, manage inventory, and accept payments securely.',
-        icon: ShoppingCart,
-        comingSoon: false,
-    },
-    {
-        title: 'Restaurant',
-        description: 'Create an attractive site with your menu, photo gallery, and reservation info.',
-        icon: Utensils,
-        comingSoon: true,
-    },
-    {
-        title: 'Portfolio',
-        description: 'Showcase your work and talent. Perfect for artists, designers, and freelancers.',
-        icon: Palette,
-        comingSoon: true,
-    },
-];
+const props = defineProps<{
+    websiteTypes: Record<string, any>;
+}>();
+
+function handleIcon(type: string) {
+    switch (type) {
+        case 'E-commerce':
+            return ShoppingCart;
+        case 'Restaurant':
+            return Utensils;
+        case 'Portfolio':
+            return Palette;
+
+        default:
+            return CircleHelp;
+    }
+}
 </script>
 
 <template>
@@ -75,8 +72,8 @@ const types = [
 
             <div class="group relative overflow-hidden" @mouseenter="pauseAutoScroll" @mouseleave="resumeAutoScroll">
                 <div ref="scrollContainer" class="scrollbar-hide flex space-x-4 overflow-x-auto overflow-y-hidden scroll-smooth p-2">
-                    <template v-for="type in types" :key="type.title">
-                        <Link href="/home" v-if="!type.comingSoon" class="cards-landing-animation group/card relative min-w-[380px] rounded-xl">
+                    <template v-for="item in props.websiteTypes" :key="item.type">
+                        <Link href="/home" v-if="item.is_active" class="cards-landing-animation group/card relative min-w-[380px] rounded-xl">
                             <div
                                 class="absolute top-3 end-3 z-10 flex size-10 scale-75 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--primary)] to-[var(--destructive)] opacity-0 transition-all duration-300 group-hover/card:scale-100 group-hover/card:rotate-12 group-hover/card:opacity-100"
                             >
@@ -86,18 +83,17 @@ const types = [
                             <div
                                 class="text-body border-muted flex h-full w-full flex-col gap-3 rounded-xl border bg-black/4 p-8 text-center backdrop-blur-lg transition-all duration-200 hover:translate-y-[-2px] hover:scale-102 hover:bg-black/6 active:scale-98 dark:bg-white/4 hover:dark:bg-white/6"
                             >
-                                <component :is="type.icon" class="mx-auto size-16" />
+                                <component :is="handleIcon(item.type)" class="mx-auto size-16" />
 
                                 <div class="flex flex-col items-center justify-center gap-2">
-                                    <h3 class="text-xl font-semibold">{{ type.title }}</h3>
-                                    <p class="text-body-muted text-sm">{{ type.description }}</p>
+                                    <h3 class="text-xl font-semibold">{{ item.type }}</h3>
+                                    <p class="text-body-muted text-sm">{{ item.description }}</p>
                                 </div>
                             </div>
                         </Link>
 
                         <div v-else class="cards-landing-animation group/card relative min-w-[380px] rounded-xl">
                             <div
-                                v-if="type.comingSoon"
                                 class="absolute inset-0 z-10 rounded-lg bg-gradient-to-br from-gray-900/30 to-black/30 backdrop-blur-[1.2px] transition-all duration-300 border border-muted"
                             >
                                 <h1 class="text-sm font-medium p-2">Coming Soon</h1>
@@ -106,11 +102,11 @@ const types = [
                             <div
                                 class="text-body flex h-full w-full flex-col gap-3 rounded-xl  p-8 text-center backdrop-blur-lg"
                             >
-                                <component :is="type.icon" class="mx-auto size-16" />
+                                <component :is="handleIcon(item.type)" class="mx-auto size-16" />
 
                                 <div class="flex flex-col items-center justify-center gap-2">
-                                    <h3 class="text-xl font-semibold">{{ type.title }}</h3>
-                                    <p class="text-body-muted text-sm">{{ type.description }}</p>
+                                    <h3 class="text-xl font-semibold">{{ item.type }}</h3>
+                                    <p class="text-body-muted text-sm">{{ item.description }}</p>
                                 </div>
                             </div>
                         </div>

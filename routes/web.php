@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LandingController;
 use App\Http\Middleware\HandleLanguage;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
@@ -14,9 +15,7 @@ Route::get('/setLang/{lang}', function ($lang = null) {
 
 Route::middleware([HandleLanguage::class])->group(function () {
 
-    Route::get('/', function () {
-        return Inertia::render('landing/Landing');
-    })->name('landing');
+    Route::get('/', [LandingController::class, 'index'])->name('landing');
 
     require __DIR__ . '/dashboard.php';
     require __DIR__ . '/settings.php';

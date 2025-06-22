@@ -39,7 +39,7 @@ const modelValue = useVModel(props, 'modelValue', emits, {
       rows="5"
     ></textarea>
 
-    <div v-if="props.maxlength" class="text-sm text-end text-body-muted mt-1">
+    <div v-if="props.maxlength" class="text-xs text-end text-body-muted mt-1">
       {{ String(modelValue).length }} / {{ props.maxlength }} characters
     </div>
   </div>

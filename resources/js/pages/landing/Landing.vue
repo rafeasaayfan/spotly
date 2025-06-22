@@ -55,6 +55,11 @@ onMounted(() => {
         ScrollTrigger.refresh();
     });
 });
+
+
+const props = defineProps<{
+    websiteTypes: Record<string, any>;
+}>();
 </script>
 
 <template>
@@ -67,7 +72,7 @@ onMounted(() => {
 
         <HowItWork />
 
-        <GetStarted />
+        <GetStarted :websiteTypes="props.websiteTypes" />
 
         <AboutUs />
 

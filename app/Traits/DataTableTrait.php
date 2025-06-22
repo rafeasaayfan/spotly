@@ -39,14 +39,14 @@ trait DataTableTrait
             $query->orderBy($sortBy, $sortDir);
         }
 
-        $results = $query->paginate($perPage);
+        $result = $query->paginate($perPage);
 
-        // Transform results to flatten relation data
+        // Transform result to flatten relation data
         if (!empty($relations)) {
-            $this->flattenRelationData($results, $relations);
+            $this->flattenRelationData($result, $relations);
         }
 
-        return $results;
+        return $result;
     }
 
     /**
@@ -124,7 +124,7 @@ trait DataTableTrait
                 continue;
             }
 
-            if($value === 'all' || $value === null) {
+            if ($value === 'all' || $value === null) {
                 continue;
             }
 
@@ -142,43 +142,52 @@ trait DataTableTrait
     }
 
     /**
-     * Flatten relation data in results
+     * Flatten relation data in result
      *
-     * @param \Illuminate\Pagination\LengthAwarePaginator $results
+     * @param \Illuminate\Pagination\LengthAwarePaginator $result
      * @param array $relationColumns
      * @return void
      */
-    protected function flattenRelationData($results, array $relationColumns)
+    protected function flattenRelationData($result, array $relationColumns)
     {
-        $results->getCollection()->transform(function ($item) use ($relationColumns) {
-            foreach ($relationColumns as $relationColumn) {
-                if (str_contains($relationColumn, '_')) {
-                    [$relation, $field] = explode('_', $relationColumn, 2);
+        if ($result instanceof \Illuminate\Pagination\AbstractPaginator || $result instanceof \Illuminate\Support\Collection) {
+            $result->getCollection()->transform(function ($item) use ($relationColumns) {
+                return $this->applyFlattening($item, $relationColumns);
+            });
+        } else {
+            return $this->applyFlattening($result, $relationColumns);
+        }
+    }
 
-                    if (!isset($item->$relation)) {
-                        continue;
-                    }
+    protected function applyFlattening($item, array $relationColumns)
+    {
+        foreach ($relationColumns as $relationColumn) {
+            if (str_contains($relationColumn, '_')) {
+                [$relation, $field] = explode('_', $relationColumn, 2);
 
-                    $relationValue = $item->$relation;
-
-                    if ($relationValue instanceof \Illuminate\Support\Collection) {
-                        $flattenedValue = $relationValue->pluck($field)->filter()->implode(', ');
-                    }
-                    // If it's a single model (hasOne, belongsTo)
-                    elseif ($relationValue instanceof \Illuminate\Database\Eloquent\Model) {
-                        $flattenedValue = $relationValue->$field ?? null;
-                    } else {
-                        $flattenedValue = null;
-                    }
-
-                    $item->setAttribute("{$relation}_{$field}", $flattenedValue);
-
-                    unset($item->$relation);
+                if (!isset($item->$relation)) {
+                    continue;
                 }
-            }
 
-            return $item;
-        });
+                $relationValue = $item->$relation;
+
+                if ($relationValue instanceof \Illuminate\Support\Collection) {
+                    $flattenedValue = $relationValue->pluck($field)->filter()->implode(', ');
+                }
+                // If it's a single model (hasOne, belongsTo)
+                elseif ($relationValue instanceof \Illuminate\Database\Eloquent\Model) {
+                    $flattenedValue = $relationValue->$field ?? null;
+                } else {
+                    $flattenedValue = null;
+                }
+
+                $item->setAttribute("{$relation}_{$field}", $flattenedValue);
+
+                unset($item->$relation);
+            }
+        }
+
+        return $item;
     }
 
     /**

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class WebsiteType extends Model
 {
-    protected $fillable = ['created_by', 'type', 'is_active'];
+    protected $fillable = ['created_by', 'type', 'description', 'is_active'];
 
     /**
      * Get the user that created the website type.

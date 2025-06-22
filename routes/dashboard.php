@@ -15,6 +15,7 @@ Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboa
     dashboardPagesRoutes('users', UsersController::class);
     //* Website types
     dashboardPagesRoutes('websiteTypes', WebsiteTypesController::class);
+    Route::patch('websiteTypes/{id}/is_active', [WebsiteTypesController::class, 'toggleActive'])->name('websiteTypes.is_active');
 
     //* Assignments
     Route::middleware('can:assignments_access')->prefix('assignments')->group(function () {
