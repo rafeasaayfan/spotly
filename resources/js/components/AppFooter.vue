@@ -1,23 +1,23 @@
 <script setup lang="ts">
 import AppLogoIcon from './logo/AppLogoIcon.vue';
-import { Input } from './ui/fields';
+import { Input, InputError } from './ui/fields';
 
 import { navbarItems } from '@/config/navigations';
 import { useNavigation } from '@/composables/navigation/useNavigation';
 
-import { Link } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { Link, useForm } from '@inertiajs/vue3';
 
-import { Facebook, Instagram } from 'lucide-vue-next';
+import { Facebook, Instagram, LoaderCircle } from 'lucide-vue-next';
 import { Button } from './ui/button';
 
 const { scrollToSection } = useNavigation(navbarItems);
 
-const email = ref('');
+const form = useForm({ email: '' });
+
 const subscribe = () => {
-    // You can connect this with your backend later
-    console.log(`Subscribed: ${email.value}`);
-    email.value = '';
+    form.put(route('subscribe'), {
+        preserveScroll: true,
+    });
 };
 </script>
 
@@ -80,8 +80,12 @@ const subscribe = () => {
                             <div class="flex flex-col gap-3">
                                 <h3 class="text-body font-semibold">Subscribe to Newsletter</h3>
                                 <form @submit.prevent="subscribe" class="flex flex-col gap-2">
-                                    <Input v-model="email" type="email" placeholder="Enter your email" />
-                                    <Button type="submit" class=""> Subscribe </Button>
+                                    <Input v-model="form.email" type="email" placeholder="Enter your email" autocomplete="email" required />
+                                    <InputError v-if="form.errors" :message="form.errors.email" />
+                                    <Button type="submit" :disabled="form.processing">
+                                        <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
+                                        Subscribe
+                                    </Button>
                                 </form>
                             </div>
 

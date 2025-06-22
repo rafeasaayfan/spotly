@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import { onMounted } from 'vue';
+import { onMounted, watchEffect } from 'vue';
 
 import AppLayout from '@/layouts/AppLayout.vue';
 import AboutUs from './sections/AboutUs.vue';
@@ -12,6 +12,7 @@ import WhySpotly from './sections/WhySpotly.vue';
 
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { toast } from '@/lib/sweetAlert';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -56,10 +57,19 @@ onMounted(() => {
     });
 });
 
-
 const props = defineProps<{
     websiteTypes: Record<string, any>;
+        flash?: {
+        message?: string;
+    };
 }>();
+
+watchEffect(() => {
+    const message = props.flash?.message;
+    if (message) {
+        toast.fire({ icon: 'success', title: message });
+    }
+});
 </script>
 
 <template>
