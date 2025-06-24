@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Dialog, DialogDescription, DialogHeader, DialogScrollContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ActionAssignmentsBtn, ActionDeleteBtn, ActionEditBtn, ActionViewBtn, Tbody, Td, Tr } from '@/components/ui/table';
-import { Checkbox, Toggle } from '../ui/fields';
+import { Checkbox, Select, Toggle } from '../ui/fields';
 import { Image } from '../ui/image';
 import Modal from './actions/Modal.vue';
 
@@ -22,7 +22,7 @@ const props = defineProps<{
     handleAction: (action: 'delete', idOrIds: number | number[]) => Promise<void>;
 }>();
 
-function toggleUpdate(key: string, value: boolean, id: number) {
+function updateCol(key: string, value: any, id: number) {
     const form = useForm({ [key]: value });
 
     form.patch(route(`${props.routeName}.${key}`, id), {
@@ -47,7 +47,7 @@ function toggleUpdate(key: string, value: boolean, id: number) {
                     <Image v-if="row[column.key]" :src="row[column.key]" alt="Image" class="h-12 w-12 !rounded-full object-cover" />
                 </template>
                 <template v-else-if="column.key === 'email_verified_at'">
-                    <span v-html="formatters.EmailVerified(row[column.key])"></span>
+                    <span v-html="formatters.emailVerified(row[column.key])"></span>
                 </template>
                 <template v-else-if="column.type === 'date'">
                     {{ formatters.date(row[column.key], 'short') }}
@@ -64,17 +64,39 @@ function toggleUpdate(key: string, value: boolean, id: number) {
                     </div>
                 </template>
                 <template v-else-if="column.type === 'toggle'">
-                    <Toggle
-                        :modelValue="row[column.key] === 1"
-                        @update:modelValue="(val) => toggleUpdate(column.key, val, row.id)"
-                    />
+                    <Toggle :modelValue="row[column.key] === 1" @update:modelValue="(val) => updateCol(column.key, val, row.id)" />
+                </template>
+                <template v-else-if="column.type === 'select'">
+                    <Select
+                        :id="column.label"
+                        class="p-1 text-xs"
+                        v-model="row[column.key]"
+                        :placeholder="column.placeholder ?? column.label"
+                        :required="column.required"
+                        @update:modelValue="(val) => updateCol(column.key, val, row.id)"
+                    >
+                        <option v-for="option in column.options" :key="option.label" :value="option.value">{{ option.label }}</option>
+                    </Select>
                 </template>
                 <template v-else-if="column.type === 'boolean'">
-                    {{ formatters.boolean(row[column.key]) }}
+                    <span v-html="formatters.boolean(row[column.key])"></span>
+                </template>
+                <template v-else-if="column.type === 'active'">
+                    <span v-html="formatters.active(row[column.key])"></span>
                 </template>
                 <template v-else-if="column.type === 'status'">
-                    {{ formatters.status(row[column.key]) }}
+                    <span v-html="formatters.status(row[column.key])"></span>
                 </template>
+                <template v-else-if="column.type === 'email'">
+                    <a :href="`mailto:${row[column.key]}`">{{ row[column.key] }}</a>
+                </template>
+                <template v-else-if="column.type === 'phone_number'">
+                    <a :href="`tel:${row[column.key]}`">{{ row[column.key] }}</a>
+                </template>
+                <template v-else-if="column.type === 'url'">
+                    <a :href="`${row[column.key]}`" target="_blank">{{ column.key }}</a>
+                </template>
+
                 <template v-else>
                     {{ row[column.key] }}
                 </template>

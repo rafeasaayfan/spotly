@@ -18,9 +18,13 @@ const props = defineProps<{
 const fileUpdatedName = ref('');
 const fileInputRef = ref<HTMLInputElement | null>(null);
 
+const emit = defineEmits(['update:modelValue']);
+
 function handleFileChange(event: Event) {
   const target = event.target as HTMLInputElement;
-  fileUpdatedName.value = target.files?.[0]?.name || '';
+  const file = target.files?.[0] || null;
+  fileUpdatedName.value = file?.name || '';
+  emit('update:modelValue', file);
 }
 
 const src = props.src;

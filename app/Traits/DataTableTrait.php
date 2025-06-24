@@ -214,7 +214,5 @@ trait DataTableTrait
         if (is_array($selectedCols)) {
             return $modelClass::select(['id', ...$selectedCols])->get();
         }
-
-        return $modelClass::select(['id', $selectedCols])->get();
     }
 }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { formatters } from '@/lib/dataTable';
+import { Image } from '@/components/ui/image';
 import { type Column } from '@/composables/dataTable/useDataTable';
+import { formatters } from '@/lib/dataTable';
 
 const props = defineProps<{
     data: Record<string, any>;
@@ -10,8 +11,12 @@ const props = defineProps<{
 
 <template>
     <div class="grid gap-3 rounded-md lg:grid-cols-2">
-        <div v-for="column in props.columns" :key="column.key"
-            :class="column.type === 'textarea' ? 'col-span-2' : ''" class="border-muted bg-body flex flex-col gap-3 rounded-md border p-4 shadow-sm">
+        <div
+            v-for="column in props.columns"
+            :key="column.key"
+            :class="['textarea', 'image'].includes(column.type ?? '') ? 'col-span-2' : ''"
+            class="border-muted bg-body flex flex-col gap-3 rounded-md border p-4 shadow-sm"
+        >
             <div class="flex items-center gap-2">
                 <p class="text-body-muted">{{ column.label.charAt(0).toUpperCase() + column.label.slice(1) }}</p>
             </div>
@@ -26,7 +31,7 @@ const props = defineProps<{
                 </template>
 
                 <template v-else-if="column.key === 'email_verified_at'">
-                    <span v-html="formatters.EmailVerified(props.data[column.key])"></span>
+                    <span v-html="formatters.emailVerified(props.data[column.key])"></span>
                 </template>
 
                 <template v-else-if="column.type === 'highlight'">
@@ -42,11 +47,27 @@ const props = defineProps<{
                 </template>
 
                 <template v-else-if="column.type === 'boolean'">
-                    {{ formatters.boolean(props.data[column.key]) }}
+                    <span v-html="formatters.boolean(props.data[column.key])"></span>
+                </template>
+
+                <template v-else-if="column.type === 'active'">
+                    <span v-html="formatters.active(props.data[column.key])"></span>
                 </template>
 
                 <template v-else-if="column.type === 'status'">
-                    {{ formatters.status(props.data[column.key]) }}
+                    <span v-html="formatters.status(props.data[column.key])"></span>
+                </template>
+
+                <template v-else-if="column.type === 'email'">
+                    <a :href="`mailto:${props.data[column.key]}`">{{ props.data[column.key] }}</a>
+                </template>
+
+                <template v-else-if="column.type === 'phone_number'">
+                    <a :href="`tel:${props.data[column.key]}`">{{ props.data[column.key] }}</a>
+                </template>
+
+                <template v-else-if="column.type === 'url'">
+                    <a :href="`${props.data[column.key]}`" target="_blank">{{ column.key }}</a>
                 </template>
 
                 <template v-else>

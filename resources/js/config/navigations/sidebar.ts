@@ -1,5 +1,5 @@
 import { type SidebarSection } from '@/types';
-import { LayoutGrid, PercentDiamondIcon, Type, UsersIcon, MailCheck  } from 'lucide-vue-next';
+import { LayoutGrid, MailCheck, Monitor, PercentDiamondIcon, Type, UsersIcon } from 'lucide-vue-next';
 
 //? Sidebar Content
 export const mainSidebarItems: SidebarSection[] = [
@@ -30,6 +30,11 @@ export const mainSidebarItems: SidebarSection[] = [
                 title: 'Email subscribers',
                 href: '/dashboard/emailSubscribers',
                 icon: MailCheck,
+            },
+            {
+                title: 'Webistes',
+                href: '/dashboard/websites',
+                icon: Monitor,
             },
         ],
     },

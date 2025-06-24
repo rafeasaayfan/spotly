@@ -18,13 +18,20 @@ return new class extends Migration
             $table->foreignId('approved_or_denied_by')->nullable()->constrained('users')->onDelete('set null');
             $table->string('name')->unique();
             $table->string('subdomain')->unique();
-            $table->string('logo');
             $table->text('description');
-            $table->string('country')->nullable();
+            $table->string('country');
+            $table->string('city');
             $table->string('address');
-            $table->string('phone_number');
+            $table->string('phone_number')->unique();
+            $table->string('instagram');
+            $table->string('facebook');
+            $table->string('tiktok');
+            $table->string('language')->default('en');
+            $table->unsignedBigInteger('views_count')->default(0);
+            $table->boolean('is_active')->default(false);
             $table->enum('status', ['pending', 'denied', 'approved'])->default('pending');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

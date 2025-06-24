@@ -40,7 +40,7 @@ function updateValue(event: Event) {
         </select>
 
         <!-- Custom arrow inside the select -->
-        <div class="pointer-events-none absolute end-1 top-1/2 -translate-y-1/2">
+        <div class="pointer-events-none absolute end-1 top-0 h-full flex items-center justify-center">
             <ChevronDown class="size-3" />
         </div>
     </div>

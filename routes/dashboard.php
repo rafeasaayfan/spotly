@@ -6,8 +6,10 @@ use App\Http\Controllers\Dashboard\Pages\Assignments\RolesController;
 use App\Http\Controllers\Dashboard\Pages\Assignments\UserAssignmentsController;
 use App\Http\Controllers\Dashboard\Pages\EmailSubscribersController;
 use App\Http\Controllers\Dashboard\Pages\UsersController;
+use App\Http\Controllers\Dashboard\Pages\WebsitesController;
 use App\Http\Controllers\Dashboard\Pages\WebsiteTypesController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
@@ -17,8 +19,12 @@ Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboa
     //* Website types
     dashboardPagesRoutes('websiteTypes', WebsiteTypesController::class);
     Route::patch('websiteTypes/{id}/is_active', [WebsiteTypesController::class, 'toggleActive'])->name('websiteTypes.is_active');
-    //* Website types
+    //* Email subscribers
     dashboardPagesRoutes('emailSubscribers', EmailSubscribersController::class);
+    //* Websites
+    dashboardPagesRoutes('websites', WebsitesController::class);
+    Route::patch('websites/{id}/is_active', [WebsitesController::class, 'toggleActive'])->name('websites.is_active');
+    Route::patch('websites/{id}/status', [WebsitesController::class, 'changeStatus'])->name('websites.status');
 
     //* Assignments
     Route::middleware('can:assignments_access')->prefix('assignments')->group(function () {
@@ -44,6 +50,9 @@ Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboa
 
 function dashboardPagesRoutes($name, $controller)
 {
-    Route::resource($name, $controller)->except(['destroy']);
+    $param = Str::singular($name);
+
+    Route::resource($name, $controller)->except(['destroy', 'update']);
+    Route::post($name . '/{' . $param . '}/update', [$controller, 'update'])->name($name . '.update');
     Route::post($name . '/destroy', [$controller, 'destroy'])->name($name . '.destroy');
 }

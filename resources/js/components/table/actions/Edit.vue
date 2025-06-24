@@ -19,8 +19,8 @@ const props = defineProps<{
 const hasPasswordField = props.columns.some((column) => column.key === 'password');
 
 const form = useForm<Record<string, any>>({
-  ...props.data,
-  ...(hasPasswordField ? { password: '', password_confirmation: '' } : {}),
+    ...props.data,
+    ...(hasPasswordField ? { password: '', password_confirmation: '' } : {}),
 });
 
 watch(
@@ -35,7 +35,7 @@ watch(
 );
 
 function submit() {
-    form.put(route(`dashboard.${props.table}.update`, props.data.id), {
+    form.post(route(`dashboard.${props.table}.update`, props.data.id), {
         onSuccess: () => {
             const closeButton = document.querySelector('[data-slot="dialog-close"]');
             (closeButton as HTMLElement)?.click();
@@ -45,8 +45,8 @@ function submit() {
 </script>
 
 <template>
-    <form class="grid gap-4 pb-5 lg:grid-cols-2" @submit.prevent="submit">
-        <div class="grid gap-1" :class="column.type === 'textarea' ? 'col-span-2' : ''" v-for="(column, index) in props.columns" :key="index">
+    <form class="grid gap-4 pb-5 lg:grid-cols-2" @submit.prevent="submit" enctype="multipart/form-data">
+        <div class="flex flex-col gap-1" :class="['textarea', 'image', 'file'].includes(column.type ?? '') ? 'col-span-2' : ''" v-for="(column, index) in props.columns" :key="index">
             <Label :for="column.label">{{ column.label.charAt(0).toUpperCase() + column.label.slice(1) }}</Label>
 
             <Input
@@ -55,14 +55,14 @@ function submit() {
                 :type="column.type"
                 :id="column.label"
                 :placeholder="column.placeholder"
-                class="mt-1 block w-full"
+                class="block w-full"
                 :autocomplete="column.type"
             />
 
             <Select
                 v-if="column.type === 'select'"
                 :id="column.label"
-                class="mt-1 block w-full"
+                class="block w-full"
                 v-model="form[column.key]"
                 :placeholder="column.placeholder ?? column.label"
                 :required="column.required"
@@ -74,7 +74,7 @@ function submit() {
                 v-if="column.type === 'textarea'"
                 :id="column.label"
                 v-model="form[column.key]"
-                class="mt-1 block w-full"
+                class="block w-full"
                 :placeholder="column.placeholder ?? column.label"
                 :required="column.required"
                 :maxlength="column.maxlength"
@@ -82,17 +82,18 @@ function submit() {
 
             <File
                 v-if="column.type === 'file'"
-                class="mt-1 block w-full"
+                class="block w-full"
                 :id="column.label"
                 v-model="form[column.key]"
                 :name="column.key"
                 :label="column.label"
+                :src="typeof form[column.key] === 'string' ? form[column.key] : 'http'"
             />
 
             <SelectWithSearch
                 v-if="column.type === 'select_with_search'"
                 :id="column.label"
-                class="mt-1 block w-full"
+                class="block w-full"
                 v-model="form[column.key]"
                 :required="column.required"
                 :placeholder="column.label"

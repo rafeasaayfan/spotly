@@ -14,11 +14,11 @@ const props = defineProps<{
     data-slot="action-edit"
     :class="
       cn(
-        'bg-blue-950/25 dark:bg-blue-600/25 hover:bg-blue-950/35 hover:dark:bg-blue-600/35 text-blue-950 dark:text-blue-600 w-7 h-7 rounded-md flex items-center justify-center cursor-pointer',
+        'bg-blue-950/25 dark:bg-blue-600/25 hover:bg-blue-950/35 hover:dark:bg-blue-600/35 text-blue-950 dark:text-blue-600 w-6.5 h-6.5 rounded-md flex items-center justify-center cursor-pointer',
         props.class,
       )
     "
   >
-    <Edit2 class="w-4 h-4" />
+    <Edit2 class="size-3.5" />
   </button>
 </template>

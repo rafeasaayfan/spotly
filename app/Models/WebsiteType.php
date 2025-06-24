@@ -31,4 +31,12 @@ class WebsiteType extends Model
     {
         return $this->hasMany(Website::class);
     }
+
+    /**
+     * Get the active website type.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', 1);
+    }
 }

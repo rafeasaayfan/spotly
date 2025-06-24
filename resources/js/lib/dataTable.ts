@@ -41,20 +41,45 @@ export const defaultTableConditions: TableConditions = {
 
 export const formatters = {
     // Boolean formatter (Yes/No)
-    boolean: (value: any) => (value ? 'Yes' : 'No'),
+    boolean: (value: any) =>
+        value
+            ? `<span class="bg-success text-for-bg-success px-2 py-1 rounded-sm text-xs border border-muted shadow">Yes</span>`
+            : `<span class="bg-destructive text-for-bg-destructive px-2 py-1 rounded-sm text-xs border border-muted shadow">No</span>`,
+
+    // Active formatter (Yes/No)
+    active: (value: any) =>
+        value
+            ? `<span class="bg-success text-for-bg-success px-2 py-1 rounded-sm text-xs border border-muted shadow">Active</span>`
+            : `<span class="bg-destructive text-for-bg-destructive px-2 py-1 rounded-sm text-xs border border-muted shadow">Inactive</span>`,
 
     // Status formatter with color
     status: (value: string) => {
         const colorMap: Record<string, string> = {
-            active: 'green',
-            inactive: 'gray',
-            pending: 'orange',
-            blocked: 'red',
+            active: 'bg-success text-for-bg-success',
+            inactive: 'bg-destructive text-for-bg-destructive',
+
+            approved: 'bg-success text-for-bg-success',
+            accepted: 'bg-success text-for-bg-success',
+
+            pending: 'bg-content text-body-active',
+
+            blocked: 'bg-destructive text-for-bg-destructive',
+            denied: 'bg-destructive text-for-bg-destructive',
+            rejected: 'bg-destructive text-for-bg-destructive',
         };
 
-        const color = colorMap[value.toLowerCase()] || 'black';
+        const color = colorMap[value.toLowerCase()] || 'bg-content';
 
-        return `<span style="color:${color}; font-weight:600">${value}</span>`;
+        return `<span class="${color} px-2 py-1 rounded-sm text-xs border border-muted shadow">${value}</span>`;
+    },
+
+    // Email verified
+    emailVerified: (value: string | null) => {
+        if (!value) {
+            return `<span class="bg-destructive text-for-bg-destructive rounded-sm text-xs px-2 py-1">Not Verified</span>`;
+        } else {
+            return `<span class="bg-success text-for-bg-success rounded-sm text-xs px-2 py-1">Verified</span>`;
+        }
     },
 
     // Date formatter
@@ -67,14 +92,6 @@ export const formatters = {
         if (format === 'time') return date.toLocaleTimeString();
 
         return date.toLocaleString();
-    },
-
-    EmailVerified: (value: string | null) => {
-        if (!value) {
-            return `<span class="bg-destructive text-for-bg-destructive rounded-sm text-xs px-2 py-1">Not Verified</span>`;
-        } else {
-            return `<span class="bg-success text-for-bg-success rounded-sm text-xs px-2 py-1">Verified</span>`;
-        }
     },
 
     // Currency formatter
@@ -97,7 +114,7 @@ export const formatters = {
 
         const isLikelyPlural = prefix.endsWith('s') || prefix.endsWith('es') || prefix.endsWith('ies');
 
-        return isLikelyPlural || ((typeof value === 'string' && value.includes(',')) || Array.isArray(value));
+        return isLikelyPlural || (typeof value === 'string' && value.includes(',')) || Array.isArray(value);
     },
 
     splitAndStyle: (value: string): string[] => {

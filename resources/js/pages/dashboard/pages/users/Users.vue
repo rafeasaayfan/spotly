@@ -20,9 +20,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 const columns = [
     { key: 'id', label: 'ID' },
     { key: 'name', label: 'Name' },
-    { key: 'email', label: 'Email' },
+    { key: 'email', label: 'Email', type: 'email' },
     { key: 'email_verified_at', label: 'Verification' },
-    { key: 'created_at', label: 'Created At' },
+    { key: 'created_at', label: 'Created At', type: 'date' },
 ];
 
 const filter = [

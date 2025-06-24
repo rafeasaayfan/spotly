@@ -41,7 +41,7 @@ const props = defineProps<TableProps>();
                                 sort_dir: props.filters.sort_dir === 'asc' ? 'desc' : 'asc',
                             })
                         "
-                        class="text-body-muted cursor-pointer select-none"
+                        class="text-body-muted cursor-pointer select-none text-xs"
                     >
                         <div class="flex items-center gap-2">
                             <span>{{ column.label }}</span>
