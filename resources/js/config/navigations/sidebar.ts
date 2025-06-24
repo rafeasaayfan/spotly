@@ -1,5 +1,5 @@
 import { type SidebarSection } from '@/types';
-import { LayoutGrid, MailCheck, Monitor, PercentDiamondIcon, Type, UsersIcon } from 'lucide-vue-next';
+import { LayoutGrid, MailCheck, MessageCircle, MessageSquare, Monitor, PercentDiamondIcon, Type, UsersIcon } from 'lucide-vue-next';
 
 //? Sidebar Content
 export const mainSidebarItems: SidebarSection[] = [
@@ -22,6 +22,11 @@ export const mainSidebarItems: SidebarSection[] = [
                 icon: UsersIcon,
             },
             {
+                title: 'Messages',
+                href: '/dashboard/messages',
+                icon: MessageSquare,
+            },
+            {
                 title: 'Website types',
                 href: '/dashboard/websiteTypes',
                 icon: Type,
@@ -35,6 +40,11 @@ export const mainSidebarItems: SidebarSection[] = [
                 title: 'Webistes',
                 href: '/dashboard/websites',
                 icon: Monitor,
+            },
+            {
+                title: 'Website Messages',
+                href: '/dashboard/websiteMessages',
+                icon: MessageCircle,
             },
         ],
     },

@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
+import { useForm } from '@inertiajs/vue3';
 
 import { gsap } from 'gsap';
-import Button from '@/components/ui/button/Button.vue';
-import { Input, Textarea } from '@/components/ui/fields';
 
-const formFeedbackText = ref('');
-const formFeedbackClass = ref('mt-4 text-sm');
+import { Button } from '@/components/ui/button';
+import { Input, InputError, Textarea } from '@/components/ui/fields';
 
 onMounted(() => {
     // --- Contact Form Input Animation ---
@@ -24,7 +23,7 @@ onMounted(() => {
             },
         });
     });
-    gsap.from("#contact-form button[type='submit']", {
+    gsap.from("#button-div", {
         opacity: 0,
         scale: 0.8,
         duration: 0.4,
@@ -36,54 +35,56 @@ onMounted(() => {
             once: true,
         },
     });
-
-    const contactForm = document.getElementById('contact-form') as HTMLFormElement | null;
-    if (contactForm) {
-        contactForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            formFeedbackText.value = 'Thank you! Your message has been "sent". (Demo only)';
-            formFeedbackClass.value = 'mt-4 text-sm text-green-400';
-            contactForm.reset();
-            setTimeout(() => {
-                formFeedbackText.value = '';
-                formFeedbackClass.value = 'mt-4 text-sm';
-            }, 5000);
-        });
-    }
 });
+
+const form = useForm({
+    name: '',
+    email: '',
+    message: '',
+});
+
+const submit = () => {
+    form.put(route('contactMessages'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            form.reset();
+        }
+    });
+};
 </script>
 
 <template>
-    <section id="contact-us" class="py-22 px-0 md:px-4">
-        <div class="px-4 mx-auto text-center flex flex-col items-center justify-center min-h-[650px] bg-black/3 backdrop-blur-[2px] dark:bg-white/2 rounded-md">
-            <div class="flex flex-col gap-3 mb-16">
-                <h2 class="section-title section-title-underline text-active text-3xl sm:text-4xl md:text-4xl lg:text-5xl font-bold">
+    <section id="contact-us" class="px-0 py-22 md:px-4">
+        <div
+            class="mx-auto flex min-h-[650px] flex-col items-center justify-center rounded-md bg-black/3 px-4 text-center backdrop-blur-[2px] dark:bg-white/2"
+        >
+            <div class="mb-16 flex flex-col gap-3">
+                <h2 class="section-title section-title-underline text-active text-3xl font-bold sm:text-4xl md:text-4xl lg:text-5xl">
                     Get In <span class="gradient-text">Touch</span>
                 </h2>
                 <p class="text-body-muted">Have questions or ready to start your Spotly journey? We'd love to hear from you!</p>
             </div>
 
-            <form id="contact-form" class="space-y-6 min-w-full md:min-w-2xl lg:min-w-4xl max-w-full">
-                <div>
-                    <Input type="text" name="name" placeholder="Your Name" class="h-11" />
+            <form @submit.prevent="submit()" id="contact-form" class="flex flex-col gap-6 max-w-full min-w-full md:min-w-2xl lg:min-w-4xl">
+                <div class="flex flex-col gap-1 items-start">
+                    <Input type="text" v-model="form.name" placeholder="Your Name" class="h-11" />
+                    <InputError v-if="form.errors.name" :message="form.errors.name" />
                 </div>
-                <div>
-                    <Input type="email" name="email" placeholder="Your Email" class="h-11" />
+                <div class="flex flex-col gap-1 items-start">
+                    <Input type="email" v-model="form.email" placeholder="Your Email" class="h-11" />
+                    <InputError v-if="form.errors.email" :message="form.errors.email" />
                 </div>
-                <div>
-                    <Textarea name="message" placeholder="Your Message" />
+                <div class="text-start">
+                    <Textarea v-model="form.message" placeholder="Your Message" :maxlength="255" />
+                    <InputError v-if="form.errors.message" :message="form.errors.message" />
                 </div>
-                <div>
-                    <Button
-                        type="submit"
-                        size="lg"
-                        class="glow-button w-full"
-                    >
-                        Send Message
+                <div class="w-full flex items-end justify-end" id="button-div">
+                    <Button type="submit" size="lg" class="glow-button" :disabled="form.processing">
+                        <span v-if="form.processing">Sending...</span>
+                        <span v-else>Send Message</span>
                     </Button>
                 </div>
             </form>
-            <div :class="formFeedbackClass" v-text="formFeedbackText"></div>
         </div>
     </section>
 </template>

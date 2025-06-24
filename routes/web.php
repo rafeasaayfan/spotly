@@ -17,6 +17,7 @@ Route::middleware([HandleLanguage::class])->group(function () {
 
     Route::get('/', [LandingController::class, 'index'])->name('landing');
     Route::put('/subscribe', [LandingController::class, 'subscribe'])->name('subscribe');
+    Route::put('/contactUs', [LandingController::class, 'contactUs'])->name('contactMessages');
 
     require __DIR__ . '/dashboard.php';
     require __DIR__ . '/settings.php';

@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Dashboard\Pages;
 
 use App\Http\Controllers\Controller;
-use App\Models\EmailSubscriber;
+use App\Models\Message;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class EmailSubscribersController extends Controller
+class MessagesController extends Controller
 {
     use DataTableTrait;
 
@@ -17,14 +17,14 @@ class EmailSubscribersController extends Controller
      */
     public function index(Request $request)
     {
-        $query = EmailSubscriber::query();
+        $query = Message::query();
 
-        $columnsSearching = ['email'];
+        $columnsSearching = ['name', 'email'];
 
         $data = $this->dataTable($query, $request, $columnsSearching);
 
-        return Inertia::render('dashboard/pages/emailSubscribers/EmailSubscribers', [
-            'emailSubscribers' => $data,
+        return Inertia::render('dashboard/pages/messages/Messages', [
+            'messages' => $data,
         ]);
     }
 
@@ -49,10 +49,10 @@ class EmailSubscribersController extends Controller
      */
     public function show(string $id)
     {
-        $emailsubscriber = EmailSubscriber::findOrFail($id);
+        $message = Message::findOrFail($id);
 
         return response()->json([
-            'data' => $emailsubscriber,
+            'data' => $message,
         ]);
     }
 
@@ -67,7 +67,7 @@ class EmailSubscribersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(EmailSubscriber $emailsubscriber)
+    public function update(Request $request, Message $message)
     {
         //
     }
@@ -79,11 +79,11 @@ class EmailSubscribersController extends Controller
     {
         $validated = $request->validate([
             'ids' => 'required|array',
-            'ids.*' => 'integer|exists:email_subscribers,id',
+            'ids.*' => 'integer|exists:messages,id',
         ]);
 
-        EmailSubscriber::destroy($validated['ids']);
+        Message::destroy($validated['ids']);
 
-        return redirect()->back()->with('message', __('Subscriber(s) deleted successfully.'));
+        return redirect()->back()->with('message', __('Message(s) deleted successfully.'));
     }
 }

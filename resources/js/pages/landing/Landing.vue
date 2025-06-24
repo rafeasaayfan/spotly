@@ -119,16 +119,12 @@ watchEffect(() => {
     opacity: 0;
 }
 .glow-button:hover:before {
-    transform: translate(-50%, -50%) scale(1.1);
+    transform: translate(-50%, -50%);
     opacity: 0.7;
 }
 .glow-button:hover {
-    transform: scale(1.05) !important;
     background-image: none;
     background-color: transparent;
-}
-.glow-button:active {
-    transform: scale(0.98) !important;
 }
 
 .section-title-underline {

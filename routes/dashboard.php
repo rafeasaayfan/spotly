@@ -5,7 +5,9 @@ use App\Http\Controllers\Dashboard\Pages\Assignments\PermissionsController;
 use App\Http\Controllers\Dashboard\Pages\Assignments\RolesController;
 use App\Http\Controllers\Dashboard\Pages\Assignments\UserAssignmentsController;
 use App\Http\Controllers\Dashboard\Pages\EmailSubscribersController;
+use App\Http\Controllers\Dashboard\Pages\MessagesController;
 use App\Http\Controllers\Dashboard\Pages\UsersController;
+use App\Http\Controllers\Dashboard\Pages\WebsiteMessagesController;
 use App\Http\Controllers\Dashboard\Pages\WebsitesController;
 use App\Http\Controllers\Dashboard\Pages\WebsiteTypesController;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +27,10 @@ Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboa
     dashboardPagesRoutes('websites', WebsitesController::class);
     Route::patch('websites/{id}/is_active', [WebsitesController::class, 'toggleActive'])->name('websites.is_active');
     Route::patch('websites/{id}/status', [WebsitesController::class, 'changeStatus'])->name('websites.status');
+    //* Website messages
+    dashboardPagesRoutes('websiteMessages', WebsiteMessagesController::class);
+    //* Messages
+    dashboardPagesRoutes('messages', MessagesController::class);
 
     //* Assignments
     Route::middleware('can:assignments_access')->prefix('assignments')->group(function () {
