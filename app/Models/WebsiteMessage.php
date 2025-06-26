@@ -13,6 +13,6 @@ class WebsiteMessage extends Model
      */
     public function website()
     {
-        return $this->hasOne(Website::class);
+        return $this->belongsTo(Website::class);
     }
 }

@@ -14,6 +14,7 @@ class Website extends Model implements HasMedia
         'owner_id',
         'website_type_id',
         'approved_or_denied_by',
+        'website_template_id',
         'name',
         'subdomain',
         'description',
@@ -58,17 +59,17 @@ class Website extends Model implements HasMedia
     /**
      * The website color theme.
      */
-    public function colorTemplate()
+    public function websiteTemplate()
     {
-        return $this->hasOne(WebsiteColor::class);
+        return $this->belongsTo(WebsiteTemplate::class);
     }
 
     /**
      * The website contact messages.
      */
-    public function contactMessages()
+    public function websiteMessages()
     {
-        return $this->hasMany(ContactMessage::class);
+        return $this->hasMany(WebsiteMessage::class);
     }
 
     /**

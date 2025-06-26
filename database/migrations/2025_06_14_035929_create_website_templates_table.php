@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('website_colors', function (Blueprint $table) {
+        Schema::create('website_templates', function (Blueprint $table) {
             $table->id();
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('website_type_id')->nullable()->constrained('website_types')->onDelete('set null');
-            $table->foreignId('website_id')->nullable()->constrained('websites')->onDelete('set null');
+            $table->foreignId('website_template_id')->constrained('website_templates')->onDelete('cascade');
             $table->boolean('is_custom')->default(false);
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('website_colors');
+        Schema::dropIfExists('website_templates');
     }
 };

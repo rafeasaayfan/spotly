@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('website_type_id')->nullable()->constrained('website_types')->onDelete('set null');
             $table->foreignId('approved_or_denied_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('website_template_id')->nullable()->constrained('website_templates')->onDelete('set null');
             $table->string('name')->unique();
             $table->string('subdomain')->unique();
             $table->text('description');

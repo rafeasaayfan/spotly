@@ -36,7 +36,7 @@ const isRTL = computed(() => page.props.lang === 'ar')
 <template>
   <div
     @click="toggleChecked = !toggleChecked"
-    :class="cn('group flex items-center gap-2 cursor-pointer transition-all ease-in-out duration-150', props.class)"
+    :class="cn('group flex items-center gap-2 cursor-pointer transition-all ease-in-out duration-150 ease-in-out', props.class)"
     :id="props.id"
   >
     <button

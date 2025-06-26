@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\WebsiteBuilderController;
 use App\Http\Middleware\HandleLanguage;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
@@ -18,6 +19,8 @@ Route::middleware([HandleLanguage::class])->group(function () {
     Route::get('/', [LandingController::class, 'index'])->name('landing');
     Route::put('/subscribe', [LandingController::class, 'subscribe'])->name('subscribe');
     Route::put('/contactUs', [LandingController::class, 'contactUs'])->name('contactMessages');
+
+    Route::get('/WebsiteBuilder', [WebsiteBuilderController::class, 'index'])->name('WebsiteBuilder');
 
     require __DIR__ . '/dashboard.php';
     require __DIR__ . '/settings.php';

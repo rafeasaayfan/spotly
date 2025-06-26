@@ -25,15 +25,7 @@ class WebsiteType extends Model
     }
 
     /**
-     * Get the color templates associated to this website type.
-     */
-    public function colorTemplates()
-    {
-        return $this->hasMany(Website::class);
-    }
-
-    /**
-     * Get the active website type.
+     * Get the active website types.
      */
     public function scopeActive($query)
     {

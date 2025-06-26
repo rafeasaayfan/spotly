@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('website_messages', function (Blueprint $table) {
+        Schema::create('template_colors', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('website_id')->constrained('websites')->onDelete('cascade');
-            $table->string('name');
-            $table->string('email');
-            $table->text('message');
+            $table->string('title')->unique();
+            $table->string('key');
+            $table->text('description');
+            $table->string('light');
+            $table->string('dark');
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('contact_messages');
+        Schema::dropIfExists('template_colors');
     }
 };

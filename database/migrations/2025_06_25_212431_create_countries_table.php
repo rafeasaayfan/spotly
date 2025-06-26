@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('website_users', function (Blueprint $table) {
+        Schema::create('countries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('website_id')->constrained('websites')->onDelete('cascade');
-            $table->string('name');
-            $table->string('email');
-            $table->string('password');
+            $table->string('country')->unique();
+            $table->string('country_ar')->unique();
+            $table->string('country_fr')->unique();
+            $table->string('code')->unique();
+            $table->string('phone_code')->unique();
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('website_users');
+        Schema::dropIfExists('countries');
     }
 };

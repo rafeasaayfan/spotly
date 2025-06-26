@@ -4,6 +4,7 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\Pages\Assignments\PermissionsController;
 use App\Http\Controllers\Dashboard\Pages\Assignments\RolesController;
 use App\Http\Controllers\Dashboard\Pages\Assignments\UserAssignmentsController;
+use App\Http\Controllers\Dashboard\Pages\CountriesController;
 use App\Http\Controllers\Dashboard\Pages\EmailSubscribersController;
 use App\Http\Controllers\Dashboard\Pages\MessagesController;
 use App\Http\Controllers\Dashboard\Pages\UsersController;
@@ -31,6 +32,9 @@ Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboa
     dashboardPagesRoutes('websiteMessages', WebsiteMessagesController::class);
     //* Messages
     dashboardPagesRoutes('messages', MessagesController::class);
+    //* Countries
+    dashboardPagesRoutes('countries', CountriesController::class);
+    Route::patch('countries/{id}/is_active', [CountriesController::class, 'toggleActive'])->name('countries.is_active');
 
     //* Assignments
     Route::middleware('can:assignments_access')->prefix('assignments')->group(function () {

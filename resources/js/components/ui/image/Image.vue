@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { cn } from '@/lib/utils'
 
 const props = defineProps<{
   src?: string;
@@ -20,7 +21,7 @@ const imageSrc = computed(() => props.src || '/images/default-image.avif');
     <img
       :src="imageSrc"
       :alt="props.alt || 'No image'"
-      :class="['max-w-full max-h-full object-cover rounded-md hover:-translate-y-1 hover:shadow-lg cursor-pointer transition duration-300', props.class]"
+      :class="cn('max-w-full max-h-full object-cover rounded-md hover:-translate-y-1 hover:shadow-lg cursor-pointer transition duration-300', props.class)"
       @click="show = true"
     />
 

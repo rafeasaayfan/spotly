@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class WebsiteColor extends Model
+class WebsiteTemplate extends Model
 {
-    protected $fillable = ['created_by', 'website_type_id', 'website_id'];
+    protected $fillable = ['created_by', 'website_type_id', 'is_custom'];
 
     /**
      * Get the user that created the website color.
      */
-    public function user()
+    public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
@@ -29,7 +29,7 @@ class WebsiteColor extends Model
      */
     public function website()
     {
-        return $this->hasOne(Website::class);
+        return $this->hasMany(Website::class);
     }
 
     /**
@@ -37,6 +37,6 @@ class WebsiteColor extends Model
      */
     public function colors()
     {
-        return $this->hasMany(ColorTemplate::class);
+        return $this->hasMany(TemplateColor::class);
     }
 }

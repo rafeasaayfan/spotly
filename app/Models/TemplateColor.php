@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ColorTemplate extends Model
+class TemplateColor extends Model
 {
     protected $fillable = [
-        'website_color_id',
+        'website_template_id',
         'name',
         'key',
         'description',
@@ -18,8 +18,8 @@ class ColorTemplate extends Model
     /**
      * Get the website color associated with this template.
      */
-    public function websiteColor()
+    public function websiteTemplate()
     {
-        return $this->belongsTo(WebsiteColor::class);
+        return $this->belongsTo(WebsiteTemplate::class);
     }
 }

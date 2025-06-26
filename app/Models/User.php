@@ -74,16 +74,16 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Get the website colors created by the admins.
      */
-    public function websiteColors()
+    public function websiteTemplates()
     {
-        return $this->hasMany(WebsiteColor::class, 'created_by')->where('is_custom', false);
+        return $this->hasMany(WebsiteTemplate::class, 'created_by')->where('is_custom', false);
     }
 
     /**
      * Get the website colors that are custom and created by the user.
      */
-    public function customWebsiteColors()
+    public function customWebsiteTemplates()
     {
-        return $this->hasMany(WebsiteColor::class, 'created_by')->where('is_custom', true);
+        return $this->hasMany(WebsiteTemplate::class, 'created_by')->where('is_custom', true);
     }
 }

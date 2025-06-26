@@ -73,7 +73,7 @@ function handleIcon(type: string) {
             <div class="group relative overflow-hidden" @mouseenter="pauseAutoScroll" @mouseleave="resumeAutoScroll">
                 <div ref="scrollContainer" class="scrollbar-hide flex space-x-4 overflow-x-auto overflow-y-hidden scroll-smooth p-2">
                     <template v-for="item in props.websiteTypes" :key="item.type">
-                        <Link href="/home" v-if="item.is_active" class="cards-landing-animation group/card relative min-w-[380px] rounded-xl">
+                        <Link :href="`/WebsiteBuilder?type=${item.type}`" v-if="item.is_active" class="cards-landing-animation group/card relative min-w-[380px] rounded-xl">
                             <div
                                 class="absolute top-3 end-3 z-10 flex size-10 scale-75 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--primary)] to-[var(--destructive)] opacity-0 transition-all duration-300 group-hover/card:scale-100 group-hover/card:rotate-12 group-hover/card:opacity-100"
                             >

@@ -75,7 +75,7 @@ const src = props.src;
       <label
         class="relative flex items-center justify-center w-full text-sm cursor-pointer
           bg-gray-200 dark:bg-gray-900
-          rounded-md border border-muted active:scale-105 transition-all focus:ring active:ring-blue-800 focus:ring-blue-800/50"
+          rounded-md border border-muted active:scale-98 transition-all duration-150 ease-in-out focus:ring active:ring-blue-800 focus:ring-blue-800/50"
       >
         <input
           type="file"

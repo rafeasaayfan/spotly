@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Button from '@/components/ui/button/Button.vue';
+import { Button } from '@/components/ui/button';
 import { gsap } from 'gsap';
 import { onMounted } from 'vue';
 
@@ -172,7 +172,7 @@ const scrollToSection = (id: string) => {
                 Start your online business easily with Spotly. No need to pay expensive setup fees or buy a domain and hosting. For only $10/month,
                 you get a full, professional website. It’s simple, fast, and saves you money. Begin your journey to success today!
             </p>
-            <Button @click="scrollToSection('#get-started')" id="hero-cta" class="glow-button z-20" size="lg"> Get Started Now </Button>
+            <Button @click="scrollToSection('#get-started')" id="hero-cta" class="glow-button" size="lg">Get Started Now</Button>
 
             <div class="absolute bottom-0 flex w-full items-center justify-center pb-8">
                 <svg

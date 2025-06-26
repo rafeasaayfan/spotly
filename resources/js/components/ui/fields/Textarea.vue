@@ -29,7 +29,7 @@ const modelValue = useVModel(props, 'modelValue', emits, {
       :disabled="disabled"
       :maxlength="props.maxlength"
       :class="cn(
-        'text-sm rounded-md px-3 py-3 duration-300 active:scale-99 focus:outline-none',
+        'text-sm rounded-md px-3 py-3 duration-150 ease-in-out active:scale-99 focus:outline-none',
         'placeholder:text-slate-950/50 dark:placeholder:text-slate-100/40 text-active',
         'w-full border-none bg-field',
         'focus:ring active:ring-blue-600 focus:ring-blue-600/90',
