@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import HeadingSmall from '@/components/headers/HeadingSmall.vue';
-import PhoneNumberField from '@/components/PhoneNumberField.vue';
+import PhoneNumberField from '@/components/ui/fields/PhoneNumberField.vue';
 import { Input, InputError, SelectWithSearch } from '@/components/ui/fields';
 import { SharedData } from '@/types';
 import { usePage } from '@inertiajs/vue3';

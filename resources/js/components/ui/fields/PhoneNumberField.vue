@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Input, SelectWithSearch } from './ui/fields';
+import { Input, SelectWithSearch } from '.';
 import { watch, ref, computed } from 'vue';
 
 const props = defineProps<{
