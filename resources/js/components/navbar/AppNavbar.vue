@@ -48,7 +48,7 @@ onUnmounted(() => {
             </Link>
 
             <Link :href="route('landing')" class="flex items-center gap-2 md:hidden">
-                <AppLogoIcon class="size-16" />
+                <AppLogoIcon />
             </Link>
 
             <!-- Desktop Menu -->
