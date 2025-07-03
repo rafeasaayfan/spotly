@@ -17,6 +17,9 @@ const form = useForm({ email: '' });
 const subscribe = () => {
     form.put(route('subscribe'), {
         preserveScroll: true,
+        onSuccess: () => {
+            form.reset();
+        },
     });
 };
 </script>
@@ -80,7 +83,7 @@ const subscribe = () => {
                             <div class="flex flex-col gap-3">
                                 <h3 class="text-body font-semibold">Subscribe to Newsletter</h3>
                                 <form @submit.prevent="subscribe" class="flex flex-col gap-2">
-                                    <Input v-model="form.email" type="email" placeholder="Enter your email" autocomplete="email" required />
+                                    <Input v-model="form.email" type="email" placeholder="Enter your email" autocomplete="email" required :class="form.errors.email ? 'border-[var(--destructive)]' : ''" />
                                     <InputError v-if="form.errors" :message="form.errors.email" />
                                     <Button type="submit" :disabled="form.processing">
                                         <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
