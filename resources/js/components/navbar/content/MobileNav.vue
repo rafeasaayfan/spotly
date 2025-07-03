@@ -54,7 +54,7 @@ setupScrollTracking();
                                 v-else
                                 :href="item.href ?? ''"
                                 class="bg-content-3 flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium"
-                                :class="activeNavStyle(item.href)"
+                                :class="activeNavStyle(item.href ?? '')"
                                 :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'"
                             >
                                 <component v-if="item.icon" :is="item.icon" class="h-5 w-5" />
