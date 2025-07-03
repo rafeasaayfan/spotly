@@ -83,7 +83,7 @@ const steps = [
 </script>
 
 <template>
-    <section id="how-it-works" class="px-4 py-22">
+    <section id="how-it-works" class="relative px-4 py-22">
         <div class="mx-auto">
             <div class="w-full mb-16 flex flex-col items-start gap-3">
                 <h2 class="section-title section-title-underline text-active text-3xl font-bold sm:text-4xl md:text-4xl lg:text-5xl">
@@ -92,6 +92,13 @@ const steps = [
                 <p class="text-body-muted">The Steps to create your webiste</p>
             </div>
 
+                    <!-- Floating blurred circles -->
+        <div class="pointer-events-none absolute inset-0 z-0">
+            <span class="floating-circle bg-[var(--primary)] opacity-10 blur-2xl absolute left-10 top-32 w-40 h-40 rounded-full"></span>
+            <span class="floating-circle bg-[var(--destructive)] opacity-10 blur-2xl absolute right-24 top-60 w-32 h-32 rounded-full"></span>
+            <span class="floating-circle bg-[var(--primary)] opacity-10 blur-2xl absolute left-1/2 bottom-20 w-48 h-48 rounded-full"></span>
+        </div>
+
             <div class="timeline relative min-h-[800px]">
                 <!-- Rounded circle -->
                 <div class="relative top-0 start-0 z-10 hidden w-fit md:start-1/2 md:block">
@@ -99,7 +106,7 @@ const steps = [
                 </div>
                 <!-- Timeline line -->
                 <div
-                    class="timeline-line absolute top-0 left-0 h-full w-0.5 -translate-x-1/2 bg-gradient-to-b from-blue-700 to-red-700 md:left-1/2"
+                    class="timeline-line absolute top-0 left-0 h-full w-0.5 -translate-x-1/2 bg-gradient-to-b from-blue-700 to-red-700 md:left-1/2 shadow-[0_0_16px_2px_rgba(99,102,241,0.2)] animate-glow"
                 ></div>
 
                 <!-- Steps container -->

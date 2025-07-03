@@ -2,7 +2,7 @@
 import { Link } from '@inertiajs/vue3';
 import { onMounted, onUnmounted, ref } from 'vue';
 
-import { CheckCircle, Palette, ShoppingCart, Utensils, CircleHelp } from 'lucide-vue-next';
+import { CheckCircle, CircleHelp, Palette, ShoppingCart, Utensils } from 'lucide-vue-next';
 
 const scrollContainer = ref<HTMLElement | null>(null);
 let direction = 1; // 1 = forward, -1 = backward
@@ -61,7 +61,7 @@ function handleIcon(type: string) {
 </script>
 
 <template>
-    <section id="get-started" class="px-4 py-22">
+    <section id="get-started" class="relative px-4 py-22">
         <div class="mx-auto">
             <div class="mb-14 flex w-full flex-col items-start gap-3">
                 <h2 class="section-title section-title-underline text-active text-3xl font-bold sm:text-4xl md:text-4xl lg:text-5xl">
@@ -70,12 +70,22 @@ function handleIcon(type: string) {
                 <p class="t ext-body-muted max-w-3xl">Choose your project type and get started created your website with Spotly.</p>
             </div>
 
+            <!-- Floating blurred circles -->
+            <div class="pointer-events-none absolute inset-0 z-0">
+                <span class="floating-circle absolute top-32 left-10 h-40 w-40 rounded-full bg-[var(--primary)] opacity-10 blur-2xl"></span>
+                <span class="floating-circle absolute top-60 right-24 h-32 w-32 rounded-full bg-[var(--destructive)] opacity-10 blur-2xl"></span>
+            </div>
+
             <div class="group relative overflow-hidden" @mouseenter="pauseAutoScroll" @mouseleave="resumeAutoScroll">
                 <div ref="scrollContainer" class="scrollbar-hide flex space-x-4 overflow-x-auto overflow-y-hidden scroll-smooth p-2">
                     <template v-for="item in props.websiteTypes" :key="item.type">
-                        <Link :href="`/WebsiteBuilder?type=${item.type}`" v-if="item.is_active" class="cards-landing-animation group/card relative min-w-[380px] rounded-xl">
+                        <Link
+                            :href="`/WebsiteBuilder?type=${item.type}`"
+                            v-if="item.is_active"
+                            class="cards-landing-animation group/card relative min-w-[380px] rounded-xl"
+                        >
                             <div
-                                class="absolute top-3 end-3 z-10 flex size-10 scale-75 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--primary)] to-[var(--destructive)] opacity-0 transition-all duration-300 group-hover/card:scale-100 group-hover/card:rotate-12 group-hover/card:opacity-100"
+                                class="absolute end-3 top-3 z-10 flex size-10 scale-75 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--primary)] to-[var(--destructive)] opacity-0 transition-all duration-300 group-hover/card:scale-100 group-hover/card:rotate-12 group-hover/card:opacity-100"
                             >
                                 <component :is="CheckCircle" class="size-6 text-white" />
                             </div>
@@ -94,14 +104,12 @@ function handleIcon(type: string) {
 
                         <div v-else class="cards-landing-animation group/card relative min-w-[380px] rounded-xl">
                             <div
-                                class="absolute inset-0 z-10 rounded-lg bg-gradient-to-br from-gray-900/30 to-black/30 backdrop-blur-[1.2px] transition-all duration-300 border border-muted"
+                                class="border-muted absolute inset-0 z-10 rounded-lg border bg-gradient-to-br from-gray-900/30 to-black/30 backdrop-blur-[1.2px] transition-all duration-300"
                             >
-                                <h1 class="text-sm font-medium p-2">Coming Soon</h1>
+                                <h1 class="p-2 text-sm font-medium">Coming Soon</h1>
                             </div>
 
-                            <div
-                                class="text-body flex h-full w-full flex-col gap-3 rounded-xl  p-8 text-center backdrop-blur-lg"
-                            >
+                            <div class="text-body flex h-full w-full flex-col gap-3 rounded-xl p-8 text-center backdrop-blur-lg">
                                 <component :is="handleIcon(item.type)" class="mx-auto size-16" />
 
                                 <div class="flex flex-col items-center justify-center gap-2">

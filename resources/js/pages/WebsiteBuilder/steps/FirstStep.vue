@@ -2,6 +2,7 @@
 import HeadingSmall from '@/components/headers/HeadingSmall.vue';
 import { File, Input, InputError, Select, SelectWithSearch, Textarea } from '@/components/ui/fields';
 import { computed } from 'vue';
+import { Store } from 'lucide-vue-next';
 
 const props = defineProps<{
     form: {
@@ -59,7 +60,10 @@ const mappedTypes = props.websiteTypes.map((item: any) => ({
 <template>
     <div key="step1" class="grid grid-cols-1 gap-6 md:grid-cols-3">
         <div class="border-muted col-span-3 w-full border-b pb-3">
-            <span class="gradient-text text-2xl font-bold">Business Information</span>
+            <h1 class="flex items-center gap-2 text-xl sm:text-2xl font-bold">
+                <Store class="size-5 sm:size-6 text-active-link" />
+                <span class="gradient-text">Business Information</span>
+            </h1>
         </div>
 
         <div class="flex flex-col gap-1 md:col-span-2">

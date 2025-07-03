@@ -6,6 +6,7 @@ import { gsap } from 'gsap';
 
 import { Button } from '@/components/ui/button';
 import { Input, InputError, Textarea } from '@/components/ui/fields';
+import { Send } from 'lucide-vue-next';
 
 onMounted(() => {
     // --- Contact Form Input Animation ---
@@ -67,21 +68,24 @@ const submit = () => {
 
             <form @submit.prevent="submit()" id="contact-form" class="flex flex-col gap-6 max-w-full min-w-full md:min-w-2xl lg:min-w-4xl">
                 <div class="flex flex-col gap-1 items-start">
-                    <Input type="text" v-model="form.name" placeholder="Your Name" class="h-11" />
+                    <Input type="text" v-model="form.name" placeholder="Your Name" class="h-11" :class="form.errors.name ? 'border-[var(--destructive)]' : ''" />
                     <InputError v-if="form.errors.name" :message="form.errors.name" />
                 </div>
                 <div class="flex flex-col gap-1 items-start">
-                    <Input type="email" v-model="form.email" placeholder="Your Email" class="h-11" />
+                    <Input type="email" v-model="form.email" placeholder="Your Email" class="h-11" :class="form.errors.email ? 'border-[var(--destructive)]' : ''" />
                     <InputError v-if="form.errors.email" :message="form.errors.email" />
                 </div>
                 <div class="text-start">
-                    <Textarea v-model="form.message" placeholder="Your Message" :maxlength="255" />
+                    <Textarea v-model="form.message" placeholder="Your Message" :maxlength="255" :class="form.errors.message ? 'border-[var(--destructive)]' : ''" />
                     <InputError v-if="form.errors.message" :message="form.errors.message" />
                 </div>
                 <div class="w-full flex items-end justify-end" id="button-div">
                     <Button type="submit" size="lg" class="glow-button" :disabled="form.processing">
                         <span v-if="form.processing">Sending...</span>
-                        <span v-else>Send Message</span>
+                        <template v-else>
+                            <Send class="w-4 h-4" />
+                            <span>Send Message</span>
+                        </template>
                     </Button>
                 </div>
             </form>

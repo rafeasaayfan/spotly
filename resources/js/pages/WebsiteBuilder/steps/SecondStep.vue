@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import HeadingSmall from '@/components/headers/HeadingSmall.vue';
 import PhoneNumberField from '@/components/PhoneNumberField.vue';
-import { Input, InputError, Select, SelectWithSearch } from '@/components/ui/fields';
+import { Input, InputError, SelectWithSearch } from '@/components/ui/fields';
 import { SharedData } from '@/types';
 import { usePage } from '@inertiajs/vue3';
+import { Phone } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -19,6 +20,7 @@ const props = defineProps<{
         errors?: Record<string, string>;
     };
     countries: Record<string, any>;
+    cities: Array<string>;
 }>();
 
 const emit = defineEmits<{
@@ -83,54 +85,73 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
 <template>
     <div key="step2" class="grid grid-cols-1 gap-6 md:grid-cols-3">
         <div class="border-muted col-span-3 w-full border-b pb-3">
-            <span class="gradient-text text-2xl font-bold">Contact Details</span>
+            <h1 class="flex items-center gap-2 text-xl sm:text-2xl font-bold">
+                <Phone class="text-active-link size-5 sm:size-6" />
+                <span class="gradient-text">Contact Details</span>
+            </h1>
         </div>
 
-        <div class="flex flex-col gap-2">
-            <HeadingSmall title="Country" description="The country where you operate." />
-            <SelectWithSearch v-model="country" placeholder="Select a country..." :options="mappedCountries" />
+        <div class="flex flex-col gap-1">
+            <div class="flex flex-col gap-2">
+                <HeadingSmall title="Country" description="The country where you operate." />
+                <SelectWithSearch v-model="country" placeholder="Select a country..." :options="mappedCountries" />
+            </div>
             <InputError v-if="props.form.errors?.country" :message="props.form.errors.country" />
         </div>
 
-        <div class="flex flex-col gap-2">
-            <HeadingSmall title="Phone Number" description="Your business contact number." />
-            <PhoneNumberField v-model="phone_number" :options="mappedCountryPhones" selectedCode="+961" />
+        <div class="flex flex-col gap-1">
+            <div class="flex flex-col gap-2">
+                <HeadingSmall title="Phone Number" description="Your business contact number." />
+                <PhoneNumberField v-model="phone_number" :options="mappedCountryPhones" selectedCode="+961" />
+            </div>
             <InputError v-if="props.form.errors?.phone_number" :message="props.form.errors.phone_number" />
         </div>
 
-        <div class="flex flex-col gap-2">
-            <HeadingSmall title="Email Address" description="Your public contact email." />
-            <Input v-model="email" type="email" placeholder="contact@yourbusiness.com" />
+        <div class="flex flex-col gap-1">
+            <div class="flex flex-col gap-2">
+                <HeadingSmall title="Email Address" description="Your public contact email." />
+                <Input v-model="email" type="email" placeholder="contact@yourbusiness.com" />
+            </div>
             <InputError v-if="props.form.errors?.email" :message="props.form.errors.email" />
         </div>
 
-        <div class="flex flex-col gap-2 md:col-span-2">
-            <HeadingSmall title="Address" description="Your physical street address." />
-            <Input v-model="address" type="text" placeholder="123 Main Street" />
+        <div class="flex flex-col gap-1 md:col-span-2">
+            <div class="flex flex-col gap-2">
+                <HeadingSmall title="Address" description="Your physical street address." />
+                <Input v-model="address" type="text" placeholder="123 Main Street" />
+            </div>
             <InputError v-if="props.form.errors?.address" :message="props.form.errors.address" />
         </div>
 
-        <div class="flex flex-col gap-2">
-            <HeadingSmall title="City" description="The primary city of your business." />
-            <Select v-model="city" placeholder="Select a city..." />
+        <div class="flex flex-col gap-1">
+            <div class="flex flex-col gap-2">
+                <HeadingSmall title="City" description="The primary city of your business." />
+                <SelectWithSearch v-model="city" placeholder="Select a country..." :options="cities.map((city) => ({ value: city, label: city }))" />
+            </div>
             <InputError v-if="props.form.errors?.city" :message="props.form.errors.city" />
         </div>
 
-        <div class="flex flex-col gap-2">
-            <HeadingSmall title="Instagram Url" description="Your public contact email." />
-            <Input v-model="instagram" type="url" placeholder="contact@yourbusiness.com" />
+        <div class="flex flex-col gap-1">
+            <div class="flex flex-col gap-2">
+                <HeadingSmall title="Instagram Url" description="Your public contact email." />
+                <Input v-model="instagram" type="url" placeholder="contact@yourbusiness.com" />
+            </div>
             <InputError v-if="props.form.errors?.instagram" :message="props.form.errors.instagram" />
         </div>
 
-        <div class="flex flex-col gap-2">
-            <HeadingSmall title="Tiktok Url" description="Your public contact email." />
-            <Input v-model="tiktok" type="url" placeholder="contact@yourbusiness.com" />
+        <div class="flex flex-col gap-1">
+            <div class="flex flex-col gap-2">
+                <HeadingSmall title="Tiktok Url" description="Your public contact email." />
+                <Input v-model="tiktok" type="url" placeholder="contact@yourbusiness.com" />
+            </div>
             <InputError v-if="props.form.errors?.tiktok" :message="props.form.errors.tiktok" />
         </div>
 
-        <div class="flex flex-col gap-2">
-            <HeadingSmall title="Facebook Url" description="Your public contact email." />
-            <Input v-model="facebook" type="url" placeholder="contact@yourbusiness.com" />
+        <div class="flex flex-col gap-1">
+            <div class="flex flex-col gap-2">
+                <HeadingSmall title="Facebook Url" description="Your public contact email." />
+                <Input v-model="facebook" type="url" placeholder="contact@yourbusiness.com" />
+            </div>
             <InputError v-if="props.form.errors?.facebook" :message="props.form.errors.facebook" />
         </div>
     </div>
