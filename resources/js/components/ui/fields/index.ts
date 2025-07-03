@@ -6,4 +6,4 @@ export { default as Toggle } from '../fields/Toggle.vue'
 export { default as File } from '../fields/File.vue'
 export { default as Textarea } from '../fields/Textarea.vue'
 export { default as InputError } from '../fields/InputError.vue'
-
+export { default as PhoneNumberField } from '../fields/PhoneNumberField.vue'
