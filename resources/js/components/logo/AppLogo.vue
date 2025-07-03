@@ -7,9 +7,9 @@ const { state } = useSidebar()
 
 <template>
     <div>
-        <AppLogoIcon :class="state == 'collapsed' ? 'size-9' : 'size-18'" />
+        <AppLogoIcon :class="state == 'collapsed' ? 'w-9 h-9' : ''" />
     </div>
-    <div class="grid flex-1 text-start text-sm" :class="state == 'collapsed' ? 'hidden' : 'block'">
-        <span class="text-active truncate font-bold leading-none">VUE.RS</span>
+    <div class="grid flex-1 text-start text-lg" :class="state == 'collapsed' ? 'hidden' : 'block'">
+        <span class="text-active truncate font-bold leading-non">Spotly</span>
     </div>
 </template>
