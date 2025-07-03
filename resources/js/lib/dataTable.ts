@@ -66,6 +66,7 @@ export const formatters = {
             blocked: 'bg-destructive text-for-bg-destructive',
             denied: 'bg-destructive text-for-bg-destructive',
             rejected: 'bg-destructive text-for-bg-destructive',
+            banned: 'bg-destructive text-for-bg-destructive',
         };
 
         const color = colorMap[value.toLowerCase()] || 'bg-content';
