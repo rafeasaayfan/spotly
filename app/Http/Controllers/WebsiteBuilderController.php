@@ -13,7 +13,6 @@ class WebsiteBuilderController extends Controller
     public function index(Request $request)
     {
         $type = $request->input('type');
-
         $websiteTypes = WebsiteType::active()->get();
         $typeId = WebsiteType::where('type', $type)->value('id');
 
@@ -22,12 +21,14 @@ class WebsiteBuilderController extends Controller
             $item->flag = $item->getFirstMediaUrl('flag');
             return $item;
         });
+        $cities = config('lebanon.cities');
 
         return Inertia::render('WebsiteBuilder/Wizard', [
             'websiteTypes' => $websiteTypes,
             'type' => $type,
             'typeId' => $typeId,
             'countries' => $countries,
+            'cities' => $cities,
         ]);
     }
 
