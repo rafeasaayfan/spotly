@@ -19,6 +19,7 @@ Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboa
 
     //* Users
     dashboardPagesRoutes('users', UsersController::class);
+    Route::patch('users/{id}/status', [UsersController::class, 'changeStatus'])->name('users.status');
     //* Website types
     dashboardPagesRoutes('websiteTypes', WebsiteTypesController::class);
     Route::patch('websiteTypes/{id}/is_active', [WebsiteTypesController::class, 'toggleActive'])->name('websiteTypes.is_active');

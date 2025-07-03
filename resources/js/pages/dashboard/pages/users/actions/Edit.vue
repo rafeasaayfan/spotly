@@ -10,6 +10,17 @@ const columns = [
     { key: 'email', label: 'Email', type: 'email', required: true },
     { key: 'password', label: 'Password', type: 'password', required: false },
     { key: 'password_confirmation', label: 'Confirm Password', type: 'password', required: false },
+    { key: 'phone_number', label: 'Phone Number', type: 'text', required: false },
+    {
+        key: 'status',
+        label: 'Status',
+        type: 'select',
+        options: [
+            { value: 'active', label: 'Active' },
+            { value: 'inactive', label: 'Inactive' },
+            { value: 'banned', label: 'Banned' },
+        ],
+    },
 ];
 </script>
 

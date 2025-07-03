@@ -22,6 +22,17 @@ const columns = [
     { key: 'name', label: 'Name' },
     { key: 'email', label: 'Email', type: 'email' },
     { key: 'email_verified_at', label: 'Verification' },
+    { key: 'phone_number', label: 'Phone Number' },
+    {
+        key: 'status',
+        label: 'Status',
+        type: 'select',
+        options: [
+            { value: 'active', label: 'Active' },
+            { value: 'inactive', label: 'Inactive' },
+            { value: 'banned', label: 'Banned' },
+        ],
+    },
     { key: 'created_at', label: 'Created At', type: 'date' },
 ];
 
@@ -35,6 +46,18 @@ const filter = [
             { value: 'all', label: 'All' },
             { value: 'empty', label: 'Not verified' },
             { value: 'notEmpty', label: 'Verified' },
+        ],
+    },
+    {
+        key: 'status',
+        label: 'Status',
+        type: 'select',
+        placeholder: 'Select status',
+        options: [
+            { value: 'all', label: 'All' },
+            { value: 'active', label: 'Active' },
+            { value: 'inactive', label: 'Inactive' },
+            { value: 'banned', label: 'Banned' },
         ],
     },
 ];
@@ -62,6 +85,13 @@ const tableConditions = {
     <Head title="Users" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
-        <DataTable :table-data="props.users" :filter="filter" :columns="columns" route-name="dashboard.users" :table-conditions="tableConditions" path="users" />
+        <DataTable
+            :table-data="props.users"
+            :filter="filter"
+            :columns="columns"
+            route-name="dashboard.users"
+            :table-conditions="tableConditions"
+            path="users"
+        />
     </DashboardLayout>
 </template>

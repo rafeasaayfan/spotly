@@ -10,6 +10,7 @@ use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\Users\StoreUserRequest;
 use App\Http\Requests\Dashboard\Pages\Users\UpdateUserRequest;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Country;
 
 class UsersController extends Controller
 {
@@ -38,7 +39,11 @@ class UsersController extends Controller
      */
     public function create()
     {
-        //
+        $countries = Country::active()->get();
+
+        return response()->json([
+            'countries' => $countries
+        ]);
     }
 
     /**
@@ -50,6 +55,7 @@ class UsersController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'phone_number' => $request->phone_number,
         ]);
 
         return redirect()->route('dashboard.users.index')->with('message', 'User created successfully');
@@ -110,5 +116,27 @@ class UsersController extends Controller
         User::destroy($validated['ids']);
 
         return redirect()->back()->with('message', __('User(s) deleted successfully.'));
+    }
+
+    /**
+     * Change the status of the specified resource.
+     */
+    public function changeStatus(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'status' => 'required|string|in:active,inactive,banned',
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->update(['status' => $validated['status']]);
+
+        $message = $validated['status'] === 'active'
+        ? 'User activated successfully.'
+        : 'User deactivated successfully.';
+
+        if ($validated['status'] === 'inactive') $message = 'The user is now inactive.';
+        if ($validated['status'] === 'banned') $message = 'The user is now banned.';
+
+        return redirect()->back()->with('message', $message);
     }
 }
