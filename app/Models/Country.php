@@ -10,8 +10,15 @@ class Country extends Model implements HasMedia
 {
     use InteractsWithMedia;
 
-    protected $fillable = ['country', 'country_ar', 'country_fr', 'code', 'phone_code', 'is_active'];
-
+    protected $fillable = [
+        'country',
+        'country_ar',
+        'country_fr',
+        'code',
+        'phone_code',
+        'region',
+        'is_active'
+    ];
 
     /**
      * Get the active countries.

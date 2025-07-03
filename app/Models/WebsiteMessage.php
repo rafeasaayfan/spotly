@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class WebsiteMessage extends Model
 {
-    protected $fillable = ['website_id', 'name', 'email', 'message'];
+    protected $fillable = ['website_id', 'name', 'email', 'subject', 'status', 'type', 'message'];
 
     /**
-     * The website owner for this message and if it null so its a message for spotly.
+     * The website that the message is for.
      */
     public function website()
     {
-        return $this->belongsTo(Website::class);
+        return $this->belongsTo(Website::class, 'website_id');
     }
 }

@@ -14,26 +14,39 @@ class Website extends Model implements HasMedia
         'owner_id',
         'website_type_id',
         'approved_or_denied_by',
-        'website_template_id',
+
         'name',
         'subdomain',
-        'description',
+        'phone_number',
+        'email',
+
+        'about_us',
+
         'country',
         'city',
         'address',
-        'phone_number',
+
         'instagram',
         'facebook',
         'tiktok',
+        'youtube',
+
         'language',
+        'timezone',
+        'currency',
+
         'views_count',
         'is_active',
+        'is_verified',
         'status',
+
+        'approved_at',
+        'published_at',
     ];
 
 
     /**
-     * The website has onwe.
+     * The website has owner.
      */
     public function owner()
     {
@@ -41,27 +54,57 @@ class Website extends Model implements HasMedia
     }
 
     /**
-     * The website has type.
+     * The website has website type.
      */
     public function websiteType()
     {
-        return $this->belongsTo(WebsiteType::class);
+        return $this->belongsTo(WebsiteType::class, 'website_type_id');
     }
 
     /**
-     * The website reviewed by.
+     * The website reviewed by admin.
      */
-    public function viewedBy()
+    public function approvedOrDeniedBy()
     {
         return $this->belongsTo(User::class, 'approved_or_denied_by');
     }
 
     /**
+     * The website payment methods.
+     */
+    public function paymentMethods()
+    {
+        return $this->belongsToMany(PaymentMethod::class, 'website_payment_method')
+                    ->withPivot('is_active', 'settings')
+                    ->withTimestamps();
+    }
+
+    /**
+     * The website active payment methods.
+     */
+    public function activePaymentMethods()
+    {
+        return $this->belongsToMany(PaymentMethod::class, 'website_payment_method')
+                    ->wherePivot('is_active', true)
+                    ->withPivot('settings')
+                    ->withTimestamps();
+    }
+
+    /**
      * The website color theme.
      */
-    public function websiteTemplate()
+    public function websiteTemplateColors()
     {
-        return $this->belongsTo(WebsiteTemplate::class);
+        return $this->hasMany(WebsiteTemplateColor::class, 'website_id');
+    }
+
+    /**
+     * The website active template color.
+     */
+    public function websiteActiveTemplateColor()
+    {
+        return $this->hasMany(WebsiteTemplateColor::class, 'website_id')
+                    ->where('is_active', true);
     }
 
     /**
@@ -69,14 +112,14 @@ class Website extends Model implements HasMedia
      */
     public function websiteMessages()
     {
-        return $this->hasMany(WebsiteMessage::class);
+        return $this->hasMany(WebsiteMessage::class, 'website_id');
     }
 
     /**
      * The website users.
      */
-    public function users()
+    public function websiteUsers()
     {
-        return $this->hasMany(WebsiteUser::class);
+        return $this->hasMany(WebsiteUser::class, 'website_id');
     }
 }

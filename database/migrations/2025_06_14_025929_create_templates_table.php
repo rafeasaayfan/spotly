@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('website_templates', function (Blueprint $table) {
+        Schema::create('templates', function (Blueprint $table) {
             $table->id();
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('website_type_id')->nullable()->constrained('website_types')->onDelete('set null');
-            $table->foreignId('website_template_id')->constrained('website_templates')->onDelete('cascade');
-            $table->boolean('is_custom')->default(false);
+            $table->string('name')->unique();
+            $table->string('description')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

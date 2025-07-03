@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email');
+            $table->string('subject');
+            $table->enum('status', ['new', 'read', 'closed'])->default('new');
+            $table->enum('type', ['support', 'suggestion', 'complaint', 'other'])->default('other');
             $table->text('message');
             $table->timestamps();
         });

@@ -11,19 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('website_users', function (Blueprint $table) {
+        Schema::create('brands', function (Blueprint $table) {
             $table->id();
             $table->foreignId('website_id')->constrained('websites')->onDelete('cascade');
             $table->string('name');
-            $table->string('email');
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->string('phone_number')->unique()->nullable();
-            $table->enum('status', ['active', 'inactive', 'banned'])->default('active');
-            $table->rememberToken();
+            $table->text('description')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
+            $table->softDeletes();
 
-            $table->unique(['website_id', 'email']);
+            $table->index(['website_id', 'is_active']);
         });
     }
 
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('website_users');
+        Schema::dropIfExists('brands');
     }
 };

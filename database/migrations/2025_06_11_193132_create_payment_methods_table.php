@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('template_colors', function (Blueprint $table) {
+        Schema::create('payment_methods', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->unique();
-            $table->string('key');
-            $table->text('description');
-            $table->string('light');
-            $table->string('dark');
+            $table->string('name');
+            $table->string('code')->unique();
+            $table->text('description')->nullable();
+            $table->json('settings')->nullable();
+            $table->integer('sort_order')->default(0);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('template_colors');
+        Schema::dropIfExists('payment_ways');
     }
 };

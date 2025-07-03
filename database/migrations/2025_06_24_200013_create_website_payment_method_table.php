@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('website_messages', function (Blueprint $table) {
+        Schema::create('website_payment_method', function (Blueprint $table) {
             $table->id();
             $table->foreignId('website_id')->constrained('websites')->onDelete('cascade');
-            $table->string('name');
-            $table->string('email');
-            $table->string('subject');
-            $table->enum('status', ['new', 'read', 'closed'])->default('new');
-            $table->enum('type', ['support', 'suggestion', 'complaint', 'other'])->default('other');
-            $table->text('message');
+            $table->foreignId('payment_method_id')->constrained('payment_methods')->onDelete('cascade');
+            $table->boolean('is_active')->default(true);
+            $table->json('settings')->nullable();
             $table->timestamps();
+
+            $table->unique(['website_id', 'payment_method_id']);
         });
     }
 
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('website_messages');
+        Schema::dropIfExists('website_payment_method');
     }
 };

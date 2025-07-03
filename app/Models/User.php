@@ -22,6 +22,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'phone_number',
+        'status',
     ];
 
     /**
@@ -69,21 +71,5 @@ class User extends Authenticatable implements MustVerifyEmail
     public function reviewedWebsites()
     {
         return $this->hasMany(Website::class, 'approved_or_denied_by');
-    }
-
-    /**
-     * Get the website colors created by the admins.
-     */
-    public function websiteTemplates()
-    {
-        return $this->hasMany(WebsiteTemplate::class, 'created_by')->where('is_custom', false);
-    }
-
-    /**
-     * Get the website colors that are custom and created by the user.
-     */
-    public function customWebsiteTemplates()
-    {
-        return $this->hasMany(WebsiteTemplate::class, 'created_by')->where('is_custom', true);
     }
 }

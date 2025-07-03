@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('country_fr')->unique();
             $table->string('code')->unique();
             $table->string('phone_code')->unique();
+            $table->string('region')->nullable();
             $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
