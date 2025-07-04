@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Dashboard\Pages\Countries;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreCountryRequest extends FormRequest
 {
@@ -14,12 +15,13 @@ class StoreCountryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'country' => 'required',
-            'country_ar' => 'required',
-            'country_fr' => 'required',
-            'code' => 'required',
-            'phone_code' => 'required',
-            'is_active' => 'required',
+            'country' => ['required', 'string', 'max:255', 'unique:countries,country'],
+            'country_ar' => ['required', 'string', 'max:255', 'unique:countries,country_ar'],
+            'country_fr' => ['required', 'string', 'max:255', 'unique:countries,country_fr'],
+            'code' => ['required', 'string', 'max:255', 'unique:countries,code'],
+            'phone_code' => ['required', 'string', 'max:255', 'regex:/^\+\d{1,4}$/', 'unique:countries,phone_code'],
+            'region' => ['required', 'in:africa,asia,europe,north_america,south_america,australia,antarctica,middle_east,oceania,other'],
+            'is_active' => ['required', 'boolean'],
         ];
     }
 }

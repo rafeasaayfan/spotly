@@ -14,8 +14,10 @@ class StoreWebsiteTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'title' => ['required', 'string', 'max:30', 'unique:website_types,title'],
             'type' => ['required', 'string', 'max:30', 'unique:website_types,type'],
             'description' => ['required', 'string', 'max:100'],
+            'priority' => ['required', 'integer', 'min:0', 'max:100'],
             'is_active' => ['required', 'boolean'],
         ];
     }

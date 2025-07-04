@@ -6,6 +6,7 @@ use App\Models\User;
 use Database\Seeders\Assignments\PermissionsSeeder;
 use Database\Seeders\Assignments\RolesPermissionsSeeder;
 use Database\Seeders\Assignments\RolesSeeder;
+use Database\Seeders\WebsiteTypesSeeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -16,8 +17,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(1000)->create();
-
         $this->call([
             PermissionsSeeder::class,
             RolesSeeder::class,
@@ -33,5 +32,11 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'rafe3souayfan@gmail.com',
         ])->assignRole('admin');
+
+        $this->call([
+            WebsiteTypesSeeder::class,
+        ]);
+
+        User::factory(1000)->create();
     }
 }

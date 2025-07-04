@@ -7,8 +7,9 @@ const props = defineProps<{
 }>();
 
 const mappedCountries = props.countries.map((item: Record<string, any>) => ({
-    value: item.id,
-    label: item.country,
+    value: item.phone_code,
+    label: item.phone_code,
+    icon: item.flag,
 }));
 
 const columns = [
@@ -16,7 +17,7 @@ const columns = [
     { key: 'email', label: 'Email', type: 'email', required: true },
     { key: 'password', label: 'Password', type: 'password', required: true },
     { key: 'password_confirmation', label: 'Confirm Password', type: 'password', required: true },
-    { key: 'phone_number', label: 'Phone Number', type: 'text', required: false },
+    { key: 'phone_number', label: 'Phone Number', type: 'phone_number', required: false, options: mappedCountries },
     {
         key: 'status',
         label: 'Status',

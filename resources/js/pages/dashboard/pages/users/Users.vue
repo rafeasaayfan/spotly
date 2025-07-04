@@ -22,7 +22,7 @@ const columns = [
     { key: 'name', label: 'Name' },
     { key: 'email', label: 'Email', type: 'email' },
     { key: 'email_verified_at', label: 'Verification' },
-    { key: 'phone_number', label: 'Phone Number' },
+    { key: 'phone_number', label: 'Phone Number', type: 'phone_number' },
     {
         key: 'status',
         label: 'Status',

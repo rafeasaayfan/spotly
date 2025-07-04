@@ -20,8 +20,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 const columns = [
     { key: 'id', label: 'ID' },
     { key: 'user_name', label: 'Created By' },
+    { key: 'title', label: 'Title' },
     { key: 'type', label: 'Type' },
-    { key: 'description', label: 'Description' },
+    { key: 'priority', label: 'Priority' },
     { key: 'is_active', label: 'Is Active', type: 'toggle' },
 ];
 

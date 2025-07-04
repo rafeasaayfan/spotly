@@ -24,6 +24,7 @@ const columns = [
     { key: 'country_fr', label: 'Country FR' },
     { key: 'code', label: 'Code' },
     { key: 'phone_code', label: 'Phone Code' },
+    { key: 'region', label: 'Region' },
     { key: 'is_active', label: 'Active', type: 'toggle' },
     { key: 'created_at', label: 'Created At', type: 'date' },
 ];

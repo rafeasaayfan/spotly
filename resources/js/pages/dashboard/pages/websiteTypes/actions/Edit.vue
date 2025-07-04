@@ -6,7 +6,9 @@ const props = defineProps<{
 }>();
 
 const columns = [
+    { key: 'title', label: 'Title', type: 'text', placeholder: 'Enter the website title', required: true },
     { key: 'type', label: 'Type', type: 'text', placeholder: 'Enter the website type', required: true },
+    { key: 'priority', label: 'Priority', type: 'number', placeholder: 'Enter the website priority', required: true },
     {
         key: 'is_active',
         label: 'Is Active',

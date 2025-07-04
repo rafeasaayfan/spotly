@@ -40,6 +40,10 @@ class UsersController extends Controller
     public function create()
     {
         $countries = Country::active()->get();
+        $countries->transform(function ($item) {
+            $item->flag = $item->getFirstMediaUrl('flag');
+            return $item;
+        });
 
         return response()->json([
             'countries' => $countries
@@ -80,8 +84,15 @@ class UsersController extends Controller
     {
         $user = User::findOrFail($id);
 
+        $countries = Country::active()->get();
+        $countries->transform(function ($item) {
+            $item->flag = $item->getFirstMediaUrl('flag');
+            return $item;
+        });
+
         return response()->json([
-            'data' => $user
+            'data' => $user,
+            'countries' => $countries
         ]);
     }
 
