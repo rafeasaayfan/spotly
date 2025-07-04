@@ -2,11 +2,19 @@
 import { Input, SelectWithSearch } from '.';
 import { watch, ref, computed } from 'vue';
 
-const props = defineProps<{
-    options: Array<{ value: string | number; label: string; icon?: string; }>;
+interface Option {
+    value: string | number;
+    label: string;
+    icon?: string;
+}
+
+const props = withDefaults(defineProps<{
+    options: Option[];
     modelValue?: string;
-    selectedCode: string;
-}>();
+    selectedCode?: string;
+}>(), {
+    selectedCode: '+961',
+});
 
 const emits = defineEmits<{
     (e: 'update:modelValue', payload: string): void;
@@ -17,12 +25,12 @@ const phone = ref('');
 const code = ref(props.selectedCode);
 
 const selectedOption = computed(() =>
-    props.options.find((o) => o.label === code.value)
+    props.options.find((o) => o.value === code.value)
 );
 
 watch([phone, code], () => {
-    const code = selectedOption.value?.value;
-    const fullNumber = `${code} ${phone.value}`;
+    const codeVal = selectedOption.value?.value ?? code.value;
+    const fullNumber = `${codeVal}${phone.value}`;
     emits('update:modelValue', fullNumber);
 });
 </script>

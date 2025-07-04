@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { DialogClose, DialogFooter } from '@/components/ui/dialog';
-import { File, Input, InputError, Select, SelectWithSearch, Textarea } from '@/components/ui/fields';
+import { File, Input, InputError, Select, SelectWithSearch, Textarea, PhoneNumberField } from '@/components/ui/fields';
 
 import { useForm } from '@inertiajs/vue3';
 
@@ -88,6 +88,15 @@ function submit() {
                         value: option.value ?? option,
                     }))
                 "
+            />
+
+            <PhoneNumberField
+                v-if="column.type === 'phone_number'"
+                :id="column.label"
+                class="block w-full"
+                v-model="form[column.key]"
+                :required="column.required"
+                :options="column.options ?? []"
             />
 
             <InputError :message="form.errors?.[column.key]" />

@@ -44,7 +44,7 @@ function updateCol(key: string, value: any, id: number) {
 
             <Td v-for="column in props.columns" :key="column.key">
                 <template v-if="column.type === 'image'">
-                    <Image v-if="row[column.key]" :src="row[column.key]" alt="Image" class="h-12 w-12 !rounded-full object-cover" />
+                    <Image v-if="row[column.key]" :src="row[column.key]" alt="Image" class="h-10 w-10 !rounded-full object-cover" />
                 </template>
                 <template v-else-if="column.key === 'email_verified_at'">
                     <span v-html="formatters.emailVerified(row[column.key])"></span>
