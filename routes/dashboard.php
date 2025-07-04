@@ -33,6 +33,7 @@ Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboa
     dashboardPagesRoutes('websiteMessages', WebsiteMessagesController::class);
     //* Messages
     dashboardPagesRoutes('messages', MessagesController::class);
+    Route::patch('messages/{id}/status', [MessagesController::class, 'changeStatus'])->name('messages.status');
     //* Countries
     dashboardPagesRoutes('countries', CountriesController::class);
     Route::patch('countries/{id}/is_active', [CountriesController::class, 'toggleActive'])->name('countries.is_active');

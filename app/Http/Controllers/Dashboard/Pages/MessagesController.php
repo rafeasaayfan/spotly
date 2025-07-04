@@ -86,4 +86,28 @@ class MessagesController extends Controller
 
         return redirect()->back()->with('message', __('Message(s) deleted successfully.'));
     }
+
+    /**
+     * Change the status of the specified resource.
+     */
+    public function changeStatus(Request $request, $id)
+    {
+        $message = Message::findOrFail($id);
+
+        $validated = $request->validate([
+            'status' => 'required|in:new,read,closed',
+        ]);
+
+        $message->update([
+            'status' => $validated['status'],
+        ]);
+
+        $message = $validated['status'] === 'new'
+            ? 'Message marked as new.'
+            : 'Message marked as read.';
+
+        if ($validated['status'] === 'closed') $message = 'Message marked as closed.';
+
+        return redirect()->back()->with('message', $message);
+    }
 }

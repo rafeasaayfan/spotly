@@ -33,12 +33,16 @@ class LandingController extends Controller
     public function contactUs(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|max:30',
-            'email' => 'required|email',
-            'message' => 'required|max:255',
+            'name' => 'required|string|max:30',
+            'email' => 'required|string|email',
+            'subject' => 'required|string|max:40',
+            'type' => 'required|string|max:30|in:support,suggestion,complaint,other',
+            'message' => 'required|string|max:255',
         ]);
 
-        Message::create($validated);
+        $message = Message::create($validated);
+        $message->status = 'new';
+        $message->save();
 
         return redirect()->back()->with('message', 'Thank you for your message!');
     }

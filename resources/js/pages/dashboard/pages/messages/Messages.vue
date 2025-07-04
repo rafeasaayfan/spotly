@@ -21,8 +21,45 @@ const columns = [
     { key: 'id', label: 'ID' },
     { key: 'name', label: 'Name' },
     { key: 'email', label: 'Email', type: 'email' },
-    { key: 'message', label: 'Message' },
+    { key: 'subject', label: 'Subject' },
+    {
+        key: 'status',
+        label: 'Status',
+        type: 'select',
+        options: [
+            { value: 'new', label: 'New' },
+            { value: 'read', label: 'Read' },
+            { value: 'closed', label: 'Closed' },
+        ],
+    },
+    { key: 'type', label: 'Type', type: 'status' },
     { key: 'created_at', label: 'Created At', type: 'date' },
+];
+
+const filter = [
+    {
+        key: 'status',
+        label: 'Status',
+        type: 'select',
+        placeholder: 'Select status',
+        options: [
+            { value: 'new', label: 'New' },
+            { value: 'read', label: 'Read' },
+            { value: 'closed', label: 'Closed' },
+        ],
+    },
+    {
+        key: 'type',
+        label: 'Type',
+        type: 'select',
+        placeholder: 'Select type',
+        options: [
+            { value: 'support', label: 'Support' },
+            { value: 'suggestion', label: 'Suggestion' },
+            { value: 'complaint', label: 'Complaint' },
+            { value: 'other', label: 'Other' },
+        ],
+    },
 ];
 
 const props = defineProps<{
@@ -43,7 +80,6 @@ const tableConditions = {
     ...defaultTableConditions,
     enableCreate: false,
     enableEdit: false,
-    enableFilter: false,
 };
 </script>
 
@@ -51,6 +87,13 @@ const tableConditions = {
     <Head title="Messages" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
-        <DataTable :tableData="props.messages" :columns="columns" routeName="dashboard.messages" :tableConditions="tableConditions" path="messages" />
+        <DataTable
+            :tableData="props.messages"
+            :columns="columns"
+            routeName="dashboard.messages"
+            :tableConditions="tableConditions"
+            path="messages"
+            :filter="filter"
+        />
     </DashboardLayout>
 </template>

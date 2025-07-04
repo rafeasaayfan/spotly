@@ -5,8 +5,9 @@ import { useForm } from '@inertiajs/vue3';
 import { gsap } from 'gsap';
 
 import { Button } from '@/components/ui/button';
-import { Input, InputError, Textarea } from '@/components/ui/fields';
+import { Input, InputError, Textarea, Select } from '@/components/ui/fields';
 import { Send } from 'lucide-vue-next';
+import { Label } from '@/components/ui/label';
 
 onMounted(() => {
     // --- Contact Form Input Animation ---
@@ -41,6 +42,8 @@ onMounted(() => {
 const form = useForm({
     name: '',
     email: '',
+    subject: '',
+    type: 'support',
     message: '',
 });
 
@@ -66,20 +69,40 @@ const submit = () => {
                 <p class="text-body-muted">Have questions or ready to start your Spotly journey? We'd love to hear from you!</p>
             </div>
 
-            <form @submit.prevent="submit()" id="contact-form" class="flex flex-col gap-6 max-w-full min-w-full md:min-w-2xl lg:min-w-4xl">
+            <form @submit.prevent="submit()" id="contact-form"
+                class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-full min-w-full md:min-w-2xl lg:min-w-4xl">
                 <div class="flex flex-col gap-1 items-start">
+                    <Label for="name">Name</Label>
                     <Input type="text" v-model="form.name" placeholder="Your Name" class="h-11" :class="form.errors.name ? 'border-[var(--destructive)]' : ''" />
                     <InputError v-if="form.errors.name" :message="form.errors.name" />
                 </div>
                 <div class="flex flex-col gap-1 items-start">
+                    <Label for="email">Email</Label>
                     <Input type="email" v-model="form.email" placeholder="Your Email" class="h-11" :class="form.errors.email ? 'border-[var(--destructive)]' : ''" />
                     <InputError v-if="form.errors.email" :message="form.errors.email" />
                 </div>
-                <div class="text-start">
+                <div class="flex flex-col gap-1 items-start">
+                    <Label for="subject">Subject</Label>
+                    <Input type="text" v-model="form.subject" placeholder="Subject" class="h-11" :class="form.errors.subject ? 'border-[var(--destructive)]' : ''" />
+                    <InputError v-if="form.errors.subject" :message="form.errors.subject" />
+                </div>
+                <div class="flex flex-col gap-1 items-start">
+                    <Label for="type">Type</Label>
+                    <Select v-model="form.type" class="h-11" :class="form.errors.type ? 'border-[var(--destructive)]' : ''"
+                        :placeholder="'Select Type'">
+                        <option value="support">Support</option>
+                        <option value="suggestion">Suggestion</option>
+                        <option value="complaint">Complaint</option>
+                        <option value="other">Other</option>
+                    </Select>
+                    <InputError v-if="form.errors.type" :message="form.errors.type" />
+                </div>
+                <div class="text-start col-span-1 md:col-span-2">
+                    <Label for="message" class="pb-1">Message</Label>
                     <Textarea v-model="form.message" placeholder="Your Message" :maxlength="255" :class="form.errors.message ? 'border-[var(--destructive)]' : ''" />
                     <InputError v-if="form.errors.message" :message="form.errors.message" />
                 </div>
-                <div class="w-full flex items-end justify-end" id="button-div">
+                <div class="w-full flex items-end justify-end col-span-1 md:col-span-2" id="button-div">
                     <Button type="submit" size="lg" class="glow-button" :disabled="form.processing">
                         <span v-if="form.processing">Sending...</span>
                         <template v-else>
