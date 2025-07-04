@@ -9,7 +9,7 @@ class WebsiteType extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['created_by', 'type', 'description', 'is_active'];
+    protected $fillable = ['created_by', 'title', 'type', 'description', 'priority', 'is_active'];
 
     /**
      * Get the user that created the website type.
