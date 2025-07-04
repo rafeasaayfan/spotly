@@ -7,7 +7,7 @@ const props = defineProps<{
 
 const columns = [
     { key: 'id', label: 'ID' },
-    { key: 'email', label: 'Email' },
+    { key: 'email', label: 'Email', type: 'email' },
     { key: 'created_at', label: 'Created At', type: 'date' },
     { key: 'updated_at', label: 'Updated At', type: 'date' },
 ];
