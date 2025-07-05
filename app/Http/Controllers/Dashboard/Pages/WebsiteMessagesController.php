@@ -19,7 +19,7 @@ class WebsiteMessagesController extends Controller
     {
         $query = WebsiteMessage::query();
 
-        $columnsSearching = ['website.name'];
+        $columnsSearching = ['website.name', 'email'];
 
         $data = $this->dataTable($query, $request, $columnsSearching);
 

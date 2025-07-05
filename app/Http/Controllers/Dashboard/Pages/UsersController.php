@@ -23,11 +23,9 @@ class UsersController extends Controller
     {
         $query = User::query();
 
-        $columnsSearching = ['name', 'email'];
-        $columnsSelection = [];
-        $relations = [];
+        $columnsSearching = ['name', 'email', 'phone_number'];
 
-        $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
+        $data = $this->dataTable($query, $request, $columnsSearching);
 
         return Inertia::render('dashboard/pages/users/Users', [
             'users' => $data,
