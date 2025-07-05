@@ -30,8 +30,8 @@ function submit() {
 </script>
 
 <template>
-    <form class="grid gap-4 lg:grid-cols-2 pb-5" @submit.prevent="submit" enctype="multipart/form-data">
-        <div class="flex flex-col gap-1" :class="column.type === 'textarea' ? 'col-span-2' : ''" v-for="(column, index) in props.columns" :key="index">
+    <form class="grid gap-4 grid-cols-1 lg:grid-cols-2 pb-5" @submit.prevent="submit" enctype="multipart/form-data">
+        <div class="flex flex-col gap-1" :class="column.type === 'textarea' ? 'lg:col-span-2' : ''" v-for="(column, index) in props.columns" :key="index">
             <Label :for="column.label">{{ column.label.charAt(0).toUpperCase() + column.label.slice(1) }}</Label>
 
             <Input

@@ -21,7 +21,7 @@ const emits = defineEmits<{
     // (e: 'update:selectedCountry', payload: string): void;
 }>();
 
-const phone = ref('');
+const phone = ref(props.modelValue);
 const code = ref(props.selectedCode);
 
 const selectedOption = computed(() =>

@@ -10,11 +10,11 @@ const props = defineProps<{
 </script>
 
 <template>
-    <div class="grid gap-3 rounded-md lg:grid-cols-2">
+    <div class="grid gap-3 rounded-md grid-cols-1 lg:grid-cols-2">
         <div
             v-for="column in props.columns"
             :key="column.key"
-            :class="['textarea', 'image'].includes(column.type ?? '') ? 'col-span-2' : ''"
+            :class="['textarea', 'image'].includes(column.type ?? '') ? 'lg:col-span-2' : ''"
             class="border-muted bg-body flex flex-col gap-3 rounded-md border p-4 shadow-sm"
         >
             <div class="flex items-center gap-2">

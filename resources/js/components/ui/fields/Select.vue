@@ -7,6 +7,7 @@ import { ChevronDown } from 'lucide-vue-next';
 const props = defineProps<{
     modelValue: string | number | null
     class?: HTMLAttributes['class']
+    parentClass?: HTMLAttributes['class']
     name?: string
     id?: string
     placeholder?: string | null
@@ -23,11 +24,11 @@ function updateValue(event: Event) {
 </script>
 
 <template>
-    <div class="relative">
+    <div :class="cn('relative w-full', props.parentClass)">
         <select :name="props.name" :id="props.id" :value="modelValue" @change="updateValue" :class="cn(
             'appearance-none bg-field active:scale-98',
             'placeholder:text-slate-800 dark:placeholder:text-slate-200 text-slate-900 dark:text-slate-100 text-sm',
-            'min-w-18 w-full p-2 border-none rounded-md cursor-pointer duration-150 ease-in-out',
+            'w-full p-2 me-1.5 border-none rounded-md cursor-pointer duration-150 ease-in-out',
             'focus:ring active:ring-blue-500 focus:ring-blue-600/90 outline-none',
             props.class
         )
