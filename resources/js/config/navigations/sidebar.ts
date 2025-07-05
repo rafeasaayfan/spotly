@@ -1,5 +1,5 @@
 import { type SidebarSection } from '@/types';
-import { Flag, LayoutGrid, MailCheck, MessageCircle, MessageSquare, Monitor, PercentDiamondIcon, Type, UsersIcon } from 'lucide-vue-next';
+import { Flag, LayoutGrid, LogsIcon, MailCheck, MessageCircle, MessageSquare, Monitor, PercentDiamondIcon, Type, UsersIcon } from 'lucide-vue-next';
 
 //? Sidebar Content
 export const mainSidebarItems: SidebarSection[] = [
@@ -50,6 +50,11 @@ export const mainSidebarItems: SidebarSection[] = [
                 title: 'Countries',
                 href: '/dashboard/countries',
                 icon: Flag,
+            },
+            {
+                title: 'Brands',
+                href: '/dashboard/brands',
+                icon: LogsIcon,
             },
         ],
     },

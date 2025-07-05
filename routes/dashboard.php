@@ -7,6 +7,7 @@ use App\Http\Controllers\Dashboard\Pages\Assignments\UserAssignmentsController;
 use App\Http\Controllers\Dashboard\Pages\CountriesController;
 use App\Http\Controllers\Dashboard\Pages\EmailSubscribersController;
 use App\Http\Controllers\Dashboard\Pages\MessagesController;
+use App\Http\Controllers\Dashboard\Pages\BrandsController;
 use App\Http\Controllers\Dashboard\Pages\UsersController;
 use App\Http\Controllers\Dashboard\Pages\WebsiteMessagesController;
 use App\Http\Controllers\Dashboard\Pages\WebsitesController;
@@ -39,6 +40,9 @@ Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboa
     //* Countries
     dashboardPagesRoutes('countries', CountriesController::class);
     Route::patch('countries/{id}/is_active', [CountriesController::class, 'toggleActive'])->name('countries.is_active');
+    //* Brands
+    dashboardPagesRoutes('brands', BrandsController::class);
+    Route::patch('brands/{id}/is_active', [BrandsController::class, 'toggleActive'])->name('brands.is_active');
 
     //* Assignments
     Route::middleware('can:assignments_access')->prefix('assignments')->group(function () {

@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('brands', function (Blueprint $table) {
             $table->id();
             $table->foreignId('website_id')->constrained('websites')->onDelete('cascade');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
 
+            $table->unique(['website_id', 'name']);
             $table->index(['website_id', 'is_active']);
         });
     }
