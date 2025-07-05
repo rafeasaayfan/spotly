@@ -263,7 +263,7 @@ class RSDataTable extends Command
         if ($stubName === 'Create.vue.stub') {
             $propsCode = '';
             foreach ($this->createEditRelations as $relation) {
-                $propsCode .= "    {$relation}: Array<{ id: any; name: any }>;\n";
+                $propsCode .= "    {$relation}: Record<string, any>;\n";
             }
             $replacements = [
                 '{{ slug }}' => $name,

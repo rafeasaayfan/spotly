@@ -5,7 +5,7 @@ const props = defineProps<{
 {{ props }}
 }>();
 
-//const mappedProps = props.orders.map((item) => ({
+//const mappedProps = props.orders.map((item : any) => ({
 //    value: item.id,
  //   label: item.name,
 //}));
