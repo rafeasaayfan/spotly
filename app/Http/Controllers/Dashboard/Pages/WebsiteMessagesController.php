@@ -20,10 +20,8 @@ class WebsiteMessagesController extends Controller
         $query = WebsiteMessage::query();
 
         $columnsSearching = ['website.name'];
-        $columnsSelection = [];
-        $relations = [];
 
-        $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
+        $data = $this->dataTable($query, $request, $columnsSearching);
 
         return Inertia::render('dashboard/pages/websiteMessages/WebsiteMessages', [
             'websiteMessages' => $data,
@@ -87,5 +85,29 @@ class WebsiteMessagesController extends Controller
         WebsiteMessage::destroy($validated['ids']);
 
         return redirect()->back()->with('message', __('Message(s) deleted successfully.'));
+    }
+
+    /**
+     * Change the status of the specified resource.
+     */
+    public function changeStatus(Request $request, $id)
+    {
+        $websiteMessage = WebsiteMessage::findOrFail($id);
+
+        $validated = $request->validate([
+            'status' => 'required|in:new,read,closed',
+        ]);
+
+        $websiteMessage->update([
+            'status' => $validated['status'],
+        ]);
+
+        $message = $validated['status'] === 'new'
+            ? 'Message marked as new.'
+            : 'Message marked as read.';
+
+        if ($validated['status'] === 'closed') $message = 'Message marked as closed.';
+
+        return redirect()->back()->with('message', $message);
     }
 }

@@ -32,6 +32,7 @@ Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboa
     Route::patch('websites/{id}/status', [WebsitesController::class, 'changeStatus'])->name('websites.status');
     //* Website messages
     dashboardPagesRoutes('websiteMessages', WebsiteMessagesController::class);
+    Route::patch('websiteMessages/{id}/status', [WebsiteMessagesController::class, 'changeStatus'])->name('websiteMessages.status');
     //* Messages
     dashboardPagesRoutes('messages', MessagesController::class);
     Route::patch('messages/{id}/status', [MessagesController::class, 'changeStatus'])->name('messages.status');

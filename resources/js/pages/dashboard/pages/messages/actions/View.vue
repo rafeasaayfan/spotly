@@ -9,9 +9,9 @@ const columns = [
     { key: 'name', label: 'Name' },
     { key: 'email', label: 'Email', type: 'email' },
     { key: 'subject', label: 'Subject' },
+    { key: 'type', label: 'Type', type: 'status' },
     { key: 'status', label: 'Status', type: 'status' },
     { key: 'message', label: 'Message', type: 'textarea' },
-    { key: 'type', label: 'Type', type: 'status' },
     { key: 'created_at', label: 'Created At', type: 'date' },
 ];
 </script>

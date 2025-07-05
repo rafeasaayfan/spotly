@@ -22,6 +22,7 @@ const columns = [
     { key: 'name', label: 'Name' },
     { key: 'email', label: 'Email', type: 'email' },
     { key: 'subject', label: 'Subject' },
+    { key: 'type', label: 'Type', type: 'status' },
     {
         key: 'status',
         label: 'Status',
@@ -32,22 +33,10 @@ const columns = [
             { value: 'closed', label: 'Closed' },
         ],
     },
-    { key: 'type', label: 'Type', type: 'status' },
     { key: 'created_at', label: 'Created At', type: 'date' },
 ];
 
 const filter = [
-    {
-        key: 'status',
-        label: 'Status',
-        type: 'select',
-        placeholder: 'Select status',
-        options: [
-            { value: 'new', label: 'New' },
-            { value: 'read', label: 'Read' },
-            { value: 'closed', label: 'Closed' },
-        ],
-    },
     {
         key: 'type',
         label: 'Type',
@@ -58,6 +47,17 @@ const filter = [
             { value: 'suggestion', label: 'Suggestion' },
             { value: 'complaint', label: 'Complaint' },
             { value: 'other', label: 'Other' },
+        ],
+    },
+    {
+        key: 'status',
+        label: 'Status',
+        type: 'select',
+        placeholder: 'Select status',
+        options: [
+            { value: 'new', label: 'New' },
+            { value: 'read', label: 'Read' },
+            { value: 'closed', label: 'Closed' },
         ],
     },
 ];

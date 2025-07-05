@@ -9,7 +9,10 @@ const columns = [
     { key: 'website_name', label: 'Website Name' },
     { key: 'name', label: 'Name' },
     { key: 'email', label: 'Email', type: 'email' },
-    { key: 'description', label: 'Description', type: 'textarea' },
+    { key: 'subject', label: 'Subject' },
+    { key: 'type', label: 'Type', type: 'status' },
+    { key: 'status', label: 'Status', type: 'status' },
+    { key: 'message', label: 'Message', type: 'textarea' },
     { key: 'created_at', label: 'Created At', type: 'date' },
 ];
 </script>
