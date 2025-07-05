@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\Websites\StoreWebsiteRequest;
 use App\Http\Requests\Dashboard\Pages\Websites\UpdateWebsiteRequest;
+use App\Models\Country;
 use App\Models\WebsiteType;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,8 +25,8 @@ class WebsitesController extends Controller
         $query = Website::query();
 
         $columnsSearching = ['name', 'subdomain', 'phone_number'];
-        $columnsSelection = ['id', 'owner_id', 'website_type_id', 'approved_or_denied_by', 'name', 'subdomain', 'address', 'phone_number', 'is_active', 'status', 'created_at'];
-        $relations = ['owner_name', 'websiteType_type', 'viewedBy_name'];
+        $columnsSelection = ['id', 'owner_id', 'website_type_id', 'approved_or_denied_by', 'subdomain', 'address', 'phone_number', 'is_active', 'is_verified', 'status'];
+        $relations = ['owner_name', 'websiteType_type', 'approvedOrDeniedBy_name'];
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
@@ -41,10 +42,18 @@ class WebsitesController extends Controller
     {
         $users = $this->getRelation('user', ['name']);
         $websiteTypes = WebsiteType::select(['id', 'type'])->active()->get();
+        $cities = config('lebanon.cities');
+        $countries = Country::active()->get();
+        $countries->transform(function ($item) {
+            $item->flag = $item->getFirstMediaUrl('flag');
+            return $item;
+        });
 
         return response()->json([
             'users' => $users,
             'websiteTypes' => $websiteTypes,
+            'cities' => $cities,
+            'countries' => $countries,
         ]);
     }
 
@@ -54,16 +63,20 @@ class WebsitesController extends Controller
     public function store(StoreWebsiteRequest $request)
     {
         $validated = $request->validated();
-        unset($validated['logo']);
+        unset($validated['logo_light']);
+        unset($validated['logo_dark']);
 
         $website = new Website($validated);
-
         $website->country = 'Lebanon';
-        $website->city = 'Beirut';
 
-        if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
-            $website->addMediaFromRequest('logo')
-                ->toMediaCollection('logo');
+        if ($request->hasFile('logo_light') && $request->file('logo_light')->isValid()) {
+            $website->addMediaFromRequest('logo_light')
+                ->toMediaCollection('logo_light');
+        }
+
+        if ($request->hasFile('logo_dark') && $request->file('logo_dark')->isValid()) {
+            $website->addMediaFromRequest('logo_dark')
+                ->toMediaCollection('logo_dark');
         }
 
         $website->save();
@@ -76,9 +89,10 @@ class WebsitesController extends Controller
      */
     public function show(string $id)
     {
-        $website = Website::with(['owner', 'websiteType', 'viewedBy'])->findOrFail($id);
-        $website->logo = $website->getFirstMediaUrl('logo');
-        $result = $this->flattenRelationData($website, ['owner_name', 'websiteType_type', 'viewedBy_name']);
+        $website = Website::with(['owner', 'websiteType', 'approvedOrDeniedBy'])->findOrFail($id);
+        $website->logo_light = $website->getFirstMediaUrl('logo_light');
+        $website->logo_dark = $website->getFirstMediaUrl('logo_dark');
+        $result = $this->flattenRelationData($website, ['owner_name', 'websiteType_type', 'approvedOrDeniedBy_name']);
 
 
         return response()->json([
@@ -94,13 +108,22 @@ class WebsitesController extends Controller
         $website = Website::findOrFail($id);
         $users = $this->getRelation('user', ['name']);
         $websiteTypes = $this->getRelation('websiteType', ['type']);
+        $cities = config('lebanon.cities');
+        $countries = Country::active()->get();
+        $countries->transform(function ($item) {
+            $item->flag = $item->getFirstMediaUrl('flag');
+            return $item;
+        });
 
-        $website->logo = $website->getFirstMediaUrl('logo');
+        $website->logo_light = $website->getFirstMediaUrl('logo_light');
+        $website->logo_dark = $website->getFirstMediaUrl('logo_dark');
 
         return response()->json([
             'data' => $website,
             'users' => $users,
             'websiteTypes' => $websiteTypes,
+            'cities' => $cities,
+            'countries' => $countries,
         ]);
     }
 
@@ -140,16 +163,18 @@ class WebsitesController extends Controller
         return redirect()->back()->with('message', __('Website(s) deleted successfully.'));
     }
 
-    // Toggle active status
+    /**
+     * Toggle active status
+     */
     public function toggleActive(Request $request, $id)
     {
-        $websiteType = Website::findOrFail($id);
+        $website = Website::findOrFail($id);
 
         $validated = $request->validate([
             'is_active' => 'required|boolean',
         ]);
 
-        $websiteType->update([
+        $website->update([
             'is_active' => $validated['is_active'],
         ]);
 
@@ -160,16 +185,40 @@ class WebsitesController extends Controller
         return redirect()->back()->with('message', $message);
     }
 
-    // Change status
+    /**
+     * Toggle verified status
+     */
+    public function toggleVerified(Request $request, $id)
+    {
+        $website = Website::findOrFail($id);
+
+        $validated = $request->validate([
+            'is_verified' => 'required|boolean',
+        ]);
+
+        $website->update([
+            'is_verified' => $validated['is_verified'],
+        ]);
+
+        $message = $validated['is_verified']
+            ? 'Website verified successfully.'
+            : 'Website unverified successfully.';
+
+        return redirect()->back()->with('message', $message);
+    }
+
+    /**
+     * Change status
+     */
     public function changeStatus(Request $request, $id)
     {
-        $websiteType = Website::findOrFail($id);
+        $website = Website::findOrFail($id);
 
         $validated = $request->validate([
             'status' => 'required|in:pending,denied,approved',
         ]);
 
-        $websiteType->update([
+        $website->update([
             'status' => $validated['status'],
             'approved_or_denied_by' => Auth::id()
         ]);

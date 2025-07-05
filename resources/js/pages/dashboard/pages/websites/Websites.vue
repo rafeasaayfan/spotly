@@ -21,10 +21,11 @@ const columns = [
     { key: 'owner_name', label: 'Owner' },
     { key: 'websiteType_type', label: 'Type' },
     { key: 'viewedBy_name', label: 'Viewed By' },
-    { key: 'name', label: 'Name' },
     { key: 'subdomain', label: 'Sub Domain' },
+    { key: 'phone_number', label: 'Phone Number', type: 'phone_number' },
     { key: 'address', label: 'Address' },
     { key: 'is_active', label: 'Active', type: 'toggle' },
+    { key: 'is_verified', label: 'Verified', type: 'toggle' },
     {
         key: 'status',
         label: 'Status',
@@ -35,7 +36,6 @@ const columns = [
             { value: 'approved', label: 'Approved' },
         ],
     },
-    { key: 'created_at', label: 'Created At', type: 'date' },
 ];
 
 const filter = [
@@ -46,6 +46,15 @@ const filter = [
         options: [
             { value: '0', label: 'Inactive' },
             { value: '1', label: 'Active' },
+        ],
+    },
+    {
+        key: 'is_verified',
+        label: 'Verified',
+        type: 'select',
+        options: [
+            { value: '0', label: 'Unverified' },
+            { value: '1', label: 'Verified' },
         ],
     },
     {

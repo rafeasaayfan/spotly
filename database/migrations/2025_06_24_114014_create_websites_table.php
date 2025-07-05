@@ -19,14 +19,14 @@ return new class extends Migration
 
             $table->string('name')->unique();
             $table->string('subdomain')->unique();
-            $table->string('phone_number')->unique()->nullable();
+            $table->string('phone_number')->unique();
             $table->string('email')->unique()->nullable();
 
             $table->text('about_us')->nullable();
 
             $table->string('country')->nullable();
             $table->string('city')->nullable();
-            $table->string('address')->nullable();
+            $table->string('address');
 
             $table->string('instagram')->nullable();
             $table->string('facebook')->nullable();
@@ -41,9 +41,6 @@ return new class extends Migration
             $table->boolean('is_active')->default(false);
             $table->boolean('is_verified')->default(false);
             $table->enum('status', ['pending', 'denied', 'approved'])->default('pending');
-
-            $table->timestamp('approved_at')->nullable();
-            $table->timestamp('published_at')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

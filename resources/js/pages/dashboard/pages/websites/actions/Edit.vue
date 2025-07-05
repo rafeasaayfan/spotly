@@ -3,22 +3,29 @@ import Edit from '@/components/table/actions/Edit.vue';
 
 const props = defineProps<{
     data: Record<string, any>;
-    users: Array<{ id: any; name: any }>;
-    websiteTypes: Array<{ id: any; type: any }>;
+    users: Record<string, any>;
+    websiteTypes: Record<string, any>;
+    cities: Array<string>;
+    countries: Record<string, any>;
 }>();
 
-const mappedUsers = props.users.map((item) => ({
+const mappedUsers = props.users.map((item : any) => ({
     value: item.id,
     label: item.name,
 }));
 
-const mappedTypes = props.websiteTypes.map((item) => ({
+const mappedTypes = props.websiteTypes.map((item: any) => ({
     value: item.id,
     label: item.type,
 }));
 
+const mappedCountries = props.countries.map((item: any) => ({
+    value: item.phone_code,
+    label: item.phone_code,
+    icon: item.flag,
+}));
+
 const columns = [
-    { key: 'logo', label: 'Website logo', type: 'file', placeholder: 'Enter the website logo', required: true },
     { key: 'owner_id', label: 'Website owner', type: 'select_with_search', placeholder: 'Select the owner', required: true, relation: mappedUsers },
     {
         key: 'website_type_id',
@@ -28,18 +35,33 @@ const columns = [
         required: true,
         relation: mappedTypes,
     },
-    { key: 'name', label: 'Name', type: 'text', placeholder: 'Enter the website name', required: true },
+    { key: 'name', label: 'Website name', type: 'text', placeholder: 'Enter the website name', required: true },
     { key: 'subdomain', label: 'Sub domain', type: 'text', placeholder: 'Enter the sub domain', required: true },
-    { key: 'country', label: 'Country', type: 'select', placeholder: 'Select the country', required: false },
-    { key: 'city', label: 'City', type: 'select', placeholder: 'Select the city', required: false },
-    { key: 'address', label: 'Address', type: 'text', placeholder: 'Enter the address', required: true },
     {
         key: 'phone_number',
         label: 'Phone Number',
-        type: 'text',
+        type: 'phone_number',
         placeholder: 'Enter the website phone number',
         required: true,
+        options: mappedCountries,
     },
+    { key: 'email', label: 'Email', type: 'text', placeholder: 'Enter the website email', required: false },
+    { key: 'about_us', label: 'About Us', type: 'textarea', placeholder: 'Enter the website about us', required: false, maxlength: 255 },
+    { key: 'logo_light', label: 'Website logo light', type: 'file', placeholder: 'Enter the website logo light mode', required: false },
+    { key: 'logo_dark', label: 'Website logo dark', type: 'file', placeholder: 'Enter the website logo dark mode', required: false },
+    {
+        key: 'city',
+        label: 'City',
+        type: 'select_with_search',
+        placeholder: 'Select the city',
+        required: false,
+        relation: props.cities.map((item: any) => ({ value: item, label: item })),
+    },
+    { key: 'address', label: 'Address', type: 'text', placeholder: 'Enter the address', required: true },
+    { key: 'instagram', label: 'Instagram', type: 'text', placeholder: 'Enter the instagram url', required: false },
+    { key: 'facebook', label: 'Facebook', type: 'text', placeholder: 'Enter the facebook url', required: false },
+    { key: 'tiktok', label: 'Tiktok', type: 'text', placeholder: 'Enter the tiktok url', required: false },
+    { key: 'youtube', label: 'Youtube', type: 'text', placeholder: 'Enter the youtube url', required: false },
     {
         key: 'language',
         label: 'Language',
@@ -64,26 +86,27 @@ const columns = [
         ],
     },
     {
-        key: 'instagram',
-        label: 'Instagram url',
-        type: 'text',
-        placeholder: 'Enter the Instagram url account',
+        key: 'is_verified',
+        label: 'Verified',
+        type: 'select',
+        placeholder: 'Is verified',
         required: true,
+        options: [
+            { value: '0', label: 'Unverified' },
+            { value: '1', label: 'Verified' },
+        ],
     },
     {
-        key: 'facebook',
-        label: 'Facebook',
-        type: 'text',
-        placeholder: 'Enter the facebook url account',
+        key: 'status',
+        label: 'Status',
+        type: 'select',
+        placeholder: 'Select the website status',
         required: true,
-    },
-    { key: 'tiktok', label: 'Tiktok', type: 'text', placeholder: 'Enter the tiktok url account', required: true },
-    {
-        key: 'description',
-        label: 'Description',
-        type: 'textarea',
-        placeholder: 'Describe the website',
-        required: true,
+        options: [
+            { value: 'pending', label: 'Pending' },
+            { value: 'denied', label: 'Denied' },
+            { value: 'approved', label: 'Approved' },
+        ],
     },
 ];
 </script>

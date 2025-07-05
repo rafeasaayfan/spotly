@@ -39,9 +39,6 @@ class Website extends Model implements HasMedia
         'is_active',
         'is_verified',
         'status',
-
-        'approved_at',
-        'published_at',
     ];
 
 
