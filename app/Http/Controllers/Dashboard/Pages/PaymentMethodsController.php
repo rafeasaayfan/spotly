@@ -98,7 +98,7 @@ class PaymentMethodsController extends Controller
     {
         $validated = $request->validate([
             'ids' => 'required|array',
-            'ids.*' => 'integer|exists:paymentMethods,id',
+            'ids.*' => 'integer|exists:payment_methods,id',
         ]);
 
         PaymentMethod::destroy($validated['ids']);
