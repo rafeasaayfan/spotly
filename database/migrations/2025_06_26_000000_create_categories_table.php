@@ -15,11 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('website_id')->constrained('websites')->onDelete('cascade');
             $table->foreignId('parent_id')->nullable()->constrained('categories')->onDelete('set null');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-            $table->softDeletes();
 
             $table->index(['website_id', 'is_active']);
             $table->index(['parent_id', 'is_active']);

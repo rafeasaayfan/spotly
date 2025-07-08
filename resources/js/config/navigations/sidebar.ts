@@ -1,5 +1,5 @@
 import { type SidebarSection } from '@/types';
-import { Flag, LayoutGrid, LogsIcon, MailCheck, MessageCircle, MessageSquare, Monitor, PercentDiamondIcon, Type, UsersIcon } from 'lucide-vue-next';
+import { icons } from 'lucide-vue-next';
 
 //? Sidebar Content
 export const mainSidebarItems: SidebarSection[] = [
@@ -9,7 +9,7 @@ export const mainSidebarItems: SidebarSection[] = [
             {
                 title: 'Dashboard',
                 href: '/dashboard',
-                icon: LayoutGrid,
+                icon: icons.LayoutGrid,
             },
         ],
     },
@@ -19,42 +19,47 @@ export const mainSidebarItems: SidebarSection[] = [
             {
                 title: 'Users',
                 href: '/dashboard/users',
-                icon: UsersIcon,
+                icon: icons.User,
             },
             {
                 title: 'Messages',
                 href: '/dashboard/messages',
-                icon: MessageSquare,
+                icon: icons.MessageSquare,
             },
             {
                 title: 'Website types',
                 href: '/dashboard/websiteTypes',
-                icon: Type,
+                icon: icons.Type,
             },
             {
                 title: 'Email subscribers',
                 href: '/dashboard/emailSubscribers',
-                icon: MailCheck,
+                icon: icons.MailCheck,
             },
             {
                 title: 'Webistes',
                 href: '/dashboard/websites',
-                icon: Monitor,
+                icon: icons.Monitor,
             },
             {
                 title: 'Website Messages',
                 href: '/dashboard/websiteMessages',
-                icon: MessageCircle,
+                icon: icons.MessageCircle,
             },
             {
                 title: 'Countries',
                 href: '/dashboard/countries',
-                icon: Flag,
+                icon: icons.Flag,
             },
             {
                 title: 'Brands',
                 href: '/dashboard/brands',
-                icon: LogsIcon,
+                icon: icons.LogIn,
+            },
+            {
+                title: 'Categories',
+                href: '/dashboard/categories',
+                icon: icons.Tag,
             },
         ],
     },
@@ -69,7 +74,7 @@ export const footerSidebarItems: SidebarSection[] = [
                 title: 'Assignments',
                 href: '/dashboard/assignments',
                 permission: 'assignments_access',
-                icon: PercentDiamondIcon,
+                icon: icons.Diamond,
                 children: [
                     {
                         title: 'Permissions',

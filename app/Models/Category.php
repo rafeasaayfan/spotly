@@ -14,10 +14,6 @@ class Category extends Model
         'is_active',
     ];
 
-    protected $casts = [
-        'is_active' => 'boolean',
-    ];
-
     /**
      * Get the website that the category is associated with.
      */
@@ -40,6 +36,11 @@ class Category extends Model
     public function children()
     {
         return $this->hasMany(Category::class, 'parent_id');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', 1);
     }
 
     // ============================== Ecommerce ==============================
