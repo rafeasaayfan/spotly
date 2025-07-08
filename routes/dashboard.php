@@ -13,6 +13,7 @@ use App\Http\Controllers\Dashboard\Pages\WebsiteMessagesController;
 use App\Http\Controllers\Dashboard\Pages\WebsitesController;
 use App\Http\Controllers\Dashboard\Pages\WebsiteTypesController;
 use App\Http\Controllers\Dashboard\Pages\CategoriesController;
+use App\Http\Controllers\Dashboard\Pages\PaymentMethodsController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
@@ -47,6 +48,9 @@ Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboa
     //* Categories
     dashboardPagesRoutes('categories', CategoriesController::class);
     Route::patch('categories/{id}/is_active', [CategoriesController::class, 'toggleActive'])->name('categories.is_active');
+    //* Payment Methods
+    dashboardPagesRoutes('paymentMethods', PaymentMethodsController::class);
+    Route::patch('paymentMethods/{id}/is_active', [PaymentMethodsController::class, 'toggleActive'])->name('paymentMethods.is_active');
 
     //* Assignments
     Route::middleware('can:assignments_access')->prefix('assignments')->group(function () {

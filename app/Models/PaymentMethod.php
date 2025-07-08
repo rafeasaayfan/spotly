@@ -20,7 +20,6 @@ class PaymentMethod extends Model
 
     protected $casts = [
         'settings' => 'array',
-        'is_active' => 'boolean',
     ];
 
     /**

@@ -61,6 +61,11 @@ export const mainSidebarItems: SidebarSection[] = [
                 href: '/dashboard/categories',
                 icon: icons.Tag,
             },
+            {
+                title: 'Payment Methods',
+                href: '/dashboard/paymentMethods',
+                icon: icons.CreditCard,
+            },
         ],
     },
 ];
