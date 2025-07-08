@@ -22,7 +22,7 @@ const columns = [
     { key: 'parent_name', label: 'Parent Category' },
     { key: 'name', label: 'Category Name' },
     { key: 'description', label: 'Description' },
-    { key: 'is_active', label: 'Status', type: 'toggle' },
+    { key: 'is_active', label: 'Active', type: 'toggle' },
     { key: 'created_at', label: 'Created At', type: 'date' },
 ];
 

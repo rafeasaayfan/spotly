@@ -29,7 +29,7 @@ const columns = [
     { key: 'name', label: 'Category Name', type: 'text', placeholder: 'enter category name', required: true },
     {
         key: 'is_active',
-        label: 'Status',
+        label: 'Active',
         type: 'select',
         placeholder: 'select status',
         required: true,
