@@ -34,13 +34,13 @@ const { can } = useAuth();
                     <template v-if="item.permission ? can(item.permission) : true">
                         <SidebarMenuButton
                             as-child
-                            :is-active="item.children?.length ? false : isActiveUrl(item.href)"
+                            :is-active="item.children?.length ? false : isActiveUrl(item.href ?? '')"
                             :is-child-active="item.children?.length ? isHasChildActive(item.children) : false"
                             :tooltip="item.title"
                             @click="item.children && toggleDropdown(item.title)"
                         >
                             <template v-if="!item.children">
-                                <Link :href="item.href">
+                                <Link :href="item.href ?? ''">
                                     <component :is="item.icon" v-if="item.icon" />
                                     <span>{{ item.title }}</span>
                                 </Link>
@@ -69,8 +69,8 @@ const { can } = useAuth();
                         >
                             <SidebarMenuSub class="overflow-hidden transition-all duration-300" v-show="isDropdownOpen(item.title)" ref="dropdownRef">
                                 <SidebarMenuSubItem v-for="child in item.children" :key="child.title">
-                                    <SidebarMenuSubButton :tooltip="child.title" :is-active="isActiveUrl(child.href)">
-                                        <Link :href="child.href" class="w-full">{{ child.title }}</Link>
+                                    <SidebarMenuSubButton :tooltip="child.title" :is-active="isActiveUrl(child.href ?? '')">
+                                        <Link :href="child.href ?? ''" class="w-full">{{ child.title }}</Link>
                                     </SidebarMenuSubButton>
                                 </SidebarMenuSubItem>
                             </SidebarMenuSub>
