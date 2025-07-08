@@ -15,8 +15,8 @@ class UpdateWebsiteTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:30', Rule::unique('website_types', 'title')->ignore($this->websiteType->id)],
-            'type' => ['required', 'string', 'max:30', Rule::unique('website_types', 'type')->ignore($this->websiteType->id)],
+            'title' => ['required', 'string', 'max:30', Rule::unique('website_types', 'title')->ignore($this->route('websiteType')->id)],
+            'type' => ['required', 'string', 'max:30', Rule::unique('website_types', 'type')->ignore($this->route('websiteType')->id)],
             'description' => ['required', 'string', 'max:100'],
             'priority' => ['required', 'integer', 'min:0', 'max:100'],
             'is_active' => ['required', 'boolean'],

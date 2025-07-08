@@ -18,7 +18,7 @@ class UpdateBrandRequest extends FormRequest
             'website_id' => ['required', 'exists:websites,id'],
             'name' => ['required', 'string', 'max:20', 'min:3', Rule::unique('brands', 'name')->where(function ($query) {
                 return $query->where('website_id', $this->website_id);
-            })->ignore($this->brand->id)],
+            })->ignore($this->route('brand')->id)],
             'description' => ['nullable', 'string', 'max:255', 'min:3'],
             'is_active' => ['required', 'boolean'],
         ];

@@ -20,14 +20,14 @@ class UpdatePaymentMethodRequest extends FormRequest
                 'string',
                 'min:3',
                 'max:30',
-                Rule::unique('payment_methods', 'name')->ignore($this->paymentMethod->id)
+                Rule::unique('payment_methods', 'name')->ignore($this->route('paymentMethod')->id)
             ],
             'code' => [
                 'required',
                 'string',
                 'min:2',
                 'max:20',
-                Rule::unique('payment_methods', 'code')->ignore($this->paymentMethod->id)
+                Rule::unique('payment_methods', 'code')->ignore($this->route('paymentMethod')->id)
             ],
             'description' => ['nullable', 'string', 'max:150'],
             'sort_order' => ['required', 'integer', 'min:0'],

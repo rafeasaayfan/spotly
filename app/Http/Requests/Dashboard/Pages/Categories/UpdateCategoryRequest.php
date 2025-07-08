@@ -36,7 +36,7 @@ class UpdateCategoryRequest extends FormRequest
             ],
             'name' => ['required', 'string', 'max:255', Rule::unique('categories', 'name')->where(function ($query) {
                 return $query->where('website_id', $this->website_id);
-            })->ignore($this->category->id)],
+            })->ignore($this->route('category')->id)],
             'description' => ['nullable', 'string'],
             'is_active' => ['required', 'boolean'],
         ];
