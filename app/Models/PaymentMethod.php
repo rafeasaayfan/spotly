@@ -27,9 +27,7 @@ class PaymentMethod extends Model
      */
     public function websites()
     {
-        return $this->belongsToMany(Website::class, 'website_payment_method')
-                    ->withPivot('is_active', 'settings')
-                    ->withTimestamps();
+        return $this->hasMany(WebsitePaymentMethod::class, 'payment_method_id');
     }
 
     /**
@@ -37,9 +35,7 @@ class PaymentMethod extends Model
      */
     public function activeWebsites()
     {
-        return $this->belongsToMany(Website::class, 'website_payment_method')
-                    ->wherePivot('is_active', true)
-                    ->withPivot('settings')
-                    ->withTimestamps();
+        return $this->hasMany(WebsitePaymentMethod::class, 'payment_method_id')
+                    ->where('is_active', true);
     }
 }

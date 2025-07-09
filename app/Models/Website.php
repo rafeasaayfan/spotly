@@ -71,9 +71,7 @@ class Website extends Model implements HasMedia
      */
     public function paymentMethods()
     {
-        return $this->belongsToMany(PaymentMethod::class, 'website_payment_method')
-                    ->withPivot('is_active', 'settings')
-                    ->withTimestamps();
+        return $this->hasMany(websitePaymentMethod::class, 'website_id');
     }
 
     /**
@@ -81,10 +79,8 @@ class Website extends Model implements HasMedia
      */
     public function activePaymentMethods()
     {
-        return $this->belongsToMany(PaymentMethod::class, 'website_payment_method')
-                    ->wherePivot('is_active', true)
-                    ->withPivot('settings')
-                    ->withTimestamps();
+        return $this->hasMany(WebsitePaymentMethod::class, 'website_id')
+                    ->where('is_active', true);
     }
 
     /**
