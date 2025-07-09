@@ -66,6 +66,24 @@ export const mainSidebarItems: SidebarSection[] = [
                 href: '/dashboard/paymentMethods',
                 icon: icons.CreditCard,
             },
+            {
+                title: 'UI',
+                icon: icons.LayoutTemplate,
+                children: [
+                    {
+                        title: 'Templates',
+                        href: '/dashboard/ui/templates',
+                    },
+                    {
+                        title: 'Template Colors',
+                        href: '/dashboard/ui/templateColors',
+                    },
+                    {
+                        title: 'Template Template Colors',
+                        href: '/dashboard/ui/templateTemplateColors',
+                    },
+                ],
+            },
         ],
     },
 ];
@@ -77,7 +95,6 @@ export const footerSidebarItems: SidebarSection[] = [
         items: [
             {
                 title: 'Assignments',
-                href: '/dashboard/assignments',
                 permission: 'assignments_access',
                 icon: icons.Diamond,
                 children: [

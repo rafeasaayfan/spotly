@@ -14,6 +14,9 @@ use App\Http\Controllers\Dashboard\Pages\WebsitesController;
 use App\Http\Controllers\Dashboard\Pages\WebsiteTypesController;
 use App\Http\Controllers\Dashboard\Pages\CategoriesController;
 use App\Http\Controllers\Dashboard\Pages\PaymentMethodsController;
+use App\Http\Controllers\Dashboard\Pages\Ui\TemplatesController;
+use App\Http\Controllers\Dashboard\Pages\Ui\TemplateColorsController;
+use App\Http\Controllers\Dashboard\Pages\Ui\TemplateTemplateColorsController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
@@ -51,6 +54,22 @@ Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboa
     //* Payment Methods
     dashboardPagesRoutes('paymentMethods', PaymentMethodsController::class);
     Route::patch('paymentMethods/{id}/is_active', [PaymentMethodsController::class, 'toggleActive'])->name('paymentMethods.is_active');
+
+    //* ui
+    Route::prefix('ui')->group(function () {
+        //* Templates
+        dashboardPagesRoutes('templates', TemplatesController::class);
+        Route::patch('templates/{id}/is_active', [TemplatesController::class, 'toggleActive'])->name('templates.is_active');
+
+        //* Template Colors
+        dashboardPagesRoutes('templateColors', TemplateColorsController::class);
+        Route::patch('templateColors/{id}/is_active', [TemplateColorsController::class, 'toggleActive'])->name('templateColors.is_active');
+
+        //* Template Template Colors
+        dashboardPagesRoutes('templateTemplateColors', TemplateTemplateColorsController::class);
+        Route::patch('templateTemplateColors/{id}/is_default', [TemplateTemplateColorsController::class, 'toggleDefault'])->name('templateTemplateColors.is_default');
+    });
+
 
     //* Assignments
     Route::middleware('can:assignments_access')->prefix('assignments')->group(function () {

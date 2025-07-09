@@ -11,7 +11,7 @@ class TemplateColor extends Model
 
     protected $fillable = [
         'created_by',
-        'title',
+        'name',
 
         'bg_body_light',
         'bg_body_dark',

@@ -73,7 +73,6 @@ class PaymentMethodsController extends Controller
 
         return response()->json([
             'data' => $paymentmethod,
-
         ]);
     }
 
