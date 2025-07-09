@@ -89,6 +89,11 @@ export const mainSidebarItems: SidebarSection[] = [
                 href: '/dashboard/websiteUsers',
                 icon: icons.UserRound,
             },
+            {
+                title: 'Website Payment Methods',
+                href: '/dashboard/websitePaymentMethods',
+                icon: icons.CreditCard,
+            },
         ],
     },
 ];
