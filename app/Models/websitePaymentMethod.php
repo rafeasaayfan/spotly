@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class websitePaymentMethod extends Model
+class WebsitePaymentMethod extends Model
 {
     protected $fillable = ['website_id', 'payment_method_id', 'settings', 'is_active'];
 
