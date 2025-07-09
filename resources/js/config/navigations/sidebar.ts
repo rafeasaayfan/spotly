@@ -84,6 +84,11 @@ export const mainSidebarItems: SidebarSection[] = [
                     },
                 ],
             },
+            {
+                title: 'Website Users',
+                href: '/dashboard/websiteUsers',
+                icon: icons.UserRound,
+            },
         ],
     },
 ];
