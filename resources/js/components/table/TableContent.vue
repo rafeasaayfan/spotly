@@ -25,7 +25,7 @@ const props = defineProps<TableProps>();
 </script>
 
 <template>
-    <div class="relative overflow-x-auto xl:overflow-visible">
+    <div class="custom-scrollbar relative overflow-x-auto xl:overflow-visible">
         <Table>
             <Thead>
                 <Tr class="font-semibold">
@@ -41,7 +41,7 @@ const props = defineProps<TableProps>();
                                 sort_dir: props.filters.sort_dir === 'asc' ? 'desc' : 'asc',
                             })
                         "
-                        class="text-body-muted cursor-pointer select-none text-xs"
+                        class="text-body-muted cursor-pointer text-xs select-none"
                     >
                         <div class="flex items-center gap-2">
                             <span>{{ column.label }}</span>
@@ -76,3 +76,9 @@ const props = defineProps<TableProps>();
         </Table>
     </div>
 </template>
+
+<style scoped>
+.custom-scrollbar {
+    scrollbar-width: thin;
+}
+</style>

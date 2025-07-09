@@ -95,6 +95,17 @@ export const formatters = {
         return date.toLocaleString();
     },
 
+    // Color formatter
+    color: (value: string) => {
+        return `
+            <div class="flex items-center gap-2">
+                <span class="size-4 rounded-full border border-muted shadow" 
+                style="background-color: ${value}"></span>
+                <span class="text-xs">${value}</span>
+            </div>
+        `;
+    },
+
     // Currency formatter
     currency: (value: number, currency: string = 'USD') => {
         return new Intl.NumberFormat('en-US', {

@@ -96,6 +96,9 @@ function updateCol(key: string, value: any, id: number) {
                 <template v-else-if="column.type === 'url'">
                     <a :href="`${row[column.key]}`" target="_blank">{{ column.key }}</a>
                 </template>
+                <template v-else-if="column.type === 'color'"> 
+                    <span v-html="formatters.color(row[column.key])"></span>
+                </template>
 
                 <template v-else>
                     {{ row[column.key] }}

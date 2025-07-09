@@ -70,6 +70,10 @@ const props = defineProps<{
                     <a :href="`${props.data[column.key]}`" target="_blank">{{ column.key }}</a>
                 </template>
 
+                <template v-else-if="column.type === 'color'">
+                    <span v-html="formatters.color(props.data[column.key])"></span>
+                </template>
+
                 <template v-else>
                     {{ props.data[column.key] }}
                 </template>
