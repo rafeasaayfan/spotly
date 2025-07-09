@@ -11,14 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('template_template_color', function (Blueprint $table) {
+        Schema::create('website_templates', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('website_id')->constrained('websites')->onDelete('cascade');
             $table->foreignId('template_id')->constrained('templates')->onDelete('cascade');
             $table->foreignId('template_color_id')->constrained('template_colors')->onDelete('cascade');
-            $table->boolean('is_default')->default(false);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
 
-            $table->unique(['template_id', 'template_color_id']);
+            $table->unique(
+                ['website_id', 'template_id', 'template_color_id'],
+                'website_tpl_wid_tid_tcid_unique'
+            );
         });
     }
 
@@ -27,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('template_template_color');
+        Schema::dropIfExists('website_templates');
     }
 };
