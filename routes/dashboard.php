@@ -19,6 +19,7 @@ use App\Http\Controllers\Dashboard\Pages\Ui\TemplateColorsController;
 use App\Http\Controllers\Dashboard\Pages\Ui\TemplateTemplateColorsController;
 use App\Http\Controllers\Dashboard\Pages\WebsiteUsersController;
 use App\Http\Controllers\Dashboard\Pages\WebsitePaymentMethodsController;
+use App\Http\Controllers\Dashboard\Pages\WebsiteTemplatesController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
@@ -62,6 +63,9 @@ Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboa
     //* Website Users
     dashboardPagesRoutes('websiteUsers', WebsiteUsersController::class);
     Route::patch('websiteUsers/{id}/status', [WebsiteUsersController::class, 'changeStatus'])->name('websiteUsers.status');
+    //* Website Templates
+    dashboardPagesRoutes('websiteTemplates', WebsiteTemplatesController::class);
+    Route::patch('websiteTemplates/{id}/is_active', [WebsiteTemplatesController::class, 'toggleActive'])->name('websiteTemplates.is_active');
 
     //* ui
     Route::prefix('ui')->group(function () {

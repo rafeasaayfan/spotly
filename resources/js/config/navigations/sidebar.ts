@@ -94,6 +94,11 @@ export const mainSidebarItems: SidebarSection[] = [
                 href: '/dashboard/websitePaymentMethods',
                 icon: icons.CreditCard,
             },
+            {
+                title: 'Website Templates',
+                href: '/dashboard/websiteTemplates',
+                icon: icons.LayoutTemplate,
+            },
         ],
     },
 ];

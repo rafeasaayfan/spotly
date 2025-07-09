@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class websiteTemplateColor extends Model
+class WebsiteTemplate extends Model
 {
     protected $fillable = ['website_id', 'template_id', 'template_color_id', 'is_active'];
 
