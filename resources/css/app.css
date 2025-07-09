@@ -526,3 +526,18 @@ body {
 .popup .swal2-success-ring {
     border-color: var(--success) !important;
 }
+
+/** =============== Scrollbar =============== */
+::-webkit-scrollbar {
+    width: 2px;
+}
+::-webkit-scrollbar-track {
+    background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--destructive);
+}
