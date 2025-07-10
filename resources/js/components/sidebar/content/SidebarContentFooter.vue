@@ -70,9 +70,10 @@ const { can } = useAuth();
                             <SidebarMenuSub class="overflow-hidden transition-all duration-300" v-show="isDropdownOpen(item.title)" ref="dropdownRef">
                                 <SidebarMenuSubItem v-for="child in item.children" :key="child.title">
                                     <SidebarMenuSubButton :tooltip="child.title" :is-active="isActiveUrl(child.href ?? '')">
-                                        <Link :href="child.href ?? ''" class="w-full h-full flex items-center px-2">
-                                            {{ child.title }}
-                                        </Link>
+                                        <Link :href="child.href ?? ''" class="w-full h-full flex items-center gap-1.5 px-2">
+                                                <component :is="child.icon" v-if="child.icon" class="size-3.5" />
+                                                {{ child.title }}
+                                            </Link>
                                     </SidebarMenuSubButton>
                                 </SidebarMenuSubItem>
                             </SidebarMenuSub>
