@@ -23,7 +23,7 @@ class WebsiteBuilderController extends Controller
         });
         $cities = config('lebanon.cities');
 
-        return Inertia::render('WebsiteBuilder/Wizard', [
+        return Inertia::render('websiteBuilder/Wizard', [
             'websiteTypes' => $websiteTypes,
             'type' => $type,
             'typeId' => $typeId,

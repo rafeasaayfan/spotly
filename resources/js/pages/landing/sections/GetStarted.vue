@@ -80,7 +80,7 @@ function handleIcon(type: string) {
                 <div ref="scrollContainer" class="scrollbar-hide flex space-x-4 overflow-x-auto overflow-y-hidden scroll-smooth p-2">
                     <template v-for="item in props.websiteTypes" :key="item.type">
                         <Link
-                            :href="`/WebsiteBuilder?type=${item.type}`"
+                            :href="`/websiteBuilder?type=${item.type}`"
                             v-if="item.is_active"
                             class="cards-landing-animation group/card relative min-w-[380px] rounded-xl"
                         >

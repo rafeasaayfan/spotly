@@ -19,7 +19,7 @@ Route::middleware([HandleLanguage::class])->group(function () {
     Route::put('/subscribe', [LandingController::class, 'subscribe'])->name('subscribe');
     Route::put('/contactUs', [LandingController::class, 'contactUs'])->name('contactMessages');
 
-    Route::get('/WebsiteBuilder', [WebsiteBuilderController::class, 'index'])->name('WebsiteBuilder');
+    Route::get('/websiteBuilder', [WebsiteBuilderController::class, 'index'])->name('websiteBuilder');
 
     require __DIR__ . '/dashboard.php';
     require __DIR__ . '/settings.php';
