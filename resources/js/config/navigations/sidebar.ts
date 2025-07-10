@@ -14,57 +14,43 @@ export const mainSidebarItems: SidebarSection[] = [
         ],
     },
     {
-        name: 'Web',
+        name: 'Spotly',
         items: [
             {
-                title: 'Users',
-                href: '/dashboard/users',
-                icon: icons.User,
-            },
-            {
-                title: 'Messages',
-                href: '/dashboard/messages',
-                icon: icons.MessageSquare,
-            },
-            {
-                title: 'Website types',
-                href: '/dashboard/websiteTypes',
-                icon: icons.Type,
-            },
-            {
-                title: 'Email subscribers',
-                href: '/dashboard/emailSubscribers',
-                icon: icons.MailCheck,
-            },
-            {
-                title: 'Webistes',
-                href: '/dashboard/websites',
-                icon: icons.Monitor,
-            },
-            {
-                title: 'Website Messages',
-                href: '/dashboard/websiteMessages',
-                icon: icons.MessageCircle,
-            },
-            {
-                title: 'Countries',
-                href: '/dashboard/countries',
-                icon: icons.Flag,
-            },
-            {
-                title: 'Brands',
-                href: '/dashboard/brands',
-                icon: icons.LogIn,
-            },
-            {
-                title: 'Categories',
-                href: '/dashboard/categories',
-                icon: icons.Tag,
-            },
-            {
-                title: 'Payment Methods',
-                href: '/dashboard/paymentMethods',
-                icon: icons.CreditCard,
+                title: 'Spotly',
+                icon: icons.Settings,
+                children: [
+                    {
+                        title: 'Users',
+                        href: '/dashboard/users',
+                        icon: icons.Users,
+                    },
+                    {
+                        title: 'Website types',
+                        href: '/dashboard/websiteTypes',
+                        icon: icons.Type,
+                    },
+                    {
+                        title: 'Countries',
+                        href: '/dashboard/countries',
+                        icon: icons.Flag,
+                    },
+                    {
+                        title: 'Payment Methods',
+                        href: '/dashboard/paymentMethods',
+                        icon: icons.CreditCard,
+                    },
+                    {
+                        title: 'Messages',
+                        href: '/dashboard/messages',
+                        icon: icons.MessageCircle,
+                    },
+                    {
+                        title: 'Email subscribers',
+                        href: '/dashboard/emailSubscribers',
+                        icon: icons.Mail,
+                    },
+                ],
             },
             {
                 title: 'UI',
@@ -84,23 +70,66 @@ export const mainSidebarItems: SidebarSection[] = [
                     },
                 ],
             },
-            {
-                title: 'Website Users',
-                href: '/dashboard/websiteUsers',
-                icon: icons.UserRound,
-            },
-            {
-                title: 'Website Payment Methods',
-                href: '/dashboard/websitePaymentMethods',
-                icon: icons.CreditCard,
-            },
-            {
-                title: 'Website Templates',
-                href: '/dashboard/websiteTemplates',
-                icon: icons.LayoutTemplate,
-            },
         ],
     },
+    {
+        name: 'Websites',
+        items: [
+            {
+                title: 'Management',
+                icon: icons.Settings,
+                children: [
+                    {
+                        title: 'Websites',
+                        href: '/dashboard/websites',
+                        icon: icons.Monitor,
+                    },
+                    {
+                        title: 'Website Users',
+                        href: '/dashboard/websiteUsers',
+                        icon: icons.Users,
+                    },
+                    {
+                        title: 'Categories',
+                        href: '/dashboard/categories',
+                        icon: icons.Tag,
+                    },
+                    {
+                        title: 'Brands',
+                        href: '/dashboard/brands',
+                        icon: icons.Building2,
+                    },
+                    {
+                        title: 'Website Templates',
+                        href: '/dashboard/websiteTemplates',
+                        icon: icons.LayoutTemplate,
+                    },
+                    {
+                        title: 'Website Methods',
+                        href: '/dashboard/websitePaymentMethods',
+                        icon: icons.CreditCard,
+                    },
+                    {
+                        title: 'Website Messages',
+                        href: '/dashboard/websiteMessages',
+                        icon: icons.MessageCircle,
+                    },
+                ],
+            },
+            {
+                title: 'E-Commerce',
+                icon: icons.ShoppingCart,
+                children: [
+                    {
+                        title: 'Products',
+                        href: '/dashboard/products',
+                        icon: icons.Package,
+                    },
+                    
+                ],
+            }
+        ],
+    }
 ];
 
 export const footerSidebarItems: SidebarSection[] = [
