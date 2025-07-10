@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import AppLogoIcon from '@/components/logo/AppLogoIcon.vue';
 import { Link } from '@inertiajs/vue3';
+import CreatorLogoIcon from '../logo/CreatorLogoIcon.vue';
 </script>
 
 <template>
@@ -13,14 +13,14 @@ import { Link } from '@inertiajs/vue3';
     >
         <div class="flex items-center space-x-2">
             <Link :href="route('dashboard.index')">
-                <AppLogoIcon class="size-10" />
+                <CreatorLogoIcon class="size-12" />
             </Link>
 
             <span class="text-xs text-body-muted">@ All rights reserved</span>
         </div>
 
         <div>
-            <span class="text-xs text-body-muted">VUE.RS / 2025</span>
+            <span class="text-xs text-body-muted">Spotly / 2025</span>
         </div>
     </footer>
 </template>
