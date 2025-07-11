@@ -19,6 +19,7 @@ const props = defineProps<{
     typeId: string;
     countries: Record<string, any>;
     cities: Array<string>;
+    templates: Record<string, any>;
     flash?: {
         message?: string;
     };
@@ -36,7 +37,7 @@ const form = useForm({
     logo: '',
     name: '',
     subdomain: '',
-    description: '',
+    about_us: '',
     country: '',
     city: '',
     address: '',
@@ -46,10 +47,13 @@ const form = useForm({
     instagram: '',
     facebook: '',
     tiktok: '',
+    youtube: '',
+    template_id: '',
+    template_color_id: '',
 });
 
 const currentStep = ref(1);
-const totalSteps = 3;
+const totalSteps = 4;
 
 const nextStep = () => {
     const { isValid } = useWizard(currentStep.value, form);
@@ -91,7 +95,7 @@ const updateField = (field: string, value: string) => {
 
         <div class="flex w-full max-w-6xl flex-col gap-10">
             <!-- Form Card -->
-            <div class="border-muted relative rounded-xl bg-black/3 p-5 dark:bg-white/2 z-10 backdrop-blur-[2px]">
+            <div class="border-muted relative rounded-xl bg-black/2 px-3 py-5 md:px-5 dark:bg-white/2 z-10 backdrop-blur-[2px]">
                 <form @submit.prevent="submitForm" class="flex flex-col gap-8">
                     <Transition name="slide-fade" mode="out-in">
                         <FirstStep v-if="currentStep === 1" :form="form" @update="updateField" :websiteTypes="props.websiteTypes" />
@@ -104,7 +108,9 @@ const updateField = (field: string, value: string) => {
                             :cities="props.cities"
                         />
 
-                        <ThirdStep v-else-if="currentStep === 3" :form="form" @update="updateField" />
+                        <ThirdStep v-else-if="currentStep === 3" :form="form" :templates="props.templates" @update="updateField" />
+
+                        <!-- <FourthStep v-else-if="currentStep === 4" :form="form" @update="updateField" /> -->
                     </Transition>
 
                     <!-- Navigation Buttons -->
@@ -119,14 +125,14 @@ const updateField = (field: string, value: string) => {
                             Previous
                         </Button>
                         <Button v-if="currentStep < totalSteps" type="button" @click="nextStep"> Next Step </Button>
-                        <Button v-else type="submit" class="glow-button"> Create Website </Button>
+                        <Button v-else type="submit" class="glow-button">Create Website</Button>
                     </div>
                 </form>
 
                 <div class="absolute start-0 top-1 flex h-1 w-full -translate-y-1/2 justify-end">
-                    <div class="grid w-50 grid-cols-3 gap-3">
+                    <div class="grid w-55 grid-cols-4 gap-2">
                         <div v-for="step in totalSteps" :key="step"
-                            class="transition-all duration-500 rounded-full" :class="step <= currentStep ? 'bg-primary w-full' : 'bg-black-5 dark:bg-white/5 w-full'">
+                            class="transition-all duration-500 rounded-full" :class="step <= currentStep ? 'bg-primary w-full' : 'bg-black/5 dark:bg-white/5 w-full'">
                         </div>
                     </div>
                 </div>

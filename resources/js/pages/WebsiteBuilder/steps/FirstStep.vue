@@ -1,34 +1,30 @@
 <script setup lang="ts">
 import HeadingSmall from '@/components/headers/HeadingSmall.vue';
-import { File, Input, InputError, Select, SelectWithSearch, Textarea } from '@/components/ui/fields';
-import { computed } from 'vue';
+import { Input, InputError, Select, SelectWithSearch, Textarea } from '@/components/ui/fields';
 import { Store } from 'lucide-vue-next';
+import { computed } from 'vue';
 
 const props = defineProps<{
     form: {
         website_type: string;
-        logo: string;
         name: string;
         subdomain: string;
-        description: string;
+        about_us: string;
         language: string;
         errors?: Record<string, string>;
     };
     websiteTypes: Record<string, any>;
 }>();
 
+// Define emit for updating form fields
 const emit = defineEmits<{
     (e: 'update', field: string, value: string): void;
 }>();
 
+// Computed properties for two-way binding with form fields
 const website_type = computed({
     get: () => props.form.website_type,
     set: (val) => emit('update', 'website_type', val),
-});
-
-const logo = computed({
-    get: () => props.form.logo,
-    set: (val) => emit('update', 'logo', val),
 });
 
 const name = computed({
@@ -41,9 +37,9 @@ const subdomain = computed({
     set: (val) => emit('update', 'subdomain', val),
 });
 
-const description = computed({
-    get: () => props.form.description,
-    set: (val) => emit('update', 'description', val),
+const about_us = computed({
+    get: () => props.form.about_us,
+    set: (val) => emit('update', 'about_us', val),
 });
 
 const language = computed({
@@ -51,6 +47,7 @@ const language = computed({
     set: (val) => emit('update', 'language', val),
 });
 
+// Map website types for select options
 const mappedTypes = props.websiteTypes.map((item: any) => ({
     value: item.id,
     label: item.type,
@@ -58,49 +55,28 @@ const mappedTypes = props.websiteTypes.map((item: any) => ({
 </script>
 
 <template>
-    <div key="step1" class="grid grid-cols-1 gap-6 md:grid-cols-3">
-        <div class="border-muted col-span-3 w-full border-b pb-3">
-            <h1 class="flex items-center gap-2 text-xl sm:text-2xl font-bold">
-                <Store class="size-5 sm:size-6 text-active-link" />
+    <div key="step1" class="grid grid-cols-1 gap-x-6 gap-y-8 md:gap-y-10 md:grid-cols-3">
+        <!-- Section Title -->
+        <div class="border-muted col-span-1 w-full border-b pb-3 md:col-span-3">
+            <h1 class="flex items-center gap-2 text-xl font-bold sm:text-2xl">
+                <Store class="text-active-link size-5 sm:size-6" />
                 <span class="gradient-text">Business Information</span>
             </h1>
         </div>
 
-        <div class="flex flex-col gap-1 md:col-span-2">
+        <!-- Website Type Selection -->
+        <div class="col-span-1 flex flex-col gap-1 md:col-span-2">
             <div class="flex flex-col gap-2">
-                <HeadingSmall title="Website Type" description="Choose the type of your business." />
+                <HeadingSmall title="Website Type" description="Select the category that best describes your business." />
                 <SelectWithSearch v-model="website_type" placeholder="e.g., E-commerce" :options="mappedTypes" />
             </div>
             <InputError v-if="props.form.errors?.website_type" :message="props.form.errors.website_type" />
         </div>
 
-        <div class="flex flex-col gap-1">
+        <!-- Language Selection -->
+        <div class="col-span-1 flex flex-col gap-1 md:col-span-1">
             <div class="flex flex-col gap-2">
-                <HeadingSmall title="Logo" description="The official logo of your business." />
-                <File v-model="logo" type="text" placeholder="e.g., The Corner Cafe" />
-            </div>
-            <InputError v-if="props.form.errors?.logo" :message="props.form.errors.logo" />
-        </div>
-
-        <div class="flex flex-col gap-1">
-            <div class="flex flex-col gap-2">
-                <HeadingSmall title="Name" description="The official name of your business." />
-                <Input v-model="name" type="text" placeholder="e.g., The Corner Cafe" required />
-            </div>
-            <InputError v-if="props.form.errors?.name" :message="props.form.errors.name" />
-        </div>
-
-        <div class="flex flex-col gap-1">
-            <div class="flex flex-col gap-2">
-                <HeadingSmall title="Subdomain" description="Your unique URL on Spotly." />
-                <Input v-model="subdomain" type="text" placeholder="the-corner-cafe" addon=".spotly.com" />
-            </div>
-            <InputError v-if="props.form.errors?.subdomain" :message="props.form.errors.subdomain" />
-        </div>
-
-        <div class="flex flex-col gap-1">
-            <div class="flex flex-col gap-2">
-                <HeadingSmall title="Language" description="The primary language of your site." />
+                <HeadingSmall title="Primary Language" description="Choose the main language for your website." />
                 <Select v-model="language" placeholder="Select a language...">
                     <option
                         v-for="option in [
@@ -119,12 +95,32 @@ const mappedTypes = props.websiteTypes.map((item: any) => ({
             <InputError v-if="props.form.errors?.language" :message="props.form.errors.language" />
         </div>
 
-        <div class="flex flex-col md:col-span-3">
-            <div class="flex flex-col gap-2">
-                <HeadingSmall title="Description" description="A short summary of your business." />
-                <Textarea v-model="description" placeholder="e.g., A cozy spot for coffee lovers..." />
+        <!-- Website Name and Subdomain -->
+        <div class="grid grid-cols-1 md:grid-cols-2 md:col-span-3 gap-6">
+            <div class="col-span-1 flex flex-col gap-1">
+                <div class="flex flex-col gap-2">
+                    <HeadingSmall title="Business Name" description="Enter the official name of your business or website." />
+                    <Input v-model="name" type="text" placeholder="e.g., The Corner Cafe" required />
+                </div>
+                <InputError v-if="props.form.errors?.name" :message="props.form.errors.name" />
             </div>
-            <InputError v-if="props.form.errors?.description" :message="props.form.errors.description" />
+
+            <div class="col-span-1 flex flex-col gap-1">
+                <div class="flex flex-col gap-2">
+                    <HeadingSmall title="Subdomain" description="Create a unique Spotly URL for your website." />
+                    <Input v-model="subdomain" type="text" placeholder="the-corner-cafe" addon=".spotly.com" />
+                </div>
+                <InputError v-if="props.form.errors?.subdomain" :message="props.form.errors.subdomain" />
+            </div>
+        </div>
+
+        <!-- About Us Section -->
+        <div class="col-span-1 flex flex-col md:col-span-3">
+            <div class="flex flex-col gap-2">
+                <HeadingSmall title="About Your Business" description="Provide a brief summary describing your business." />
+                <Textarea v-model="about_us" placeholder="e.g., A cozy spot for coffee lovers..." />
+            </div>
+            <InputError v-if="props.form.errors?.about_us" :message="props.form.errors.about_us" />
         </div>
     </div>
 </template>
