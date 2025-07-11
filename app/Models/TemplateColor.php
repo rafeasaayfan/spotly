@@ -62,7 +62,7 @@ class TemplateColor extends Model
      */
     public function templates()
     {
-        return $this->belongsToMany(Template::class, 'template_template_color')
+        return $this->belongsToMany(Template::class, 'template_template_colors')
                     ->withPivot('is_default')
                     ->withTimestamps();
     }
@@ -72,7 +72,7 @@ class TemplateColor extends Model
      */
     public function defaultForTemplates()
     {
-        return $this->belongsToMany(Template::class, 'template_template_color')
+        return $this->belongsToMany(Template::class, 'template_template_colors')
                     ->wherePivot('is_default', true)
                     ->withTimestamps();
     }

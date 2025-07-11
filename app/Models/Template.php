@@ -32,7 +32,7 @@ class Template extends Model
      */
     public function templateColors()
     {
-        return $this->belongsToMany(TemplateColor::class, 'template_template_color')
+        return $this->belongsToMany(TemplateColor::class, 'template_template_colors')
                     ->withPivot('is_default')
                     ->withTimestamps();
     }
@@ -42,8 +42,16 @@ class Template extends Model
      */
     public function defaultTemplateColor()
     {
-        return $this->belongsToMany(TemplateColor::class, 'template_template_color')
+        return $this->belongsToMany(TemplateColor::class, 'template_template_colors')
                     ->wherePivot('is_default', true)
                     ->withTimestamps();
+    }
+
+    /**
+     * Scope a query to only include active templates.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', 1);
     }
 }
