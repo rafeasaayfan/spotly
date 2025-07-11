@@ -5,41 +5,86 @@ import { onMounted, onUnmounted, ref } from 'vue';
 import { CheckCircle, CircleHelp, Palette, ShoppingCart, Utensils } from 'lucide-vue-next';
 
 const scrollContainer = ref<HTMLElement | null>(null);
-let direction = 1; // 1 = forward, -1 = backward
+const sectionRef = ref<HTMLElement | null>(null);
+let direction = 1;
 let isPaused = false;
+let isVisible = false;
+let intervalId: number | null = null;
+let delayTimeout: number | null = null;
 
 const autoScroll = () => {
-    if (!scrollContainer.value || isPaused) return;
+    if (!scrollContainer.value || isPaused || !isVisible) return;
 
     const container = scrollContainer.value;
     const maxScroll = container.scrollWidth - container.clientWidth;
 
-    // Reverse direction if we hit start or end
     if (container.scrollLeft >= maxScroll) {
-        direction = -1; // Go left
+        direction = -1;
     } else if (container.scrollLeft <= 0) {
-        direction = 1; // Go right
+        direction = 1;
     }
 
     container.scrollLeft += direction;
 };
 
+const startAutoScroll = () => {
+    if (intervalId === null) {
+        intervalId = window.setInterval(autoScroll, 20);
+    }
+};
+
+const stopAutoScroll = () => {
+    if (intervalId !== null) {
+        clearInterval(intervalId);
+        intervalId = null;
+    }
+    if (delayTimeout !== null) {
+        clearTimeout(delayTimeout);
+        delayTimeout = null;
+    }
+};
+
+const handleSectionVisible = () => {
+    isVisible = true;
+    delayTimeout = window.setTimeout(startAutoScroll, 500); // 0.5 second delay
+};
+
+const handleSectionHidden = () => {
+    isVisible = false;
+    stopAutoScroll();
+};
+
+onMounted(() => {
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    handleSectionVisible();
+                } else {
+                    handleSectionHidden();
+                }
+            });
+        },
+        { threshold: 0.4 }
+    );
+
+    if (sectionRef.value) {
+        observer.observe(sectionRef.value);
+    }
+
+    onUnmounted(() => {
+        observer.disconnect();
+        stopAutoScroll();
+    });
+});
+
 const pauseAutoScroll = () => {
     isPaused = true;
 };
+
 const resumeAutoScroll = () => {
     isPaused = false;
 };
-
-let intervalId: number | null = null;
-onMounted(() => {
-    intervalId = window.setInterval(autoScroll, 20);
-});
-onUnmounted(() => {
-    if (intervalId !== null) {
-        clearInterval(intervalId);
-    }
-});
 
 const props = defineProps<{
     websiteTypes: Record<string, any>;
@@ -53,7 +98,6 @@ function handleIcon(type: string) {
             return Utensils;
         case 'Portfolio':
             return Palette;
-
         default:
             return CircleHelp;
     }
@@ -61,7 +105,7 @@ function handleIcon(type: string) {
 </script>
 
 <template>
-    <section id="get-started" class="relative px-4 py-22">
+    <section ref="sectionRef" id="get-started" class="relative px-4 py-22">
         <div class="mx-auto">
             <div class="mb-14 flex w-full flex-col items-start gap-3">
                 <h2 class="section-title section-title-underline text-active text-3xl font-bold sm:text-4xl md:text-4xl lg:text-5xl">
