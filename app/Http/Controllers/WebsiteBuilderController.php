@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\WebsiteBuilderRequest;
 use App\Models\Country;
+use App\Models\Template;
 use App\Models\WebsiteType;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -23,12 +24,17 @@ class WebsiteBuilderController extends Controller
         });
         $cities = config('lebanon.cities');
 
+        $templates = Template::active()->where('website_type_id', $typeId)
+            ->with('templateColors')
+            ->get();
+
         return Inertia::render('websiteBuilder/Wizard', [
             'websiteTypes' => $websiteTypes,
             'type' => $type,
             'typeId' => $typeId,
             'countries' => $countries,
             'cities' => $cities,
+            'templates' => $templates,
         ]);
     }
 
