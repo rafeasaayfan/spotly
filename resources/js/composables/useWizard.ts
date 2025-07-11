@@ -1,9 +1,9 @@
 export interface WizardContent {
     website_type: string;
-    logo: string;
+    logo?: string;
     name: string;
     subdomain: string;
-    description: string;
+    about_us: string;
     language: string;
     country: string;
     city: string;
@@ -13,6 +13,7 @@ export interface WizardContent {
     instagram: string;
     facebook: string;
     tiktok: string;
+    youtube: string;
     errors?: Record<string, string>;
 }
 
@@ -25,7 +26,7 @@ export function useWizard(step: number, form: WizardContent) {
         if (!form.name) errors.name = 'Business name is required.';
         if (!form.subdomain) errors.subdomain = 'Subdomain is required.';
         if (!form.language) errors.language = 'Language is required.';
-        if (!form.description) errors.description = 'Description is required.';
+        if (!form.about_us) errors.about_us = 'About us is required.';
     }
 
     if (step === 2) {
