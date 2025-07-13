@@ -169,7 +169,7 @@ function handleIcon(type: string) {
     </section>
 </template>
 
-<style>
+<style scoped>
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
 }

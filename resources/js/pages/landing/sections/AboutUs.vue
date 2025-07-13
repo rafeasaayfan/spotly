@@ -166,13 +166,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.gradient-text {
-    background: linear-gradient(135deg, var(--primary), var(--destructive));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
 .floating-element {
     animation: float 6s ease-in-out infinite;
 }

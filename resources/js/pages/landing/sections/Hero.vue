@@ -5,12 +5,18 @@ import { onMounted } from 'vue';
 
 onMounted(() => {
     // --- Hero Section Animations ---
-    const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-    heroTl
-        .fromTo('#hero-title span', { y: 50, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.2, duration: 1 })
-        .fromTo('#hero-subtitle-main', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8 }, '-=0.5')
-        .fromTo('#hero-cta', { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.6 }, '-=0.4')
-        .fromTo('#scroll-indicator', { y: -20, opacity: 0 }, { y: 0, opacity: 1, duration: 1, repeat: -1, yoyo: true, ease: 'sine.inOut' }, '-=0.5');
+    gsap.from('#hero-title, #hero-subtitle-main', {
+        opacity: 0,
+        y: 50,
+        stagger: 0.15,
+        duration: 1,
+        ease: 'power2.out',
+        scrollTrigger: {
+            trigger: '#hero-title',
+            start: 'top 80%',
+            toggleActions: 'play none none none',
+        },
+    });
 
     // Website mockup elements pulsing
     gsap.utils.toArray<SVGElement>('.website-element').forEach((elem, i) => {
@@ -63,7 +69,7 @@ const scrollToSection = (id: string) => {
 </script>
 
 <template>
-    <section id="hero" class="relative flex min-h-[650px] w-full flex-col items-center justify-center overflow-hidden text-center md:px-4 pt-15 pb-22">
+    <section id="hero" class="relative flex min-h-[650px] w-full flex-col items-center justify-center overflow-hidden text-center px-4 pt-15 pb-22">
         <svg class="hero-bg-svg absolute top-0 left-0 z-0 h-full w-full overflow-hidden" preserveAspectRatio="xMidYMid slice" viewBox="0 0 100 100">
             <defs>
                 <!-- Professional grid pattern -->
@@ -164,11 +170,11 @@ const scrollToSection = (id: string) => {
         <div
             class="relative z-10 flex min-h-[650px] w-full flex-col items-center justify-center rounded-md bg-black/3 px-4 backdrop-blur-[2px] lg:px-0 dark:bg-white/2"
         >
-            <h1 id="hero-title" class="text-active mb-6 text-3xl font-bold sm:text-4xl md:text-4xl lg:text-7xl">
+            <h1 id="hero-title" class="text-active text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl mb-6">
                 <span class="gradient-text">Spotly</span> - Build Your <br class="hidden md:block" />
-                Digital Presence, <span class="">Effortlessly</span>
+                Digital Presence, Effortlessly
             </h1>
-            <p id="hero-subtitle-main" class="mx-auto mb-10 max-w-3xl text-center sm:text-lg md:text-xl">
+            <p id="hero-subtitle-main" class="mx-auto text-body-muted mb-10 max-w-3xl text-center text-base md:text-xl">
                 Start your online business easily with Spotly. No need to pay expensive setup fees or buy a domain and hosting. For only $10/month,
                 you get a full, professional website. It’s simple, fast, and saves you money. Begin your journey to success today!
             </p>

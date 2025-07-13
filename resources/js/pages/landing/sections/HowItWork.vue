@@ -139,7 +139,7 @@ const steps = [
     </section>
 </template>
 
-<style>
+<style scoped>
 .step-card {
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
