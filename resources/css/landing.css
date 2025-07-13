@@ -31,7 +31,13 @@
 }
 .glow-button:hover {
     background-image: none;
-    background-color: transparent;
+    background-color: hsl(0, 0%, 40%);
+    color: white;
+}
+.dark .glow-button:hover {
+    background-image: none;
+    background-color: hsl(0, 0%, 5%);
+    color: white;
 }
 
 .section-title-underline {
