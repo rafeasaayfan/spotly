@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import AppLogoIcon from '@/components/logo/AppLogoIcon.vue';
+// import AppLogoIcon from '@/components/logo/AppLogoIcon.vue';
+import { Button } from '@/components/ui/button';
 import { Link } from '@inertiajs/vue3';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ChevronRight, Pin, ShoppingCart } from 'lucide-vue-next';
+import { ChevronRight, Heart, Pin, ShoppingCart } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
 
 const badgeRef = ref<HTMLElement | null>(null);
@@ -11,19 +12,24 @@ const badgeRef = ref<HTMLElement | null>(null);
 onMounted(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Fix: Ensure cards are displayed by running GSAP animation after next DOM update
-    gsap.utils.toArray<HTMLElement>('.product-card-item').forEach((card) => {
-        gsap.from(card, {
-            opacity: 0,
-            y: 50,
-            duration: 1,
-            ease: 'power2.out',
-            scrollTrigger: {
-                trigger: card,
-                start: 'top 90%',
-                toggleActions: 'play none none none',
-            },
-        });
+    // Set initial state for cards
+    gsap.set('.product-card-item', {
+        opacity: 0,
+        y: 50,
+    });
+
+    // Animate cards into view
+    gsap.to('.product-card-item', {
+        opacity: 1,
+        y: 0,
+        stagger: 0.15,
+        duration: 0.5,
+        ease: 'power2.out',
+        scrollTrigger: {
+            trigger: '.product-card-item',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+        },
     });
 
     // Animate the badge with a vibrate effect every 3 seconds
@@ -45,14 +51,17 @@ onMounted(() => {
         );
     };
 
-    setInterval(vibrate, 3500);
+    setInterval(vibrate, 5000);
 });
 </script>
 
 <template>
-    <section class="relative py-22 flex flex-col gap-4">
+    <section class="relative py-22 flex flex-col gap-8">
         <div class="flex w-full items-center justify-between">
-            <h2 class="text-active text-3xl font-bold md:text-4xl">Products</h2>
+            <h2 class="text-active text-3xl font-bold md:text-4xl section-title-underline">
+                Our
+                <span class="gradient-text">Products</span> 
+            </h2>
 
             <Link href="#" class="group text-active-link flex items-center gap-0.5 text-sm font-medium">
                 <span>See All</span>
@@ -60,12 +69,12 @@ onMounted(() => {
             </Link>
         </div>
 
-        <div class="relative grid grid-cols-1 gap-x-10 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
-            <div class="absolute top-0 left-0 h-full w-full opacity-10">
+        <div class="relative grid grid-cols-1 gap-6 md:gap-10 sm:grid-cols-2 lg:grid-cols-3">
+            <!-- <div class="absolute top-0 left-0 h-full w-full opacity-10">
                 <div class="flex h-full w-full items-center justify-center">
                     <AppLogoIcon class="size-[55rem]" />
                 </div>
-            </div>
+            </div> -->
 
             <Link
                 v-for="n in 6"
@@ -84,6 +93,7 @@ onMounted(() => {
                     </div>
                 </div>
 
+                <!-- Product Image -->
                 <div class="relative overflow-hidden rounded-xl shadow">
                     <img
                         :src="'/images/img.jpg'"
@@ -91,11 +101,22 @@ onMounted(() => {
                         alt="Product"
                     />
 
+                    <!-- Quick Actions Overlay -->
+                    <div class="absolute top-1 end-1 group-hover:opacity-100 transition-opacity duration-300 gap-4">
+                        <Button
+                            size="icon"
+                            class="bg-transparent backdrop-blur rounded-full hover:bg-white shadow-none"
+                        >
+                            <Heart class="size-5 text-black" />
+                        </Button>
+                    </div>
+
                     <div class="absolute start-3 bottom-2">
                         <span class="text-active-link rounded-full bg-white/90 px-2 py-1 text-base font-bold backdrop-blur"> Samsung </span>
                     </div>
                 </div>
 
+                <!-- Product Info -->
                 <div class="flex flex-col gap-3">
                     <div class="flex flex-col">
                         <h3 class="text-active text-lg font-semibold">Nike Air Max 270</h3>
@@ -107,7 +128,8 @@ onMounted(() => {
                     <p class="text-sm font-medium">Men's Running Shoes</p>
                 </div>
 
-                <div class="flex w-full items-center justify-between border-t border-gray-500/30 pt-3">
+                <!-- Price and Actions -->
+                <div class="flex w-full items-center justify-between border-t border-gray-500/30 pt-2">
                     <div class="flex items-center gap-2">
                         <span class="text-active text-lg font-bold">$120</span>
                         <span class="text-body-muted text-sm line-through">$150</span>
@@ -115,13 +137,17 @@ onMounted(() => {
 
                     <Link
                         href="#"
-                        class="bg-primary flex items-center gap-2 rounded px-4 py-2 text-sm text-white shadow transition duration-300 ease-in-out hover:scale-103 active:scale-98"
                     >
-                        <ShoppingCart class="size-4" />
-                        <span>Add to Cart</span>
+                        <Button
+                            class="glow-button"
+                        >
+                            <ShoppingCart class="size-5 text-white" />
+                            <span>Add to Cart</span>
+                        </Button>
                     </Link>
                 </div>
             </Link>
         </div>
     </section>
 </template>
+

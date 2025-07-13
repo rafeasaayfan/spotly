@@ -4,7 +4,8 @@ import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import LanguagesMenu from '@/components/languages/Languages.vue';
 // import AppLogo from '@/components/logo/AppLogo.vue';
 // import AppLogoIcon from '@/components/logo/AppLogoIcon.vue';
-import type { BreadcrumbItem } from '@/types';
+import type { BreadcrumbItem, SharedData } from '@/types';
+import { usePage } from '@inertiajs/vue3';
 // import { Link } from '@inertiajs/vue3';
 import DesktopNav from './content/DesktopNav.vue';
 import MobileNav from './content/MobileNav.vue';
@@ -17,21 +18,28 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
 });
+
+const page = usePage<SharedData>();
 </script>
 
 <template>
-    <div class="fixed z-20 w-full transition-all duration-300 bg-white/80 dark:bg-black/80 backdrop-blur-sm border-b border-muted shadow">
+    <div
+        class="fixed z-20 w-full transition-all duration-300
+        backdrop-blur-md bg-black/3 dark:bg-white/3"
+        :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'"
+    >
         <div
-            class="mx-auto flex h-15 items-center justify-between transition-all duration-300 max-w-7xl px-4 md:px-0"
+            class="mx-auto flex h-15 items-center justify-between transition-all duration-300 max-w-7xl px-4 md:px-10 lg:px-4"
         >
             <!-- Mobile Menu -->
             <MobileNav />
 
-            <!-- <Link :href="route('landing')" class="hidden items-center gap-2 md:flex">
-                <AppLogo />
+            <Link :href="route('landing')" class="hidden items-center gap-2 md:flex cursor-pointer">
+                <!-- <AppLogo /> -->
+                <span class="gradient-text text-xl font-bold">E-commerce</span>
             </Link>
 
-            <Link :href="route('landing')" class="flex items-center gap-2 md:hidden">
+            <!-- <Link :href="route('landing')" class="flex items-center gap-2 md:hidden">
                 <AppLogoIcon class="size-16" />
             </Link> -->
 

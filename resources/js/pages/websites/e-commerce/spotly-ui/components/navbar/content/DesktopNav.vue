@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/navigation-menu';
 
 import { useNavigation } from '@/composables/navigation/useNavigation';
-import { navbarItems } from '@/config/navigations/websites/e-commerce-nav';
+import { navbarItems } from '@/pages/websites/e-commerce/spotly-ui/config/navbar';
 import type { SharedData } from '@/types';
 
 import { Link, usePage } from '@inertiajs/vue3';
@@ -54,7 +54,7 @@ setupScrollTracking();
 
                     <div
                         v-if="isCurrentRoute(item.href ?? '')"
-                        class="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white"
+                        class="absolute bottom-0 left-0 h-0.5 w-full bg-black dark:bg-white"
                     ></div>
                 </NavigationMenuItem>
             </NavigationMenuList>

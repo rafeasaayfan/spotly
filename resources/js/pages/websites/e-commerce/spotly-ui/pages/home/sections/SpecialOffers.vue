@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Button } from '@/components/ui/button';
 import { Link } from '@inertiajs/vue3';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -48,9 +49,12 @@ onMounted(() => {
 </script>
 
 <template>
-    <section class="featured-offer-section relative py-22 flex flex-col gap-4">
+    <section class="featured-offer-section relative flex flex-col gap-4 py-22">
         <div class="flex w-full items-center justify-between">
-            <h2 class="text-active text-3xl font-bold md:text-4xl">Special Offer</h2>
+            <h2 class="text-active section-title-underline text-3xl font-bold md:text-4xl">
+                Special
+                <span class="gradient-text">Offer</span>
+            </h2>
 
             <Link href="#" class="group text-active-link flex items-center gap-0.5 text-sm font-medium">
                 <span>See All</span>
@@ -59,16 +63,16 @@ onMounted(() => {
         </div>
 
         <div
-            class="group special-cadre dark:from-bg-blue-950/40 flex w-full flex-col items-center gap-10 lg:gap-30
-            rounded-2xl border border-blue-800/30 bg-gradient-to-b from-blue-950/20 to-black/4 px-5 py-8 lg:flex-row dark:to-white/4"
+            class="group special-cadre flex w-full flex-col items-center gap-10 rounded-2xl border border-[var(--primary)]/20 bg-gradient-to-b from-[var(--primary)]/10 to-[var(--destructive)]/5 px-5 py-8 lg:flex-row lg:gap-30"
         >
-            <div class="relative w-full overflow-hidden rounded-xl lg:w-1/2
-                flex justify-center items-center">
-                <img
-                    :src="featuredProduct.imageUrl"
-                    :alt="featuredProduct.name"
-                    class="featured-offer-image w-full shadow rounded-xl transition-all duration-300 ease-in-out"
-                />
+            <div class="relative flex w-full items-center overflow-hidden justify-center rounded-xl lg:w-1/2">
+                <div class="w-3/4 sm:w-1/2 lg:w-full overflow-hidden rounded-xl">
+                    <img
+                        :src="featuredProduct.imageUrl"
+                        :alt="featuredProduct.name"
+                        class="featured-offer-image w-full rounded-xl shadow transition-all duration-300 ease-in-out"
+                    />
+                </div>
             </div>
 
             <div class="featured-offer-content flex w-full flex-col gap-8 lg:w-1/2">
@@ -80,7 +84,7 @@ onMounted(() => {
 
                 <div class="flex flex-col gap-5">
                     <div class="flex flex-col gap-3">
-                        <h2 class="font-display text-active text-3xl leading-tight font-bold tracking-wide">
+                        <h2 class="text-active text-3xl leading-tight font-bold tracking-wide">
                             {{ featuredProduct.name }}
                         </h2>
                         <p class="text-body-muted max-w-2xl text-base leading-relaxed">
@@ -93,19 +97,16 @@ onMounted(() => {
                     </div>
                 </div>
 
-                <div class="flex flex justify-between items-center gap-4 border-t pt-4">
+                <div class="flex items-center justify-between gap-4 border-t pt-4">
                     <div class="flex items-center gap-3">
-                        <span class="text-2xl font-bold text-active">${{ featuredProduct.currentPrice }}</span>
+                        <span class="text-active text-2xl font-bold">${{ featuredProduct.currentPrice }}</span>
                         <span class="text-body-muted text-lg line-through">${{ featuredProduct.originalPrice }}</span>
                     </div>
 
-                    <button
-                        class="w-fit bg-primary flex cursor-pointer items-center gap-2 rounded px-4 py-2 font-medium text-white
-                        transition-all duration-300 ease-in-out text-sm"
-                    >
+                    <Button class="glow-button">
                         <ShoppingCart class="size-5" />
                         <span>Add to Cart</span>
-                    </button>
+                    </Button>
                 </div>
             </div>
         </div>
