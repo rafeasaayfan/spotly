@@ -13,6 +13,7 @@ const props = defineProps<{
   name?: string;
   label?: string;
   src?: string;
+  multiple?: boolean;
 }>();
 
 const fileUpdatedName = ref('');
@@ -22,9 +23,15 @@ const emit = defineEmits(['update:modelValue']);
 
 function handleFileChange(event: Event) {
   const target = event.target as HTMLInputElement;
-  const file = target.files?.[0] || null;
-  fileUpdatedName.value = file?.name || '';
-  emit('update:modelValue', file);
+  const files = target.files;
+
+  if (!files) return;
+
+  fileUpdatedName.value = props.multiple
+    ? `${files.length} files selected`
+    : files[0]?.name || '';
+
+  emit('update:modelValue', props.multiple ? Array.from(files) : files[0]);
 }
 
 const src = props.src;
@@ -78,9 +85,10 @@ const src = props.src;
           rounded-md border border-muted active:scale-98 transition-all duration-150 ease-in-out focus:ring active:ring-blue-800 focus:ring-blue-800/50"
       >
         <input
+          :multiple="props.multiple || false"
           type="file"
           :id="props.id || props.name"
-          :name="props.name"
+          :name="props.multiple ? `${props.name}[]` : props.name"
           class="w-full text-sm focus:outline-none file:py-2 file:px-4 file:border-0 file:text-sm file:font-medium
             file:bg-slate-100 file:text-slate-950 hover:file:bg-slate-200
             dark:file:bg-slate-700 dark:file:text-slate-100 dark:hover:file:bg-slate-800 rounded-md
