@@ -2,7 +2,7 @@
 import type { HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
 
-import { View } from 'lucide-vue-next';
+import { Eye } from 'lucide-vue-next';
 
 const props = defineProps<{
   class?: HTMLAttributes['class']
@@ -19,6 +19,6 @@ const props = defineProps<{
       )
     "
   >
-    <View class="size-3.5" />
+    <Eye class="size-3.5" />
   </button>
 </template>
