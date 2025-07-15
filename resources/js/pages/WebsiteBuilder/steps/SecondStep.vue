@@ -93,7 +93,7 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
 </script>
 
 <template>
-    <div key="step2" class="grid grid-cols-1 gap-x-6 gap-y-8 md:gap-y-10 md:grid-cols-3">
+    <div key="step2" class="grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-3 md:gap-y-10">
         <!-- Section Title -->
         <div class="border-muted col-span-1 w-full border-b pb-3 md:col-span-3">
             <h1 class="flex items-center gap-2 text-xl font-bold sm:text-2xl">
@@ -104,80 +104,80 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
 
         <!-- Phone and Email -->
         <div class="grid grid-cols-1 gap-6 md:col-span-3 md:grid-cols-2">
-            <div class="col-span-1 flex flex-col gap-1">
-                <div class="flex flex-col gap-2">
-                    <HeadingSmall title="Phone Number" description="Enter your business contact number." />
+            <div class="col-span-1 flex flex-col gap-2">
+                <HeadingSmall title="Phone Number" description="Enter your business contact number." />
+                <div class="flex flex-col gap-1 ps-2">
                     <PhoneNumberField v-model="phone_number" :options="mappedCountryPhones" selectedCode="+961" />
+                    <InputError v-if="props.form.errors?.phone_number" :message="props.form.errors.phone_number" />
                 </div>
-                <InputError v-if="props.form.errors?.phone_number" :message="props.form.errors.phone_number" />
             </div>
 
-            <div class="col-span-1 flex flex-col gap-1">
-                <div class="flex flex-col gap-2">
-                    <HeadingSmall title="Email Address" description="Enter your public contact email address." />
+            <div class="col-span-1 flex flex-col gap-2">
+                <HeadingSmall title="Email Address" description="Enter your public contact email address." />
+                <div class="flex flex-col gap-1 ps-2">
                     <Input v-model="email" type="email" placeholder="contact@yourbusiness.com" />
+                    <InputError v-if="props.form.errors?.email" :message="props.form.errors.email" />
                 </div>
-                <InputError v-if="props.form.errors?.email" :message="props.form.errors.email" />
             </div>
         </div>
 
         <!-- Address, Country, City -->
-        <div class="col-span-1 flex flex-col gap-1 md:col-span-1">
-            <div class="flex flex-col gap-2">
-                <HeadingSmall title="Street Address" description="Enter your business's physical address." />
+        <div class="col-span-1 flex flex-col gap-2 md:col-span-1">
+            <HeadingSmall title="Street Address" description="Enter your business's physical address." />
+            <div class="flex flex-col gap-1 ps-2">
                 <Input v-model="address" type="text" placeholder="123 Main Street" />
+                <InputError v-if="props.form.errors?.address" :message="props.form.errors.address" />
             </div>
-            <InputError v-if="props.form.errors?.address" :message="props.form.errors.address" />
         </div>
 
-        <div class="col-span-1 flex flex-col gap-1 md:col-span-1">
-            <div class="flex flex-col gap-2">
-                <HeadingSmall title="Country" description="Select the business's country." />
+        <div class="col-span-1 flex flex-col gap-2 md:col-span-1">
+            <HeadingSmall title="Country" description="Select the business's country." />
+            <div class="flex flex-col gap-1 ps-2">
                 <SelectWithSearch v-model="country" placeholder="Select a country..." :options="mappedCountries" />
+                <InputError v-if="props.form.errors?.country" :message="props.form.errors.country" />
             </div>
-            <InputError v-if="props.form.errors?.country" :message="props.form.errors.country" />
         </div>
 
-        <div class="col-span-1 flex flex-col gap-1 md:col-span-1">
-            <div class="flex flex-col gap-2">
-                <HeadingSmall title="City" description="Select the business's city." />
+        <div class="col-span-1 flex flex-col gap-2 md:col-span-1">
+            <HeadingSmall title="City" description="Select the business's city." />
+            <div class="flex flex-col gap-1 ps-2">
                 <SelectWithSearch v-model="city" placeholder="Select a city..." :options="cities.map((city) => ({ value: city, label: city }))" />
+                <InputError v-if="props.form.errors?.city" :message="props.form.errors.city" />
             </div>
-            <InputError v-if="props.form.errors?.city" :message="props.form.errors.city" />
         </div>
 
         <!-- Social Media Links -->
         <div class="grid grid-cols-1 gap-6 md:col-span-3 md:grid-cols-2 lg:grid-cols-4">
-            <div class="col-span-1 flex flex-col gap-1">
-                <div class="flex flex-col gap-2">
-                    <HeadingSmall title="Instagram URL" description="Link to your Instagram profile." />
+            <div class="col-span-1 flex flex-col gap-2">
+                <HeadingSmall title="Instagram URL" description="Link to your Instagram profile." />
+                <div class="flex flex-col gap-2 ps-2">
                     <Input v-model="instagram" type="url" placeholder="https://instagram.com/yourbusiness" />
+                    <InputError v-if="props.form.errors?.instagram" :message="props.form.errors.instagram" />
                 </div>
-                <InputError v-if="props.form.errors?.instagram" :message="props.form.errors.instagram" />
             </div>
 
-            <div class="col-span-1 flex flex-col gap-1">
-                <div class="flex flex-col gap-2">
-                    <HeadingSmall title="Facebook URL" description="Link to your Facebook page." />
+            <div class="col-span-1 flex flex-col gap-2">
+                <HeadingSmall title="Facebook URL" description="Link to your Facebook page." />
+                <div class="flex flex-col gap-1 ps-2">
                     <Input v-model="facebook" type="url" placeholder="https://facebook.com/yourbusiness" />
+                    <InputError v-if="props.form.errors?.facebook" :message="props.form.errors.facebook" />
                 </div>
-                <InputError v-if="props.form.errors?.facebook" :message="props.form.errors.facebook" />
             </div>
 
-            <div class="col-span-1 flex flex-col gap-1">
-                <div class="flex flex-col gap-2">
-                    <HeadingSmall title="TikTok URL" description="Link to your TikTok profile." />
+            <div class="col-span-1 flex flex-col gap-2">
+                <HeadingSmall title="TikTok URL" description="Link to your TikTok profile." />
+                <div class="flex flex-col gap-1 ps-2">
                     <Input v-model="tiktok" type="url" placeholder="https://tiktok.com/@yourbusiness" />
+                    <InputError v-if="props.form.errors?.tiktok" :message="props.form.errors.tiktok" />
                 </div>
-                <InputError v-if="props.form.errors?.tiktok" :message="props.form.errors.tiktok" />
             </div>
 
-            <div class="col-span-1 flex flex-col gap-1">
-                <div class="flex flex-col gap-2">
-                    <HeadingSmall title="YouTube URL" description="Link to your YouTube channel." />
+            <div class="col-span-1 flex flex-col gap-2">
+                <HeadingSmall title="YouTube URL" description="Link to your YouTube channel." />
+                <div class="flex flex-col gap-1 ps-2">
                     <Input v-model="youtube" type="url" placeholder="https://youtube.com/yourbusiness" />
+                    <InputError v-if="props.form.errors?.youtube" :message="props.form.errors.youtube" />
                 </div>
-                <InputError v-if="props.form.errors?.youtube" :message="props.form.errors.youtube" />
             </div>
         </div>
     </div>

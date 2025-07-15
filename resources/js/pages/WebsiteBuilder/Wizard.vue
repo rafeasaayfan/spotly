@@ -20,6 +20,7 @@ const props = defineProps<{
     countries: Record<string, any>;
     cities: Array<string>;
     templates: Record<string, any>;
+    templateTemplateColors: Record<string, any>;
     flash?: {
         message?: string;
     };
@@ -89,13 +90,12 @@ const updateField = (field: string, value: string) => {
 <template>
     <Head title="Create Your Website" />
 
-    <section class="relative flex min-h-screen w-full items-center justify-center py-12 overflow-hidden px-4 md:px-0">
-
+    <section class="relative flex min-h-screen w-full items-center justify-center overflow-hidden px-4 py-12 md:px-0">
         <Icons :website_type="form.website_type" />
 
         <div class="flex w-full max-w-6xl flex-col gap-10">
             <!-- Form Card -->
-            <div class="border-muted relative rounded-xl bg-black/2 px-3 py-5 md:px-5 dark:bg-white/2 z-10 backdrop-blur-[2px]">
+            <div class="border-muted relative z-10 rounded-xl bg-black/2 px-3 py-5 backdrop-blur-[2px] md:px-5 dark:bg-white/2">
                 <form @submit.prevent="submitForm" class="flex flex-col gap-8">
                     <Transition name="slide-fade" mode="out-in">
                         <FirstStep v-if="currentStep === 1" :form="form" @update="updateField" :websiteTypes="props.websiteTypes" />
@@ -108,7 +108,13 @@ const updateField = (field: string, value: string) => {
                             :cities="props.cities"
                         />
 
-                        <ThirdStep v-else-if="currentStep === 3" :form="form" :templates="props.templates" @update="updateField" />
+                        <ThirdStep 
+                            v-else-if="currentStep === 3" 
+                            :form="form" 
+                            :templates="props.templates" 
+                            :templateTemplateColors="props.templateTemplateColors"
+                            @update="updateField"
+                        />
 
                         <!-- <FourthStep v-else-if="currentStep === 4" :form="form" @update="updateField" /> -->
                     </Transition>
@@ -131,9 +137,12 @@ const updateField = (field: string, value: string) => {
 
                 <div class="absolute start-0 top-1 flex h-1 w-full -translate-y-1/2 justify-end">
                     <div class="grid w-55 grid-cols-4 gap-2">
-                        <div v-for="step in totalSteps" :key="step"
-                            class="transition-all duration-500 rounded-full" :class="step <= currentStep ? 'bg-primary w-full' : 'bg-black/5 dark:bg-white/5 w-full'">
-                        </div>
+                        <div
+                            v-for="step in totalSteps"
+                            :key="step"
+                            class="rounded-full transition-all duration-500"
+                            :class="step <= currentStep ? 'bg-primary w-full' : 'w-full bg-black/5 dark:bg-white/5'"
+                        ></div>
                     </div>
                 </div>
             </div>
