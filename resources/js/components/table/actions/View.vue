@@ -10,7 +10,7 @@ const props = defineProps<{
 </script>
 
 <template>
-    <div class="grid gap-3 rounded-md grid-cols-1 lg:grid-cols-2">
+    <div class="grid grid-cols-1 gap-3 rounded-md lg:grid-cols-2">
         <div
             v-for="column in props.columns"
             :key="column.key"
@@ -27,7 +27,20 @@ const props = defineProps<{
                 </template>
 
                 <template v-else-if="column.type === 'image'">
-                    <Image v-if="props.data[column.key]" :src="props.data[column.key]" alt="Image" class="h-12 w-12 !rounded-full object-cover" />
+                    <template v-if="typeof props.data[column.key] === 'object'">
+                        <div class="flex flex-wrap gap-2">
+                            <Image
+                                v-for="image in props.data[column.key]"
+                                :key="image.id"
+                                :src="image.original_url"
+                                alt="Image"
+                                class="h-36 w-36 !rounded-full object-cover"
+                            />
+                        </div>
+                    </template>
+                    <template v-else>
+                        <Image v-if="props.data[column.key]" :src="props.data[column.key]" alt="Image" class="h-12 w-12 !rounded-full object-cover" />
+                    </template>
                 </template>
 
                 <template v-else-if="column.key === 'email_verified_at'">

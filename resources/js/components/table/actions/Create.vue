@@ -16,6 +16,7 @@ const props = defineProps<{
 }>();
 
 const form = useForm(Object.fromEntries(props.columns.map((column) => [column.key, ''])));
+// const form = useForm(Object.fromEntries(props.columns.map((column) => [column.key, column.type === 'multiple_file' ? [] : ''])));
 
 function submit() {
     form.post(route(`dashboard.${props.table}.store`), {
@@ -73,6 +74,7 @@ function submit() {
                 v-model="form[column.key]"
                 :name="column.key"
                 :label="column.label"
+                :multiple="column.multiple || false"
             />
 
             <SelectWithSearch
@@ -106,6 +108,18 @@ function submit() {
                 v-model="form[column.key]"
                 :required="column.required"
             />
+
+            <!-- <MultipleFileField
+                v-if="column.type === 'multiple_file'"
+                :id="column.label"
+                class="block w-full"
+                v-model="form[column.key]"
+                :label="column.label"
+                :multiple="(column as any).multiple"
+                :max-files="(column as any).maxFiles"
+                :accept="(column as any).accept"
+                :max-file-size="(column as any).maxFileSize"
+            /> -->
 
             <InputError :message="form.errors?.[column.key]" />
         </div>
