@@ -44,6 +44,12 @@ const columns = [
             { value: '1', label: 'Yes' },
         ],
     },
+    {
+        key: 'images',
+        label: 'Template Images',
+        type: 'file',
+        multiple: true,
+    },
 ];
 </script>
 
