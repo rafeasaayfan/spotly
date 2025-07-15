@@ -57,16 +57,19 @@ class TemplateTemplateColorsController extends Controller
     public function store(StoreTemplateTemplateColorRequest $request)
     {
         $validated = $request->validated();
-        // unset($validated['image']);
 
         $templateTemplateColor = new TemplateTemplateColor($validated);
-
-        // if ($request->hasFile('image') && $request->file('image')->isValid()) {
-        //    $templatetemplatecolor->addMediaFromRequest('image')
-        //        ->toMediaCollection('image');
-        // }
-
         $templateTemplateColor->save();
+
+        // Handle multiple images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                if ($image->isValid()) {
+                    $templateTemplateColor->addMedia($image)
+                        ->toMediaCollection('images');
+                }
+            }
+        }
 
         return redirect()->route('dashboard.templateTemplateColors.index')->with('message', 'TemplateTemplateColor created successfully');
     }
@@ -76,8 +79,10 @@ class TemplateTemplateColorsController extends Controller
      */
     public function show(string $id)
     {
-        $templateTemplateColor = TemplateTemplateColor::findOrFail($id);
-        // $templatetemplatecolor->image = $templatetemplatecolor->getFirstMediaUrl('image');
+        $query = TemplateTemplateColor::with(['template', 'templateColor'])->findOrFail($id);
+        $query->images = $query->getMedia('images');
+
+        $templateTemplateColor = $this->flattenRelationData($query, ['template_name', 'templateColor_name']);
 
         return response()->json([
             'data' => $templateTemplateColor,
@@ -108,17 +113,22 @@ class TemplateTemplateColorsController extends Controller
     public function update(UpdateTemplateTemplateColorRequest $request, TemplateTemplateColor $templateTemplateColor)
     {
         $validated = $request->validated();
-        // unset($validated['image']);
 
         $templateTemplateColor->fill($validated);
-
-        // if ($request->hasFile('image') && $request->file('image')->isValid()) {
-        //    $templatetemplatecolor->clearMediaCollection('image');
-        //    $templatetemplatecolor->addMediaFromRequest('image')
-        //        ->toMediaCollection('image');
-        // }
-
         $templateTemplateColor->save();
+
+        // Handle multiple images
+        if ($request->hasFile('images')) {
+            // Clear existing images if new ones are uploaded
+            $templateTemplateColor->clearMediaCollection('images');
+            
+            foreach ($request->file('images') as $image) {
+                if ($image->isValid()) {
+                    $templateTemplateColor->addMedia($image)
+                        ->toMediaCollection('images');
+                }
+            }
+        }
 
         return redirect()->route('dashboard.templateTemplateColors.index')->with('message', 'TemplateTemplateColor updated successfully');
     }
