@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\WebsiteBuilderController;
+use App\Http\Controllers\WebsitePreviewController;
 use App\Http\Middleware\HandleLanguage;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
@@ -19,7 +20,16 @@ Route::middleware([HandleLanguage::class])->group(function () {
     Route::put('/subscribe', [LandingController::class, 'subscribe'])->name('subscribe');
     Route::put('/contactUs', [LandingController::class, 'contactUs'])->name('contactMessages');
 
-    Route::get('/websiteBuilder', [WebsiteBuilderController::class, 'index'])->name('websiteBuilder');
+    // WebsiteBuilder
+    Route::prefix('websiteBuilder')->name('websiteBuilder.')->group(function() {
+        Route::get('/', [WebsiteBuilderController::class, 'index'])->name('index');
+        Route::post('/getTemplateTemplateColors', [WebsiteBuilderController::class, 'getTemplateTemplateColors'])->name('getTemplateTemplateColors');
+        Route::post('/customColors', [WebsiteBuilderController::class, 'customColors'])->name('customColors');
+    });
+
+
+    // Preview
+    Route::post('/websites/preview', [WebsitePreviewController::class, 'preview'])->name('website.preview');
 
     require __DIR__ . '/dashboard.php';
     require __DIR__ . '/settings.php';

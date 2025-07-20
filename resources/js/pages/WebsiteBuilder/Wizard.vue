@@ -20,7 +20,6 @@ const props = defineProps<{
     countries: Record<string, any>;
     cities: Array<string>;
     templates: Record<string, any>;
-    templateTemplateColors: Record<string, any>;
     flash?: {
         message?: string;
     };
@@ -111,8 +110,8 @@ const updateField = (field: string, value: string) => {
                         <ThirdStep 
                             v-else-if="currentStep === 3" 
                             :form="form" 
+                            :type="props.type"
                             :templates="props.templates" 
-                            :templateTemplateColors="props.templateTemplateColors"
                             @update="updateField"
                         />
 
