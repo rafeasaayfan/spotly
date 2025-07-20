@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             WebsiteTypesSeeder::class,
+            TemplateColorsSeeder::class
         ]);
 
         User::factory(1000)->create();
