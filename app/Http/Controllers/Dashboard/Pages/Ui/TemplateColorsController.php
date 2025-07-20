@@ -28,11 +28,6 @@ class TemplateColorsController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
-        // $data->transform(function ($item) {
-        //    $item->image = $item->getFirstMediaUrl('image');
-        //    return $item;
-        // });
-
         return Inertia::render('dashboard/pages/ui/templateColors/TemplateColors', [
             'templateColors' => $data,
         ]);
@@ -52,16 +47,10 @@ class TemplateColorsController extends Controller
     public function store(StoreTemplateColorRequest $request)
     {
         $validated = $request->validated();
-        // unset($validated['image']);
 
         $templateColor = new TemplateColor($validated);
 
         $templateColor->created_by = Auth::id();
-
-        // if ($request->hasFile('image') && $request->file('image')->isValid()) {
-        //    $templatecolor->addMediaFromRequest('image')
-        //        ->toMediaCollection('image');
-        // }
 
         $templateColor->save();
 
@@ -88,8 +77,6 @@ class TemplateColorsController extends Controller
     {
         $templatecolor = TemplateColor::findOrFail($id);
         
-        // $templatecolor->image = $templatecolor->getFirstMediaUrl('image');
-
         return response()->json([
             'data' => $templatecolor,
         ]);
@@ -101,15 +88,8 @@ class TemplateColorsController extends Controller
     public function update(UpdateTemplateColorRequest $request, TemplateColor $templateColor)
     {
         $validated = $request->validated();
-        // unset($validated['image']);
 
         $templateColor->fill($validated);
-
-        // if ($request->hasFile('image') && $request->file('image')->isValid()) {
-        //    $templatecolor->clearMediaCollection('image');
-        //    $templatecolor->addMediaFromRequest('image')
-        //        ->toMediaCollection('image');
-        // }
 
         $templateColor->save();
 
