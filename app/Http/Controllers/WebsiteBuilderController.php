@@ -28,7 +28,7 @@ class WebsiteBuilderController extends Controller
             return $item;
         });
 
-        $cities = config('lebanon.cities');
+        $cities = config('cities.lebanon');
 
         $templates = Template::active()->where('website_type_id', $typeId)
             ->with(['templateColors'])
@@ -78,5 +78,21 @@ class WebsiteBuilderController extends Controller
     /**
      * Store the website builder data.
     */
-    public function store(WebsiteBuilderRequest $request) {}
+    public function store(WebsiteBuilderRequest $request, string $step)
+    {
+        // $validated = $request->validated();
+
+        switch ($step) {
+            case 1:
+                return redirect()->back()->with('message', 'First step completed!');
+            case 2:
+                return redirect()->back()->with('message', 'Second step completed!');
+            case 3:
+                return redirect()->back()->with('message', 'Third step completed!');
+            case 4:
+                return redirect()->back()->with('message', 'Website created successfully!');
+            default:
+                return redirect()->back()->with('error', 'Invalid step!');
+        }
+    }
 }

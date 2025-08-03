@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import '../../../css/landing.css';
 
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, router, useForm } from '@inertiajs/vue3';
 import { ref, watchEffect } from 'vue';
 
 import { Button } from '@/components/ui/button';
 import FirstStep from './steps/FirstStep.vue';
 import SecondStep from './steps/SecondStep.vue';
 import ThirdStep from './steps/ThirdStep.vue';
+import FourthStep from './steps/FourthStep.vue';
 
 import { useWizard } from '@/composables/useWizard';
 import { toast } from '@/lib/sweetAlert';
@@ -16,7 +17,7 @@ import Icons from './Icons.vue';
 const props = defineProps<{
     websiteTypes: Record<string, any>;
     type: string;
-    typeId: string;
+    typeId: number;
     countries: Record<string, any>;
     cities: Array<string>;
     templates: Record<string, any>;
@@ -33,39 +34,54 @@ watchEffect(() => {
 });
 
 const form = useForm({
-    website_type: props.typeId ?? '',
-    logo: '',
+    website_type_id: props.typeId ?? null,
     name: '',
     subdomain: '',
     about_us: '',
-    country: '',
-    city: '',
-    address: '',
     language: '',
+
     phone_number: '',
     email: '',
+    address: '',
+    country: '',
+    city: '',
     instagram: '',
     facebook: '',
     tiktok: '',
     youtube: '',
+
+    lightLogo: null,
+    darkLogo: null,
     template_id: '',
     template_color_id: '',
+    custom_template_color: false,
+    colors: [],
+
+    user_phone_number: '',
+    user_email: '',
 });
 
 const currentStep = ref(1);
 const totalSteps = 4;
 
-const nextStep = () => {
+const submitForm = () => {
     const { isValid } = useWizard(currentStep.value, form);
 
     if (!isValid) {
-        // toast.fire({ icon: 'error', title: 'Please fix the errors before proceeding.' });
-        // return;
+        toast.fire({ icon: 'error', title: 'Please fix the errors before proceeding.' });
+        return;
     }
 
-    if (currentStep.value < totalSteps) {
-        currentStep.value++;
-    }
+    form.post(
+        route('websiteBuilder.store', { step: currentStep.value }),
+        {
+            onSuccess() {
+                if (currentStep.value < totalSteps) {
+                    currentStep.value++;
+                }
+            },
+        },
+    );
 };
 
 const prevStep = () => {
@@ -74,15 +90,26 @@ const prevStep = () => {
     }
 };
 
-const submitForm = () => {
-    // Here you would typically post the form
-    // form.post('/your-submission-route', { ... });
-    console.log('Form submitted!', form.data());
-    // toast.fire({ icon: 'success', title: 'Website creation process started!' });
+const typeRef = ref(props.type);
+
+const updateField = (field: string, value: any) => {
+    if(field === 'type') {
+        typeRef.value = value;
+        fetchNewType();
+
+    } else {
+        (form as any)[field] = value;
+    }
 };
 
-const updateField = (field: string, value: string) => {
-    (form as any)[field] = value;
+const fetchNewType = async () => {
+    if (typeRef.value === props.type) return;
+
+    try {
+        router.get(route('websiteBuilder.index', { type: typeRef.value }), {}, { preserveState: true, replace: true });
+    } catch (error) {
+        console.error('Failed to fetch website type data:', error);
+    }
 };
 </script>
 
@@ -90,14 +117,19 @@ const updateField = (field: string, value: string) => {
     <Head title="Create Your Website" />
 
     <section class="relative flex min-h-screen w-full items-center justify-center overflow-hidden px-4 py-12 md:px-0">
-        <Icons :website_type="form.website_type" />
+        <Icons :website_type_id="form.website_type_id" />
 
         <div class="flex w-full max-w-6xl flex-col gap-10">
             <!-- Form Card -->
             <div class="border-muted relative z-10 rounded-xl bg-black/2 px-3 py-5 backdrop-blur-[2px] md:px-5 dark:bg-white/2">
-                <form @submit.prevent="submitForm" class="flex flex-col gap-8">
+                <form class="flex flex-col gap-8">
                     <Transition name="slide-fade" mode="out-in">
-                        <FirstStep v-if="currentStep === 1" :form="form" @update="updateField" :websiteTypes="props.websiteTypes" />
+                        <FirstStep 
+                            v-if="currentStep === 1" 
+                            :form="form" @update="updateField" 
+                            :websiteTypes="props.websiteTypes" 
+                            :type="type"
+                        />
 
                         <SecondStep
                             v-else-if="currentStep === 2"
@@ -107,15 +139,19 @@ const updateField = (field: string, value: string) => {
                             :cities="props.cities"
                         />
 
-                        <ThirdStep 
+                        <ThirdStep
                             v-else-if="currentStep === 3" 
-                            :form="form" 
-                            :type="props.type"
+                            :form="form" :type="props.type" 
                             :templates="props.templates" 
                             @update="updateField"
                         />
 
-                        <!-- <FourthStep v-else-if="currentStep === 4" :form="form" @update="updateField" /> -->
+                        <FourthStep 
+                            v-else-if="currentStep === 4" 
+                            :form="form"
+                            @update="updateField"
+                            :countries="props.countries"
+                        />
                     </Transition>
 
                     <!-- Navigation Buttons -->
@@ -129,8 +165,10 @@ const updateField = (field: string, value: string) => {
                         >
                             Previous
                         </Button>
-                        <Button v-if="currentStep < totalSteps" type="button" @click="nextStep"> Next Step </Button>
-                        <Button v-else type="submit" class="glow-button">Create Website</Button>
+                        <Button type="button" @click="submitForm" :class="currentStep < totalSteps ? '' : 'glow-button'">
+                            <template v-if="currentStep < totalSteps">Next Step</template>
+                            <template v-else>Create Website</template>
+                        </Button>
                     </div>
                 </form>
 

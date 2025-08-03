@@ -2,11 +2,11 @@
 import { computed } from 'vue';
 
 const props = defineProps<{
-    website_type: string;
+    website_type_id: number;
 }>();
 
 const backgroundSVG = computed(() => {
-    switch (String(props.website_type)) {
+    switch (String(props.website_type_id)) {
         case '1':
             return {
                 leftTop: `

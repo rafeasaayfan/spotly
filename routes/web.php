@@ -23,6 +23,9 @@ Route::middleware([HandleLanguage::class])->group(function () {
     // WebsiteBuilder
     Route::prefix('websiteBuilder')->name('websiteBuilder.')->group(function() {
         Route::get('/', [WebsiteBuilderController::class, 'index'])->name('index');
+        Route::post('/store/{step}', [WebsiteBuilderController::class, 'store'])->name('store');
+
+        // UI 
         Route::post('/getTemplateTemplateColors', [WebsiteBuilderController::class, 'getTemplateTemplateColors'])->name('getTemplateTemplateColors');
         Route::post('/customColors', [WebsiteBuilderController::class, 'customColors'])->name('customColors');
     });
