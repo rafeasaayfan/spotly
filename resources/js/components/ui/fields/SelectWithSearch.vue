@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { cn } from '@/lib/utils'
-import { ArrowBigDownDash, ArrowBigUpDash } from 'lucide-vue-next';
+import { ArrowBigUpDash } from 'lucide-vue-next';
 import { Image } from '../image';
 
 const props = defineProps<{
@@ -57,26 +57,27 @@ function toggleDropdown() {
 
 <template>
     <div ref="selectRef" class="relative w-full">
-        <button type="button" :class="cn('w-full text-start border border-muted bg-field text-sm px-2 py-1 h-9 rounded-md cursor-pointer active:scale-98 transition duration-150 ease-in-out',
+        <button type="button" :class="cn('w-full text-start border border-muted bg-field text-sm px-2 py-1 h-9 rounded-md z-5', 
+           'cursor-pointer transition duration-150 ease-in-out focus:ring active:ring-blue-500 focus:ring-blue-600/90',
             props.class
         )" @click="toggleDropdown">
             <div class="flex items-center justify-between">
                 <span>
                     {{ selected || props.placeholder || 'Select an option' }}
                 </span>
-                <ArrowBigDownDash v-if="!isOpen" class="size-4" />
-                <ArrowBigUpDash v-if="isOpen" class="size-4" />
+                <ArrowBigUpDash class="size-4 z-0 transition-all duration-300 ease-in-out" :class="isOpen? '' : 'rotate-180'" />
             </div>
         </button>
 
-        <div v-if="isOpen" :class="cn('dropdown-scrollbar absolute mt-1 z-50 p-2 w-full bg-field border border-muted rounded-md shadow-lg max-h-60 overflow-auto',
+        <div v-if="isOpen" :class="cn('z-10 dropdown-scrollbar absolute mt-1 z-50 p-2 w-full bg-field rounded-md shadow-lg max-h-60 overflow-auto',
+            'border border-black/20 shadow-md',
             props.classDropdown
         )">
             <input v-model="search" type="text" placeholder="Search..."
                 class="w-full p-2 text-sm bg-field border-b border-gray-400 dark:border-gray-700 mb-2 focus:outline-none" />
 
             <div v-if="filteredOptions?.length === 0" class="p-2 text-sm text-slate-500">
-                No options found.
+                No result found.
             </div>
 
             <div v-for="option in filteredOptions" :key="option.value" @click="selectOption(option.value)"
