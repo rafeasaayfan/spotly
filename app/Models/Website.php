@@ -88,7 +88,7 @@ class Website extends Model implements HasMedia
      */
     public function websiteTemplateColors()
     {
-        return $this->hasMany(WebsiteTemplateColor::class, 'website_id');
+        return $this->hasMany(WebsiteTemplate::class, 'website_id');
     }
 
     /**
@@ -96,7 +96,7 @@ class Website extends Model implements HasMedia
      */
     public function websiteActiveTemplateColor()
     {
-        return $this->hasMany(WebsiteTemplateColor::class, 'website_id')
+        return $this->hasMany(WebsiteTemplate::class, 'website_id')
                     ->where('is_active', true);
     }
 
