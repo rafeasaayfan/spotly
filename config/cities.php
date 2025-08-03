@@ -2,7 +2,7 @@
 
 return [
 
-    'cities' => [
+    'lebanon' => [
         // Beirut
         "Beirut",
 

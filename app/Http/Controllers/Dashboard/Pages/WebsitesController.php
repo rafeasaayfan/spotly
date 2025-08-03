@@ -42,7 +42,7 @@ class WebsitesController extends Controller
     {
         $users = $this->getRelation('user', ['name']);
         $websiteTypes = WebsiteType::select(['id', 'type'])->active()->get();
-        $cities = config('lebanon.cities');
+        $cities = config('cities.lebanon');
         $countries = Country::active()->get();
         $countries->transform(function ($item) {
             $item->flag = $item->getFirstMediaUrl('flag');
@@ -108,7 +108,7 @@ class WebsitesController extends Controller
         $website = Website::findOrFail($id);
         $users = $this->getRelation('user', ['name']);
         $websiteTypes = $this->getRelation('websiteType', ['type']);
-        $cities = config('lebanon.cities');
+        $cities = config('cities.lebanon');
         $countries = Country::active()->get();
         $countries->transform(function ($item) {
             $item->flag = $item->getFirstMediaUrl('flag');
