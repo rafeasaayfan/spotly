@@ -50,6 +50,11 @@ export const mainSidebarItems: SidebarSection[] = [
                         href: '/dashboard/emailSubscribers',
                         icon: icons.Mail,
                     },
+                    {
+                        title: 'Plans',
+                        href: '/dashboard/plans',
+                        icon: icons.CreditCard,
+                    },
                 ],
             },
             {
