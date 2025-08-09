@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders\Assignments;
+namespace Database\Seeders\Tables\Assignments;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;

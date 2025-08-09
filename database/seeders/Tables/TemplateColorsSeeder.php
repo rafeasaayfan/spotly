@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Tables;
 
 use App\Models\TemplateColor;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;

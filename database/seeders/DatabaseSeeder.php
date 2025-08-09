@@ -3,10 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Database\Seeders\Assignments\PermissionsSeeder;
-use Database\Seeders\Assignments\RolesPermissionsSeeder;
-use Database\Seeders\Assignments\RolesSeeder;
-use Database\Seeders\WebsiteTypesSeeder;
+use Database\Seeders\Tables\Assignments\PermissionsSeeder;
+use Database\Seeders\Tables\Assignments\RolesPermissionsSeeder;
+use Database\Seeders\Tables\Assignments\RolesSeeder;
+use Database\Seeders\Tables\WebsiteTypesSeeder;
+use Database\Seeders\Tables\TemplateColorsSeeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -35,7 +36,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             WebsiteTypesSeeder::class,
-            TemplateColorsSeeder::class
+            TemplateColorsSeeder::class,
         ]);
 
         User::factory(1000)->create();
