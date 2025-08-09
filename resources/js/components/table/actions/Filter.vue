@@ -74,7 +74,7 @@ watch(filterForm, (newVal) => {
             <Select
                 v-if="column.type === 'select'"
                 :id="column.label"
-                class="mt-1 block w-full p-1"
+                class="block"
                 v-model="filterForm[column.key]"
                 :option="column.placeholder ?? null"
                 :placeholder="column.placeholder ?? column.label"
