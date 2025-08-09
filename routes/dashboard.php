@@ -14,6 +14,7 @@ use App\Http\Controllers\Dashboard\Pages\WebsitesController;
 use App\Http\Controllers\Dashboard\Pages\WebsiteTypesController;
 use App\Http\Controllers\Dashboard\Pages\CategoriesController;
 use App\Http\Controllers\Dashboard\Pages\PaymentMethodsController;
+use App\Http\Controllers\Dashboard\Pages\PlansController;
 use App\Http\Controllers\Dashboard\Pages\Ui\TemplatesController;
 use App\Http\Controllers\Dashboard\Pages\Ui\TemplateColorsController;
 use App\Http\Controllers\Dashboard\Pages\Ui\TemplateTemplateColorsController;
@@ -66,6 +67,9 @@ Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboa
     //* Website Templates
     dashboardPagesRoutes('websiteTemplates', WebsiteTemplatesController::class);
     Route::patch('websiteTemplates/{id}/is_active', [WebsiteTemplatesController::class, 'toggleActive'])->name('websiteTemplates.is_active');
+    //* Plans
+    dashboardPagesRoutes('plans', PlansController::class);
+    Route::patch('plans/{id}/is_active', [PlansController::class, 'toggleActive'])->name('plans.is_active');
 
     //* ui
     Route::prefix('ui')->group(function () {
