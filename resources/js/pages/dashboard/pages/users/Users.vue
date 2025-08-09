@@ -41,7 +41,7 @@ const filter = [
         key: 'email_verified_at',
         label: 'Verification',
         type: 'select',
-        placeholder: 'Select verification status',
+        placeholder: 'Verification status',
         options: [
             { value: 'all', label: 'All' },
             { value: 'empty', label: 'Not verified' },
