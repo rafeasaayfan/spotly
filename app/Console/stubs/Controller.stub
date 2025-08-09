@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use {{ requestNamespace }}\Store{{ model }}Request;
 use {{ requestNamespace }}\Update{{ model }}Request;
+use Illuminate\Support\Facades\Log;
 
 class {{ controllerName }} extends Controller
 {
@@ -42,11 +43,19 @@ class {{ controllerName }} extends Controller
      */
     public function create()
     {
-        {{ createEditrelations }}
+        try {
+            {{ createEditrelations }}
 
-        return response()->json([
-            {{ createEditrelationsReturn }}
-        ]);
+            return response()->json([
+                {{ createEditrelationsReturn }}
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on {{ controllerName }}@create',
+                'error'   => config('app.debug') ? $e->getMessage() : null
+            ], 500);
+        }
     }
 
     /**
@@ -54,19 +63,27 @@ class {{ controllerName }} extends Controller
      */
     public function store(Store{{ model }}Request $request)
     {
-        $validated = $request->validated();
-        // unset($validated['image']);
+        try {
+            $validated = $request->validated();
+            // unset($validated['image']);
 
-        ${{ modelVariable }} = new {{ model }}($validated);
+            ${{ modelVariable }} = new {{ model }}($validated);
 
-        // if ($request->hasFile('image') && $request->file('image')->isValid()) {
-        //    ${{ modelVariable }}->addMediaFromRequest('image')
-        //        ->toMediaCollection('image');
-        // }
+            // if ($request->hasFile('image') && $request->file('image')->isValid()) {
+                // ${{ modelVariable }}->addMediaFromRequest('image')
+                // ->toMediaCollection('image');
+            // }
 
-        ${{ modelVariable }}->save();
+            ${{ modelVariable }}->save();
 
-        return redirect()->route('dashboard.{{ folder }}.index')->with('message', '{{ model }} created successfully');
+            return redirect()->route('dashboard.{{ folder }}.index')->with('message', '{{ model }} created successfully');
+
+        } catch (\Exception $e) {
+            Log::error('Error in {{ controllerName }}@store: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while creating the {{ model }}. Please try again.');
+        }
     }
 
     /**
@@ -74,12 +91,23 @@ class {{ controllerName }} extends Controller
      */
     public function show(string $id)
     {
-        ${{ modelVariable }} = {{ model }}::findOrFail($id);
-        // ${{ modelVariable }}->image = ${{ modelVariable }}->getFirstMediaUrl('image');
+        try {
+            ${{ modelVariable }} = {{ model }}::findOrFail($id);
 
-        return response()->json([
-            'data' => ${{ modelVariable }},
-        ]);
+            // ${{ modelVariable }}->image = ${{ modelVariable }}->getFirstMediaUrl('image');
+
+            // ${{ modelVariable }} = $this->flattenRelationData($query, ['..._name']);
+
+            return response()->json([
+                'data' => ${{ modelVariable }},
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on {{ controllerName }}@show',
+                'error'   => config('app.debug') ? $e->getMessage() : null
+            ], 500);
+        }
     }
 
     /**
@@ -87,15 +115,24 @@ class {{ controllerName }} extends Controller
      */
     public function edit(string $id)
     {
-        ${{ modelVariable }} = {{ model }}::findOrFail($id);
-        {{ createEditrelations }}
+        try {
+            ${{ modelVariable }} = {{ model }}::findOrFail($id);
 
-        // ${{ modelVariable }}->image = ${{ modelVariable }}->getFirstMediaUrl('image');
+            // ${{ modelVariable }}->image = ${{ modelVariable }}->getFirstMediaUrl('image');
 
-        return response()->json([
-            'data' => ${{ modelVariable }},
-            {{ createEditrelationsReturn }}
-        ]);
+            {{ createEditrelations }}
+
+            return response()->json([
+                'data' => ${{ modelVariable }},
+                {{ createEditrelationsReturn }}
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on {{ controllerName }}@edit',
+                'error'   => config('app.debug') ? $e->getMessage() : null
+            ], 500);
+        }
     }
 
     /**
@@ -103,20 +140,28 @@ class {{ controllerName }} extends Controller
      */
     public function update(Update{{ model }}Request $request, {{ model }} ${{ modelVariable }})
     {
-        $validated = $request->validated();
-        // unset($validated['image']);
+        try {
+            $validated = $request->validated();
+            // unset($validated['image']);
 
-        ${{ modelVariable }}->fill($validated);
+            ${{ modelVariable }}->fill($validated);
 
-        // if ($request->hasFile('image') && $request->file('image')->isValid()) {
-        //    ${{ modelVariable }}->clearMediaCollection('image');
-        //    ${{ modelVariable }}->addMediaFromRequest('image')
-        //        ->toMediaCollection('image');
-        // }
+            // if ($request->hasFile('image') && $request->file('image')->isValid()) {
+                // ${{ modelVariable }}->clearMediaCollection('image');
+                // ${{ modelVariable }}->addMediaFromRequest('image')
+                // ->toMediaCollection('image');
+            // }
 
-        ${{ modelVariable }}->save();
+            ${{ modelVariable }}->save();
 
-        return redirect()->route('dashboard.{{ folder }}.index')->with('message', '{{ model }} updated successfully');
+            return redirect()->route('dashboard.{{ folder }}.index')->with('message', '{{ model }} updated successfully');
+
+        } catch (\Exception $e) {
+            Log::error('Error in {{ controllerName }}@store: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the {{ model }}. Please try again.');
+        }
     }
 
     /**
@@ -124,13 +169,80 @@ class {{ controllerName }} extends Controller
      */
     public function destroy(Request $request)
     {
-        $validated = $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:{{ pluralVariable }},id',
-        ]);
+        try {
+            $validated = $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'integer|exists:{{ pluralVariable }},id',
+            ]);
+    
+            {{ model }}::destroy($validated['ids']);
+    
+            return redirect()->back()->with('message', __('{{ model }}(s) deleted successfully.'));
 
-        {{ model }}::destroy($validated['ids']);
+        } catch (\Exception $e) {
+            Log::error('Error in {{ controllerName }}@destroy: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while deleting the {{ model }}(s). Please try again.');
+        }
+    }
 
-        return redirect()->back()->with('message', __('{{ model }}(s) deleted successfully.'));
+    /**
+     * Toggle the active status of the specified resource.
+    */
+    public function toggleActive(Request $request, $id)
+    {
+        try {
+            ${{ modelVariable }} = {{ model }}::findOrFail($id);
+    
+            $validated = $request->validate([
+                'is_active' => 'required|boolean',
+            ]);
+    
+            ${{ modelVariable }}->update([
+                'is_active' => $validated['is_active'],
+            ]);
+    
+            $message = $validated['is_active']
+                ? '{{ model }} activated successfully.'
+                : '{{ model }} deactivated successfully.';
+    
+            return redirect()->back()->with('message', $message);
+            
+        } catch (\Exception $e) {
+            Log::error('Error in {{ controllerName }}@toggleActive: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the {{ model }} status. Please try again.');
+        }
+    }
+
+    /**
+     * Change the status of the specified resource.
+    */
+    public function changeStatus(Request $request, $id)
+    {
+        try {
+            $validated = $request->validate([
+                'status' => 'required|string|in:active,inactive,banned',
+            ]);
+
+            ${{ modelVariable }} = {{ model }}::findOrFail($id);
+            ${{ modelVariable }}->update(['status' => $validated['status']]);
+
+            $message = $validated['status'] === 'active'
+                ? 'User activated successfully.'
+                : 'User deactivated successfully.';
+
+            if ($validated['status'] === 'inactive') $message = 'The user is now inactive.';
+            if ($validated['status'] === 'banned') $message = 'The user is now banned.';
+
+            return redirect()->back()->with('message', $message);
+        } catch (\Exception $e) {
+            Log::error('Error in {{ controllerName }}@changeStatus: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the {{ model }} status. Please try again.');
+        }
     }
 }
