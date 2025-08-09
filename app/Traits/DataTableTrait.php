@@ -2,51 +2,68 @@
 
 namespace App\Traits;
 
-// use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Log;
 
 trait DataTableTrait
 {
     protected function dataTable($query, $request, $columsSearching = [], $columnsSelection = [], $relations = [])
     {
-        $search = trim($request->input('search', ''));
-        $filters = $request->input('filter', []);
-        $sortBy = $request->input('sort_by', 'id');
-        $sortDir = $request->input('sort_dir', 'desc');
-        // $page = (int)$request->get('page', 1);
-        $perPage = (int)$request->input('limit', 10);
+        try {
+            $search = trim($request->input('search', ''));
+            $filters = $request->input('filter', []);
+            $sortBy = $request->input('sort_by', 'id');
+            $sortDir = $request->input('sort_dir', 'desc');
+            // $page = (int)$request->get('page', 1);
+            $perPage = (int)$request->input('limit', 10);
+            $model = $query->getModel();
 
-        // Apply column selection
-        if (!empty($columnsSelection)) {
-            $this->applyColumnSelection($query, $columnsSelection);
+            // Apply column selection
+            if (!empty($columnsSelection)) {
+                $this->applyColumnSelection($query, $columnsSelection);
+            }
+
+            if (method_exists($model, 'media')) {
+                $query->with('media');
+            }
+
+            // Load relations
+            if (!empty($relations)) {
+                $this->loadRelations($query, $relations);
+            }
+
+            if (!empty($search)) {
+                $this->applySearch($query, $search, $columsSearching);
+            }
+
+            if (!empty($filters)) {
+                $this->applyFilters($query, $filters);
+            }
+
+            $table = $query->getModel()->getTable();
+            if (Schema::hasColumn($table, $sortBy)) {
+                $query->orderBy($sortBy, $sortDir);
+            }
+
+            $result = $query->paginate($perPage);
+
+            // Transform result to flatten relation data
+            if (!empty($relations)) {
+                $this->flattenRelationData($result, $relations);
+            }
+
+            return $result;
+
+        } catch (\Throwable $e) {
+            Log::error('Error on DataTable: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'message' => 'Error on DataTable',
+                'error'   => config('app.debug') ? $e->getMessage() : null
+            ], 500);
         }
-
-        // Load relations
-        if (!empty($relations)) {
-            $this->loadRelations($query, $relations);
-        }
-
-        if (!empty($search)) {
-            $this->applySearch($query, $search, $columsSearching);
-        }
-
-        if (!empty($filters)) {
-            $this->applyFilters($query, $filters);
-        }
-
-        $table = $query->getModel()->getTable();
-        if (Schema::hasColumn($table, $sortBy)) {
-            $query->orderBy($sortBy, $sortDir);
-        }
-
-        $result = $query->paginate($perPage);
-
-        // Transform result to flatten relation data
-        if (!empty($relations)) {
-            $this->flattenRelationData($result, $relations);
-        }
-
-        return $result;
     }
 
     /**
@@ -97,10 +114,10 @@ trait DataTableTrait
                 if (str_contains($column, '.')) {
                     [$relation, $field] = explode('.', $column, 2);
                     $q->orWhereHas($relation, function ($subQ) use ($field, $search) {
-                        $subQ->where($field, 'like', "{$search}%");
+                        $subQ->where($field, 'like', "%{$search}%");
                     });
                 } else {
-                    $q->orWhere($column, 'like', "{$search}%");
+                    $q->orWhere($column, 'like', "%{$search}%");
                 }
             }
         });
@@ -117,14 +134,14 @@ trait DataTableTrait
     {
         foreach ($filters as $key => $value) {
             // Special handling for email verification status
-            if ($value === 'empty' || $value === 'notEmpty') {
+            if (trim($value) === 'empty' || trim($value) === 'notEmpty') {
                 $value === 'notEmpty'
                     ? $query->whereNotNull($key)
                     : $query->whereNull($key);
                 continue;
             }
 
-            if ($value === 'all' || $value === null) {
+            if (trim($value) === 'all' || $value === null) {
                 continue;
             }
 
@@ -137,7 +154,7 @@ trait DataTableTrait
             }
 
             // Standard where condition
-            $query->where($key, $value);
+            $query->where($key, trim($value));
         }
     }
 
