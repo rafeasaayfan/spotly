@@ -24,11 +24,12 @@ function updateValue(event: Event) {
 </script>
 
 <template>
-    <div :class="cn('relative w-full', props.parentClass)">
+    <div :class="cn('relative w-full flex items-center bg-field border-none rounded-md cursor-pointer duration-150 ease-in-out min-h-5 h-9',
+        props.parentClass)">
         <select :name="props.name" :id="props.id" :value="modelValue" @change="updateValue" :class="cn(
-            'appearance-none bg-field',
+            'appearance-none border-none rounded-md cursor-pointer duration-150 ease-in-out',
             'placeholder:text-slate-800 dark:placeholder:text-slate-200 text-slate-900 dark:text-slate-100 text-sm',
-            'w-full p-2 me-1.5 border-none rounded-md cursor-pointer duration-150 ease-in-out',
+            'w-full ps-3 h-full bg-field',
             'focus:ring active:ring-blue-500 focus:ring-blue-600/90 outline-none',
             props.class
         )
@@ -40,7 +41,7 @@ function updateValue(event: Event) {
         </select>
 
         <!-- Custom arrow inside the select -->
-        <div class="pointer-events-none absolute end-1 top-0 h-full flex items-center justify-center">
+        <div class="pointer-events-none absolute end-1.5 top-0 h-full flex items-center justify-center">
             <ChevronDown class="size-3" />
         </div>
     </div>

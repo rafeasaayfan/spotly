@@ -13,12 +13,6 @@ const props = defineProps<{
   modelValue: boolean
 }>()
 
-// This means that the component is a controlled component
-// and the value is passed from the parent component
-// and the component will emit an event to update the value
-// and is used to create a two-way binding between the parent and child components
-// The parent component will pass the value to the child component
-// and the child component will emit an event to update the value
 const emits = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
 }>()
@@ -52,8 +46,8 @@ const isRTL = computed(() => page.props.lang === 'ar')
           'absolute w-3 h-3 rounded-full transition-all ease-in-out duration-500',
           toggleChecked
             ? isRTL
-              ? 'left-[2.5px] bg-slate-950 dark:bg-slate-100'
-              : 'right-[2.5px] bg-slate-950 dark:bg-slate-100'
+              ? 'left-[2.5px] bg-white'
+              : 'right-[2.5px] bg-white'
             : isRTL
               ? 'right-[2.5px] bg-slate-500/50 dark:bg-slate-600/50'
               : 'left-[2.5px] bg-slate-500/50 dark:bg-slate-600/50'

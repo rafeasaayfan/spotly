@@ -22,8 +22,8 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     v-bind="forwarded"
     :class="
       cn(
-        'cursor-pointer rounded border-0 w-[19px] h-[19px] flex justify-center items-center transition-transform duration-150 active:scale-95 focus:outline-none focus:ring-0',
-        'bg-gray-300 dark:bg-gray-900',
+        'cursor-pointer rounded border border-blue-600/10 dark:border-blue-600/5 w-[19px] h-[19px] flex justify-center items-center transition-transform duration-150 active:scale-95 focus:outline-none focus:ring-0',
+        'bg-[var(--field)]',
         'data-[state=checked]:bg-blue-800 data-[state=checked]:dark:bg-blue-600',
         props.class
       )
