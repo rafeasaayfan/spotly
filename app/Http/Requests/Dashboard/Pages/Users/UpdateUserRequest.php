@@ -18,7 +18,8 @@ class UpdateUserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($this->route('user')->id)],
             'password' => ['nullable', 'confirmed', 'min:8'],
-            'phone_number' => ['required', 'string', 'max:255', 'regex:/^\+[1-9]\d{1,14}$/'],
+            'phone_number' => ['nullable', 'string', 'max:255', 'regex:/^\+[1-9]\d{1,14}$/'],
+            'status' => ['required', 'string', 'in:active,inactive,banned'],
         ];
     }
 }
