@@ -3,12 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class WebsiteType extends Model
 {
-    use HasFactory;
-
     protected $fillable = ['created_by', 'title', 'type', 'description', 'priority', 'is_active'];
 
     /**
