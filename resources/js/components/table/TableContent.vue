@@ -30,7 +30,11 @@ const props = defineProps<TableProps>();
             <Thead>
                 <Tr class="font-semibold">
                     <Th class="text-body-muted w-3 border-none" v-if="props.tableConditions.enableRowsDelete">
-                        <Checkbox :modelValue="allSelected" @update:modelValue="(val) => typeof val === 'boolean' && toggleSelectAll(val)" />
+                        <Checkbox 
+                            :modelValue="allSelected" 
+                            @update:modelValue="(val) => typeof val === 'boolean' && toggleSelectAll(val)"
+                            class="border-blue-600/20 dark:border-blue-600/10"
+                        />
                     </Th>
                     <Th
                         v-for="column in props.columns"

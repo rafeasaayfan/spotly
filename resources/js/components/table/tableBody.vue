@@ -69,7 +69,8 @@ function updateCol(key: string, value: any, id: number) {
                 <template v-else-if="column.type === 'select'">
                     <Select
                         :id="column.label"
-                        class="p-1 text-xs"
+                        parentClass="h-7"
+                        class="ps-1 text-xs"
                         v-model="row[column.key]"
                         :placeholder="column.placeholder ?? column.label"
                         :required="column.required"
