@@ -7,6 +7,7 @@ use App\Models\EmailSubscriber;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 
 class EmailSubscribersController extends Controller
 {
@@ -49,11 +50,18 @@ class EmailSubscribersController extends Controller
      */
     public function show(string $id)
     {
-        $emailsubscriber = EmailSubscriber::findOrFail($id);
+        try {
+            $emailsubscriber = EmailSubscriber::findOrFail($id);
 
-        return response()->json([
-            'data' => $emailsubscriber,
-        ]);
+            return response()->json([
+                'data' => $emailsubscriber,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on EmailSubscribersController@show',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -77,13 +85,20 @@ class EmailSubscribersController extends Controller
      */
     public function destroy(Request $request)
     {
-        $validated = $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:email_subscribers,id',
-        ]);
+        try {
+            $validated = $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'integer|exists:email_subscribers,id',
+            ]);
 
-        EmailSubscriber::destroy($validated['ids']);
+            EmailSubscriber::destroy($validated['ids']);
 
-        return redirect()->back()->with('message', __('Subscriber(s) deleted successfully.'));
+            return redirect()->back()->with('message', __('Subscriber(s) deleted successfully.'));
+        } catch (\Exception $e) {
+            Log::error('Error in EmailSubscribersController@destroy: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while deleting the subscriber(s). Please try again.');
+        }
     }
 }

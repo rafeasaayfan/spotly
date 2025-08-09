@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Log;
 
 class UserAssignmentsController extends Controller
 {
@@ -36,21 +37,28 @@ class UserAssignmentsController extends Controller
      */
     public function assignment(string $id)
     {
-        $attached = User::select('id', 'name')->with(['roles', 'permissions'])->findOrFail($id);
+        try {
+            $attached = User::select('id', 'name')->with(['roles', 'permissions'])->findOrFail($id);
 
-        $availablePermissions = Permission::whereDoesntHave('users', function ($query) use ($id) {
-            $query->where('users.id', $id);
-        })->get();
+            $availablePermissions = Permission::whereDoesntHave('users', function ($query) use ($id) {
+                $query->where('users.id', $id);
+            })->get();
 
-        $availableRoles = Role::whereDoesntHave('users', function ($query) use ($id) {
-            $query->where('users.id', $id);
-        })->get();
+            $availableRoles = Role::whereDoesntHave('users', function ($query) use ($id) {
+                $query->where('users.id', $id);
+            })->get();
 
-        return response()->json([
-            'attached' => $attached,
-            'availablePermissions' => $availablePermissions,
-            'availableRoles' => $availableRoles,
-        ]);
+            return response()->json([
+                'attached' => $attached,
+                'availablePermissions' => $availablePermissions,
+                'availableRoles' => $availableRoles,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on UserAssignmentsController@assignment',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -58,41 +66,48 @@ class UserAssignmentsController extends Controller
      */
     public function storeAssignments(Request $request, string $id)
     {
-        $validated = $request->validate([
-            'action' => 'required|string|in:add,delete',
-            'type' => 'required|string|in:roles,permissions',
-            'id' => 'required|integer|exists:' . ($request->type === 'roles' ? 'roles' : 'permissions') . ',id',
-        ]);
+        try {
+            $validated = $request->validate([
+                'action' => 'required|string|in:add,delete',
+                'type' => 'required|string|in:roles,permissions',
+                'id' => 'required|integer|exists:' . ($request->type === 'roles' ? 'roles' : 'permissions') . ',id',
+            ]);
 
-        $user = User::findOrFail($id);
+            $user = User::findOrFail($id);
 
-        switch ($validated['type']) {
-            case 'roles':
-                $role = Role::findOrFail($validated['id']);
-                if ($validated['action'] === 'add') {
-                    $user->assignRole($role);
-                    $message = 'Role assigned successfully.';
-                } else {
-                    $user->removeRole($role);
-                    $message = 'Role removed successfully.';
-                }
-                break;
+            switch ($validated['type']) {
+                case 'roles':
+                    $role = Role::findOrFail($validated['id']);
+                    if ($validated['action'] === 'add') {
+                        $user->assignRole($role);
+                        $message = 'Role assigned successfully.';
+                    } else {
+                        $user->removeRole($role);
+                        $message = 'Role removed successfully.';
+                    }
+                    break;
 
-            case 'permissions':
-                $permission = Permission::findOrFail($validated['id']);
-                if ($validated['action'] === 'add') {
-                    $user->givePermissionTo($permission);
-                    $message = 'Permission granted successfully.';
-                } else {
-                    $user->revokePermissionTo($permission);
-                    $message = 'Permission revoked successfully.';
-                }
-                break;
+                case 'permissions':
+                    $permission = Permission::findOrFail($validated['id']);
+                    if ($validated['action'] === 'add') {
+                        $user->givePermissionTo($permission);
+                        $message = 'Permission granted successfully.';
+                    } else {
+                        $user->revokePermissionTo($permission);
+                        $message = 'Permission revoked successfully.';
+                    }
+                    break;
 
-            default:
-                return redirect()->back()->with('error', 'Invalid assignment type.');
+                default:
+                    return redirect()->back()->withErrors('Invalid assignment type.');
+            }
+
+            return redirect()->back()->with('message', $message);
+        } catch (\Exception $e) {
+            Log::error('Error on UserAssignmentsController@storeAssignments: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating assignments. Please try again.');
         }
-
-        return redirect()->back()->with('message', $message);
     }
 }

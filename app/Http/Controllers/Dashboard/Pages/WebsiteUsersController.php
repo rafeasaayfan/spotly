@@ -10,6 +10,7 @@ use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\WebsiteUsers\StoreWebsiteUserRequest;
 use App\Http\Requests\Dashboard\Pages\WebsiteUsers\UpdateWebsiteUserRequest;
 use App\Models\Country;
+use Illuminate\Support\Facades\Log;
 
 class WebsiteUsersController extends Controller
 {
@@ -38,17 +39,24 @@ class WebsiteUsersController extends Controller
      */
     public function create()
     {
-        $websites = $this->getRelation('website', ['name']);
-        $countries = Country::active()->get();
-        $countries->transform(function ($item) {
-            $item->flag = $item->getFirstMediaUrl('flag');
-            return $item;
-        });
+        try {
+            $websites = $this->getRelation('website', ['name']);
+            $countries = Country::with('media')->active()->get();
+            $countries->transform(function ($item) {
+                $item->flag = $item->getFirstMediaUrl('flag');
+                return $item;
+            });
 
-        return response()->json([
-            'websites' => $websites,
-            'countries' => $countries,
-        ]);
+            return response()->json([
+                'websites' => $websites,
+                'countries' => $countries,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error loading create form data.',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -56,13 +64,20 @@ class WebsiteUsersController extends Controller
      */
     public function store(StoreWebsiteUserRequest $request)
     {
-        $validated = $request->validated();
+        try {
+            $validated = $request->validated();
 
-        $websiteUser = new WebsiteUser($validated);
+            $websiteUser = new WebsiteUser($validated);
 
-        $websiteUser->save();
+            $websiteUser->save();
 
-        return redirect()->route('dashboard.websiteUsers.index')->with('message', 'Website User created successfully');
+            return redirect()->route('dashboard.websiteUsers.index')->with('message', 'Website User created successfully');
+        } catch (\Exception $e) {
+            Log::error('Error in WebsiteUsersController@store: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->withErrors('An error occurred while creating the Website User. Please try again.');
+        }
     }
 
     /**
@@ -70,12 +85,19 @@ class WebsiteUsersController extends Controller
      */
     public function show(string $id)
     {
-        $query = WebsiteUser::with('website')->findOrFail($id);
-        $websiteUser = $this->flattenRelationData($query, ['website_name']);
+        try {
+            $query = WebsiteUser::with('website')->findOrFail($id);
+            $websiteUser = $this->flattenRelationData($query, ['website_name']);
 
-        return response()->json([
-            'data' => $websiteUser,
-        ]);
+            return response()->json([
+                'data' => $websiteUser,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error fetching Website User details.',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -83,20 +105,27 @@ class WebsiteUsersController extends Controller
      */
     public function edit(string $id)
     {
-        $websiteUser = WebsiteUser::findOrFail($id);
-        $websites = $this->getRelation('website', ['name']);
+        try {
+            $websiteUser = WebsiteUser::findOrFail($id);
+            $websites = $this->getRelation('website', ['name']);
 
-        $countries = Country::active()->get();
-        $countries->transform(function ($item) {
-            $item->flag = $item->getFirstMediaUrl('flag');
-            return $item;
-        });
+            $countries = Country::with('media')->active()->get();
+            $countries->transform(function ($item) {
+                $item->flag = $item->getFirstMediaUrl('flag');
+                return $item;
+            });
 
-        return response()->json([
-            'data' => $websiteUser,
-            'websites' => $websites,
-            'countries' => $countries,
-        ]);
+            return response()->json([
+                'data' => $websiteUser,
+                'websites' => $websites,
+                'countries' => $countries,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error loading Website User for edit.',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -104,13 +133,19 @@ class WebsiteUsersController extends Controller
      */
     public function update(UpdateWebsiteUserRequest $request, WebsiteUser $websiteUser)
     {
-        $validated = $request->validated();
+        try {
+            $validated = $request->validated();
 
-        $websiteUser->fill($validated);
+            $websiteUser->fill($validated);
+            $websiteUser->save();
 
-        $websiteUser->save();
-
-        return redirect()->route('dashboard.websiteUsers.index')->with('message', 'Website User updated successfully');
+            return redirect()->route('dashboard.websiteUsers.index')->with('message', 'Website User updated successfully');
+        } catch (\Exception $e) {
+            Log::error('Error in WebsiteUsersController@update: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the Website User. Please try again.');
+        }
     }
 
     /**
@@ -118,14 +153,21 @@ class WebsiteUsersController extends Controller
      */
     public function destroy(Request $request)
     {
-        $validated = $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:website_users,id',
-        ]);
+        try {
+            $validated = $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'integer|exists:website_users,id',
+            ]);
 
-        WebsiteUser::destroy($validated['ids']);
+            WebsiteUser::destroy($validated['ids']);
 
-        return redirect()->back()->with('message', __('WebsiteUser(s) deleted successfully.'));
+            return redirect()->back()->with('message', __('WebsiteUser(s) deleted successfully.'));
+        } catch (\Exception $e) {
+            Log::error('Error in WebsiteUsersController@destroy: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->withErrors('An error occurred while deleting Website User(s). Please try again.');
+        }
     }
 
     /**
@@ -133,22 +175,31 @@ class WebsiteUsersController extends Controller
      */
     public function changeStatus(Request $request, $id)
     {
-        $websiteUser = WebsiteUser::findOrFail($id);
+        try {
+            $websiteUser = WebsiteUser::findOrFail($id);
 
-        $validated = $request->validate([
-            'status' => 'required|in:active,inactive,banned',
-        ]);
+            $validated = $request->validate([
+                'status' => 'required|in:active,inactive,banned',
+            ]);
 
-        $websiteUser->update([
-            'status' => $validated['status'],
-        ]);
+            $websiteUser->update([
+                'status' => $validated['status'],
+            ]);
 
-        $message = $validated['status'] === 'active'
-            ? 'Website User marked as active.'
-            : 'Website User marked as inactive.';
+            $message = $validated['status'] === 'active'
+                ? 'Website User marked as active.'
+                : 'Website User marked as inactive.';
 
-        if ($validated['status'] === 'banned') $message = 'Website User marked as banned.';
+            if ($validated['status'] === 'banned') {
+                $message = 'Website User marked as banned.';
+            }
 
-        return redirect()->back()->with('message', $message);
+            return redirect()->back()->with('message', $message);
+        } catch (\Exception $e) {
+            Log::error('Error in WebsiteUsersController@changeStatus: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->withErrors('An error occurred while changing status. Please try again.');
+        }
     }
 }

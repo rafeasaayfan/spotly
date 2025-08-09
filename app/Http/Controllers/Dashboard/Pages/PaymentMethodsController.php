@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\PaymentMethods\StorePaymentMethodRequest;
 use App\Http\Requests\Dashboard\Pages\PaymentMethods\UpdatePaymentMethodRequest;
+use Illuminate\Support\Facades\Log;
 
 class PaymentMethodsController extends Controller
 {
@@ -43,13 +44,20 @@ class PaymentMethodsController extends Controller
      */
     public function store(StorePaymentMethodRequest $request)
     {
-        $validated = $request->validated();
+        try {
+            $validated = $request->validated();
 
-        $paymentmethod = new PaymentMethod($validated);
+            $paymentMethod = new PaymentMethod($validated);
+            $paymentMethod->save();
 
-        $paymentmethod->save();
+            return redirect()->route('dashboard.paymentMethods.index')->with('message', 'Payment Method created successfully.');
 
-        return redirect()->route('dashboard.paymentMethods.index')->with('message', 'PaymentMethod created successfully');
+        } catch (\Exception $e) {
+            Log::error('Error in PaymentMethodsController@store: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while creating the payment method. Please try again.');
+        }
     }
 
     /**
@@ -57,11 +65,18 @@ class PaymentMethodsController extends Controller
      */
     public function show(string $id)
     {
-        $paymentmethod = PaymentMethod::findOrFail($id);
+        try {
+            $paymentMethod = PaymentMethod::findOrFail($id);
 
-        return response()->json([
-            'data' => $paymentmethod,
-        ]);
+            return response()->json([
+                'data' => $paymentMethod,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on PaymentMethodsController@show',
+                'error'   => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -69,11 +84,18 @@ class PaymentMethodsController extends Controller
      */
     public function edit(string $id)
     {
-        $paymentmethod = PaymentMethod::findOrFail($id);
+        try {
+            $paymentMethod = PaymentMethod::findOrFail($id);
 
-        return response()->json([
-            'data' => $paymentmethod,
-        ]);
+            return response()->json([
+                'data' => $paymentMethod,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on PaymentMethodsController@edit',
+                'error'   => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -81,13 +103,19 @@ class PaymentMethodsController extends Controller
      */
     public function update(UpdatePaymentMethodRequest $request, PaymentMethod $paymentMethod)
     {
-        $validated = $request->validated();
+        try {
+            $validated = $request->validated();
 
-        $paymentMethod->fill($validated);
+            $paymentMethod->fill($validated);
+            $paymentMethod->save();
 
-        $paymentMethod->save();
-
-        return redirect()->route('dashboard.paymentMethods.index')->with('message', 'PaymentMethod updated successfully');
+            return redirect()->route('dashboard.paymentMethods.index')->with('message', 'Payment Method updated successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error in PaymentMethodsController@update: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the payment method. Please try again.');
+        }
     }
 
     /**
@@ -95,14 +123,21 @@ class PaymentMethodsController extends Controller
      */
     public function destroy(Request $request)
     {
-        $validated = $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:payment_methods,id',
-        ]);
+        try {
+            $validated = $request->validate([
+                'ids'   => 'required|array',
+                'ids.*' => 'integer|exists:payment_methods,id',
+            ]);
 
-        PaymentMethod::destroy($validated['ids']);
+            PaymentMethod::destroy($validated['ids']);
 
-        return redirect()->back()->with('message', __('PaymentMethod(s) deleted successfully.'));
+            return redirect()->back()->with('message', __('Payment Method(s) deleted successfully.'));
+        } catch (\Exception $e) {
+            Log::error('Error in PaymentMethodsController@destroy: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while deleting the payment method(s). Please try again.');
+        }
     }
 
     /**
@@ -110,20 +145,27 @@ class PaymentMethodsController extends Controller
      */
     public function toggleActive(Request $request, $id)
     {
-        $paymentMethod = PaymentMethod::findOrFail($id);
+        try {
+            $paymentMethod = PaymentMethod::findOrFail($id);
 
-        $validated = $request->validate([
-            'is_active' => 'required|boolean',
-        ]);
+            $validated = $request->validate([
+                'is_active' => 'required|boolean',
+            ]);
 
-        $paymentMethod->update([
-            'is_active' => $validated['is_active'],
-        ]);
+            $paymentMethod->update([
+                'is_active' => $validated['is_active'],
+            ]);
 
-        $message = $validated['is_active']
-            ? 'Payment Method activated successfully.'
-            : 'Payment Method deactivated successfully.';
+            $message = $validated['is_active']
+                ? 'Payment Method activated successfully.'
+                : 'Payment Method deactivated successfully.';
 
-        return redirect()->back()->with('message', $message);
+            return redirect()->back()->with('message', $message);
+        } catch (\Exception $e) {
+            Log::error('Error in PaymentMethodsController@toggleActive: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while toggling the payment method status. Please try again.');
+        }
     }
 }

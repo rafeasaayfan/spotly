@@ -10,6 +10,7 @@ use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\Ui\Templates\StoreTemplateRequest;
 use App\Http\Requests\Dashboard\Pages\Ui\Templates\UpdateTemplateRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class TemplatesController extends Controller
 {
@@ -43,11 +44,18 @@ class TemplatesController extends Controller
      */
     public function create()
     {
-        $websiteTypes = $this->getRelation('websiteType', ['type']);
+        try {
+            $websiteTypes = $this->getRelation('websiteType', ['type']);
 
-        return response()->json([
-            'websiteTypes' => $websiteTypes,
-        ]);
+            return response()->json([
+                'websiteTypes' => $websiteTypes,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on TemplatesController@create',
+                'error'   => config('app.debug') ? $e->getMessage() : null
+            ], 500);
+        }
     }
 
     /**
@@ -55,21 +63,27 @@ class TemplatesController extends Controller
      */
     public function store(StoreTemplateRequest $request)
     {
-        $validated = $request->validated();
-        // unset($validated['image']);
+        try {
+            $validated = $request->validated();
+            // unset($validated['image']);
 
-        $template = new Template($validated);
+            // if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            //    $ui->addMediaFromRequest('image')
+            //        ->toMediaCollection('image');
+            // }
 
-        $template->created_by = Auth::id();
+            $template = new Template($validated);
+            $template->created_by = Auth::id();
 
-        // if ($request->hasFile('image') && $request->file('image')->isValid()) {
-        //    $ui->addMediaFromRequest('image')
-        //        ->toMediaCollection('image');
-        // }
+            $template->save();
 
-        $template->save();
-
-        return redirect()->route('dashboard.templates.index')->with('message', 'template created successfully');
+            return redirect()->route('dashboard.templates.index')->with('message', 'Template created successfully');
+        } catch (\Exception $e) {
+            Log::error('Error in TemplatesController@store: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->withErrors('An error occurred while creating the template. Please try again.');
+        }
     }
 
     /**
@@ -77,14 +91,21 @@ class TemplatesController extends Controller
      */
     public function show(string $id)
     {
-        $query = Template::with(['createdBy', 'websiteType'])->findOrFail($id);
-        $template = $this->flattenRelationData($query, ['createdBy_name', 'websiteType_type']);
+        try {
+            $query = Template::with(['createdBy', 'websiteType'])->findOrFail($id);
+            $template = $this->flattenRelationData($query, ['createdBy_name', 'websiteType_type']);
 
-        // $ui->image = $ui->getFirstMediaUrl('image');
+            // $ui->image = $ui->getFirstMediaUrl('image');
 
-        return response()->json([
-            'data' => $template,
-        ]);
+            return response()->json([
+                'data' => $template,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on TemplatesController@show',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -92,15 +113,21 @@ class TemplatesController extends Controller
      */
     public function edit(string $id)
     {
-        $template = Template::findOrFail($id);
-        $websiteTypes = $this->getRelation('websiteType', ['type']);
+        try {
+            $template = Template::findOrFail($id);
+            $websiteTypes = $this->getRelation('websiteType', ['type']);
+            // $ui->image = $ui->getFirstMediaUrl('image');
 
-        // $ui->image = $ui->getFirstMediaUrl('image');
-
-        return response()->json([
-            'data' => $template,
-            'websiteTypes' => $websiteTypes,
-        ]);
+            return response()->json([
+                'data' => $template,
+                'websiteTypes' => $websiteTypes,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on TemplatesController@edit',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -108,20 +135,25 @@ class TemplatesController extends Controller
      */
     public function update(UpdateTemplateRequest $request, Template $template)
     {
-        $validated = $request->validated();
-        // unset($validated['image']);
+        try {
+            $validated = $request->validated();
+            // unset($validated['image']);
+            // if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            //    $ui->clearMediaCollection('image');
+            //    $ui->addMediaFromRequest('image')
+            //        ->toMediaCollection('image');
+            // }
 
-        $template->fill($validated);
+            $template->fill($validated);
+            $template->save();
 
-        // if ($request->hasFile('image') && $request->file('image')->isValid()) {
-        //    $ui->clearMediaCollection('image');
-        //    $ui->addMediaFromRequest('image')
-        //        ->toMediaCollection('image');
-        // }
-
-        $template->save();
-
-        return redirect()->route('dashboard.templates.index')->with('message', 'template updated successfully');
+            return redirect()->route('dashboard.templates.index')->with('message', 'Template updated successfully');
+        } catch (\Exception $e) {
+            Log::error('Error on TemplatesController@update: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the template. Please try again.');
+        }
     }
 
     /**
@@ -129,14 +161,21 @@ class TemplatesController extends Controller
      */
     public function destroy(Request $request)
     {
-        $validated = $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:templates,id',
-        ]);
+        try {
+            $validated = $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'integer|exists:templates,id',
+            ]);
 
-        Template::destroy($validated['ids']);
+            Template::destroy($validated['ids']);
 
-        return redirect()->back()->with('message', __('template(s) deleted successfully.'));
+            return redirect()->back()->with('message', __('Template(s) deleted successfully.'));
+        } catch (\Exception $e) {
+            Log::error('Error on TemplatesController@destroy: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->withErrors('An error occurred while deleting the template(s). Please try again.');
+        }
     }
 
     /**
@@ -144,20 +183,27 @@ class TemplatesController extends Controller
      */
     public function toggleActive(Request $request, $id)
     {
-        $template = Template::findOrFail($id);
+        try {
+            $template = Template::findOrFail($id);
 
-        $validated = $request->validate([
-            'is_active' => 'required|boolean',
-        ]);
+            $validated = $request->validate([
+                'is_active' => 'required|boolean',
+            ]);
 
-        $template->update([
-            'is_active' => $validated['is_active'],
-        ]);
+            $template->update([
+                'is_active' => $validated['is_active'],
+            ]);
 
-        $message = $validated['is_active']
-            ? 'Template activated successfully.'
-            : 'Template deactivated successfully.';
+            $message = $validated['is_active']
+                ? 'Template activated successfully.'
+                : 'Template deactivated successfully.';
 
-        return redirect()->back()->with('message', $message);
+            return redirect()->back()->with('message', $message);
+        } catch (\Exception $e) {
+            Log::error('Error in TemplatesController@toggleActive: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the template status. Please try again.');
+        }
     }
 }

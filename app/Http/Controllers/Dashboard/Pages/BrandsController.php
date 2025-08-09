@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\Brands\StoreBrandRequest;
 use App\Http\Requests\Dashboard\Pages\Brands\UpdateBrandRequest;
+use Illuminate\Support\Facades\Log;
 
 class BrandsController extends Controller
 {
@@ -37,11 +38,19 @@ class BrandsController extends Controller
      */
     public function create()
     {
-        $websites = $this->getRelation('website', ['name']);
+        try {
+            $websites = $this->getRelation('website', ['name']);
 
-        return response()->json([
-            'websites' => $websites,
-        ]);
+            return response()->json([
+                'websites' => $websites,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on BrandsController@create',
+                'error'   => config('app.debug') ? $e->getMessage() : null
+            ], 500);
+        }
     }
 
     /**
@@ -49,13 +58,21 @@ class BrandsController extends Controller
      */
     public function store(StoreBrandRequest $request)
     {
-        $validated = $request->validated();
+        try {
+            $validated = $request->validated();
 
-        $brand = new Brand($validated);
+            $brand = new Brand($validated);
 
-        $brand->save();
+            $brand->save();
 
-        return redirect()->route('dashboard.brands.index')->with('message', 'Brand created successfully');
+            return redirect()->route('dashboard.brands.index')->with('message', 'Brand created successfully');
+
+        } catch (\Exception $e) {
+            Log::error('Error in BrandsController@store: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while creating the brand. Please try again.');
+        }
     }
 
     /**
@@ -63,12 +80,20 @@ class BrandsController extends Controller
      */
     public function show(string $id)
     {
-        $query = Brand::with('website')->findOrFail($id);
-        $brand = $this->flattenRelationData($query, ['website_name']);
+        try {
+            $query = Brand::with('website')->findOrFail($id);
 
-        return response()->json([
-            'data' => $brand,
-        ]);
+            $brand = $this->flattenRelationData($query, ['website_name']);
+
+            return response()->json([
+                'data' => $brand,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on BrandsController@show',
+                'error'   => config('app.debug') ? $e->getMessage() : null
+            ], 500);
+        }
     }
 
     /**
@@ -76,13 +101,22 @@ class BrandsController extends Controller
      */
     public function edit(string $id)
     {
-        $brand = Brand::findOrFail($id);
-        $websites = $this->getRelation('website', ['name']);
+        try {
+            $brand = Brand::findOrFail($id);
 
-        return response()->json([
-            'data' => $brand,
-            'websites' => $websites,
-        ]);
+            $websites = $this->getRelation('website', ['name']);
+
+            return response()->json([
+                'data' => $brand,
+                'websites' => $websites,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on BrandsController@edit',
+                'error'   => config('app.debug') ? $e->getMessage() : null
+            ], 500);
+        }
     }
 
     /**
@@ -90,13 +124,21 @@ class BrandsController extends Controller
      */
     public function update(UpdateBrandRequest $request, Brand $brand)
     {
-        $validated = $request->validated();
+        try {
+            $validated = $request->validated();
 
-        $brand->fill($validated);
+            $brand->fill($validated);
 
-        $brand->save();
+            $brand->save();
 
-        return redirect()->route('dashboard.brands.index')->with('message', 'Brand updated successfully');
+            return redirect()->route('dashboard.brands.index')->with('message', 'Brand updated successfully');
+
+        } catch (\Exception $e) {
+            Log::error('Error in BrandsController@store: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the brand. Please try again.');
+        }
     }
 
     /**
@@ -104,14 +146,22 @@ class BrandsController extends Controller
      */
     public function destroy(Request $request)
     {
-        $validated = $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:brands,id',
-        ]);
+        try {
+            $validated = $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'integer|exists:brands,id',
+            ]);
+    
+            Brand::destroy($validated['ids']);
+    
+            return redirect()->back()->with('message', __('Brand(s) deleted successfully.'));
 
-        Brand::destroy($validated['ids']);
-
-        return redirect()->back()->with('message', __('Brand(s) deleted successfully.'));
+        } catch (\Exception $e) {
+            Log::error('Error in BrandsController@destroy: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while deleting the brand(s). Please try again.');
+        }
     }
 
     /**
@@ -119,20 +169,28 @@ class BrandsController extends Controller
      */
     public function toggleActive(Request $request, $id)
     {
-        $brand = Brand::findOrFail($id);
-
-        $validated = $request->validate([
-            'is_active' => 'required|boolean',
-        ]);
-
-        $brand->update([
-            'is_active' => $validated['is_active'],
-        ]);
-
-        $message = $validated['is_active']
-            ? 'Brand activated successfully.'
-            : 'Brand deactivated successfully.';
-
-        return redirect()->back()->with('message', $message);
+        try {
+            $brand = Brand::findOrFail($id);
+    
+            $validated = $request->validate([
+                'is_active' => 'required|boolean',
+            ]);
+    
+            $brand->update([
+                'is_active' => $validated['is_active'],
+            ]);
+    
+            $message = $validated['is_active']
+                ? 'Brand activated successfully.'
+                : 'Brand deactivated successfully.';
+    
+            return redirect()->back()->with('message', $message);
+            
+        } catch (\Exception $e) {
+            Log::error('Error in BrandsController@toggleActive: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the brand status. Please try again.');
+        }
     }
 }

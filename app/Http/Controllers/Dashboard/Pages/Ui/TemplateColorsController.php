@@ -10,6 +10,7 @@ use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\Ui\TemplateColors\StoreTemplateColorRequest;
 use App\Http\Requests\Dashboard\Pages\Ui\TemplateColors\UpdateTemplateColorRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class TemplateColorsController extends Controller
 {
@@ -46,15 +47,20 @@ class TemplateColorsController extends Controller
      */
     public function store(StoreTemplateColorRequest $request)
     {
-        $validated = $request->validated();
+        try {
+            $validated = $request->validated();
 
-        $templateColor = new TemplateColor($validated);
+            $templateColor = new TemplateColor($validated);
+            $templateColor->created_by = Auth::id();
+            $templateColor->save();
 
-        $templateColor->created_by = Auth::id();
-
-        $templateColor->save();
-
-        return redirect()->route('dashboard.templateColors.index')->with('message', 'TemplateColor created successfully');
+            return redirect()->route('dashboard.templateColors.index')->with('message', 'Template Color created successfully');
+        } catch (\Exception $e) {
+            Log::error('Error in TemplateColorsController@store: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while creating he Template Color. Please try again.');
+        }
     }
 
     /**
@@ -62,12 +68,19 @@ class TemplateColorsController extends Controller
      */
     public function show(string $id)
     {
-        $query = TemplateColor::with('createdBy')->findOrFail($id);
-        $templateColor = $this->flattenRelationData($query, ['createdBy_name']);
+        try {
+            $query = TemplateColor::with('createdBy')->findOrFail($id);
+            $templateColor = $this->flattenRelationData($query, ['createdBy_name']);
 
-        return response()->json([
-            'data' => $templateColor
-        ]);
+            return response()->json([
+                'data' => $templateColor,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on TemplateColorsController@show',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -75,11 +88,18 @@ class TemplateColorsController extends Controller
      */
     public function edit(string $id)
     {
-        $templatecolor = TemplateColor::findOrFail($id);
-        
-        return response()->json([
-            'data' => $templatecolor,
-        ]);
+        try {
+            $templateColor = TemplateColor::findOrFail($id);
+
+            return response()->json([
+                'data' => $templateColor,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on TemplateColorsController@edit',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -87,13 +107,19 @@ class TemplateColorsController extends Controller
      */
     public function update(UpdateTemplateColorRequest $request, TemplateColor $templateColor)
     {
-        $validated = $request->validated();
+        try {
+            $validated = $request->validated();
 
-        $templateColor->fill($validated);
+            $templateColor->fill($validated);
+            $templateColor->save();
 
-        $templateColor->save();
-
-        return redirect()->route('dashboard.templateColors.index')->with('message', 'TemplateColor updated successfully');
+            return redirect()->route('dashboard.templateColors.index')->with('message', 'Template Color updated successfully');
+        } catch (\Exception $e) {
+            Log::error('Error in TemplateColorsController@update: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating he Template Color. Please try again.');
+        }
     }
 
     /**
@@ -101,14 +127,21 @@ class TemplateColorsController extends Controller
      */
     public function destroy(Request $request)
     {
-        $validated = $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:template_colors,id',
-        ]);
+        try {
+            $validated = $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'integer|exists:template_colors,id',
+            ]);
 
-        TemplateColor::destroy($validated['ids']);
+            TemplateColor::destroy($validated['ids']);
 
-        return redirect()->back()->with('message', __('TemplateColor(s) deleted successfully.'));
+            return redirect()->back()->with('message', __('Template Color(s) deleted successfully.'));
+        } catch (\Exception $e) {
+            Log::error('Error in TemplateColorsController@destroy: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while deleting the template(s). Please try again.');
+        }
     }
 
     /**
@@ -116,20 +149,27 @@ class TemplateColorsController extends Controller
      */
     public function toggleActive(Request $request, $id)
     {
-        $templateColor = TemplateColor::findOrFail($id);
+        try {
+            $templateColor = TemplateColor::findOrFail($id);
 
-        $validated = $request->validate([
-            'is_active' => 'required|boolean',
-        ]);
+            $validated = $request->validate([
+                'is_active' => 'required|boolean',
+            ]);
 
-        $templateColor->update([
-            'is_active' => $validated['is_active'],
-        ]);
+            $templateColor->update([
+                'is_active' => $validated['is_active'],
+            ]);
 
-        $message = $validated['is_active']
-            ? 'Template Color activated successfully.'
-            : 'Template Color deactivated successfully.';
+            $message = $validated['is_active']
+                ? 'Template Color activated successfully.'
+                : 'Template Color deactivated successfully.';
 
-        return redirect()->back()->with('message', $message);
+            return redirect()->back()->with('message', $message);
+        } catch (\Exception $e) {
+            Log::error('Error in TemplateColorsController@toggleActive: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the template color status. Please try again.');
+        }
     }
 }

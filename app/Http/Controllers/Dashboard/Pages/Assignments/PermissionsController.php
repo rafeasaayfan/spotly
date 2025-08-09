@@ -8,8 +8,7 @@ use Spatie\Permission\Models\Role;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-
-use function Laravel\Prompts\error;
+use Illuminate\Support\Facades\Log;
 
 class PermissionsController extends Controller
 {
@@ -44,16 +43,23 @@ class PermissionsController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'guard_name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'guard_name' => 'required|string|max:255',
+                'description' => 'required|string|max:255',
+            ]);
 
-        $permission = new Permission($validated);
-        $permission->save();
+            $permission = new Permission($validated);
+            $permission->save();
 
-        return redirect()->route('dashboard.permissions.index')->with('message', 'Permission created successfully');
+            return redirect()->route('dashboard.permissions.index')->with('message', 'Permission created successfully');
+        } catch (\Exception $e) {
+            Log::error('Error on PermissionsController@store: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->withErrors('An error occurred while creating the permission. Please try again.');
+        }
     }
 
     /**
@@ -61,11 +67,18 @@ class PermissionsController extends Controller
      */
     public function show(string $id)
     {
-        $permission = Permission::findOrFail($id);
+        try {
+            $permission = Permission::findOrFail($id);
 
-        return response()->json([
-            'data' => $permission
-        ]);
+            return response()->json([
+                'data' => $permission
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on PermissionsController@show',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -73,11 +86,18 @@ class PermissionsController extends Controller
      */
     public function edit(string $id)
     {
-        $permission = Permission::findOrFail($id);
+        try {
+            $permission = Permission::findOrFail($id);
 
-        return response()->json([
-            'data' => $permission
-        ]);
+            return response()->json([
+                'data' => $permission
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on PermissionsController@edit',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -85,17 +105,24 @@ class PermissionsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $data = Permission::findOrFail($id);
+        try {
+            $data = Permission::findOrFail($id);
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'guard_name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-        ]);
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'guard_name' => 'required|string|max:255',
+                'description' => 'required|string|max:255',
+            ]);
 
-        $data->update($validated);
+            $data->update($validated);
 
-        return redirect()->route('dashboard.permissions.index')->with('message', 'Permission updated successfully');
+            return redirect()->route('dashboard.permissions.index')->with('message', 'Permission updated successfully');
+        } catch (\Exception $e) {
+            Log::error('Error on PermissionsController@update: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the permission. Please try again.');
+        }
     }
 
     /**
@@ -103,14 +130,21 @@ class PermissionsController extends Controller
      */
     public function destroy(Request $request)
     {
-        $validated = $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:permissions,id',
-        ]);
+        try {
+            $validated = $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'integer|exists:permissions,id',
+            ]);
 
-        Permission::destroy($validated['ids']);
+            Permission::destroy($validated['ids']);
 
-        return redirect()->back()->with('message', __('Permission(s) deleted successfully.'));
+            return redirect()->back()->with('message', __('Permission(s) deleted successfully.'));
+        } catch (\Exception $e) {
+            Log::error('Error on PermissionsController@destroy: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->withErrors('An error occurred while deleting permission(s). Please try again.');
+        }
     }
 
     /**
@@ -118,15 +152,22 @@ class PermissionsController extends Controller
      */
     public function assignment(string $id)
     {
-        $attachedRoles = Permission::with('roles')->findOrFail($id);
-        $availableRoles = Role::whereDoesntHave('permissions', function ($query) use ($id) {
-            $query->where('permissions.id', $id);
-        })->get();
+        try {
+            $attachedRoles = Permission::with('roles')->findOrFail($id);
+            $availableRoles = Role::whereDoesntHave('permissions', function ($query) use ($id) {
+                $query->where('permissions.id', $id);
+            })->get();
 
-        return response()->json([
-            'attachedRoles' => $attachedRoles,
-            'availableRoles' => $availableRoles,
-        ]);
+            return response()->json([
+                'attachedRoles' => $attachedRoles,
+                'availableRoles' => $availableRoles,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on PermissionsController@assignment',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -134,20 +175,27 @@ class PermissionsController extends Controller
      */
     public function storeAssignments(Request $request, string $id)
     {
-        $validated = $request->validate([
-            'action' => 'required|string|in:add,delete',
-            'id' => 'required|integer|exists:roles,id',
-        ]);
+        try {
+            $validated = $request->validate([
+                'action' => 'required|string|in:add,delete',
+                'id' => 'required|integer|exists:roles,id',
+            ]);
 
-        $permission = Permission::findOrFail($id);
-        $role = Role::findOrFail($validated['id']);
+            $permission = Permission::findOrFail($id);
+            $role = Role::findOrFail($validated['id']);
 
-        if ($validated['action'] === 'add') {
-            $role->givePermissionTo($permission);
-            return redirect()->back()->with('message', 'Role assigned to permission successfully.');
-        } else {
-            $role->revokePermissionTo($permission);
-            return redirect()->back()->with('message', 'Role revoked from Permission successfully.');
+            if ($validated['action'] === 'add') {
+                $role->givePermissionTo($permission);
+                return redirect()->back()->with('message', 'Role assigned to permission successfully.');
+            } else {
+                $role->revokePermissionTo($permission);
+                return redirect()->back()->with('message', 'Role revoked from permission successfully.');
+            }
+        } catch (\Exception $e) {
+            Log::error('Error on PermissionsController@storeAssignments: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating role assignments. Please try again.');
         }
     }
 }

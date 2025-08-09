@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\Categories\StoreCategoryRequest;
 use App\Http\Requests\Dashboard\Pages\Categories\UpdateCategoryRequest;
-use App\Models\Website;
+use Illuminate\Support\Facades\Log;
 
 class CategoriesController extends Controller
 {
@@ -35,72 +35,116 @@ class CategoriesController extends Controller
 
     public function create()
     {
-        $websites = $this->getRelation('website', ['name']);
-        $parents = Category::active()->get();
+        try {
+            $websites = $this->getRelation('website', ['name']);
+            $parents = Category::active()->get();
 
-        return response()->json([
-            'websites' => $websites,
-            'parents' => $parents,
-        ]);
+            return response()->json([
+                'websites' => $websites,
+                'parents' => $parents,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on CategoriesController@create',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     public function store(StoreCategoryRequest $request)
     {
-        $validated = $request->validated();
+        try {
+            $validated = $request->validated();
 
-        $category = new Category($validated);
-        $category->save();
+            $category = new Category($validated);
+            $category->save();
 
-        return redirect()->route('dashboard.categories.index')->with('message', 'Category created successfully');
+            return redirect()->route('dashboard.categories.index')->with('message', 'Category created successfully');
+        } catch (\Exception $e) {
+            Log::error('Error in CategoriesController@store: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while creating the category. Please try again.');
+        }
     }
 
     public function show(string $id)
     {
-        $query = Category::with(['website', 'parent'])->findOrFail($id);
-        $category = $this->flattenRelationData($query, ['website_name', 'parent_name']);
+        try {
+            $query = Category::with(['website', 'parent'])->findOrFail($id);
+            $category = $this->flattenRelationData($query, ['website_name', 'parent_name']);
 
-        return response()->json([
-            'data' => $category,
-        ]);
+            return response()->json([
+                'data' => $category,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on CategoriesController@show',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     public function edit(string $id)
     {
-        $category = Category::findOrFail($id);
+        try {
+            $category = Category::findOrFail($id);
 
-        $websites = $this->getRelation('website', ['name']);
+            $websites = $this->getRelation('website', ['name']);
 
-        $childrenIds = Category::where('parent_id', $category->id)->pluck('id')->toArray();
-        $parents = Category::active()
-            ->where('id', '!=', $category->id)
-            ->whereNotIn('id', $childrenIds)
-            ->get();
-            
-        return response()->json([
-            'data' => $category,
-            'websites' => $websites,
-            'parents' => $parents,
-        ]);
+            $childrenIds = Category::where('parent_id', $category->id)->pluck('id')->toArray();
+            $parents = Category::active()
+                ->where('id', '!=', $category->id)
+                ->whereNotIn('id', $childrenIds)
+                ->get();
+
+            return response()->json([
+                'data' => $category,
+                'websites' => $websites,
+                'parents' => $parents,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on CategoriesController@edit',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $validated = $request->validated();
+        try {
+            $validated = $request->validated();
 
-        $category->fill($validated);
-        $category->save();
+            $category->fill($validated);
+            $category->save();
 
-        return redirect()->route('dashboard.categories.index')->with('message', 'Category updated successfully');
+            return redirect()->route('dashboard.categories.index')->with('message', 'Category updated successfully');
+        } catch (\Exception $e) {
+            Log::error('Error in CategoriesController@update: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the category. Please try again.');
+        }
     }
 
     public function destroy(Request $request)
     {
-        $validated = $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:categories,id',
-        ]);
-        Category::destroy($validated['ids']);
-        return redirect()->back()->with('message', __('Category(s) deleted successfully.'));
+        try {
+            $validated = $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'integer|exists:categories,id',
+            ]);
+
+            Category::destroy($validated['ids']);
+
+            return redirect()->back()->with('message', __('Category(s) deleted successfully.'));
+        } catch (\Exception $e) {
+            Log::error('Error in CategoriesController@destroy: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while deleting the category(s). Please try again.');
+        }
     }
 
     /**
@@ -108,20 +152,27 @@ class CategoriesController extends Controller
      */
     public function toggleActive(Request $request, $id)
     {
-        $category = Category::findOrFail($id);
+        try {
+            $category = Category::findOrFail($id);
 
-        $validated = $request->validate([
-            'is_active' => 'required|boolean',
-        ]);
+            $validated = $request->validate([
+                'is_active' => 'required|boolean',
+            ]);
 
-        $category->update([
-            'is_active' => $validated['is_active'],
-        ]);
+            $category->update([
+                'is_active' => $validated['is_active'],
+            ]);
 
-        $message = $validated['is_active']
-            ? 'Category activated successfully.'
-            : 'Category deactivated successfully.';
+            $message = $validated['is_active']
+                ? 'Category activated successfully.'
+                : 'Category deactivated successfully.';
 
-        return redirect()->back()->with('message', $message);
+            return redirect()->back()->with('message', $message);
+        } catch (\Exception $e) {
+            Log::error('Error in CategoriesController@toggleActive: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the category status. Please try again.');
+        }
     }
 }

@@ -11,6 +11,7 @@ use App\Http\Requests\Dashboard\Pages\Users\StoreUserRequest;
 use App\Http\Requests\Dashboard\Pages\Users\UpdateUserRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Country;
+use Illuminate\Support\Facades\Log;
 
 class UsersController extends Controller
 {
@@ -37,15 +38,22 @@ class UsersController extends Controller
      */
     public function create()
     {
-        $countries = Country::active()->get();
-        $countries->transform(function ($item) {
-            $item->flag = $item->getFirstMediaUrl('flag');
-            return $item;
-        });
+        try {
+            $countries = Country::with('media')->active()->get();
+            $countries->transform(function ($item) {
+                $item->flag = $item->getFirstMediaUrl('flag');
+                return $item;
+            });
 
-        return response()->json([
-            'countries' => $countries
-        ]);
+            return response()->json([
+                'countries' => $countries,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on UsersController@create',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -53,14 +61,21 @@ class UsersController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'phone_number' => $request->phone_number,
-        ]);
+        try {
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'phone_number' => $request->phone_number,
+            ]);
 
-        return redirect()->route('dashboard.users.index')->with('message', 'User created successfully');
+            return redirect()->route('dashboard.users.index')->with('message', 'User created successfully');
+        } catch (\Exception $e) {
+            Log::error('Error in UsersController@store: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while creating the user. Please try again.');
+        }
     }
 
     /**
@@ -68,11 +83,18 @@ class UsersController extends Controller
      */
     public function show(string $id)
     {
-        $user = User::findOrFail($id);
+        try {
+            $user = User::findOrFail($id);
 
-        return response()->json([
-            'data' => $user
-        ]);
+            return response()->json([
+                'data' => $user,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on UsersController@show',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -80,18 +102,25 @@ class UsersController extends Controller
      */
     public function edit(string $id)
     {
-        $user = User::findOrFail($id);
+        try {
+            $user = User::findOrFail($id);
 
-        $countries = Country::active()->get();
-        $countries->transform(function ($item) {
-            $item->flag = $item->getFirstMediaUrl('flag');
-            return $item;
-        });
+            $countries = Country::with('media')->active()->get();
+            $countries->transform(function ($item) {
+                $item->flag = $item->getFirstMediaUrl('flag');
+                return $item;
+            });
 
-        return response()->json([
-            'data' => $user,
-            'countries' => $countries
-        ]);
+            return response()->json([
+                'data' => $user,
+                'countries' => $countries,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on UsersController@edit',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -99,17 +128,24 @@ class UsersController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $data = $request->validated();
+        try {
+            $data = $request->validated();
 
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
-        } else {
-            unset($data['password']);
+            if ($request->filled('password')) {
+                $data['password'] = Hash::make($request->password);
+            } else {
+                unset($data['password']);
+            }
+
+            $user->update($data);
+
+            return redirect()->route('dashboard.users.index')->with('message', 'User updated successfully');
+        } catch (\Exception $e) {
+            Log::error('Error in UsersController@update: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the user. Please try again.');
         }
-
-        $user->update($data);
-
-        return redirect()->route('dashboard.users.index')->with('message', 'User updated successfully');
     }
 
     /**
@@ -117,14 +153,21 @@ class UsersController extends Controller
      */
     public function destroy(Request $request)
     {
-        $validated = $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:users,id',
-        ]);
+        try {
+            $validated = $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'integer|exists:users,id',
+            ]);
 
-        User::destroy($validated['ids']);
+            User::destroy($validated['ids']);
 
-        return redirect()->back()->with('message', __('User(s) deleted successfully.'));
+            return redirect()->back()->with('message', __('User(s) deleted successfully.'));
+        } catch (\Exception $e) {
+            Log::error('Error in UsersController@destroy: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while deleting the user(s). Please try again.');
+        }
     }
 
     /**
@@ -132,20 +175,27 @@ class UsersController extends Controller
      */
     public function changeStatus(Request $request, $id)
     {
-        $validated = $request->validate([
-            'status' => 'required|string|in:active,inactive,banned',
-        ]);
+        try {
+            $validated = $request->validate([
+                'status' => 'required|string|in:active,inactive,banned',
+            ]);
 
-        $user = User::findOrFail($id);
-        $user->update(['status' => $validated['status']]);
+            $user = User::findOrFail($id);
+            $user->update(['status' => $validated['status']]);
 
-        $message = $validated['status'] === 'active'
-        ? 'User activated successfully.'
-        : 'User deactivated successfully.';
+            $message = $validated['status'] === 'active'
+                ? 'User activated successfully.'
+                : 'User deactivated successfully.';
 
-        if ($validated['status'] === 'inactive') $message = 'The user is now inactive.';
-        if ($validated['status'] === 'banned') $message = 'The user is now banned.';
+            if ($validated['status'] === 'inactive') $message = 'The user is now inactive.';
+            if ($validated['status'] === 'banned') $message = 'The user is now banned.';
 
-        return redirect()->back()->with('message', $message);
+            return redirect()->back()->with('message', $message);
+        } catch (\Exception $e) {
+            Log::error('Error in UsersController@changeStatus: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the user status. Please try again.');
+        }
     }
 }

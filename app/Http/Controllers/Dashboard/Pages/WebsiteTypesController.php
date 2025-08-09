@@ -10,6 +10,7 @@ use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\WebsiteTypes\StoreWebsiteTypeRequest;
 use App\Http\Requests\Dashboard\Pages\WebsiteTypes\UpdateWebsiteTypeRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class WebsiteTypesController extends Controller
 {
@@ -46,17 +47,26 @@ class WebsiteTypesController extends Controller
      */
     public function store(StoreWebsiteTypeRequest $request)
     {
-        $validated = $request->validated();
+        try {
+            $validated = $request->validated();
 
-        $created_by = Auth::id();
-        if (!$created_by) return;
+            $created_by_id = Auth::id();
+            if (!$created_by_id) {
+                return redirect()->back()->withErrors('Unauthorized: User not authenticated.');
+            }
 
-        $websiteType = new WebsiteType($validated);
-        $websiteType->created_by = $created_by;
+            $websiteType = new WebsiteType($validated);
+            $websiteType->created_by = $created_by_id;
 
-        $websiteType->save();
+            $websiteType->save();
 
-        return redirect()->route('dashboard.websiteTypes.index')->with('message', 'Website type created successfully');
+            return redirect()->route('dashboard.websiteTypes.index')->with('message', 'Website type created successfully');
+        } catch (\Exception $e) {
+            Log::error('Error in WebsiteTypesController@store: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->withErrors('An error occurred while creating the Website Type. Please try again.');
+        }
     }
 
     /**
@@ -64,12 +74,19 @@ class WebsiteTypesController extends Controller
      */
     public function show(string $id)
     {
-        $result = WebsiteType::with('user')->findOrFail($id);
-        $websiteType = $this->flattenRelationData($result, ['user_name']);
+        try {
+            $result = WebsiteType::with('user')->findOrFail($id);
+            $websiteType = $this->flattenRelationData($result, ['user_name']);
 
-        return response()->json([
-            'data' => $websiteType,
-        ]);
+            return response()->json([
+                'data' => $websiteType,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error fetching Website Type details',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -77,11 +94,18 @@ class WebsiteTypesController extends Controller
      */
     public function edit(string $id)
     {
-        $websiteType = WebsiteType::findOrFail($id);
+        try {
+            $websiteType = WebsiteType::findOrFail($id);
 
-        return response()->json([
-            'data' => $websiteType,
-        ]);
+            return response()->json([
+                'data' => $websiteType,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error fetching Website Type for edit',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -89,13 +113,20 @@ class WebsiteTypesController extends Controller
      */
     public function update(UpdateWebsiteTypeRequest $request, WebsiteType $websiteType)
     {
-        $validated = $request->validated();
+        try {
+            $validated = $request->validated();
 
-        $websiteType->fill($validated);
+            $websiteType->fill($validated);
 
-        $websiteType->save();
+            $websiteType->save();
 
-        return redirect()->route('dashboard.websiteTypes.index')->with('message', 'Website type updated successfully');
+            return redirect()->route('dashboard.websiteTypes.index')->with('message', 'Website type updated successfully');
+        } catch (\Exception $e) {
+            Log::error('Error in WebsiteTypesController@update: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the Website Type. Please try again.');
+        }
     }
 
     /**
@@ -103,33 +134,47 @@ class WebsiteTypesController extends Controller
      */
     public function destroy(Request $request)
     {
-        $validated = $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:website_types,id',
-        ]);
+        try {
+            $validated = $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'integer|exists:website_types,id',
+            ]);
 
-        WebsiteType::destroy($validated['ids']);
+            WebsiteType::destroy($validated['ids']);
 
-        return redirect()->back()->with('message', __('Website type(s) deleted successfully.'));
+            return redirect()->back()->with('message', __('Website type(s) deleted successfully.'));
+        } catch (\Exception $e) {
+            Log::error('Error in WebsiteTypesController@destroy: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->withErrors('An error occurred while deleting the Website Type(s). Please try again.');
+        }
     }
 
     // Toggle active status
     public function toggleActive(Request $request, $id)
     {
-        $websiteType = WebsiteType::findOrFail($id);
+        try {
+            $websiteType = WebsiteType::findOrFail($id);
 
-        $validated = $request->validate([
-            'is_active' => 'required|boolean',
-        ]);
+            $validated = $request->validate([
+                'is_active' => 'required|boolean',
+            ]);
 
-        $websiteType->update([
-            'is_active' => $validated['is_active'],
-        ]);
+            $websiteType->update([
+                'is_active' => $validated['is_active'],
+            ]);
 
-        $message = $validated['is_active']
-            ? 'Website type activated successfully.'
-            : 'Website type deactivated successfully.';
+            $message = $validated['is_active']
+                ? 'Website type activated successfully.'
+                : 'Website type deactivated successfully.';
 
-        return redirect()->back()->with('message', $message);
+            return redirect()->back()->with('message', $message);
+        } catch (\Exception $e) {
+            Log::error('Error in WebsiteTypesController@toggleActive: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the Website Type status. Please try again.');
+        }
     }
 }

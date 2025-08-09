@@ -20,9 +20,9 @@ class WebsiteBuilderController extends Controller
     {
         $type = $request->input('type');
         $websiteTypes = WebsiteType::active()->get();
-        $typeId = WebsiteType::where('type', $type)->value('id');
+        $typeId = $websiteTypes->firstWhere('type', $type)?->id;
 
-        $countries = Country::active()->get();
+        $countries = Country::with('media')->active()->get();
         $countries->transform(function ($item) {
             $item->flag = $item->getFirstMediaUrl('flag');
             return $item;

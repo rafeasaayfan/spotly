@@ -7,6 +7,7 @@ use App\Models\Message;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 
 class MessagesController extends Controller
 {
@@ -49,11 +50,18 @@ class MessagesController extends Controller
      */
     public function show(string $id)
     {
-        $message = Message::findOrFail($id);
+        try {
+            $message = Message::findOrFail($id);
 
-        return response()->json([
-            'data' => $message,
-        ]);
+            return response()->json([
+                'data' => $message,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on MessagesController@show',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -77,14 +85,21 @@ class MessagesController extends Controller
      */
     public function destroy(Request $request)
     {
-        $validated = $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:messages,id',
-        ]);
+        try {
+            $validated = $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'integer|exists:messages,id',
+            ]);
 
-        Message::destroy($validated['ids']);
+            Message::destroy($validated['ids']);
 
-        return redirect()->back()->with('message', __('Message(s) deleted successfully.'));
+            return redirect()->back()->with('message', __('Message(s) deleted successfully.'));
+        } catch (\Exception $e) {
+            Log::error('Error in MessagesController@destroy: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while deleting the message(s). Please try again.');
+        }
     }
 
     /**
@@ -92,22 +107,31 @@ class MessagesController extends Controller
      */
     public function changeStatus(Request $request, $id)
     {
-        $message = Message::findOrFail($id);
+        try {
+            $message = Message::findOrFail($id);
 
-        $validated = $request->validate([
-            'status' => 'required|in:new,read,closed',
-        ]);
+            $validated = $request->validate([
+                'status' => 'required|in:new,read,closed',
+            ]);
 
-        $message->update([
-            'status' => $validated['status'],
-        ]);
+            $message->update([
+                'status' => $validated['status'],
+            ]);
 
-        $message = $validated['status'] === 'new'
-            ? 'Message marked as new.'
-            : 'Message marked as read.';
+            $msg = $validated['status'] === 'new'
+                ? 'Message marked as new.'
+                : 'Message marked as read.';
 
-        if ($validated['status'] === 'closed') $message = 'Message marked as closed.';
+            if ($validated['status'] === 'closed') {
+                $msg = 'Message marked as closed.';
+            }
 
-        return redirect()->back()->with('message', $message);
+            return redirect()->back()->with('message', $msg);
+        } catch (\Exception $e) {
+            Log::error('Error in MessagesController@changeStatus: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the message status. Please try again.');
+        }
     }
 }

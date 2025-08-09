@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\Countries\StoreCountryRequest;
 use App\Http\Requests\Dashboard\Pages\Countries\UpdateCountryRequest;
+use Illuminate\Support\Facades\Log;
 
 class CountriesController extends Controller
 {
@@ -50,19 +51,26 @@ class CountriesController extends Controller
      */
     public function store(StoreCountryRequest $request)
     {
-        $validated = $request->validated();
-        unset($validated['flag']);
+        try {
+            $validated = $request->validated();
+            unset($validated['flag']);
 
-        $country = new Country($validated);
+            $country = new Country($validated);
 
-        if ($request->hasFile('flag') && $request->file('flag')->isValid()) {
-            $country->addMediaFromRequest('flag')
-                ->toMediaCollection('flag');
+            if ($request->hasFile('flag') && $request->file('flag')->isValid()) {
+                $country->addMediaFromRequest('flag')
+                    ->toMediaCollection('flag');
+            }
+
+            $country->save();
+
+            return redirect()->route('dashboard.countries.index')->with('message', 'Country created successfully');
+        } catch (\Exception $e) {
+            Log::error('Error in CountriesController@store: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while creating the country. Please try again.');
         }
-
-        $country->save();
-
-        return redirect()->route('dashboard.countries.index')->with('message', 'Country created successfully');
     }
 
     /**
@@ -70,12 +78,19 @@ class CountriesController extends Controller
      */
     public function show(string $id)
     {
-        $country = Country::findOrFail($id);
-        $country->flag = $country->getFirstMediaUrl('flag');
+        try {
+            $country = Country::findOrFail($id);
+            $country->flag = $country->getFirstMediaUrl('flag');
 
-        return response()->json([
-            'data' => $country,
-        ]);
+            return response()->json([
+                'data' => $country,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on CountriesController@show',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -83,14 +98,20 @@ class CountriesController extends Controller
      */
     public function edit(string $id)
     {
-        $country = Country::findOrFail($id);
+        try {
+            $country = Country::findOrFail($id);
 
-        $country->flag = $country->getFirstMediaUrl('flag');
+            $country->flag = $country->getFirstMediaUrl('flag');
 
-        return response()->json([
-            'data' => $country,
-
-        ]);
+            return response()->json([
+                'data' => $country,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on CountriesController@edit',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -98,20 +119,27 @@ class CountriesController extends Controller
      */
     public function update(UpdateCountryRequest $request, Country $country)
     {
-        $validated = $request->validated();
-        unset($validated['flag']);
+        try {
+            $validated = $request->validated();
+            unset($validated['flag']);
 
-        $country->fill($validated);
+            $country->fill($validated);
 
-        if ($request->hasFile('image') && $request->file('flag')->isValid()) {
-            $country->clearMediaCollection('flag');
-            $country->addMediaFromRequest('flag')
-                ->toMediaCollection('flag');
+            if ($request->hasFile('flag') && $request->file('flag')->isValid()) {
+                $country->clearMediaCollection('flag');
+                $country->addMediaFromRequest('flag')
+                    ->toMediaCollection('flag');
+            }
+
+            $country->save();
+
+            return redirect()->route('dashboard.countries.index')->with('message', 'Country updated successfully');
+        } catch (\Exception $e) {
+            Log::error('Error in CountriesController@update: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the country. Please try again.');
         }
-
-        $country->save();
-
-        return redirect()->route('dashboard.countries.index')->with('message', 'Country updated successfully');
     }
 
     /**
@@ -119,33 +147,47 @@ class CountriesController extends Controller
      */
     public function destroy(Request $request)
     {
-        $validated = $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:countries,id',
-        ]);
+        try {
+            $validated = $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'integer|exists:countries,id',
+            ]);
 
-        Country::destroy($validated['ids']);
+            Country::destroy($validated['ids']);
 
-        return redirect()->back()->with('message', __('Country(s) deleted successfully.'));
+            return redirect()->back()->with('message', __('Country(s) deleted successfully.'));
+        } catch (\Exception $e) {
+            Log::error('Error in CountriesController@destroy: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while deleting the country(s). Please try again.');
+        }
     }
 
     // Toggle active status
     public function toggleActive(Request $request, $id)
     {
-        $websiteType = Country::findOrFail($id);
+        try {
+            $websiteType = Country::findOrFail($id);
 
-        $validated = $request->validate([
-            'is_active' => 'required|boolean',
-        ]);
+            $validated = $request->validate([
+                'is_active' => 'required|boolean',
+            ]);
 
-        $websiteType->update([
-            'is_active' => $validated['is_active'],
-        ]);
+            $websiteType->update([
+                'is_active' => $validated['is_active'],
+            ]);
 
-        $message = $validated['is_active']
-            ? 'Country activated successfully.'
-            : 'Country deactivated successfully.';
+            $message = $validated['is_active']
+                ? 'Country activated successfully.'
+                : 'Country deactivated successfully.';
 
-        return redirect()->back()->with('message', $message);
+            return redirect()->back()->with('message', $message);
+        } catch (\Exception $e) {
+            Log::error('Error in CountriesController@toggleActive: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the country status. Please try again.');
+        }
     }
 }

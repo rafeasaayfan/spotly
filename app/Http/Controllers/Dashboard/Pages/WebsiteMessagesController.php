@@ -7,6 +7,7 @@ use App\Models\WebsiteMessage;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 
 class WebsiteMessagesController extends Controller
 {
@@ -49,11 +50,18 @@ class WebsiteMessagesController extends Controller
      */
     public function show(string $id)
     {
-        $contactmessage = WebsiteMessage::findOrFail($id);
+        try {
+            $contactmessage = WebsiteMessage::findOrFail($id);
 
-        return response()->json([
-            'data' => $contactmessage,
-        ]);
+            return response()->json([
+                'data' => $contactmessage,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error on WebsiteMessagesController@show',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
@@ -77,14 +85,21 @@ class WebsiteMessagesController extends Controller
      */
     public function destroy(Request $request)
     {
-        $validated = $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:website_messages,id',
-        ]);
+        try {
+            $validated = $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'integer|exists:website_messages,id',
+            ]);
 
-        WebsiteMessage::destroy($validated['ids']);
+            WebsiteMessage::destroy($validated['ids']);
 
-        return redirect()->back()->with('message', __('Message(s) deleted successfully.'));
+            return redirect()->back()->with('message', __('Message(s) deleted successfully.'));
+        } catch (\Exception $e) {
+            Log::error('Error in WebsiteMessagesController@destroy: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while deleting the message(s). Please try again.');
+        }
     }
 
     /**
@@ -92,22 +107,29 @@ class WebsiteMessagesController extends Controller
      */
     public function changeStatus(Request $request, $id)
     {
-        $websiteMessage = WebsiteMessage::findOrFail($id);
+        try {
+            $websiteMessage = WebsiteMessage::findOrFail($id);
 
-        $validated = $request->validate([
-            'status' => 'required|in:new,read,closed',
-        ]);
+            $validated = $request->validate([
+                'status' => 'required|in:new,read,closed',
+            ]);
 
-        $websiteMessage->update([
-            'status' => $validated['status'],
-        ]);
+            $websiteMessage->update([
+                'status' => $validated['status'],
+            ]);
 
-        $message = $validated['status'] === 'new'
-            ? 'Message marked as new.'
-            : 'Message marked as read.';
+            $message = $validated['status'] === 'new'
+                ? 'Message marked as new.'
+                : 'Message marked as read.';
 
-        if ($validated['status'] === 'closed') $message = 'Message marked as closed.';
+            if ($validated['status'] === 'closed') $message = 'Message marked as closed.';
 
-        return redirect()->back()->with('message', $message);
+            return redirect()->back()->with('message', $message);
+        } catch (\Exception $e) {
+            Log::error('Error in WebsiteMessagesController@changeStatus: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while updating the message status. Please try again.');
+        }
     }
 }
