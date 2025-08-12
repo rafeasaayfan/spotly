@@ -24,7 +24,7 @@ use App\Http\Controllers\Dashboard\Pages\WebsiteTemplatesController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
-Route::middleware(['auth', 'can:dashboard_access', 'verified'])->prefix('dashboard')->name('dashboard.')->group(function () {
+Route::middleware(['auth', 'verified', 'can:dashboard_access'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
     //* Users
