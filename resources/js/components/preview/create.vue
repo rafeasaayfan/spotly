@@ -3,7 +3,7 @@ import { DialogDescription, DialogHeader, DialogScrollContent, DialogTitle } fro
 import { toast } from '@/lib/sweetAlert';
 import axios from 'axios';
 import { Menu } from 'lucide-vue-next';
-import { computed, ref, defineAsyncComponent, DefineComponent, watch } from 'vue';
+import { computed, defineAsyncComponent, DefineComponent, ref, watch } from 'vue';
 import HeadingSmall from '../headers/HeadingSmall.vue';
 import { Button } from '../ui/button';
 import { Color, Input, InputError, Textarea } from '../ui/fields';
@@ -20,16 +20,20 @@ const props = defineProps<{
 // Get the component path
 const components = import.meta.glob('@/pages/preview/**/**/pages/home/Home.vue');
 const refPath = ref(props.data.path);
-watch(() => props.data.path, (newPath) => {
-  refPath.value = newPath;
-}, { immediate: true });
+watch(
+    () => props.data.path,
+    (newPath) => {
+        refPath.value = newPath;
+    },
+    { immediate: true },
+);
 const matchingPath = computed(() => {
-  return Object.keys(components).find(path => path.includes(refPath.value));
+    return Object.keys(components).find((path) => path.includes(refPath.value));
 });
 const actionCompo = computed(() => {
-  const path = matchingPath.value;
-  if (!path) throw new Error(`Component not found for path: ${refPath.value}`);
-  return defineAsyncComponent(components[path] as () => Promise<DefineComponent>);
+    const path = matchingPath.value;
+    if (!path) throw new Error(`Component not found for path: ${refPath.value}`);
+    return defineAsyncComponent(components[path] as () => Promise<DefineComponent>);
 });
 
 const emit = defineEmits<{
@@ -55,16 +59,18 @@ const colors = computed({
 
 const colorKeywords = ['color', 'bg', 'primary', 'secondary', 'danger', 'foreground'];
 const colorKeys = Object.keys(props.data.colors).filter(
-    (key) =>
-        typeof props.data.colors[key] === 'string' &&
-        colorKeywords.some(keyword => key.includes(keyword))
+    (key) => typeof props.data.colors[key] === 'string' && colorKeywords.some((keyword) => key.includes(keyword)),
 );
 
 // Local copy for editing
 const formColors = ref<Record<string, any>>({ ...props.data.colors });
-watch(() => props.data.colors, (newColors) => {
-    formColors.value = { ...newColors };
-}, { deep: true, immediate: true });
+watch(
+    () => props.data.colors,
+    (newColors) => {
+        formColors.value = { ...newColors };
+    },
+    { deep: true, immediate: true },
+);
 
 // Validation state
 const colorErrors = ref<Record<string, string>>({});
@@ -137,7 +143,7 @@ const showForm = () => {
         </DialogHeader>
 
         <div class="relative grid w-full grid-cols-6 items-start">
-            <div class="bg-card col-span-1 flex flex-col gap-2 p-4 xl:col-span-2">
+            <div class="bg-card col-span-6 flex flex-col gap-2 p-4 sm:col-span-1 xl:col-span-2">
                 <div class="border-muted col-span-2 flex flex-wrap items-center justify-between gap-3 border-b pb-2 xl:justify-end">
                     <Button @click="showForm()" variant="ghost" size="icon" class="xl:hidden">
                         <Menu class="size-5" />
@@ -154,7 +160,7 @@ const showForm = () => {
                 </div>
 
                 <div
-                    class="absolute top-30 z-20 transition-all duration-300 ease-in-out lg:top-18 xl:relative xl:top-0"
+                    class="absolute top-18 sm:top-30 z-20 transition-all duration-300 ease-in-out lg:top-18 xl:relative xl:top-0"
                     :class="[showFormRef ? '-start-200' : 'bg-body border-muted start-0 rounded-md border p-3']"
                 >
                     <div class="grid grid-cols-2 gap-x-3 gap-y-5">
@@ -166,11 +172,13 @@ const showForm = () => {
                             </div>
                         </div>
 
-                        <div v-for="key in colorKeys" :key="key" class="flex flex-col gap-2">
-                            <HeadingSmall :title="key" titleClass="text-sm" />
-                            <div class="flex flex-col gap-1">
-                                <Color v-model="formColors[key]" />
-                                <InputError :message="colorErrors[key]" />
+                        <div v-for="key in colorKeys" :key="key" class="col-span-2 sm:col-span-1">
+                            <div class="flex flex-col gap-2">
+                                <HeadingSmall :title="key" titleClass="text-sm" />
+                                <div class="flex flex-col gap-1">
+                                    <Color v-model="formColors[key]" />
+                                    <InputError :message="colorErrors[key]" />
+                                </div>
                             </div>
                         </div>
 
@@ -189,7 +197,7 @@ const showForm = () => {
                 </div>
             </div>
 
-            <div class="col-span-5 xl:col-span-4">
+            <div class="col-span-6 sm:col-span-5 xl:col-span-4">
                 <component :is="actionCompo" :colors="formColors" />
             </div>
         </div>
