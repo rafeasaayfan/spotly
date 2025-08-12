@@ -26,7 +26,7 @@ return new class extends Migration
 
             $table->string('country')->nullable();
             $table->string('city')->nullable();
-            $table->string('address');
+            $table->string('address')->nullable();
 
             $table->string('instagram')->nullable();
             $table->string('facebook')->nullable();
