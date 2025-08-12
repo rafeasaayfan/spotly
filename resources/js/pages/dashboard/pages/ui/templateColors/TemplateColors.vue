@@ -22,7 +22,7 @@ const columns = [
     { key: 'name', label: 'Name' },
     { key: 'bg_body_light', label: 'Bg Body Light', type: 'color' },
     { key: 'bg_nav_light', label: 'Bg Nav Light', type: 'color' },
-    { key: 'forground_light', label: 'Forground Light', type: 'color' },
+    { key: 'foreground_light', label: 'Foreground Light', type: 'color' },
     { key: 'is_custom', label: 'Is Custom' },
     { key: 'is_active', label: 'Active', type: 'toggle' },
     { key: 'created_at', label: 'Created At', type: 'date' },
