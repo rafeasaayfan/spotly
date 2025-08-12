@@ -17,12 +17,12 @@ const columns = [
     { key: 'bg_footer_light', label: 'Bg Footer Light', type: 'color' },
     { key: 'bg_footer_dark', label: 'Bg Footer Dark', type: 'color' },
 
-    { key: 'forground_light', label: 'Forground Light', type: 'color' },
-    { key: 'forground_dark', label: 'Forground Dark', type: 'color' },
-    { key: 'forground_active_light', label: 'Forground Active Light', type: 'color' },
-    { key: 'forground_active_dark', label: 'Forground Active Dark', type: 'color' },
-    { key: 'forground_muted_light', label: 'Forground Muted Light', type: 'color' },
-    { key: 'forground_muted_dark', label: 'Forground Muted Dark', type: 'color' },
+    { key: 'foreground_light', label: 'Forground Light', type: 'color' },
+    { key: 'foreground_dark', label: 'Forground Dark', type: 'color' },
+    { key: 'foreground_active_light', label: 'Forground Active Light', type: 'color' },
+    { key: 'foreground_active_dark', label: 'Forground Active Dark', type: 'color' },
+    { key: 'foreground_muted_light', label: 'Forground Muted Light', type: 'color' },
+    { key: 'foreground_muted_dark', label: 'Forground Muted Dark', type: 'color' },
 
     { key: 'bg_field_light', label: 'Bg Field Light', type: 'color' },
     { key: 'bg_field_dark', label: 'Bg Field Dark', type: 'color' },
