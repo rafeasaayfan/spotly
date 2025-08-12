@@ -72,19 +72,19 @@ class WebsitesController extends Controller
     {
         try {
             $validated = $request->validated();
-            unset($validated['logo_light'], $validated['logo_dark']);
+            unset($validated['light_logo'], $validated['dark_logo']);
 
             $website = new Website($validated);
             $website->country = 'Lebanon';
 
-            if ($request->hasFile('logo_light') && $request->file('logo_light')->isValid()) {
-                $website->addMediaFromRequest('logo_light')
-                    ->toMediaCollection('logo_light');
+            if ($request->hasFile('light_logo') && $request->file('light_logo')->isValid()) {
+                $website->addMediaFromRequest('light_logo')
+                    ->toMediaCollection('light_logo');
             }
 
-            if ($request->hasFile('logo_dark') && $request->file('logo_dark')->isValid()) {
-                $website->addMediaFromRequest('logo_dark')
-                    ->toMediaCollection('logo_dark');
+            if ($request->hasFile('dark_logo') && $request->file('dark_logo')->isValid()) {
+                $website->addMediaFromRequest('dark_logo')
+                    ->toMediaCollection('dark_logo');
             }
 
             $website->save();
@@ -105,8 +105,8 @@ class WebsitesController extends Controller
     {
         try {
             $website = Website::with(['media', 'owner', 'websiteType', 'approvedOrDeniedBy'])->findOrFail($id);
-            $website->logo_light = $website->getFirstMediaUrl('logo_light');
-            $website->logo_dark = $website->getFirstMediaUrl('logo_dark');
+            $website->light_logo = $website->getFirstMediaUrl('light_logo');
+            $website->dark_logo = $website->getFirstMediaUrl('dark_logo');
             $result = $this->flattenRelationData($website, ['owner_name', 'websiteType_type', 'approvedOrDeniedBy_name']);
 
             return response()->json([
@@ -137,8 +137,8 @@ class WebsitesController extends Controller
                 return $item;
             });
 
-            $website->logo_light = $website->getFirstMediaUrl('logo_light');
-            $website->logo_dark = $website->getFirstMediaUrl('logo_dark');
+            $website->light_logo = $website->getFirstMediaUrl('light_logo');
+            $website->dark_logo = $website->getFirstMediaUrl('dark_logo');
 
             return response()->json([
                 'data' => $website,
@@ -160,30 +160,21 @@ class WebsitesController extends Controller
      */
     public function update(UpdateWebsiteRequest $request, Website $website)
     {
-
-        if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
-            $website->clearMediaCollection('logo');
-            $website->addMediaFromRequest('logo')
-                ->toMediaCollection('logo');
-        }
-
-        $website->save();
-
-        return redirect()->route('dashboard.websites.index')->with('message', 'Website updated successfully');
-
         try {
             $validated = $request->validated();
-            unset($validated['logo_light'], $validated['logo_dark']);
+            unset($validated['light_logo'], $validated['dark_logo']);
 
             $website->fill($validated);
 
-            if ($request->hasFile('logo_light') && $request->file('logo_light')->isValid()) {
-                $website->addMediaFromRequest('logo_light')
-                    ->toMediaCollection('logo_light');
+            if ($request->hasFile('light_logo') && $request->file('light_logo')->isValid()) {
+                $website->clearMediaCollection('light_logo');
+                $website->addMediaFromRequest('light_logo')
+                    ->toMediaCollection('light_logo');
             }
-            if ($request->hasFile('logo_dark') && $request->file('logo_dark')->isValid()) {
-                $website->addMediaFromRequest('logo_dark')
-                    ->toMediaCollection('logo_dark');
+            if ($request->hasFile('dark_logo') && $request->file('dark_logo')->isValid()) {
+                $website->clearMediaCollection('dark_logo');
+                $website->addMediaFromRequest('dark_logo')
+                    ->toMediaCollection('dark_logo');
             }
 
             $website->save();

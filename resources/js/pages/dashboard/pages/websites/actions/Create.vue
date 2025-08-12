@@ -46,8 +46,8 @@ const columns = [
     },
     { key: 'email', label: 'Email', type: 'text', placeholder: 'Enter the website email', required: false },
     { key: 'about_us', label: 'About Us', type: 'textarea', placeholder: 'Enter the website about us', required: false, maxlength: 255 },
-    { key: 'logo_light', label: 'Website logo light', type: 'file', placeholder: 'Enter the website logo light mode', required: false },
-    { key: 'logo_dark', label: 'Website logo dark', type: 'file', placeholder: 'Enter the website logo dark mode', required: false },
+    { key: 'light_logo', label: 'Website light logo', type: 'file', placeholder: 'Enter the website light logo', required: false },
+    { key: 'dark_logo', label: 'Website dark logo', type: 'file', placeholder: 'Enter the website dark logo', required: false },
     {
         key: 'city',
         label: 'City',

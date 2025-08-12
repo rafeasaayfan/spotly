@@ -6,8 +6,8 @@ const props = defineProps<{
 }>();
 
 const columns = [
-    { key: 'logo_light', label: 'Website logo light', type: 'image' },
-    { key: 'logo_dark', label: 'Website logo dark', type: 'image' },
+    { key: 'light_logo', label: 'Website light logo', type: 'image' },
+    { key: 'dark_logo', label: 'Website dark logo', type: 'image' },
     { key: 'owner_name', label: 'Website owner' },
     { key: 'websiteType_type', label: 'Website type' },
     { key: 'approvedOrDeniedBy_name', label: 'Viewed by' },
