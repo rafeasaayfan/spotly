@@ -3,6 +3,7 @@
 namespace App\Http\Requests\WebsiteBuilder;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class WebsiteBuilderRequest extends FormRequest
 {
@@ -21,10 +22,11 @@ class WebsiteBuilderRequest extends FormRequest
      */
     public function rules(): array
     {
+        $step = $this->route('step');
 
         $validation = [];
 
-        switch ($this->route('step')) {
+        switch ($step) {
             case '1':
                 $validation = [
                     'website_type_id' => ['required', 'exists:website_types,id'],
@@ -74,22 +76,18 @@ class WebsiteBuilderRequest extends FormRequest
                 ];
                 break;
 
-            case 3: 
+            case 3:
                 $validation = [
-                    'lightLogo' => ['nullable', 'file', 'mimes:svg', 'max:2048'],
-                    'darkLogo' => ['nullable', 'file', 'mimes:svg', 'max:2048'],
+                    'light_logo' => ['nullable', 'file', 'mimes:svg', 'max:2048', 'required_with:dark_logo'],
+                    'dark_logo' => ['nullable', 'file', 'mimes:svg', 'max:2048', 'required_with:light_logo'],
 
                     'template_id' => ['required', 'exists:templates,id'],
                     'template_color_id' => [
-                        function ($attribute, $value, $fail) {
-                            if ($this->input('custom_template_color')) {
-                                return;
-                            }
-                            if (empty($value)) {
-                                $fail('Please choose a template colors');
-                            }
-                        },
-                        'exists:template_colors,id'
+                        Rule::when(
+                            !$this->input('custom_template_color'),
+                            ['required', 'exists:template_colors,id'],
+                            ['nullable']
+                        )
                     ],
                     'custom_template_color' => ['nullable', 'boolean'],
                     'colors' => ['nullable', 'array'],
@@ -98,14 +96,28 @@ class WebsiteBuilderRequest extends FormRequest
 
             case '4':
                 $validation = [
-                    'user_phone_number' => ['required', 'string'],
-                    'user_email' => ['required', 'email', 'unique:users,email'],
-                    'plan_id' => ['required', 'exists:plans,id'],
-                    'payment_method_id' => ['required', 'exists:payment_methods,id'],
+                    'acceptSteps' => ['required', 'boolean']
                 ];
                 break;
         };
 
         return $validation;
+    }
+
+    protected function passedValidation()
+    {
+        $step = $this->route('step');
+        $data = $this->validated();
+
+        if ($step === '3') {
+            if ($this->hasFile('light_logo') && $this->hasFile('dark_logo')) {
+                $data['light_logo'] = $this->file('light_logo')->store('temp');
+                $data['dark_logo'] = $this->file('dark_logo')->store('temp');
+            }
+        }
+
+        session(["wizard_step_{$step}" => $data]);
+
+        // Validator::make($allData, [ ... ])->validate();
     }
 }
