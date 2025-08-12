@@ -9,7 +9,7 @@ import Edit from '@/components/ui/table/actions/Edit.vue';
 import ViewBtn from '@/components/ui/table/actions/View.vue';
 import axios from 'axios';
 import { CheckCircle, LayoutTemplate } from 'lucide-vue-next';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 const props = defineProps<{
     form: {
@@ -17,8 +17,8 @@ const props = defineProps<{
         template_color_id: string;
         custom_template_color: boolean;
         colors: Record<string, any>;
-        lightLogo: File | null;
-        darkLogo: File | null;
+        light_logo: File | null;
+        dark_logo: File | null;
         errors?: Record<string, string>;
     };
     type: string;
@@ -41,7 +41,13 @@ const template_id = computed({
     },
 });
 
-const fetchTemplateTemplateColors = async (val: string) => {
+onMounted(() => {
+    if (props.form.template_id) {
+        fetchTemplateTemplateColors(props.form.template_id, true);
+    }
+});
+
+const fetchTemplateTemplateColors = async (val: string, fromOnMounted: boolean = false) => {
     try {
         animate.value = false;
 
@@ -50,7 +56,9 @@ const fetchTemplateTemplateColors = async (val: string) => {
         if (response.data?.templateTemplateColors) {
             templateTemplateColors.value = response.data?.templateTemplateColors;
 
-            template_color_id.value = '';
+            if(!fromOnMounted) {
+                template_color_id.value = '';
+            }
 
             setTimeout(() => {
                 animate.value = true;
@@ -83,14 +91,14 @@ const custom_template_color = computed({
     },
 });
 
-const lightLogo = computed({
-    get: () => props.form.lightLogo,
-    set: (val: File) => emit('update', 'lightLogo', val),
+const light_logo = computed({
+    get: () => props.form.light_logo,
+    set: (val: File) => emit('update', 'light_logo', val),
 });
 
-const darkLogo = computed({
-    get: () => props.form.darkLogo,
-    set: (val: File) => emit('update', 'darkLogo', val),
+const dark_logo = computed({
+    get: () => props.form.dark_logo,
+    set: (val: File) => emit('update', 'dark_logo', val),
 });
 
 const modalType = ref<'view' | 'create' | null>(null);
@@ -129,15 +137,15 @@ const updateField = (field: string, value: any) => {
         <div class="flex flex-col gap-2">
             <HeadingSmall title="Website Light Logo" description="If you don't have logo will make for you a default one." />
             <div class="flex flex-col gap-1 ps-2">
-                <File v-model="lightLogo" />
-                <InputError v-if="props.form.errors?.lightLogo" :message="props.form.errors.lightLogo" />
+                <File v-model="light_logo" />
+                <InputError v-if="props.form.errors?.light_logo" :message="props.form.errors.light_logo" />
             </div>
         </div>
         <div class="flex flex-col gap-2">
             <HeadingSmall title="Website Dark Logo" description="If you don't have logo will make for you a default one." />
             <div class="flex flex-col gap-1 ps-2">
-                <File v-model="darkLogo" />
-                <InputError v-if="props.form.errors?.darkLogo" :message="props.form.errors.darkLogo" />
+                <File v-model="dark_logo" />
+                <InputError v-if="props.form.errors?.dark_logo" :message="props.form.errors.dark_logo" />
             </div>
         </div>
 
@@ -148,7 +156,8 @@ const updateField = (field: string, value: any) => {
                 <HeadingSmall title="Website Template*" description="Select the template design for your business." />
 
                 <div class="custom-scrollbar flex w-full items-center gap-3 overflow-x-auto p-2">
-                    <div
+                    <button
+                        type="button"
                         v-for="template in props.templates"
                         :key="template.id"
                         class="border-muted text-body relative flex min-h-26 min-w-40 cursor-pointer items-center justify-center rounded-lg border bg-black/3 transition-all duration-200 ease-in-out hover:-translate-y-1 hover:scale-102 hover:bg-black/4 active:scale-98 dark:bg-white/3 dark:hover:bg-white/4"
@@ -164,11 +173,11 @@ const updateField = (field: string, value: any) => {
                         >
                             <CheckCircle class="size-4 text-white" />
                         </div>
-                    </div>
+                    </button>
                 </div>
 
                 <div class="ps-2">
-                    <InputError :message="form.errors?.template_id" v-if="form.errors?.template_id"  />
+                    <InputError :message="form.errors?.template_id" v-if="form.errors?.template_id" />
                 </div>
             </div>
 
@@ -184,6 +193,7 @@ const updateField = (field: string, value: any) => {
                 />
 
                 <div class="custom-scrollbar flex w-full items-center gap-3 overflow-x-auto p-2">
+                    <!-- Customed Colors -->
                     <div
                         class="border-muted relative flex min-h-[280px] min-w-[450px] flex-col rounded-lg border bg-black/3 transition-all duration-200 ease-in-out hover:-translate-y-1 hover:bg-black/4 dark:bg-white/3 dark:hover:bg-white/4"
                         :class="custom_template_color || Object.keys(props.form.colors).length > 0 ? '' : 'hidden'"
@@ -195,10 +205,8 @@ const updateField = (field: string, value: any) => {
 
                             <div class="flex items-center gap-1">
                                 <Dialog>
-                                    <DialogTrigger as-child>
-                                        <div @click="preview('create', templateTemplateColors[0].template.name, props.form.colors)">
-                                            <Edit class="size-7 rounded-full" />
-                                        </div>
+                                    <DialogTrigger as-child @click="preview('create', templateTemplateColors[0].template.name, props.form.colors)">
+                                        <Edit class="size-7 rounded-full" />
                                     </DialogTrigger>
                                     <Create
                                         v-if="modalType === 'create' && previewData"
@@ -209,32 +217,32 @@ const updateField = (field: string, value: any) => {
                                 </Dialog>
 
                                 <Dialog>
-                                    <DialogTrigger as-child>
-                                        <div @click="preview('view', templateTemplateColors[0].template.name, props.form.colors)">
-                                            <ViewBtn class="size-7 rounded-full" />
-                                        </div>
+                                    <DialogTrigger as-child @click="preview('view', templateTemplateColors[0].template.name, props.form.colors)">
+                                        <ViewBtn class="size-7 rounded-full" />
                                     </DialogTrigger>
                                     <View v-if="modalType === 'view' && previewData" :data="previewData" @close="closeModals" />
                                 </Dialog>
 
-                                <div
+                                <button
+                                    type="button"
                                     class="bg-content flex cursor-pointer items-center justify-center rounded-md text-xs backdrop-blur-3xl"
                                     @click="custom_template_color = true"
                                 >
                                     <div
                                         v-if="custom_template_color"
-                                        class="h-full w-full rounded-md bg-gradient-to-r from-[var(--primary)] to-[var(--destructive)] px-3 py-2 font-bold"
+                                        class="h-full w-full rounded-md bg-gradient-to-r from-[var(--primary)] to-[var(--destructive)] px-3 py-2 font-bold text-white"
                                     >
                                         Selected
                                     </div>
                                     <div v-else class="bg-content h-full w-full rounded-md px-3 py-2">Select</div>
-                                </div>
+                                </button>
                             </div>
                         </div>
 
                         <div class="flex h-full w-full items-center justify-center">Your Custom Colors</div>
                     </div>
 
+                    <!-- Default Colors -->
                     <div
                         v-for="item in templateTemplateColors"
                         :key="item.id"
@@ -248,10 +256,8 @@ const updateField = (field: string, value: any) => {
 
                             <div class="flex items-center gap-1">
                                 <Dialog>
-                                    <DialogTrigger as-child>
-                                        <div @click="preview('create', item.template.name, item.template_color)">
-                                            <Edit class="size-7 rounded-full" />
-                                        </div>
+                                    <DialogTrigger as-child @click="preview('create', item.template.name, item.template_color)">
+                                        <Edit class="size-7 rounded-full" />
                                     </DialogTrigger>
                                     <Create
                                         v-if="modalType === 'create' && previewData"
@@ -262,26 +268,25 @@ const updateField = (field: string, value: any) => {
                                 </Dialog>
 
                                 <Dialog>
-                                    <DialogTrigger as-child>
-                                        <div @click="preview('view', item.template.name, item.template_color)">
-                                            <ViewBtn class="size-7 rounded-full" />
-                                        </div>
+                                    <DialogTrigger as-child @click="preview('view', item.template.name, item.template_color)">
+                                        <ViewBtn class="size-7 rounded-full" />
                                     </DialogTrigger>
                                     <View v-if="modalType === 'view' && previewData" :data="previewData" @close="closeModals" />
                                 </Dialog>
 
-                                <div
+                                <button
+                                    type="button"
                                     class="bg-content flex cursor-pointer items-center justify-center rounded-md text-xs backdrop-blur-3xl"
                                     @click="template_color_id = item.template_color.id"
                                 >
                                     <div
                                         v-if="template_color_id === item.template_color.id"
-                                        class="h-full w-full rounded-md bg-gradient-to-r from-[var(--primary)] to-[var(--destructive)] px-3 py-2 font-bold"
+                                        class="h-full w-full rounded-md bg-gradient-to-r from-[var(--primary)] to-[var(--destructive)] px-3 py-2 font-bold text-white"
                                     >
                                         Selected
                                     </div>
                                     <div v-else class="bg-content h-full w-full rounded-md px-3 py-2">Select</div>
-                                </div>
+                                </button>
                             </div>
                         </div>
 
@@ -290,7 +295,7 @@ const updateField = (field: string, value: any) => {
                 </div>
 
                 <div class="ps-2">
-                    <InputError :message="form.errors?.template_color_id" v-if="form.errors?.template_color_id"  />
+                    <InputError :message="form.errors?.template_color_id" v-if="form.errors?.template_color_id" />
                 </div>
             </div>
         </div>

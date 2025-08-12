@@ -50,15 +50,14 @@ const form = useForm({
     tiktok: '',
     youtube: '',
 
-    lightLogo: null,
-    darkLogo: null,
+    light_logo: null,
+    dark_logo: null,
     template_id: '',
     template_color_id: '',
     custom_template_color: false,
     colors: [],
 
-    user_phone_number: '',
-    user_email: '',
+    acceptSteps: false,
 });
 
 const currentStep = ref(1);
@@ -73,7 +72,7 @@ const submitForm = () => {
     }
 
     form.post(
-        route('websiteBuilder.store', { step: currentStep.value }),
+        route('websiteBuilder.wizard', { step: currentStep.value }),
         {
             onSuccess() {
                 if (currentStep.value < totalSteps) {
@@ -97,7 +96,7 @@ const updateField = (field: string, value: any) => {
         typeRef.value = value;
         fetchNewType();
 
-    } else {
+    }  else {
         (form as any)[field] = value;
     }
 };
@@ -150,7 +149,6 @@ const fetchNewType = async () => {
                             v-else-if="currentStep === 4" 
                             :form="form"
                             @update="updateField"
-                            :countries="props.countries"
                         />
                     </Transition>
 
@@ -165,14 +163,15 @@ const fetchNewType = async () => {
                         >
                             Previous
                         </Button>
-                        <Button type="button" @click="submitForm" :class="currentStep < totalSteps ? '' : 'glow-button'">
+                        <Button type="button" @click="submitForm" :class="currentStep < totalSteps ? '' : 'glow-button'"
+                            :disabled="currentStep === totalSteps && !form.acceptSteps">
                             <template v-if="currentStep < totalSteps">Next Step</template>
                             <template v-else>Create Website</template>
                         </Button>
                     </div>
                 </form>
 
-                <div class="absolute start-0 top-1 flex h-1 w-full -translate-y-1/2 justify-end">
+                <div class="absolute -start-2 -top-2 flex h-1 w-full -translate-y-1/2 justify-end">
                     <div class="grid w-55 grid-cols-4 gap-2">
                         <div
                             v-for="step in totalSteps"

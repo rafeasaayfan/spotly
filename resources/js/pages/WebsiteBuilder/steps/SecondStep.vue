@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import HeadingSmall from '@/components/headers/HeadingSmall.vue';
-import { Input, InputError, SelectWithSearch, PhoneNumberField } from '@/components/ui/fields';
+import { Input, InputError, PhoneNumberField, SelectWithSearch } from '@/components/ui/fields';
 import { SharedData } from '@/types';
 import { usePage } from '@inertiajs/vue3';
 import { Phone } from 'lucide-vue-next';
@@ -104,9 +104,15 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
         <!-- Phone and Email -->
         <div class="grid grid-cols-1 gap-6 md:col-span-3 md:grid-cols-2">
             <div class="col-span-1 flex flex-col gap-2">
-                <HeadingSmall title="Phone Numbe*" description="Enter your business contact number." />
+                <HeadingSmall title="Phone Number*" description="Enter your business contact number." />
                 <div class="flex flex-col gap-1 ps-2">
-                    <PhoneNumberField v-model="phone_number" :options="mappedCountryPhones" selectedCode="+961" />
+                    <PhoneNumberField
+                        v-model="phone_number"
+                        :options="mappedCountryPhones"
+                        selectedCode="+961"
+                        selectParentClass="sm:col-span-1 md:col-span-2 xl:col-span-1"
+                        inputClass="sm:col-span-6 md:col-span-5 xl:col-span-6"
+                    />
                     <InputError v-if="props.form.errors?.phone_number" :message="props.form.errors.phone_number" />
                 </div>
             </div>
