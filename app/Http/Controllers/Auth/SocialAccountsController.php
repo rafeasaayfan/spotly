@@ -45,9 +45,13 @@ class SocialAccountsController extends Controller
             ]
         );
 
-
         Auth::login($user);
 
-        return redirect()->intended(route('landing', absolute: false));
+        // If wizard was pending, create website now
+        if (session('pending_website_creation')) {
+            return app(\App\Http\Controllers\WebsiteBuilderController::class)->store();
+        }
+
+        return redirect()->intended(route('dashboard.index', absolute: false));
     }
 }

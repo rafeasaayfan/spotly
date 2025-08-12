@@ -31,9 +31,14 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
+        // If wizard was pending, create website now
+        if (session('pending_website_creation')) {
+            return app(\App\Http\Controllers\WebsiteBuilderController::class)->store();
+        }
+
         $request->session()->regenerate();
 
-        return redirect()->intended(route('landing', absolute: false));
+        return redirect()->intended(route('dashboard.index', absolute: false));
     }
 
     /**
