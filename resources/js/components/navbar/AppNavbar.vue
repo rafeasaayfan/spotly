@@ -9,7 +9,7 @@ import { Link } from '@inertiajs/vue3';
 import { onMounted, onUnmounted, ref } from 'vue';
 import DesktopNav from './content/DesktopNav.vue';
 import MobileNav from './content/MobileNav.vue';
-// import AuthAvatar from '@/components/AuthAvatar.vue';
+import AuthAvatar from '@/components/AuthAvatar.vue';
 
 interface Props {
     breadcrumbs?: BreadcrumbItem[];
