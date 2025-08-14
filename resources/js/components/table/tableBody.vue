@@ -37,7 +37,7 @@ function updateCol(key: string, value: any, id: number) {
         <Tr v-for="(row, index) in props.data" :key="index" class="text-body bg-content-3 w-3 text-sm font-medium">
             <Td class="max-w-5 border-none" v-if="props.tableConditions.enableRowsDelete">
                 <Checkbox
-                    :model-value="selectedIds.includes(row.id)"
+                    :modelValue="selectedIds.includes(row.id)"
                     @update:modelValue="(val) => typeof val === 'boolean' && toggleRowSelection(row.id, val)"
                 />
             </Td>
