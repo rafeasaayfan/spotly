@@ -21,7 +21,7 @@ const auth = computed(() => page.props.auth);
                 class="size-10 w-auto cursor-pointer rounded-full p-1 bg-primary"
             >
                 <Avatar class="size-8 overflow-hidden rounded-full">
-                    <AvatarImage v-if="auth.user.avatar" :src="auth.user.avatar" :alt="auth.user.name" />
+                    <AvatarImage v-if="auth.user?.avatar" :src="auth.user.avatar" :alt="auth.user.name" />
                     <AvatarFallback class="rounded-lg font-bold text-for-bg-primary">
                         {{ getInitials(auth.user?.name) }}
                     </AvatarFallback>
