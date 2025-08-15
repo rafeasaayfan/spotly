@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { DialogClose, DialogFooter } from '@/components/ui/dialog';
-import { File, Input, InputError, Select, SelectWithSearch, Textarea, PhoneNumberField, Color } from '@/components/ui/fields';
+import { File, Input, InputError, Select, SelectWithSearch, Textarea, PhoneNumberField, Color, MultiInput } from '@/components/ui/fields';
 import { Label } from '@/components/ui/label';
 
 import { useForm } from '@inertiajs/vue3';
@@ -50,7 +50,7 @@ function submit() {
             <Label :for="column.label">{{ column.label.charAt(0).toUpperCase() + column.label.slice(1) }}</Label>
 
             <Input
-                v-if="column.type === 'text' || column.type === 'email' || column.type === 'number' || column.type === 'password'"
+                v-if="column.type && ['text', 'email', 'password', 'time', 'datetime', 'date', 'tel', 'number'].includes(column.type)"
                 v-model="form[column.key]"
                 :type="column.type"
                 :id="column.label"
@@ -60,7 +60,7 @@ function submit() {
             />
 
             <Select
-                v-if="column.type === 'select'"
+                v-else-if="column.type === 'select'"
                 :id="column.label"
                 class="block w-full"
                 v-model="form[column.key]"
@@ -71,7 +71,7 @@ function submit() {
             </Select>
 
             <Textarea
-                v-if="column.type === 'textarea'"
+                v-else-if="column.type === 'textarea'"
                 :id="column.label"
                 v-model="form[column.key]"
                 class="block w-full"
@@ -81,7 +81,7 @@ function submit() {
             />
 
             <File
-                v-if="column.type === 'file'"
+                v-else-if="column.type === 'file'"
                 class="block w-full"
                 :id="column.label"
                 v-model="form[column.key]"
@@ -91,7 +91,7 @@ function submit() {
             />
 
             <SelectWithSearch
-                v-if="column.type === 'select_with_search'"
+                v-else-if="column.type === 'select_with_search'"
                 :id="column.label"
                 class="block w-full"
                 v-model="form[column.key]"
@@ -106,7 +106,7 @@ function submit() {
             />
 
             <PhoneNumberField
-                v-if="column.type === 'phone_number'"
+                v-else-if="column.type === 'phone_number'"
                 :id="column.label"
                 class="block w-full"
                 v-model="form[column.key]"
@@ -115,11 +115,19 @@ function submit() {
             />
 
             <Color
-                v-if="column.type === 'color'"
+                v-else-if="column.type === 'color'"
                 :id="column.label"
                 class="block w-full"
                 v-model="form[column.key]"
                 :required="column.required"
+            />
+
+            <MultiInput
+                v-else-if="column.type === 'multiInput'"
+                :id="column.label"
+                class="block w-full"
+                v-model="(form[column.key] as (string | number)[])"
+                :label="column.label"
             />
 
             <InputError :message="form.errors?.[column.key]" />
