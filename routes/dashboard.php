@@ -1,28 +1,27 @@
 <?php
 
-use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\Dashboard\Pages\Assignments\PermissionsController;
-use App\Http\Controllers\Dashboard\Pages\Assignments\RolesController;
-use App\Http\Controllers\Dashboard\Pages\Assignments\UserAssignmentsController;
-use App\Http\Controllers\Dashboard\Pages\CountriesController;
-use App\Http\Controllers\Dashboard\Pages\EmailSubscribersController;
-use App\Http\Controllers\Dashboard\Pages\MessagesController;
-use App\Http\Controllers\Dashboard\Pages\BrandsController;
-use App\Http\Controllers\Dashboard\Pages\UsersController;
-use App\Http\Controllers\Dashboard\Pages\WebsiteMessagesController;
-use App\Http\Controllers\Dashboard\Pages\WebsitesController;
-use App\Http\Controllers\Dashboard\Pages\WebsiteTypesController;
-use App\Http\Controllers\Dashboard\Pages\CategoriesController;
-use App\Http\Controllers\Dashboard\Pages\PaymentMethodsController;
-use App\Http\Controllers\Dashboard\Pages\PlansController;
-use App\Http\Controllers\Dashboard\Pages\Ui\TemplatesController;
-use App\Http\Controllers\Dashboard\Pages\Ui\TemplateColorsController;
-use App\Http\Controllers\Dashboard\Pages\Ui\TemplateTemplateColorsController;
-use App\Http\Controllers\Dashboard\Pages\WebsiteUsersController;
-use App\Http\Controllers\Dashboard\Pages\WebsitePaymentMethodsController;
-use App\Http\Controllers\Dashboard\Pages\WebsiteTemplatesController;
+use App\Http\Controllers\Spotly\Dashboard\DashboardController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\Assignments\PermissionsController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\Assignments\RolesController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\Assignments\UserAssignmentsController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\CountriesController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\EmailSubscribersController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\MessagesController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\BrandsController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\UsersController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\WebsiteMessagesController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\WebsitesController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\WebsiteTypesController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\CategoriesController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\PaymentMethodsController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\PlansController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\Ui\TemplatesController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\Ui\TemplateColorsController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\Ui\TemplateTemplateColorsController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\WebsiteUsersController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\WebsitePaymentMethodsController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\WebsiteTemplatesController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 
 Route::middleware(['auth', 'verified', 'can:dashboard_access'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
@@ -108,12 +107,3 @@ Route::middleware(['auth', 'verified', 'can:dashboard_access'])->prefix('dashboa
         });
     });
 });
-
-function dashboardPagesRoutes($name, $controller)
-{
-    $param = Str::singular($name);
-
-    Route::resource($name, $controller)->except(['destroy', 'update']);
-    Route::post($name . '/{' . $param . '}/update', [$controller, 'update'])->name($name . '.update');
-    Route::post($name . '/destroy', [$controller, 'destroy'])->name($name . '.destroy');
-}

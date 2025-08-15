@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\LandingController;
-use App\Http\Controllers\WebsiteBuilderController;
-use App\Http\Controllers\WebsitePreviewController;
+use App\Http\Controllers\Spotly\LandingController;
+use App\Http\Controllers\Spotly\WebsiteBuilderController;
+use App\Http\Controllers\Spotly\WebsitePreviewController;
 use App\Http\Middleware\HandleLanguage;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 Route::get('/setLang/{lang}', function ($lang = null) {
     App::setLocale($lang);
@@ -30,12 +31,21 @@ Route::middleware([HandleLanguage::class])->group(function () {
         Route::post('/customColors', [WebsiteBuilderController::class, 'customColors'])->name('customColors');
     });
 
-
     // Preview
     Route::post('/websites/preview', [WebsitePreviewController::class, 'preview'])->name('website.preview');
 
     require __DIR__ . '/dashboard.php';
     require __DIR__ . '/settings.php';
     require __DIR__ . '/auth.php';
-    require __DIR__ . '/webistes.php';
+    require __DIR__ . '/websites/e-commerce/web.php';
 });
+
+// Dashboards Routes function
+function dashboardPagesRoutes($name, $controller)
+{
+    $param = Str::singular($name);
+
+    Route::resource($name, $controller)->except(['destroy', 'update']);
+    Route::post($name . '/{' . $param . '}/update', [$controller, 'update'])->name($name . '.update');
+    Route::post($name . '/destroy', [$controller, 'destroy'])->name($name . '.destroy');
+}

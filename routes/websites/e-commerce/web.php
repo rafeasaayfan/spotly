@@ -11,3 +11,6 @@ Route::get('/e-commerce', function() {
 Route::get('/shop', function() {
     return Inertia::render('websites/e-commerce/spotly-ui/pages/shop/Shop');
 });
+
+
+require __DIR__ . '/dashboard.php';
