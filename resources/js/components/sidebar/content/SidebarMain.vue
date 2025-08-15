@@ -15,12 +15,16 @@ import {
 
 import { useSidebarNavigation } from '@/composables/navigation/useNavigation';
 import useAuth from '@/composables/useAuth';
-import { mainSidebarItems } from '@/config/navigations';
+import { type SidebarSection as SidebarSectionType } from '@/types';
 
 import { Link } from '@inertiajs/vue3';
 import { Minus, Plus } from 'lucide-vue-next';
 
-const { isActiveUrl, isHasChildActive, toggleDropdown, isDropdownOpen, onEnter, onAfterEnter, onLeave, onAfterLeave } = useSidebarNavigation(mainSidebarItems);
+const props = defineProps<{
+    mainSidebarItems: SidebarSectionType[],
+}>();
+
+const { isActiveUrl, isHasChildActive, toggleDropdown, isDropdownOpen, onEnter, onAfterEnter, onLeave, onAfterLeave } = useSidebarNavigation(props.mainSidebarItems);
 
 const { can } = useAuth();
 </script>

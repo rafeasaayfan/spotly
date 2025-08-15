@@ -12,14 +12,18 @@ import {
     SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 
-import { footerSidebarItems } from '@/config/navigations';
+import { type SidebarSection as SidebarSectionType  } from '@/types';
 import useAuth from '@/composables/useAuth';
 
 import { Minus, Plus } from 'lucide-vue-next';
 import { Link } from '@inertiajs/vue3';
 import { useSidebarNavigation } from '@/composables/navigation/useNavigation';
 
-const { isActiveUrl, isHasChildActive, toggleDropdown, isDropdownOpen, onEnter, onAfterEnter, onLeave, onAfterLeave } = useSidebarNavigation(footerSidebarItems);
+const props = defineProps<{
+    footerSidebarItems: SidebarSectionType[],
+}>();
+
+const { isActiveUrl, isHasChildActive, toggleDropdown, isDropdownOpen, onEnter, onAfterEnter, onLeave, onAfterLeave } = useSidebarNavigation(props.footerSidebarItems);
 
 const { can } = useAuth();
 </script>

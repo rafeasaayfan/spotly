@@ -4,11 +4,31 @@ import SidebarContentHeader from '@/components/sidebar/content/SidebarContentHea
 import SidebarMain from '@/components/sidebar/content/SidebarMain.vue';
 import SidebarUser from '@/components/sidebar/content/SidebarUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from '@/components/ui/sidebar';
-import { sidebarCollapsible, sidebarVariant } from '@/config/navigations';
+import { useSidebar } from '@/components/ui/sidebar/utils';
+import { sidebarCollapsible, sidebarVariant, mainSidebarItems, footerSidebarItems } from '@/config/navigations';
 import { SharedData } from '@/types';
 import { usePage } from '@inertiajs/vue3';
 
 const page = usePage<SharedData>();
+
+const { dashboardFor } = useSidebar();
+
+const getSidebarConfig = (dashboard: string) => {
+  switch (dashboard) {
+    case 'e-commerce':
+      return {
+        main: [],
+        footer: [],
+      }
+    default:
+      return {
+        main: mainSidebarItems,
+        footer: footerSidebarItems,
+      }
+  }
+}
+
+const sidebarConfig = getSidebarConfig(dashboardFor.value)
 </script>
 
 <template>
@@ -18,11 +38,11 @@ const page = usePage<SharedData>();
         </SidebarHeader>
 
         <SidebarContent>
-            <SidebarMain />
+            <SidebarMain :mainSidebarItems="sidebarConfig.main" />
         </SidebarContent>
 
         <SidebarFooter>
-            <SidebarContentFooter />
+            <SidebarContentFooter :footerSidebarItems="sidebarConfig.footer" />
             <SidebarUser />
         </SidebarFooter>
     </Sidebar>
