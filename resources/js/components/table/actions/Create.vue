@@ -122,6 +122,7 @@ function submit() {
                 class="block w-full"
                 v-model="form[column.key]"
                 :label="column.label"
+                :placeholder="column.placeholder"
             />
 
             <!-- <MultipleFileField

@@ -126,8 +126,9 @@ function submit() {
                 v-else-if="column.type === 'multiInput'"
                 :id="column.label"
                 class="block w-full"
-                v-model="(form[column.key] as (string | number)[])"
+                v-model="form[column.key]"
                 :label="column.label"
+                :placeholder="column.placeholder"
             />
 
             <InputError :message="form.errors?.[column.key]" />
