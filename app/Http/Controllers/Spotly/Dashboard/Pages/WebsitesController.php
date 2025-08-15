@@ -45,7 +45,7 @@ class WebsitesController extends Controller
             $users = $this->getRelation('user', ['name']);
             $websiteTypes = WebsiteType::select(['id', 'type'])->active()->get();
             $cities = config('cities.lebanon');
-            $countries = Country::with('active')->active()->get();
+            $countries = Country::with('media')->active()->get();
             $countries->transform(function ($item) {
                 $item->flag = $item->getFirstMediaUrl('flag');
                 return $item;
