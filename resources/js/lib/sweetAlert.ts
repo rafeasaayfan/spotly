@@ -9,9 +9,9 @@ export const confirmDialog = (options = {}) => {
         title: 'Are you sure?',
         icon: 'warning',
 
-        background: isDark.value ? 'hsl(0 0% 4%)' : 'hsl(0 0% 90%)',
-        confirmButtonColor: isDark.value ? 'hsl(355, 78%, 56%)' : 'hsl(0 72% 51%)',
-        cancelButtonColor: isDark.value ? 'hsl(220 60% 50%)' : 'hsl(216 80% 30%)',
+        background: isDark.value ? 'hsl(0 0% 4%)' : 'hsl(0 0% 96%)',
+        confirmButtonColor: isDark.value ? 'hsl(0, 74%, 40%)' : 'hsl(0 80% 40%)',
+        cancelButtonColor: isDark.value ? 'hsl(221, 83%, 50%)' : 'hsl(221 80% 30%)',
 
         color: isDark.value ? '#fff' : '#000',
 
@@ -33,13 +33,15 @@ export const toast = Swal.mixin({
     timer: 3000,
     showConfirmButton: false,
     timerProgressBar: true,
+    width: 'fit-content',
 
     // background: '#1e293b', // dark
-    background: isDark.value ? 'hsl(0 0% 4%)' : 'hsl(0 0% 90%)',
+    background: isDark.value ? 'hsl(0 0% 4%)' : 'hsl(0 0% 96%)',
     color: isDark.value ? '#fff' : '#000',
 
     customClass: {
         popup: 'popup',
+        icon: 'my-toast-icon'
     },
 
     didOpen: (toast) => {
