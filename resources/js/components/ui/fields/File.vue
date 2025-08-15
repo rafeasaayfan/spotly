@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { SharedData } from '@/types';
 
@@ -19,7 +19,9 @@ const props = defineProps<{
 const fileUpdatedName = ref('');
 const fileInputRef = ref<HTMLInputElement | null>(null);
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: File | File[] | null): void;
+}>();
 
 function handleFileChange(event: Event) {
   const target = event.target as HTMLInputElement;
@@ -35,6 +37,15 @@ function handleFileChange(event: Event) {
 }
 
 const src = props.src;
+
+watch(
+  () => props.src,
+  () => {
+    fileUpdatedName.value = ''; 
+    emit('update:modelValue', null);
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
