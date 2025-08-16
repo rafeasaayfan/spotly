@@ -55,6 +55,12 @@ const tableConditions = {
     <Head title="User assignments" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
-        <DataTable :tableData="props.data" :columns="columns" routeName="dashboard.userAssignments" :tableConditions="tableConditions" path="assignments/userAssignments" />
+        <DataTable
+            :tableData="props.data"
+            :columns="columns"
+            routeName="dashboard.userAssignments"
+            :tableConditions="tableConditions"
+            path="assignments/userAssignments"
+        />
     </DashboardLayout>
 </template>

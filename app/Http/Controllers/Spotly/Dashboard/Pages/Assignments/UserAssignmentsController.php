@@ -66,13 +66,13 @@ class UserAssignmentsController extends Controller
      */
     public function storeAssignments(Request $request, string $id)
     {
-        try {
-            $validated = $request->validate([
-                'action' => 'required|string|in:add,delete',
-                'type' => 'required|string|in:roles,permissions',
-                'id' => 'required|integer|exists:' . ($request->type === 'roles' ? 'roles' : 'permissions') . ',id',
-            ]);
+        $validated = $request->validate([
+            'action' => 'required|string|in:add,delete',
+            'type' => 'required|string|in:roles,permissions',
+            'id' => 'required|integer|exists:' . ($request->type === 'roles' ? 'roles' : 'permissions') . ',id',
+        ]);
 
+        try {
             $user = User::findOrFail($id);
 
             switch ($validated['type']) {

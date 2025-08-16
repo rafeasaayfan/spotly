@@ -99,11 +99,11 @@ Route::middleware(['auth', 'verified', 'can:dashboard_access'])->prefix('dashboa
         Route::post('roles/{id}/storeAssignments', [RolesController::class, 'storeAssignments'])->name('roles.storeAssignments');
 
         // Users assignments
-        Route::prefix('usersAssignments')->group(function () {
-            Route::get('/', [UserAssignmentsController::class, 'index'])->name('usersAssignments.index');
+        Route::prefix('usersAssignments')->name('userAssignments.')->group(function () {
+            Route::get('/', [UserAssignmentsController::class, 'index'])->name('index');
 
-            Route::get('/{id}/assign', [UserAssignmentsController::class, 'assignment'])->name('usersAssignments.assignment');
-            Route::post('/storeAssignments/{id}', [UserAssignmentsController::class, 'storeAssignments'])->name('usersAssignments.storeAssignments');
+            Route::get('/{id}/assign', [UserAssignmentsController::class, 'assignment'])->name('assignment');
+            Route::post('/storeAssignments/{id}', [UserAssignmentsController::class, 'storeAssignments'])->name('storeAssignments');
         });
     });
 });

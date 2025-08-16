@@ -47,7 +47,11 @@ const availableList = computed(() => {
     return type.value === 'roles' ? availableRoleList.value : availablePermissionList.value;
 });
 
+const disabledSubmit = ref(false);
+
 function submit(action: 'delete' | 'add', assignmentId: number, type: string, userId: number) {
+    disabledSubmit.value = true;
+
     router.post(
         route('dashboard.userAssignments.storeAssignments', { id: userId }),
         {
@@ -62,6 +66,9 @@ function submit(action: 'delete' | 'add', assignmentId: number, type: string, us
                     attached.value = response.data.attached;
                     availableRoles.value = response.data.availableRoles;
                     availablePermissions.value = response.data.availablePermissions;
+
+                    disabledSubmit.value = false;
+
                 } catch (error) {
                     console.error('Failed to fetch record:', error);
                 }
@@ -98,6 +105,7 @@ function submit(action: 'delete' | 'add', assignmentId: number, type: string, us
                                 size="icon"
                                 class="absolute end-0 top-0 rounded-s-none hover:scale-101"
                                 @click="submit('delete', item.id, type, attachedList.id)"
+                                :disabled="disabledSubmit"
                             >
                                 <Trash2 class="size-4.5" />
                             </Button>
@@ -128,6 +136,7 @@ function submit(action: 'delete' | 'add', assignmentId: number, type: string, us
                                 size="icon"
                                 class="absolute start-0 top-0 rounded-e-none hover:scale-101"
                                 @click="submit('add', item.id, type, attachedList.id)"
+                                :disabled="disabledSubmit"
                             >
                                 <PlusCircle class="size-4.5" />
                             </Button>

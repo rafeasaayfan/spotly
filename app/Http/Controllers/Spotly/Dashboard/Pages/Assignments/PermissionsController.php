@@ -43,13 +43,13 @@ class PermissionsController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'guard_name' => 'required|string|max:255',
-                'description' => 'required|string|max:255',
-            ]);
+        $validated = $request->validate([
+            'name' => 'required|string|min:3|max:40',
+            'guard_name' => 'required|string|in:web,website',
+            'description' => 'required|string|max:255',
+        ]);
 
+        try {
             $permission = new Permission($validated);
             $permission->save();
 
@@ -105,14 +105,14 @@ class PermissionsController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $validated = $request->validate([
+            'name' => 'required|string|min:3|max:40',
+            'guard_name' => 'required|string|in:web,website',
+            'description' => 'required|string|max:255',
+        ]);
+
         try {
             $data = Permission::findOrFail($id);
-
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'guard_name' => 'required|string|max:255',
-                'description' => 'required|string|max:255',
-            ]);
 
             $data->update($validated);
 

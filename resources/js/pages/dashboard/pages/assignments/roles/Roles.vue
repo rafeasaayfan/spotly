@@ -22,7 +22,7 @@ const columns = [
     { key: 'name', label: 'Name' },
     { key: 'guard_name', label: 'Guard Name' },
     { key: 'description', label: 'Description' },
-    { key: 'created_at', label: 'Created At' },
+    { key: 'created_at', label: 'Created At', type: 'date' },
 ];
 
 const props = defineProps<{

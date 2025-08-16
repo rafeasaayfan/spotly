@@ -6,9 +6,19 @@ const props = defineProps<{
 }>();
 
 const columns = [
-    { label: 'Name', key: 'name', type: 'text', required: true },
-    { label: 'Guard Name', key: 'guard_name', type: 'text', required: true },
-    { label: 'Description', key: 'description', type: 'textarea', required: true },
+    { key: 'name', label: 'Name', type: 'text', required: true },
+    {
+        key: 'guard_name',
+        label: 'Guard Name',
+        type: 'select',
+        placeholder: 'Select guard',
+        required: true,
+        options: [
+            { value: 'web', label: 'web' },
+            { value: 'website', label: 'website' },
+        ],
+    },
+    { key: 'description', label: 'Description', type: 'textarea', required: true },
 ];
 </script>
 

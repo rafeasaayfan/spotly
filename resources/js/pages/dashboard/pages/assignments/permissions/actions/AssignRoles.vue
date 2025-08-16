@@ -32,7 +32,11 @@ watch(
 const attachedRoleList = computed(() => attachedRoles.value ?? []);
 const availableRoleList = computed(() => availableRoles.value ?? []);
 
+const disabledSubmit = ref(false);
+
 function submit(action: 'delete' | 'add', roleId: number, permissionId: number) {
+    disabledSubmit.value = true;
+
     router.post(
         route('dashboard.permissions.storeAssignments', { id: permissionId }),
         {
@@ -45,6 +49,9 @@ function submit(action: 'delete' | 'add', roleId: number, permissionId: number) 
                     const response = await axios.get(route('dashboard.permissions.assignRoles', permissionId));
                     attachedRoles.value = response.data.attachedRoles;
                     availableRoles.value = response.data.availableRoles;
+
+                    disabledSubmit.value = false;
+
                 } catch (error) {
                     console.error('Failed to fetch record:', error);
                 }
@@ -73,6 +80,7 @@ function submit(action: 'delete' | 'add', roleId: number, permissionId: number) 
                             size="icon"
                             class="absolute end-0 top-0 rounded-s-none hover:scale-101"
                             @click="submit('delete', role.id, attachedRoleList.id)"
+                            :disabled="disabledSubmit"
                         >
                             <Trash2 class="size-4.5" />
                         </Button>
@@ -101,6 +109,7 @@ function submit(action: 'delete' | 'add', roleId: number, permissionId: number) 
                             size="icon"
                             class="absolute start-0 top-0 rounded-e-none hover:scale-101"
                             @click="submit('add', role.id, attachedRoleList.id)"
+                            :disabled="disabledSubmit"
                         >
                             <PlusCircle class="size-4.5" />
                         </Button>

@@ -22,7 +22,7 @@ const columns = [
     { key: 'name', label: 'Name' },
     { key: 'guard_name', label: 'Guard Name' },
     { key: 'description', label: 'Description' },
-    { key: 'created_at', label: 'Created At' },
+    { key: 'created_at', label: 'Created At', type: 'date' },
 ];
 
 const props = defineProps<{
@@ -50,6 +50,12 @@ const tableConditions = {
     <Head title="Permissions" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
-        <DataTable :tableData="props.permissions" :columns="columns" routeName="dashboard.permissions" :tableConditions="tableConditions" path="assignments/permissions" />
+        <DataTable
+            :tableData="props.permissions"
+            :columns="columns"
+            routeName="dashboard.permissions"
+            :tableConditions="tableConditions"
+            path="assignments/permissions"
+        />
     </DashboardLayout>
 </template>
