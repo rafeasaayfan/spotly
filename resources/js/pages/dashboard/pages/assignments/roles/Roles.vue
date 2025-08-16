@@ -50,6 +50,12 @@ const tableConditions = {
     <Head title="Roles" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
-        <DataTable :tableData="props.roles" :columns="columns" routeName="dashboard.roles" :tableConditions="tableConditions" path="assignments/roles" />
+        <DataTable
+            :tableData="props.roles"
+            :columns="columns"
+            routeName="dashboard.roles"
+            :tableConditions="tableConditions"
+            path="assignments/roles"
+        />
     </DashboardLayout>
 </template>
