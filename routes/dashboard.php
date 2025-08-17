@@ -103,7 +103,7 @@ Route::middleware(['auth', 'verified', 'can:dashboard_access'])->prefix('dashboa
             Route::get('/', [UserAssignmentsController::class, 'index'])->name('index');
 
             Route::get('/{id}/assign', [UserAssignmentsController::class, 'assignment'])->name('assignment');
-            Route::post('/storeAssignments/{id}', [UserAssignmentsController::class, 'storeAssignments'])->name('storeAssignments');
+            Route::post('/store-assignments/{id}', [UserAssignmentsController::class, 'storeAssignments'])->name('storeAssignments');
         });
     });
 });
