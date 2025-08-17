@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 import { DialogClose, DialogFooter } from '@/components/ui/dialog';
 import { File, Input, InputError, Select, SelectWithSearch, Textarea, PhoneNumberField, Color, MultiInput } from '@/components/ui/fields';
 
+import { toast } from '@/lib/sweetAlert';
+
 import { useForm } from '@inertiajs/vue3';
 
 import { Label } from '@/components/ui/label';
@@ -32,6 +34,13 @@ function submit() {
         onSuccess: () => {
             const closeButton = document.querySelector('[data-slot="dialog-close"]');
             (closeButton as HTMLElement)?.click();
+        },
+        onError: (errors: any) => {
+            Object.keys(errors).forEach((key) => {
+                if (!(key in form)) {
+                    toast.fire({ icon: 'error', title: errors[key] + ' ' });
+                }
+            });
         },
     });
 }

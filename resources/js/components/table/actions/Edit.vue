@@ -4,6 +4,8 @@ import { DialogClose, DialogFooter } from '@/components/ui/dialog';
 import { File, Input, InputError, Select, SelectWithSearch, Textarea, PhoneNumberField, Color, MultiInput } from '@/components/ui/fields';
 import { Label } from '@/components/ui/label';
 
+import { toast } from '@/lib/sweetAlert';
+
 import { useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 import { watch } from 'vue';
@@ -39,6 +41,13 @@ function submit() {
         onSuccess: () => {
             const closeButton = document.querySelector('[data-slot="dialog-close"]');
             (closeButton as HTMLElement)?.click();
+        },
+        onError: (errors: any) => {
+            Object.keys(errors).forEach((key) => {
+                if (!(key in form)) {
+                    toast.fire({ icon: 'error', title: errors[key] + ' ' });
+                }
+            });
         },
     });
 }
@@ -87,7 +96,7 @@ function submit() {
                 v-model="form[column.key]"
                 :name="column.key"
                 :label="column.label"
-                :src="typeof form[column.key] === 'string' ? form[column.key] : 'http'"
+                :src="form[column.key]"
             />
 
             <SelectWithSearch
