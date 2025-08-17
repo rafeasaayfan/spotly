@@ -46,7 +46,7 @@ const tableConditions = {
 </script>
 
 <template>
-    <Head title="EmailSubscribers" />
+    <Head title="Email Subscribers" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <DataTable

@@ -18,6 +18,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const columns = [
+    { key: 'images', label: 'Images', type: 'images' },
     { key: 'template_name', label: 'Template Name' },
     { key: 'templateColor_name', label: 'Template Color Name' },
     { key: 'is_default', label: 'Default', type: 'toggle' },
@@ -56,7 +57,7 @@ const tableConditions = {
 </script>
 
 <template>
-    <Head title="TemplateTemplateColors" />
+    <Head title="Template Template Colors" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <DataTable

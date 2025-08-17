@@ -74,7 +74,7 @@ const tableConditions = {
 
 <template>
 
-    <Head title="TemplateColors" />
+    <Head title="Template Colors" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <DataTable 

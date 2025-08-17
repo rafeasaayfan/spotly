@@ -33,7 +33,7 @@ export const mainSidebarItems: SidebarSection[] = [
                         icon: icons.Users,
                     },
                     {
-                        title: 'Website types',
+                        title: 'Website Types',
                         href: '/dashboard/website-types',
                         icon: icons.Type,
                     },
@@ -53,7 +53,7 @@ export const mainSidebarItems: SidebarSection[] = [
                         icon: icons.MessageCircle,
                     },
                     {
-                        title: 'Email subscribers',
+                        title: 'Email Subscribers',
                         href: '/dashboard/email-subscribers',
                         icon: icons.Mail,
                     },

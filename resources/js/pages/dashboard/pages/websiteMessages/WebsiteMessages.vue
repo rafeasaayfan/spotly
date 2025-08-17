@@ -84,7 +84,7 @@ const tableConditions = {
 </script>
 
 <template>
-    <Head title="WebsiteMessages" />
+    <Head title="Website Messages" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <DataTable

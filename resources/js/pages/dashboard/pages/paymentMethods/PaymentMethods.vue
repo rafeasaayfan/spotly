@@ -58,7 +58,7 @@ const tableConditions = {
 </script>
 
 <template>
-    <Head title="PaymentMethods" />
+    <Head title="Payment Methods" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <DataTable
