@@ -12,8 +12,8 @@ import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'TemplateTemplateColors',
-        href: '/dashboard/templateTemplateColors',
+        title: 'Template Template Colors',
+        href: '/dashboard/template-template-colors',
     },
 ];
 

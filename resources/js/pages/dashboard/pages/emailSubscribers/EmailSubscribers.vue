@@ -12,8 +12,8 @@ import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'EmailSubscribers',
-        href: '/dashboard/emailSubscribers',
+        title: 'Email Subscribers',
+        href: '/dashboard/email-subscribers',
     },
 ];
 

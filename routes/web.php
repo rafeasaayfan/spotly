@@ -35,17 +35,19 @@ Route::middleware([HandleLanguage::class])->group(function () {
     Route::post('/websites/preview', [WebsitePreviewController::class, 'preview'])->name('website.preview');
 
     require __DIR__ . '/dashboard.php';
+    require __DIR__ . '/client.php';
     require __DIR__ . '/settings.php';
     require __DIR__ . '/auth.php';
     require __DIR__ . '/websites/e-commerce/web.php';
 });
 
 // Dashboards Routes function
-function dashboardPagesRoutes($name, $controller)
+function dashboardPagesRoutes($uri, $controller)
 {
+    $name = Str::camel($uri);
     $param = Str::singular($name);
 
-    Route::resource($name, $controller)->except(['destroy', 'update']);
-    Route::post($name . '/{' . $param . '}/update', [$controller, 'update'])->name($name . '.update');
-    Route::post($name . '/destroy', [$controller, 'destroy'])->name($name . '.destroy');
+    Route::resource($uri, $controller)->except(['destroy', 'update'])->names($name);
+    Route::post($uri . '/{' . $param . '}/update', [$controller, 'update'])->name($name . '.update');
+    Route::post($uri . '/destroy', [$controller, 'destroy'])->name($name . '.destroy');
 }

@@ -12,8 +12,8 @@ import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'TemplateColors',
-        href: '/dashboard/ui/templateColors',
+        title: 'Template Colors',
+        href: '/dashboard/ui/template-colors',
     },
 ];
 
@@ -77,7 +77,12 @@ const tableConditions = {
     <Head title="TemplateColors" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
-        <DataTable :tableData="props.templateColors" :filter="filter" :columns="columns"
-            routeName="dashboard.templateColors" :tableConditions="tableConditions" path=ui/templateColors />
+        <DataTable 
+            :tableData="props.templateColors" 
+            :filter="filter" :columns="columns"
+            routeName="dashboard.templateColors"
+             :tableConditions="tableConditions" 
+            path=ui/templateColors
+        />
     </DashboardLayout>
 </template>

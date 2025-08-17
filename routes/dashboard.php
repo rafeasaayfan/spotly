@@ -30,18 +30,18 @@ Route::middleware(['auth', 'verified', 'can:dashboard_access'])->prefix('dashboa
     dashboardPagesRoutes('users', UsersController::class);
     Route::patch('users/{id}/status', [UsersController::class, 'changeStatus'])->name('users.status');
     //* Website types
-    dashboardPagesRoutes('websiteTypes', WebsiteTypesController::class);
-    Route::patch('websiteTypes/{id}/is_active', [WebsiteTypesController::class, 'toggleActive'])->name('websiteTypes.is_active');
+    dashboardPagesRoutes('website-types', WebsiteTypesController::class);
+    Route::patch('website-types/{id}/is_active', [WebsiteTypesController::class, 'toggleActive'])->name('websiteTypes.is_active');
     //* Email subscribers
-    dashboardPagesRoutes('emailSubscribers', EmailSubscribersController::class);
+    dashboardPagesRoutes('email-subscribers', EmailSubscribersController::class);
     //* Websites
     dashboardPagesRoutes('websites', WebsitesController::class);
     Route::patch('websites/{id}/is_active', [WebsitesController::class, 'toggleActive'])->name('websites.is_active');
     Route::patch('websites/{id}/is_verified', [WebsitesController::class, 'toggleVerified'])->name('websites.is_verified');
     Route::patch('websites/{id}/status', [WebsitesController::class, 'changeStatus'])->name('websites.status');
     //* Website messages
-    dashboardPagesRoutes('websiteMessages', WebsiteMessagesController::class);
-    Route::patch('websiteMessages/{id}/status', [WebsiteMessagesController::class, 'changeStatus'])->name('websiteMessages.status');
+    dashboardPagesRoutes('website-messages', WebsiteMessagesController::class);
+    Route::patch('website-messages/{id}/status', [WebsiteMessagesController::class, 'changeStatus'])->name('websiteMessages.status');
     //* Messages
     dashboardPagesRoutes('messages', MessagesController::class);
     Route::patch('messages/{id}/status', [MessagesController::class, 'changeStatus'])->name('messages.status');
@@ -55,17 +55,17 @@ Route::middleware(['auth', 'verified', 'can:dashboard_access'])->prefix('dashboa
     dashboardPagesRoutes('categories', CategoriesController::class);
     Route::patch('categories/{id}/is_active', [CategoriesController::class, 'toggleActive'])->name('categories.is_active');
     //* Payment Methods
-    dashboardPagesRoutes('paymentMethods', PaymentMethodsController::class);
-    Route::patch('paymentMethods/{id}/is_active', [PaymentMethodsController::class, 'toggleActive'])->name('paymentMethods.is_active');
+    dashboardPagesRoutes('payment-methods', PaymentMethodsController::class);
+    Route::patch('payment-methods/{id}/is_active', [PaymentMethodsController::class, 'toggleActive'])->name('paymentMethods.is_active');
     //* Website Payment Methods
-    dashboardPagesRoutes('websitePaymentMethods', WebsitePaymentMethodsController::class);
-    Route::patch('websitePaymentMethods/{id}/is_active', [WebsitePaymentMethodsController::class, 'toggleActive'])->name('websitePaymentMethods.is_active');
+    dashboardPagesRoutes('website-payment-methods', WebsitePaymentMethodsController::class);
+    Route::patch('website-payment-methods/{id}/is_active', [WebsitePaymentMethodsController::class, 'toggleActive'])->name('websitePaymentMethods.is_active');
     //* Website Users
-    dashboardPagesRoutes('websiteUsers', WebsiteUsersController::class);
-    Route::patch('websiteUsers/{id}/status', [WebsiteUsersController::class, 'changeStatus'])->name('websiteUsers.status');
+    dashboardPagesRoutes('website-users', WebsiteUsersController::class);
+    Route::patch('website-users/{id}/status', [WebsiteUsersController::class, 'changeStatus'])->name('websiteUsers.status');
     //* Website Templates
-    dashboardPagesRoutes('websiteTemplates', WebsiteTemplatesController::class);
-    Route::patch('websiteTemplates/{id}/is_active', [WebsiteTemplatesController::class, 'toggleActive'])->name('websiteTemplates.is_active');
+    dashboardPagesRoutes('website-templates', WebsiteTemplatesController::class);
+    Route::patch('website-templates/{id}/is_active', [WebsiteTemplatesController::class, 'toggleActive'])->name('websiteTemplates.is_active');
     //* Plans
     dashboardPagesRoutes('plans', PlansController::class);
     Route::patch('plans/{id}/is_active', [PlansController::class, 'toggleActive'])->name('plans.is_active');
@@ -77,12 +77,12 @@ Route::middleware(['auth', 'verified', 'can:dashboard_access'])->prefix('dashboa
         Route::patch('templates/{id}/is_active', [TemplatesController::class, 'toggleActive'])->name('templates.is_active');
 
         //* Template Colors
-        dashboardPagesRoutes('templateColors', TemplateColorsController::class);
-        Route::patch('templateColors/{id}/is_active', [TemplateColorsController::class, 'toggleActive'])->name('templateColors.is_active');
+        dashboardPagesRoutes('template-colors', TemplateColorsController::class);
+        Route::patch('template-colors/{id}/is_active', [TemplateColorsController::class, 'toggleActive'])->name('templateColors.is_active');
 
         //* Template Template Colors
-        dashboardPagesRoutes('templateTemplateColors', TemplateTemplateColorsController::class);
-        Route::patch('templateTemplateColors/{id}/is_default', [TemplateTemplateColorsController::class, 'toggleDefault'])->name('templateTemplateColors.is_default');
+        dashboardPagesRoutes('template-template-colors', TemplateTemplateColorsController::class);
+        Route::patch('template-template-colors/{id}/is_default', [TemplateTemplateColorsController::class, 'toggleDefault'])->name('templateTemplateColors.is_default');
     });
 
 
@@ -99,7 +99,7 @@ Route::middleware(['auth', 'verified', 'can:dashboard_access'])->prefix('dashboa
         Route::post('roles/{id}/storeAssignments', [RolesController::class, 'storeAssignments'])->name('roles.storeAssignments');
 
         // Users assignments
-        Route::prefix('usersAssignments')->name('userAssignments.')->group(function () {
+        Route::prefix('user-assignments')->name('userAssignments.')->group(function () {
             Route::get('/', [UserAssignmentsController::class, 'index'])->name('index');
 
             Route::get('/{id}/assign', [UserAssignmentsController::class, 'assignment'])->name('assignment');

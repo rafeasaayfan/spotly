@@ -12,8 +12,8 @@ import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'PaymentMethods',
-        href: '/dashboard/paymentMethods',
+        title: 'Payment Methods',
+        href: '/dashboard/payment-methods',
     },
 ];
 
