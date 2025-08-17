@@ -28,10 +28,10 @@ class TemplateTemplateColorsController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
-        // $data->transform(function ($item) {
-        //    $item->image = $item->getFirstMediaUrl('image');
-        //    return $item;
-        // });
+        $data->transform(function ($item) {
+           $item->images = $item->getMedia('images');
+           return $item;
+        });
 
         return Inertia::render('dashboard/pages/ui/templateTemplateColors/TemplateTemplateColors', [
             'templateTemplateColors' => $data,
@@ -64,8 +64,10 @@ class TemplateTemplateColorsController extends Controller
      */
     public function store(StoreTemplateTemplateColorRequest $request)
     {
+        
         try {
             $validated = $request->validated();
+            unset($validated['images']);
 
             $templateTemplateColor = new TemplateTemplateColor($validated);
             $templateTemplateColor->save();
@@ -95,7 +97,7 @@ class TemplateTemplateColorsController extends Controller
     public function show(string $id)
     {
         try {
-            $query = TemplateTemplateColor::with(['template', 'templateColor'])->findOrFail($id);
+            $query = TemplateTemplateColor::with(['media', 'template', 'templateColor'])->findOrFail($id);
             $query->images = $query->getMedia('images');
 
             $templateTemplateColor = $this->flattenRelationData($query, ['template_name', 'templateColor_name']);
@@ -117,10 +119,11 @@ class TemplateTemplateColorsController extends Controller
     public function edit(string $id)
     {
         try {
-            $templateTemplateColor = TemplateTemplateColor::findOrFail($id);
+            $templateTemplateColor = TemplateTemplateColor::with('media')->findOrFail($id);
+            $templateTemplateColor->images = $templateTemplateColor->getMedia('images');
+
             $templates = $this->getRelation('template', ['name']);
             $templateColors = $this->getRelation('templateColor', ['name']);
-            // $templatetemplatecolor->image = $templatetemplatecolor->getFirstMediaUrl('image');
 
             return response()->json([
                 'data' => $templateTemplateColor,
@@ -142,6 +145,7 @@ class TemplateTemplateColorsController extends Controller
     {
         try {
             $validated = $request->validated();
+            unset($validated['images']);
 
             $templateTemplateColor->fill($validated);
             $templateTemplateColor->save();

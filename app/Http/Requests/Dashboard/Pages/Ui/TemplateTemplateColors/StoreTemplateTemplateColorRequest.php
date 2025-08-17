@@ -23,7 +23,7 @@ class StoreTemplateTemplateColorRequest extends FormRequest
                     ->where('template_id', $this->input('template_id'))
             ],
             'is_default' => ['required', 'boolean'],
-            'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'], // 5MB max
+            'images.*' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,webp,svg', 'max:5120'], // 5MB max
         ];
     }
 }
