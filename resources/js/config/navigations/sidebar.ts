@@ -7,14 +7,21 @@ export const mainSidebarItems: SidebarSection[] = [
         name: 'Platform',
         items: [
             {
+               permission: ['dashboard_access'],
                 title: 'Dashboard',
                 href: '/dashboard',
                 icon: icons.LayoutGrid,
             },
+            {
+                 title: 'Client',
+                 href: '/client/my-websites',
+                 icon: icons.LayoutGrid,
+             },
         ],
     },
     {
         name: 'Spotly',
+        permission: ['dashboard_access'],
         items: [
             {
                 title: 'Spotly',
@@ -27,7 +34,7 @@ export const mainSidebarItems: SidebarSection[] = [
                     },
                     {
                         title: 'Website types',
-                        href: '/dashboard/websiteTypes',
+                        href: '/dashboard/website-types',
                         icon: icons.Type,
                     },
                     {
@@ -37,7 +44,7 @@ export const mainSidebarItems: SidebarSection[] = [
                     },
                     {
                         title: 'Payment Methods',
-                        href: '/dashboard/paymentMethods',
+                        href: '/dashboard/payment-methods',
                         icon: icons.CreditCard,
                     },
                     {
@@ -47,7 +54,7 @@ export const mainSidebarItems: SidebarSection[] = [
                     },
                     {
                         title: 'Email subscribers',
-                        href: '/dashboard/emailSubscribers',
+                        href: '/dashboard/email-subscribers',
                         icon: icons.Mail,
                     },
                     {
@@ -67,11 +74,11 @@ export const mainSidebarItems: SidebarSection[] = [
                     },
                     {
                         title: 'Template Colors',
-                        href: '/dashboard/ui/templateColors',
+                        href: '/dashboard/ui/template-colors',
                     },
                     {
                         title: 'Template Template Colors',
-                        href: '/dashboard/ui/templateTemplateColors',
+                        href: '/dashboard/ui/template-template-colors',
                     },
                 ],
             },
@@ -79,6 +86,7 @@ export const mainSidebarItems: SidebarSection[] = [
     },
     {
         name: 'Websites',
+        permission: ['dashboard_access'],
         items: [
             {
                 title: 'Management',
@@ -91,7 +99,7 @@ export const mainSidebarItems: SidebarSection[] = [
                     },
                     {
                         title: 'Website Users',
-                        href: '/dashboard/websiteUsers',
+                        href: '/dashboard/website-users',
                         icon: icons.Users,
                     },
                     {
@@ -106,17 +114,17 @@ export const mainSidebarItems: SidebarSection[] = [
                     },
                     {
                         title: 'Website Templates',
-                        href: '/dashboard/websiteTemplates',
+                        href: '/dashboard/website-templates',
                         icon: icons.LayoutTemplate,
                     },
                     {
                         title: 'Website Methods',
-                        href: '/dashboard/websitePaymentMethods',
+                        href: '/dashboard/website-payment-methods',
                         icon: icons.CreditCard,
                     },
                     {
                         title: 'Website Messages',
-                        href: '/dashboard/websiteMessages',
+                        href: '/dashboard/website-messages',
                         icon: icons.MessageCircle,
                     },
                 ],
@@ -140,11 +148,13 @@ export const mainSidebarItems: SidebarSection[] = [
 export const footerSidebarItems: SidebarSection[] = [
     {
         name: 'Roles & Permissions',
-        permission: 'assignments_access',
+        role: ['super_admin'],
+        permission: ['assignments_access'],
         items: [
             {
                 title: 'Assignments',
-                permission: 'assignments_access',
+                role: ['super_admin'],
+                permission: ['assignments_access'],
                 icon: icons.Diamond,
                 children: [
                     {
@@ -156,8 +166,8 @@ export const footerSidebarItems: SidebarSection[] = [
                         href: '/dashboard/assignments/roles',
                     },
                     {
-                        title: 'Users assignments',
-                        href: '/dashboard/assignments/usersAssignments',
+                        title: 'User Assignments',
+                        href: '/dashboard/assignments/user-assignments',
                     },
                 ],
             },

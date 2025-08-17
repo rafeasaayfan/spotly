@@ -25,17 +25,17 @@ const props = defineProps<{
 
 const { isActiveUrl, isHasChildActive, toggleDropdown, isDropdownOpen, onEnter, onAfterEnter, onLeave, onAfterLeave } = useSidebarNavigation(props.footerSidebarItems);
 
-const { can } = useAuth();
+const { canAny, hasAnyRole } = useAuth();
 </script>
 
 <template>
     <SidebarGroup v-for="section in footerSidebarItems" :key="section.name">
-        <SidebarGroupContent v-if="section.permission ? can(section.permission) : true">
+        <SidebarGroupContent v-if="(section.permission ? canAny(section.permission) : true) && (section.role ? hasAnyRole(section.role) : true)">
             <SidebarGroupLabel>{{ section.name }}</SidebarGroupLabel>
 
             <SidebarMenu class="cursor-pointer">
                 <SidebarMenuItem v-for="item in section.items" :key="item.title">
-                    <template v-if="item.permission ? can(item.permission) : true">
+                    <template v-if="(item.permission ? canAny(item.permission) : true) && (item.role ? hasAnyRole(item.role) : true)">
                         <SidebarMenuButton
                             as-child
                             :is-active="item.children?.length ? false : isActiveUrl(item.href ?? '')"

@@ -17,13 +17,15 @@ export interface NavItem {
     icon?: LucideIcon;
     isActive?: boolean;
     children?: NavItem[];
-    permission?: string;
+    role?: string[];
+    permission?: string[];
 }
 
 export interface SidebarSection {
     name: string;
     items: NavItem[];
-    permission?: string;
+    role?: string[];
+    permission?: string[];
 }
 
 export interface SharedData extends PageProps {
