@@ -43,7 +43,18 @@ function updateCol(key: string, value: any, id: number) {
             </Td>
 
             <Td v-for="column in props.columns" :key="column.key">
-                <template v-if="column.type === 'image'">
+                <template v-if="column.type === 'images'">
+                    <div class="flex max-w-full items-center gap-1 overflow-x-auto overflow-y-hidden">
+                        <Image
+                            v-for="item in row[column.key]"
+                            :key="item.uid"
+                            :src="item.original_url"
+                            alt="Image"
+                            class="h-10 w-10 !rounded-full object-cover"
+                        />
+                    </div>
+                </template>
+                <template v-else-if="column.type === 'image'">
                     <Image v-if="row[column.key]" :src="row[column.key]" alt="Image" class="h-10 w-10 !rounded-full object-cover" />
                 </template>
                 <template v-else-if="column.key === 'email_verified_at'">
@@ -97,7 +108,7 @@ function updateCol(key: string, value: any, id: number) {
                 <template v-else-if="column.type === 'url'">
                     <a :href="`${row[column.key]}`" target="_blank">{{ column.key }}</a>
                 </template>
-                <template v-else-if="column.type === 'color'"> 
+                <template v-else-if="column.type === 'color'">
                     <span v-html="formatters.color(row[column.key])"></span>
                 </template>
 
