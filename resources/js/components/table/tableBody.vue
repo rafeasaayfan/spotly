@@ -44,7 +44,7 @@ function updateCol(key: string, value: any, id: number) {
 
             <Td v-for="column in props.columns" :key="column.key">
                 <template v-if="column.type === 'images'">
-                    <div class="flex max-w-full items-center gap-1 overflow-x-auto overflow-y-hidden">
+                    <div class="flex max-w-full items-center gap-1 overflow-x-auto py-1">
                         <Image
                             v-for="item in row[column.key]"
                             :key="item.uid"
