@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('website_id')->constrained('websites')->onDelete('cascade');
             $table->foreignId('template_id')->constrained('templates')->onDelete('cascade');
             $table->foreignId('template_color_id')->constrained('template_colors')->onDelete('cascade');
+            $table->json('template_images')->nullable();
+            $table->boolean('is_custom')->default(false);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
