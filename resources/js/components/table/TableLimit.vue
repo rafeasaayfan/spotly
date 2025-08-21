@@ -17,7 +17,7 @@ const formattedLinks = computed(() => formatPaginationLinks(props.links));
 const limit = ref(props.selectedLimit);
 
 watch(limit, (newLimit) => {
-    props.applyFilters({ limit: newLimit });
+    props.applyFilters({ limit: newLimit, page: 1 });
 });
 </script>
 
