@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Checkbox, InputError } from '@/components/ui/fields';
+import { Label } from '@/components/ui/label';
 import { CreditCard, HelpCircle } from 'lucide-vue-next';
 import { computed } from 'vue';
 
@@ -68,8 +69,7 @@ const creationSteps = [
 
             <!-- Terms Checkbox -->
             <div class="border-muted mt-2 border-t pt-4 flex flex-col gap-2">
-                <Label for="accept" class="text-body flex cursor-pointer items-center gap-2.5 text-xs md:text-sm hover:font-bold 
-                    transition-all duration-100 ease-in-out">
+                <Label for="accept" class="text-xs md:text-sm hover:font-bold">
                     <Checkbox id="accept" v-model="acceptSteps" class="min-w-[19px]" />
                     <span>I have read and understood how the website creation process works and I accept the terms.</span>
                 </Label>
