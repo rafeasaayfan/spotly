@@ -76,7 +76,7 @@ function setFormData(key: string, value: any) {
                     v-model="localSearch"
                 />
 
-                <Search class="absolute top-1/2 left-2 h-5 w-5 -translate-y-1/2 transform" />
+                <Search class="absolute top-1/2 left-2 h-5 w-5 -translate-y-1/2 transform z-0 pointer-events-none" />
             </div>
 
             <DropdownMenu v-if="props.tableConditions.enableColsVisible">
@@ -112,7 +112,7 @@ function setFormData(key: string, value: any) {
                     </Button>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end" class="w-48">
+                <DropdownMenuContent align="end" class="w-60">
                     <DropdownMenuShortcut>Filter options</DropdownMenuShortcut>
 
                     <DropdownMenuSeparator />
