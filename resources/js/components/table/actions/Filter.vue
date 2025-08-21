@@ -57,7 +57,7 @@ watch(filterForm, (newVal) => {
 
 <template>
     <form class="grid grid-cols-1 gap-5" @submit.prevent="submit" enctype="multipart/form-data">
-        <div class="grid gap-1" v-for="(column, index) in props.filter" :key="index">
+        <div class="grid gap-2" v-for="(column, index) in props.filter" :key="index">
             <Label class="text-xs" :for="column.label">{{ column.label.charAt(0).toUpperCase() + column.label.slice(1) }}</Label>
 
             <Input
@@ -65,7 +65,6 @@ watch(filterForm, (newVal) => {
                 v-model="filterForm[column.key]"
                 :type="column.type"
                 :id="column.label"
-                class="mt-1 block w-full"
                 :autocomplete="column.type"
                 :placeholder="column.placeholder ?? column.label"
                 @input="submit"
@@ -74,7 +73,6 @@ watch(filterForm, (newVal) => {
             <Select
                 v-if="column.type === 'select'"
                 :id="column.label"
-                class="block"
                 v-model="filterForm[column.key]"
                 :option="column.placeholder ?? null"
                 :placeholder="column.placeholder ?? column.label"
@@ -87,14 +85,12 @@ watch(filterForm, (newVal) => {
                 v-if="column.type === 'textarea'"
                 :id="column.label"
                 v-model="filterForm[column.key]"
-                class="mt-1 block w-full"
                 :placeholder="column.placeholder ?? column.label"
                 @input="submit"
             />
 
             <File
                 v-if="column.type === 'file'"
-                class="mt-1 block w-full"
                 :id="column.label"
                 v-model="filterForm[column.key]"
                 :name="column.key"
@@ -105,7 +101,6 @@ watch(filterForm, (newVal) => {
             <SelectWithSearch
                 v-if="column.type === 'select_with_search'"
                 :id="column.label"
-                class="mt-1 block w-full"
                 v-model="filterForm[column.key]"
                 :placeholder="column.placeholder ?? column.label"
                 :options="
@@ -120,7 +115,7 @@ watch(filterForm, (newVal) => {
             <InputError class="mt-2" :message="props.form.errors?.[column.key]" />
         </div>
 
-        <div class="mt mt-1 flex justify-end">
+        <div class="mt-1 pt-2 border-t border-muted flex justify-end">
             <Button variant="secondary" size="sm" type="button" :disabled="isResetting" @click="resetForm()">
                 <LoaderCircle v-if="isResetting" class="h-4 w-4 animate-spin" />
                 <span v-else>Reset</span>
