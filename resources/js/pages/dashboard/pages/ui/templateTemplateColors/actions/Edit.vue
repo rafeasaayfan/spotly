@@ -46,7 +46,7 @@ const columns = [
         ],
     },
     {
-        key: 'images',
+        key: 'uiImages',
         label: 'Template Images',
         type: 'file',
         multiple: true,
