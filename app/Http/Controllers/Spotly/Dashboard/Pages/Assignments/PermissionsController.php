@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Spotly\Dashboard\Pages\Assignments;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Dashboard\FilterRequest;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use App\Traits\DataTableTrait;
@@ -17,7 +18,7 @@ class PermissionsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(FilterRequest $request)
     {
         $query = Permission::query();
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Spotly\Dashboard\Pages\Ui;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\TemplateColor;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class TemplateColorsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(FilterRequest $request)
     {
         $query = TemplateColor::query();
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Spotly\Dashboard\Pages\Ui;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\TemplateTemplateColor;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class TemplateTemplateColorsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(FilterRequest $request)
     {
         $query = TemplateTemplateColor::query();
 
@@ -29,7 +30,7 @@ class TemplateTemplateColorsController extends Controller
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
         $data->transform(function ($item) {
-           $item->images = $item->getMedia('images');
+           $item->uiImages = $item->getMedia('uiImages');
            return $item;
         });
 
@@ -67,17 +68,17 @@ class TemplateTemplateColorsController extends Controller
         
         try {
             $validated = $request->validated();
-            unset($validated['images']);
+            unset($validated['uiImages']);
 
             $templateTemplateColor = new TemplateTemplateColor($validated);
             $templateTemplateColor->save();
 
             // Handle multiple images
-            if ($request->hasFile('images')) {
-                foreach ($request->file('images') as $image) {
+            if ($request->hasFile('uiImages')) {
+                foreach ($request->file('uiImages') as $image) {
                     if ($image->isValid()) {
                         $templateTemplateColor->addMedia($image)
-                            ->toMediaCollection('images');
+                            ->toMediaCollection('uiImages');
                     }
                 }
             }
@@ -98,7 +99,7 @@ class TemplateTemplateColorsController extends Controller
     {
         try {
             $query = TemplateTemplateColor::with(['media', 'template', 'templateColor'])->findOrFail($id);
-            $query->images = $query->getMedia('images');
+            $query->uiImages = $query->getMedia('uiImages');
 
             $templateTemplateColor = $this->flattenRelationData($query, ['template_name', 'templateColor_name']);
 
@@ -120,7 +121,7 @@ class TemplateTemplateColorsController extends Controller
     {
         try {
             $templateTemplateColor = TemplateTemplateColor::with('media')->findOrFail($id);
-            $templateTemplateColor->images = $templateTemplateColor->getMedia('images');
+            $templateTemplateColor->uiImages = $templateTemplateColor->getMedia('uiImages');
 
             $templates = $this->getRelation('template', ['name']);
             $templateColors = $this->getRelation('templateColor', ['name']);
@@ -145,19 +146,19 @@ class TemplateTemplateColorsController extends Controller
     {
         try {
             $validated = $request->validated();
-            unset($validated['images']);
+            unset($validated['uiImages']);
 
             $templateTemplateColor->fill($validated);
             $templateTemplateColor->save();
 
-            if ($request->hasFile('images')) {
+            if ($request->hasFile('uiImages')) {
                 // Clear existing images if new ones are uploaded
-                $templateTemplateColor->clearMediaCollection('images');
+                $templateTemplateColor->clearMediaCollection('uiImages');
 
-                foreach ($request->file('images') as $image) {
+                foreach ($request->file('uiImages') as $image) {
                     if ($image->isValid()) {
                         $templateTemplateColor->addMedia($image)
-                            ->toMediaCollection('images');
+                            ->toMediaCollection('uiImages');
                     }
                 }
             }

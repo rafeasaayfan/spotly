@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Spotly\Dashboard\Pages\Assignments;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\User;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class UserAssignmentsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(FilterRequest $request)
     {
         $query = User::query();
         $columnsSearching = ['name', 'email'];

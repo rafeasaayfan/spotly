@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Spotly\Dashboard\Pages;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\Website;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class WebsitesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(FilterRequest $request)
     {
         $query = Website::query();
 
