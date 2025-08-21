@@ -8,6 +8,8 @@ use App\Models\WebsiteType;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\Client\ClientWebsitesIndexRequest;
+use App\Http\Requests\Client\UpdateWebsiteRequest;
+use App\Models\Country;
 use Inertia\Inertia;
 
 class ClientWebsitesController extends Controller
@@ -60,12 +62,6 @@ class ClientWebsitesController extends Controller
                 })
                 ->paginate($limit);
 
-            $websites->transform(function ($item) {
-                $item->lightLogo = $item->getFirstMediaUrl('lightLogo');
-                $item->darktLogo = $item->getFirstMediaUrl('darktLogo');
-                return $item;
-            });
-
             $websiteTypes = WebsiteType::active()->select('id', 'title')->get();
 
             return Inertia::render('client/myWebsites/Websites', [
@@ -77,6 +73,64 @@ class ClientWebsitesController extends Controller
                 'trace' => $e->getTraceAsString(),
             ]);
             return redirect()->back()->withErrors('An error occurred while fetching the websites. Please try again.');
+        }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $websiteId)
+    { 
+        $website = Website::with('media')->findOrFail($websiteId);
+        $website->light_logo = $website->getFirstMediaUrl('light_logo');
+        $website->dark_logo = $website->getFirstMediaUrl('dark_logo');
+
+        $countries = Country::with('media')->active()->get();
+        $countries->transform(function ($country) {
+            $country->flag = $country->getFirstMediaUrl('flag');
+            return $country;
+        });
+
+        $cities = config('cities.lebanon');
+
+        return Inertia::render('client/myWebsites/actions/Edit', [
+            'website' => $website,
+            'countries' => $countries,
+            'cities' => $cities,
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+    */
+    public function update(UpdateWebsiteRequest $request, Website $website)
+    { 
+        try {
+            $validated = $request->validated();
+            unset($validated['light_logo'], $validated['dark_logo']);
+
+            $website->fill($validated);
+
+            if ($request->hasFile('light_logo') && $request->file('light_logo')->isValid()) {
+                $website->clearMediaCollection('light_logo');
+                $website->addMediaFromRequest('light_logo')
+                    ->toMediaCollection('light_logo');
+            }
+            if ($request->hasFile('dark_logo') && $request->file('dark_logo')->isValid()) {
+                $website->clearMediaCollection('dark_logo');
+                $website->addMediaFromRequest('dark_logo')
+                    ->toMediaCollection('dark_logo');
+            }
+
+            $website->save();
+
+            return redirect()->back()->with('message', 'Website updated successfully');
+        } catch (\Exception $e) {
+            Log::error('Error in ClientWebsitesController@update: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            dd($e->getTraceAsString());
+            return redirect()->back()->withErrors('An error occurred while updating the website. Please try again.');
         }
     }
 }

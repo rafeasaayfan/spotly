@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label';
 import Delete from '@/components/ui/table/actions/Delete.vue';
 import Edit from '@/components/ui/table/actions/Edit.vue';
 import View from '@/components/ui/table/actions/View.vue';
+import { Link } from '@inertiajs/vue3';
 import { Activity, CalendarClock, CalendarIcon, CalendarMinus, CheckCircle, Clock, CopyIcon, DiamondPlus, Globe, XCircle } from 'lucide-vue-next';
 
 const props = defineProps<{
@@ -27,7 +28,9 @@ const props = defineProps<{
 
             <div class="flex items-center gap-2">
                 <View />
-                <Edit />
+                <Link :href="route('client.myWebsite.edit', website.id)">
+                    <Edit />
+                </Link>
                 <Delete />
             </div>
         </div>
