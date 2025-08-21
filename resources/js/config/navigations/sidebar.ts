@@ -13,8 +13,8 @@ export const mainSidebarItems: SidebarSection[] = [
                 icon: icons.LayoutGrid,
             },
             {
-                 title: 'Client',
-                 href: '/client/my-websites',
+                 title: 'My Websites',
+                 href: '/dashboard/my-websites',
                  icon: icons.LayoutGrid,
              },
         ],
