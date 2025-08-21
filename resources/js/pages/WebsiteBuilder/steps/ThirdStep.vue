@@ -19,6 +19,7 @@ const props = defineProps<{
         colors: Record<string, any>;
         light_logo: File | null;
         dark_logo: File | null;
+        template_images: string[];
         errors?: Record<string, string>;
     };
     type: string;
@@ -80,6 +81,11 @@ const template_color_id = computed({
     },
 });
 
+const template_images = computed({
+    get: () => props.form.template_images,
+    set: (val: ['']) => emit('update', 'template_images', val),
+});
+
 const custom_template_color = computed({
     get: () => props.form.custom_template_color,
     set: (val) => {
@@ -87,9 +93,18 @@ const custom_template_color = computed({
 
         if (val) {
             template_color_id.value = '';
+            template_images.value = [''];
         }
     },
 });
+
+const selectingItem = (item: any) => {
+    if(template_color_id.value != item.template_color.id) {
+        template_color_id.value = item.template_color.id;
+
+        template_images.value = item.uiImages.map((img: any) => img.original_url);
+    }
+}
 
 const light_logo = computed({
     get: () => props.form.light_logo,
@@ -277,7 +292,7 @@ const updateField = (field: string, value: any) => {
                                 <button
                                     type="button"
                                     class="bg-content flex cursor-pointer items-center justify-center rounded-md text-xs backdrop-blur-3xl"
-                                    @click="template_color_id = item.template_color.id"
+                                    @click="selectingItem(item)"
                                 >
                                     <div
                                         v-if="template_color_id === item.template_color.id"
@@ -290,7 +305,7 @@ const updateField = (field: string, value: any) => {
                             </div>
                         </div>
 
-                        <Carousel :items="item.images" height="250px" width="450px" :showArrows="false" />
+                        <Carousel :items="item.uiImages" height="250px" width="450px" :showArrows="false" />
                     </div>
                 </div>
 

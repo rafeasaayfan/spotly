@@ -25,30 +25,37 @@ class WebsiteBuilderController extends Controller
      */
     public function index(Request $request)
     {
-        $type = $request->input('type');
-        $websiteTypes = WebsiteType::active()->get();
-        $typeId = $websiteTypes->firstWhere('type', $type)?->id;
+        try {
+            $type = $request->input('type');
+            $websiteTypes = WebsiteType::active()->get();
+            $typeId = $websiteTypes->firstWhere('type', $type)?->id;
 
-        $countries = Country::with('media')->active()->get();
-        $countries->transform(function ($item) {
-            $item->flag = $item->getFirstMediaUrl('flag');
-            return $item;
-        });
+            $countries = Country::with('media')->active()->get();
+            $countries->transform(function ($item) {
+                $item->flag = $item->getFirstMediaUrl('flag');
+                return $item;
+            });
 
-        $cities = config('cities.lebanon');
+            $cities = config('cities.lebanon');
 
-        $templates = Template::active()->where('website_type_id', $typeId)
-            ->with(['templateColors'])
-            ->get();
+            $templates = Template::active()->where('website_type_id', $typeId)
+                ->with(['templateColors'])
+                ->get();
 
-        return Inertia::render('websiteBuilder/Wizard', [
-            'websiteTypes' => $websiteTypes,
-            'type' => $type,
-            'typeId' => $typeId,
-            'countries' => $countries,
-            'cities' => $cities,
-            'templates' => $templates,
-        ]);
+            return Inertia::render('websiteBuilder/Wizard', [
+                'websiteTypes' => $websiteTypes,
+                'type' => $type,
+                'typeId' => $typeId,
+                'countries' => $countries,
+                'cities' => $cities,
+                'templates' => $templates,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error in WebsiteBuilderController@index: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->withErrors('An error occurred while fetching website builder data. Please try again.');
+        }
     }
 
     /**
@@ -56,26 +63,36 @@ class WebsiteBuilderController extends Controller
      */
     public function getTemplateTemplateColors(Request $request)
     {
-        $templateId = $request->input('templateId');
+        try {
+            $templateId = $request->input('templateId');
 
-        $templateTemplateColors = TemplateTemplateColor::with(['template:id,name', 'templateColor'])
-            ->where('template_id', $templateId)
-            ->get();
-        $templateTemplateColors->transform(function ($item) {
-            $item->images = $item->getMedia('images')->toArray();
-            return $item;
-        });
-
-        return response()->json([
-            'templateTemplateColors' => $templateTemplateColors
-        ]);
+            $templateTemplateColors = TemplateTemplateColor::with(['template:id,name', 'templateColor'])
+                ->where('template_id', $templateId)
+                ->get();
+            $templateTemplateColors->transform(function ($item) {
+                $item->uiImages = $item->getMedia('uiImages')->toArray();
+                return $item;
+            });
+    
+            return response()->json([
+                'templateTemplateColors' => $templateTemplateColors
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error in WebsiteBuilderController@getTemplateTemplateColors: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return response()->json([
+                'message' => 'Error on WebsiteBuilderController@getTemplateTemplateColors',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 
     /**
      * Handle custom color selection for a template.
      */
     public function customColors(CustomColorsRequest $request)
-    { 
+    {
         return response()->json([
             'validate' => $request->validated() ? true : false,
             'message' => 'Your custom colors selected successfully.'
@@ -128,43 +145,12 @@ class WebsiteBuilderController extends Controller
             session()->regenerate();
 
             return redirect()->route('e-commerce.dashboard.index')->with('message', 'Your website has been created!');
-
         } catch (\Exception $e) {
             Log::error('Error in WebsiteBuilderController@store: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
             ]);
 
             return redirect()->back()->with(['message' => "An error occurred while creating the website. Please try again."], 500);
-        }
-    }
-
-    /**
-     * Store the website template data.
-     */
-    public function storeTemplate($websiteId, $websiteTemplateData)
-    {
-        $templarecolorId = '';
-
-        try {
-
-            if (!empty($websiteTemplateData['custom_template_color']) && $websiteTemplateData['custom_template_color']) {
-                $templarecolors = TemplateColor::create($websiteTemplateData['colors']);
-                $templarecolorId = $templarecolors->id;
-            } else {
-                $templarecolorId = $websiteTemplateData['template_color_id'];
-            }
-
-            WebsiteTemplate::create([
-                'website_id' => $websiteId,
-                'template_id' => $websiteTemplateData['template_id'],
-                'template_color_id' => $templarecolorId,
-                'is_active' => 1
-            ]);
-            
-        } catch (\Exception $e) {
-            Log::error('Error in WebsiteBuilderController@storeTemplate: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
         }
     }
 
@@ -187,9 +173,41 @@ class WebsiteBuilderController extends Controller
                 Storage::delete($thirdStepData['light_logo']);
                 Storage::delete($thirdStepData['dark_logo']);
             }
-
         } catch (\Exception $e) {
             Log::error('Error in WebsiteBuilderController@storeLogos: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+        }
+    }
+
+    /**
+     * Store the website template data.
+     */
+    public function storeTemplate($websiteId, $websiteTemplateData)
+    {
+        $templarecolorId = '';
+        $template_images = [''];
+
+        try {
+            // check if is a custom colors
+            if (!empty($websiteTemplateData['custom_template_color']) && $websiteTemplateData['custom_template_color']) {
+                $templarecolors = TemplateColor::create($websiteTemplateData['colors']);
+                $templarecolorId = $templarecolors->id;
+            } else {
+                $templarecolorId = $websiteTemplateData['template_color_id'];
+                $template_images = $websiteTemplateData['template_images'];
+            }
+
+            WebsiteTemplate::create([
+                'website_id' => $websiteId,
+                'template_id' => $websiteTemplateData['template_id'],
+                'template_color_id' => $templarecolorId,
+                'template_images' => $template_images,
+                'is_custom' => $websiteTemplateData['custom_template_color'],
+                'is_active' => 1
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error in WebsiteBuilderController@storeTemplate: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
             ]);
         }

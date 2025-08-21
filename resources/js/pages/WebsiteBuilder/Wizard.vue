@@ -56,6 +56,7 @@ const form = useForm({
     template_color_id: '',
     custom_template_color: false,
     colors: [],
+    template_images: [],
 
     acceptSteps: false,
 });

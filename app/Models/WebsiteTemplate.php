@@ -3,10 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
 
-class WebsiteTemplate extends Model
+class WebsiteTemplate extends Model 
 {
-    protected $fillable = ['website_id', 'template_id', 'template_color_id', 'is_active'];
+    protected $fillable = ['website_id', 'template_id', 'template_color_id', 'template_images', 'is_custom', 'is_active'];
+
+    protected $casts = [
+        'template_images' => 'array'
+    ];
 
     /**
      * Get the website that the template color is associated with.

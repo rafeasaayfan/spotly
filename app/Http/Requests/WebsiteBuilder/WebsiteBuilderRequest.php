@@ -81,12 +81,21 @@ class WebsiteBuilderRequest extends FormRequest
                     'light_logo' => ['nullable', 'file', 'mimes:svg', 'max:2048', 'required_with:dark_logo'],
                     'dark_logo' => ['nullable', 'file', 'mimes:svg', 'max:2048', 'required_with:light_logo'],
 
+                    'template_images' => [
+                        Rule::when(
+                            $this->input('custom_template_color'),
+                            ['nullable'],
+                            ['required', 'array']
+                        )
+                    ],
+                    'template_images.*' => ['string', 'url'],
+
                     'template_id' => ['required', 'exists:templates,id'],
                     'template_color_id' => [
                         Rule::when(
-                            !$this->input('custom_template_color'),
-                            ['required', 'exists:template_colors,id'],
-                            ['nullable']
+                            $this->input('custom_template_color'),
+                            ['nullable'],
+                            ['required', 'exists:template_colors,id']
                         )
                     ],
                     'custom_template_color' => ['nullable', 'boolean'],
