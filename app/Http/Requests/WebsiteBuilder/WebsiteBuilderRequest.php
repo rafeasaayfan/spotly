@@ -69,10 +69,10 @@ class WebsiteBuilderRequest extends FormRequest
                             }
                         }
                     ],
-                    'instagram' => ['nullable', 'string', 'max:255'],
-                    'facebook' => ['nullable', 'string', 'max:255'],
-                    'tiktok' => ['nullable', 'string', 'max:255'],
-                    'youtube' => ['nullable', 'string', 'max:255'],
+                    'instagram' => ['nullable', 'url', 'max:255'],
+                    'facebook' => ['nullable', 'url', 'max:255'],
+                    'tiktok' => ['nullable', 'url', 'max:255'],
+                    'youtube' => ['nullable', 'url', 'max:255'],
                 ];
                 break;
 
