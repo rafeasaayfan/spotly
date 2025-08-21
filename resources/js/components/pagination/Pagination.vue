@@ -1,22 +1,24 @@
 <script setup lang="ts">
+import { type TableConditions } from '@/lib/dataTable';
 import { generateBladeStylePagination, type PaginationData, type PaginationLink } from '@/lib/pagination';
 import type { SharedData } from '@/types';
 import { usePage } from '@inertiajs/vue3';
 import { ArrowBigLeftDash, ArrowBigRightDash, Ellipsis } from 'lucide-vue-next';
-import { PaginationBtn } from '../ui/pagination';
 import { computed } from 'vue';
-import { type TableConditions } from '@/lib/dataTable';
+import { PaginationBtn } from '../ui/pagination';
 
 const props = defineProps<{
     links: PaginationLink[];
     data?: PaginationData;
-    applyFilters: (overrides: Record<string, any>) => void;
-    tableConditions: TableConditions;
+    applyFilters?: (overrides: Record<string, any>) => void;
+    tableConditions?: TableConditions;
 }>();
 
-const paginationLinks = computed(() =>
-    generateBladeStylePagination(props.data, props.links)
-);
+const emit = defineEmits<{
+    (e: 'updatePage', field: number): void;
+}>();
+
+const paginationLinks = computed(() => generateBladeStylePagination(props.data, props.links));
 
 const page = usePage<SharedData>();
 
@@ -25,12 +27,18 @@ function goToPage(url: string | null) {
 
     const pageNumber = new URL(url).searchParams.get('page');
 
-    props.applyFilters({ page: pageNumber });
+    if (pageNumber) {
+        if (props.applyFilters) {
+            props.applyFilters({ page: pageNumber });
+        } else {
+            emit('updatePage', Number(pageNumber));
+        }
+    }
 }
 </script>
 
 <template>
-    <div v-if="paginationLinks.length > 1 && props.tableConditions.enablePagination" class="flex items-center gap-1.5">
+    <div v-if="paginationLinks.length > 1 && (props.tableConditions?.enablePagination ?? true)" class="flex items-center gap-1.5">
         <div v-for="link in paginationLinks" :key="link.label">
             <PaginationBtn @click="goToPage(link.url)" :disabled="!link.url" :active="link.active">
                 <template v-if="!isNaN(Number(link.label))">
@@ -52,4 +60,3 @@ function goToPage(url: string | null) {
         </div>
     </div>
 </template>
-
