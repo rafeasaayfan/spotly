@@ -137,7 +137,7 @@ onUnmounted(() => {
           class="carousel-slide w-full h-full flex-shrink-0 flex-grow-0 flex-basis-full">
           <slot name="slide" :item="item" :index="index">
             <div class="w-full h-full">
-              <img v-if="item.original_url" :src="item.original_url" :alt="item.title || `Slide ${index + 1}`"
+              <img :src="item.original_url ?? item" :alt="item.title || `Slide ${index + 1}`"
                 class="object-cover rounded-md" :style="{ height: height, width: width }" />
 
               <div class="absolute bottom-0 top-0 start-0 text-center text-white z-20 pb-8">
@@ -166,7 +166,7 @@ onUnmounted(() => {
     <!-- Dots Navigation -->
     <div v-if="showDots && totalSlides > 1"
       class="w-full absolute bottom-0 start-0 flex items-center justify-start sm:justify-center gap-1 ps-3 pb-3 z-10">
-      <Button v-for="(item, index) in items" :key="index" @click="goToSlide(index)" size="icon"
+      <Button v-for="(item, index) in items" :key="index" @click="goToSlide(index)" type="button" size="icon"
         class="size-3.5 bg-white/50 hover:bg-white/80 rounded-full active:bg-white/90 active:ring-2 active:ring-[var(--primary)]"
         :class="{ 'size-4 bg-white': index === currentIndex }" :aria-label="`Go to slide ${index + 1}`" />
     </div>
