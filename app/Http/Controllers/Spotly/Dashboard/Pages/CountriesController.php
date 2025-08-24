@@ -7,10 +7,8 @@ use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\Country;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\Countries\StoreCountryRequest;
 use App\Http\Requests\Dashboard\Pages\Countries\UpdateCountryRequest;
-use Illuminate\Support\Facades\Log;
 
 class CountriesController extends Controller
 {
@@ -34,9 +32,7 @@ class CountriesController extends Controller
             return $item;
         });
 
-        return Inertia::render('dashboard/pages/countries/Countries', [
-            'countries' => $data,
-        ]);
+        return $this->inertiaRender('dashboard/pages/countries/Countries', ['countries' => $data]);
     }
 
     /**
@@ -65,12 +61,9 @@ class CountriesController extends Controller
 
             $country->save();
 
-            return redirect()->route('dashboard.countries.index')->with('message', 'Country created successfully');
+            return $this->redirectSuccess('dashboard.countries.index', 'Country created successfully');
         } catch (\Exception $e) {
-            Log::error('Error in CountriesController@store: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while creating the country. Please try again.');
+            return $this->logResponse('CountriesController@store', $e, 'An error occurred while creating the country');
         }
     }
 
@@ -83,14 +76,11 @@ class CountriesController extends Controller
             $country = Country::findOrFail($id);
             $country->flag = $country->getFirstMediaUrl('flag');
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $country,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on CountriesController@show',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('CountriesController@show', $e, 'An error when fetching the show page');
         }
     }
 
@@ -104,14 +94,11 @@ class CountriesController extends Controller
 
             $country->flag = $country->getFirstMediaUrl('flag');
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $country,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on CountriesController@edit',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('CountriesController@edit', $e, 'An error when fetching the edit page');
         }
     }
 
@@ -134,12 +121,9 @@ class CountriesController extends Controller
 
             $country->save();
 
-            return redirect()->route('dashboard.countries.index')->with('message', 'Country updated successfully');
+            return $this->redirectSuccess('dashboard.countries.index', 'Country updated successfully');
         } catch (\Exception $e) {
-            Log::error('Error in CountriesController@update: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the country. Please try again.');
+            return $this->logResponse('CountriesController@update', $e, 'An error occurred while updating the country');
         }
     }
 
@@ -156,12 +140,9 @@ class CountriesController extends Controller
 
             Country::destroy($validated['ids']);
 
-            return redirect()->back()->with('message', __('Country(s) deleted successfully.'));
+            return $this->backSuccess('Country(s) deleted successfully');
         } catch (\Exception $e) {
-            Log::error('Error in CountriesController@destroy: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while deleting the country(s). Please try again.');
+            return $this->logResponse('CountriesController@destroy', $e, 'An error occurred while deleting the country(s)');
         }
     }
 
@@ -183,12 +164,9 @@ class CountriesController extends Controller
                 ? 'Country activated successfully.'
                 : 'Country deactivated successfully.';
 
-            return redirect()->back()->with('message', $message);
+            return $this->backSuccess($message);
         } catch (\Exception $e) {
-            Log::error('Error in CountriesController@toggleActive: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the country status. Please try again.');
+            return $this->logResponse('CountriesController@toggleActive', $e, 'An error occurred updating the country status');
         }
     }
 }

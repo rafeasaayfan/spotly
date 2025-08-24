@@ -7,10 +7,8 @@ use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\User;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Log;
 
 class UserAssignmentsController extends Controller
 {
@@ -28,9 +26,7 @@ class UserAssignmentsController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
-        return Inertia::render('dashboard/pages/assignments/userAssignments/Index', [
-            'data' => $data,
-        ]);
+        return $this->inertiaRender('dashboard/pages/assignments/userAssignments/Index', ['data' => $data]);
     }
 
     /**
@@ -49,16 +45,13 @@ class UserAssignmentsController extends Controller
                 $query->where('users.id', $id);
             })->get();
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'attached' => $attached,
                 'availablePermissions' => $availablePermissions,
                 'availableRoles' => $availableRoles,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on UserAssignmentsController@assignment',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('UserAssignmentsController@assignment', $e, 'An error when fetching the assignment page');
         }
     }
 
@@ -100,15 +93,12 @@ class UserAssignmentsController extends Controller
                     break;
 
                 default:
-                    return redirect()->back()->withErrors('Invalid assignment type.');
+                    return $this->backError('Invalid assignment type');
             }
 
-            return redirect()->back()->with('message', $message);
+            return $this->backSuccess($message);
         } catch (\Exception $e) {
-            Log::error('Error on UserAssignmentsController@storeAssignments: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating assignments. Please try again.');
+            return $this->logResponse('UserAssignmentsController@storeAssignments', $e, 'An error occurred while updating the assignments');
         }
     }
 }

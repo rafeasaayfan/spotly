@@ -7,13 +7,11 @@ use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\Website;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\Websites\StoreWebsiteRequest;
 use App\Http\Requests\Dashboard\Pages\Websites\UpdateWebsiteRequest;
 use App\Models\Country;
 use App\Models\WebsiteType;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class WebsitesController extends Controller
 {
@@ -32,9 +30,7 @@ class WebsitesController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
-        return Inertia::render('dashboard/pages/websites/Websites', [
-            'websites' => $data,
-        ]);
+        return $this->inertiaRender('dashboard/pages/websites/Websites', ['websites' => $data]);
     }
 
     /**
@@ -52,17 +48,14 @@ class WebsitesController extends Controller
                 return $item;
             });
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'users' => $users,
                 'websiteTypes' => $websiteTypes,
                 'cities' => $cities,
                 'countries' => $countries,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on WebsitesController@create',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('WebsitesController@create', $e, 'An error when fetching the create page');
         }
     }
 
@@ -90,12 +83,9 @@ class WebsitesController extends Controller
 
             $website->save();
 
-            return redirect()->route('dashboard.websites.index')->with('message', 'Website created successfully');
+            return $this->redirectSuccess('dashboard.websites.index', 'Website created successfully');
         } catch (\Exception $e) {
-            Log::error('Error in WebsitesController@store: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while creating the website. Please try again.');
+            return $this->logResponse('WebsitesController@store', $e, 'An error occurred while creating the website');
         }
     }
 
@@ -110,14 +100,11 @@ class WebsitesController extends Controller
             $website->dark_logo = $website->getFirstMediaUrl('dark_logo');
             $result = $this->flattenRelationData($website, ['owner_name', 'websiteType_type', 'approvedOrDeniedBy_name']);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $result,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on WebsitesController@show',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('WebsitesController@show', $e, 'An error when fetching the show page');
         }
     }
 
@@ -129,8 +116,7 @@ class WebsitesController extends Controller
         try {
             $website = Website::with('media')->findOrFail($id);
             $users = $this->getRelation('user', ['name']);
-            $websiteTypes = $this->getRelation('websiteType', ['type'])
-            ;
+            $websiteTypes = $this->getRelation('websiteType', ['type']);
             $cities = config('cities.lebanon');
             $countries = Country::with('media')->active()->get();
             $countries->transform(function ($item) {
@@ -141,7 +127,7 @@ class WebsitesController extends Controller
             $website->light_logo = $website->getFirstMediaUrl('light_logo');
             $website->dark_logo = $website->getFirstMediaUrl('dark_logo');
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $website,
                 'users' => $users,
                 'websiteTypes' => $websiteTypes,
@@ -149,10 +135,7 @@ class WebsitesController extends Controller
                 'countries' => $countries,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on WebsitesController@edit',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('WebsitesController@edit', $e, 'An error when fetching the edit page');
         }
     }
 
@@ -180,12 +163,9 @@ class WebsitesController extends Controller
 
             $website->save();
 
-            return redirect()->route('dashboard.websites.index')->with('message', 'Website updated successfully');
+            return $this->redirectSuccess('dashboard.websites.index', 'Website updated successfully');
         } catch (\Exception $e) {
-            Log::error('Error in WebsitesController@update: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the website. Please try again.');
+            return $this->logResponse('WebsitesController@update', $e, 'An error occurred while updating the website');
         }
     }
 
@@ -202,12 +182,9 @@ class WebsitesController extends Controller
 
             Website::destroy($validated['ids']);
 
-            return redirect()->back()->with('message', __('Website(s) deleted successfully.'));
+            return $this->backSuccess('Website(s) deleted successfully');
         } catch (\Exception $e) {
-            Log::error('Error in WebsitesController@destroy: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while deleting the website(s). Please try again.');
+            return $this->logResponse('WebsitesController@destroy', $e, 'An error occurred while deleting the website(s)');
         }
     }
 
@@ -231,12 +208,9 @@ class WebsitesController extends Controller
                 ? 'Website activated successfully.'
                 : 'Website deactivated successfully.';
 
-            return redirect()->back()->with('message', $message);
+            return $this->backSuccess($message);
         } catch (\Exception $e) {
-            Log::error('Error in WebsitesController@toggleActive: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the website status. Please try again.');
+            return $this->logResponse('WebsitesController@toggleActive', $e, 'An error occurred while updating the website status');
         }
     }
 
@@ -260,12 +234,9 @@ class WebsitesController extends Controller
                 ? 'Website verified successfully.'
                 : 'Website unverified successfully.';
 
-            return redirect()->back()->with('message', $message);
+            return $this->backSuccess($message);
         } catch (\Exception $e) {
-            Log::error('Error in WebsitesController@toggleVerified: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the website verification status. Please try again.');
+            return $this->logResponse('WebsitesController@toggleVerified', $e, 'An error occurred while updating the website verification status');
         }
     }
 
@@ -292,10 +263,9 @@ class WebsitesController extends Controller
 
             if ($validated['status'] === 'pending') $message = 'The website is now pending.';
 
-            return redirect()->back()->with('message', $message);
+            return $this->backSuccess($message);
         } catch (\Exception $e) {
-            Log::error('Error in WebsitesController@changeStatus: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            return redirect()->back()->withErrors('An error occurred while changing the website status. Please try again.');
+            return $this->logResponse('WebsitesController@changeStatus', $e, 'An error occurred while changing the website status');
         }
     }
 }

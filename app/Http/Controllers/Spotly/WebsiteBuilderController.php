@@ -14,9 +14,7 @@ use App\Models\WebsiteTemplate;
 use App\Models\WebsiteType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Inertia\Inertia;
 
 class WebsiteBuilderController extends Controller
 {
@@ -42,7 +40,7 @@ class WebsiteBuilderController extends Controller
                 ->with(['templateColors'])
                 ->get();
 
-            return Inertia::render('websiteBuilder/Wizard', [
+            return $this->inertiaRender('websiteBuilder/Wizard', [
                 'websiteTypes' => $websiteTypes,
                 'type' => $type,
                 'typeId' => $typeId,
@@ -51,10 +49,7 @@ class WebsiteBuilderController extends Controller
                 'templates' => $templates,
             ]);
         } catch (\Exception $e) {
-            Log::error('Error in WebsiteBuilderController@index: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while fetching website builder data. Please try again.');
+            return $this->logResponse('WebsiteBuilderController@index', $e, 'An error occurred while fetching website builder data');
         }
     }
 
@@ -66,25 +61,25 @@ class WebsiteBuilderController extends Controller
         try {
             $templateId = $request->input('templateId');
 
-            $templateTemplateColors = TemplateTemplateColor::with(['template:id,name', 'templateColor'])
-                ->where('template_id', $templateId)
-                ->get();
-            $templateTemplateColors->transform(function ($item) {
-                $item->uiImages = $item->getMedia('uiImages')->toArray();
+            $templateTemplateColors = TemplateTemplateColor::with([
+                'media' => function($query) {
+                    $query->where('collection_name', 'uiImages');
+                },
+                'template:id,name', 
+                'templateColor'
+            ])
+            ->where('template_id', $templateId)
+            ->get()
+            ->transform(function ($item) {
+                $item->uiImages = $item->media->toArray();
+                unset($item->media); 
                 return $item;
             });
     
-            return response()->json([
-                'templateTemplateColors' => $templateTemplateColors
-            ]);
+            return $this->jsonSuccess('', ['templateTemplateColors' => $templateTemplateColors]);
+
         } catch (\Exception $e) {
-            Log::error('Error in WebsiteBuilderController@getTemplateTemplateColors: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return response()->json([
-                'message' => 'Error on WebsiteBuilderController@getTemplateTemplateColors',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('WebsiteBuilderController@getTemplateTemplateColors', $e, 'An error occurred while fetching template');
         }
     }
 
@@ -108,18 +103,17 @@ class WebsiteBuilderController extends Controller
             case 1:
             case 2:
             case 3:
-                return redirect()->back()->with('message', "Step {$step} completed!");
+                return $this->backSuccess('Step {$step} completed!');
             case 4:
                 if (!Auth::check()) {
                     session(['pending_website_creation' => true]);
 
-                    return redirect()->route('register')
-                        ->with('message', 'Please register or login to continue.');
+                    return $this->redirectSuccess('register', 'Please register or login to continue');
                 }
                 return $this->store();
                 break;
             default:
-                return redirect()->back()->with('error', 'Invalid step!');
+                return $this->backError('Invalid step!');
         }
     }
 
@@ -144,13 +138,10 @@ class WebsiteBuilderController extends Controller
             session()->forget(['wizard_step_1', 'wizard_step_2', 'wizard_step_3', 'pending_website_creation']);
             session()->regenerate();
 
-            return redirect()->route('e-commerce.dashboard.index')->with('message', 'Your website has been created!');
-        } catch (\Exception $e) {
-            Log::error('Error in WebsiteBuilderController@store: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
+            return $this->redirectSuccess('e-commerce.dashboard.index', 'Your website has been created!');
 
-            return redirect()->back()->with(['message' => "An error occurred while creating the website. Please try again."], 500);
+        } catch (\Exception $e) {
+            return $this->logResponse('WebsiteBuilderController@store', $e, 'An error occurred while creating the website');
         }
     }
 
@@ -174,9 +165,7 @@ class WebsiteBuilderController extends Controller
                 Storage::delete($thirdStepData['dark_logo']);
             }
         } catch (\Exception $e) {
-            Log::error('Error in WebsiteBuilderController@storeLogos: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
+            return $this->logResponse('WebsiteBuilderController@storeLogos', $e, 'An error occurred while storing the website logos');
         }
     }
 
@@ -207,9 +196,7 @@ class WebsiteBuilderController extends Controller
                 'is_active' => 1
             ]);
         } catch (\Exception $e) {
-            Log::error('Error in WebsiteBuilderController@storeTemplate: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
+            return $this->logResponse('WebsiteBuilderController@storeTemplate', $e, 'An error occurred while storing the website template');
         }
     }
 }

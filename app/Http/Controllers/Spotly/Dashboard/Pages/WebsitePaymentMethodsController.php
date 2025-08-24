@@ -7,10 +7,8 @@ use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\WebsitePaymentMethod;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\WebsitePaymentMethods\StoreWebsitePaymentMethodRequest;
 use App\Http\Requests\Dashboard\Pages\WebsitePaymentMethods\UpdateWebsitePaymentMethodRequest;
-use Illuminate\Support\Facades\Log;
 
 class WebsitePaymentMethodsController extends Controller
 {
@@ -29,9 +27,7 @@ class WebsitePaymentMethodsController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
-        return Inertia::render('dashboard/pages/websitePaymentMethods/WebsitePaymentMethods', [
-            'websitePaymentMethods' => $data,
-        ]);
+        return $this->inertiaRender('dashboard/pages/websitePaymentMethods/WebsitePaymentMethods', ['websitePaymentMethods' => $data]);
     }
 
     /**
@@ -43,15 +39,12 @@ class WebsitePaymentMethodsController extends Controller
             $websites = $this->getRelation('website', ['name']);
             $paymentMethods = $this->getRelation('paymentMethod', ['name']);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'websites' => $websites,
                 'paymentMethods' => $paymentMethods,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on WebsitePaymentMethodsController@create',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('WebsitePaymentMethodsController@create', $e, 'An error when fetching the create page');
         }
     }
 
@@ -67,12 +60,9 @@ class WebsitePaymentMethodsController extends Controller
 
             $websitePaymentMethod->save();
 
-            return redirect()->route('dashboard.websitePaymentMethods.index')->with('message', 'Website Payment Method created successfully');
+            return $this->redirectSuccess('dashboard.websitePaymentMethods.index', 'Website Payment Method created successfully');
         } catch (\Exception $e) {
-            Log::error('Error in WebsitePaymentMethodsController@store: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while creating the Website Payment Method. Please try again.');
+            return $this->logResponse('WebsitePaymentMethodsController@store', $e, 'An error occurred while creating the Website Payment Method');
         }
     }
 
@@ -85,14 +75,11 @@ class WebsitePaymentMethodsController extends Controller
             $query = WebsitePaymentMethod::with(['website', 'paymentMethod'])->findOrFail($id);
             $websitePaymentMethod = $this->flattenRelationData($query, ['website_name', 'paymentMethod_name']);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $websitePaymentMethod,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on WebsitePaymentMethodsController@show',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('WebsitePaymentMethodsController@show', $e, 'An error when fetching the show page');
         }
     }
 
@@ -106,16 +93,13 @@ class WebsitePaymentMethodsController extends Controller
             $websites = $this->getRelation('website', ['name']);
             $paymentMethods = $this->getRelation('paymentMethod', ['name']);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $websitePaymentMethod,
                 'websites' => $websites,
                 'paymentMethods' => $paymentMethods,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on WebsitePaymentMethodsController@edit',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('WebsitePaymentMethodsController@edit', $e, 'An error when fetching the edit page');
         }
     }
 
@@ -131,12 +115,9 @@ class WebsitePaymentMethodsController extends Controller
 
             $websitePaymentMethod->save();
 
-            return redirect()->route('dashboard.websitePaymentMethods.index')->with('message', 'Website Payment Method updated successfully');
+            return $this->redirectSuccess('dashboard.websitePaymentMethods.index', 'Website Payment Method updated successfully');
         } catch (\Exception $e) {
-            Log::error('Error in WebsitePaymentMethodsController@update: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the Website Payment Method. Please try again.');
+            return $this->logResponse('WebsitePaymentMethodsController@update', $e, 'An error occurred while updating the Website Payment Method');
         }
     }
 
@@ -153,12 +134,9 @@ class WebsitePaymentMethodsController extends Controller
 
             WebsitePaymentMethod::destroy($validated['ids']);
 
-            return redirect()->back()->with('message', __('Website Payment Methods(s) deleted successfully.'));
+            return $this->backSuccess('Website Payment Methods(s) deleted successfully');
         } catch (\Exception $e) {
-            Log::error('Error in WebsitePaymentMethodsController@destroy: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while deleting the Website Payment Method(s). Please try again.');
+            return $this->logResponse('WebsitePaymentMethodsController@destroy', $e, 'An error occurred while deleting the Website Payment Methods(s)');
         }
     }
 
@@ -182,12 +160,9 @@ class WebsitePaymentMethodsController extends Controller
                 ? 'Website Payment Method activated successfully.'
                 : 'Website Payment Method deactivated successfully.';
 
-            return redirect()->back()->with('message', $message);
+            return $this->backSuccess($message);
         } catch (\Exception $e) {
-            Log::error('Error in WebsitePaymentMethodsController@toggleActive: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the Website Payment Method status. Please try again.');
+            return $this->logResponse('WebsitePaymentMethodsController@toggleActive', $e, 'An error occurred while updating the Website Payment Method status');
         }
     }
 }

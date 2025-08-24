@@ -7,10 +7,8 @@ use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\TemplateTemplateColor;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\Ui\TemplateTemplateColors\StoreTemplateTemplateColorRequest;
 use App\Http\Requests\Dashboard\Pages\Ui\TemplateTemplateColors\UpdateTemplateTemplateColorRequest;
-use Illuminate\Support\Facades\Log;
 
 class TemplateTemplateColorsController extends Controller
 {
@@ -30,13 +28,11 @@ class TemplateTemplateColorsController extends Controller
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
         $data->transform(function ($item) {
-           $item->uiImages = $item->getMedia('uiImages');
-           return $item;
+            $item->uiImages = $item->getMedia('uiImages');
+            return $item;
         });
 
-        return Inertia::render('dashboard/pages/ui/templateTemplateColors/TemplateTemplateColors', [
-            'templateTemplateColors' => $data,
-        ]);
+        return $this->inertiaRender('dashboard/pages/ui/templateTemplateColors/TemplateTemplateColors', ['templateTemplateColors' => $data]);
     }
 
     /**
@@ -48,15 +44,12 @@ class TemplateTemplateColorsController extends Controller
             $templates = $this->getRelation('template', ['name']);
             $templateColors = $this->getRelation('templateColor', ['name']);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'templates' => $templates,
                 'templateColors' => $templateColors,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on TemplateTemplateColorsController@create',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('TemplateTemplateColorsController@create', $e, 'An error when fetching the create page');
         }
     }
 
@@ -65,7 +58,7 @@ class TemplateTemplateColorsController extends Controller
      */
     public function store(StoreTemplateTemplateColorRequest $request)
     {
-        
+
         try {
             $validated = $request->validated();
             unset($validated['uiImages']);
@@ -83,12 +76,9 @@ class TemplateTemplateColorsController extends Controller
                 }
             }
 
-            return redirect()->route('dashboard.templateTemplateColors.index')->with('message', 'TemplateTemplateColor created successfully');
+            return $this->redirectSuccess('dashboard.templateTemplateColors.index', 'TemplateTemplateColor created successfully');
         } catch (\Exception $e) {
-            Log::error('Error on TemplateTemplateColorsController@store: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while creating the template template color. Please try again.');
+            return $this->logResponse('TemplateTemplateColorsController@store', $e, 'An error occurred while creating the template template color');
         }
     }
 
@@ -103,14 +93,11 @@ class TemplateTemplateColorsController extends Controller
 
             $templateTemplateColor = $this->flattenRelationData($query, ['template_name', 'templateColor_name']);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $templateTemplateColor,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on TemplateTemplateColorsController@show',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('TemplateTemplateColorsController@show', $e, 'An error when fetching the show page');
         }
     }
 
@@ -126,16 +113,13 @@ class TemplateTemplateColorsController extends Controller
             $templates = $this->getRelation('template', ['name']);
             $templateColors = $this->getRelation('templateColor', ['name']);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $templateTemplateColor,
                 'templates' => $templates,
                 'templateColors' => $templateColors,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on TemplateTemplateColorsController@edit',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('TemplateTemplateColorsController@edit', $e, 'An error when fetching the edit page');
         }
     }
 
@@ -163,12 +147,9 @@ class TemplateTemplateColorsController extends Controller
                 }
             }
 
-            return redirect()->route('dashboard.templateTemplateColors.index')->with('message', 'TemplateTemplateColor updated successfully');
+            return $this->redirectSuccess('dashboard.templateTemplateColors.index', 'TemplateTemplateColor updated successfully');
         } catch (\Exception $e) {
-            Log::error('Error on TemplateTemplateColorsController@update: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the template template color. Please try again.');
+            return $this->logResponse('TemplateTemplateColorsController@update', $e, 'An error occurred while updating the template template color');
         }
     }
 
@@ -185,12 +166,9 @@ class TemplateTemplateColorsController extends Controller
 
             TemplateTemplateColor::destroy($validated['ids']);
 
-            return redirect()->back()->with('message', __('TemplateTemplateColor(s) deleted successfully.'));
+            return $this->backSuccess('TemplateTemplateColor(s) deleted successfully');
         } catch (\Exception $e) {
-            Log::error('Error on TemplateTemplateColorsController@destroy: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while deleting the template template color(s). Please try again.');
+            return $this->logResponse('TemplateTemplateColorsController@destroy', $e, 'An error occurred while deleting the template template color(s)');
         }
     }
 
@@ -221,12 +199,9 @@ class TemplateTemplateColorsController extends Controller
                 ? 'Template color set as default successfully.'
                 : 'Template color removed from default successfully.';
 
-            return redirect()->back()->with('message', $message);
+            return $this->backSuccess($message);
         } catch (\Exception $e) {
-            Log::error('Error on TemplateTemplateColorsController@toggleDefault: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the default status. Please try again.');
+            return $this->logResponse('TemplateTemplateColorsController@toggleDefault', $e, 'An error occurred while updating the default status');
         }
     }
 }

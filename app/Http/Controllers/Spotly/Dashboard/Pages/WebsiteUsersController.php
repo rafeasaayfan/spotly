@@ -7,11 +7,9 @@ use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\WebsiteUser;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\WebsiteUsers\StoreWebsiteUserRequest;
 use App\Http\Requests\Dashboard\Pages\WebsiteUsers\UpdateWebsiteUserRequest;
 use App\Models\Country;
-use Illuminate\Support\Facades\Log;
 
 class WebsiteUsersController extends Controller
 {
@@ -30,9 +28,7 @@ class WebsiteUsersController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
-        return Inertia::render('dashboard/pages/websiteUsers/WebsiteUsers', [
-            'websiteUsers' => $data,
-        ]);
+        return $this->inertiaRender('dashboard/pages/websiteUsers/WebsiteUsers', ['websiteUsers' => $data]);
     }
 
     /**
@@ -48,15 +44,12 @@ class WebsiteUsersController extends Controller
                 return $item;
             });
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'websites' => $websites,
                 'countries' => $countries,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error loading create form data.',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('WebsiteUsersController@create', $e, 'An error when fetching the create page');
         }
     }
 
@@ -72,12 +65,9 @@ class WebsiteUsersController extends Controller
 
             $websiteUser->save();
 
-            return redirect()->route('dashboard.websiteUsers.index')->with('message', 'Website User created successfully');
+            return $this->redirectSuccess('dashboard.websiteUsers.index', 'Website User created successfully');
         } catch (\Exception $e) {
-            Log::error('Error in WebsiteUsersController@store: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while creating the Website User. Please try again.');
+            return $this->logResponse('WebsiteUsersController@store', $e, 'An error occurred while creating the Website User');
         }
     }
 
@@ -90,14 +80,11 @@ class WebsiteUsersController extends Controller
             $query = WebsiteUser::with('website')->findOrFail($id);
             $websiteUser = $this->flattenRelationData($query, ['website_name']);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $websiteUser,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error fetching Website User details.',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('WebsiteUsersController@show', $e, 'An error when fetching the show page');
         }
     }
 
@@ -116,16 +103,13 @@ class WebsiteUsersController extends Controller
                 return $item;
             });
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $websiteUser,
                 'websites' => $websites,
                 'countries' => $countries,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error loading Website User for edit.',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('WebsiteUsersController@edit', $e, 'An error when fetching the edit page');
         }
     }
 
@@ -140,12 +124,9 @@ class WebsiteUsersController extends Controller
             $websiteUser->fill($validated);
             $websiteUser->save();
 
-            return redirect()->route('dashboard.websiteUsers.index')->with('message', 'Website User updated successfully');
+            return $this->redirectSuccess('dashboard.websiteUsers.index', 'Website User updated successfully');
         } catch (\Exception $e) {
-            Log::error('Error in WebsiteUsersController@update: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the Website User. Please try again.');
+            return $this->logResponse('WebsiteUsersController@update', $e, 'An error occurred while updating the Website User');
         }
     }
 
@@ -162,12 +143,9 @@ class WebsiteUsersController extends Controller
 
             WebsiteUser::destroy($validated['ids']);
 
-            return redirect()->back()->with('message', __('WebsiteUser(s) deleted successfully.'));
+            return $this->backSuccess('Website User(s) deleted successfully');
         } catch (\Exception $e) {
-            Log::error('Error in WebsiteUsersController@destroy: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while deleting Website User(s). Please try again.');
+            return $this->logResponse('WebsiteUsersController@destroy', $e, 'An error occurred while deleting the Website User(s)');
         }
     }
 
@@ -195,12 +173,9 @@ class WebsiteUsersController extends Controller
                 $message = 'Website User marked as banned.';
             }
 
-            return redirect()->back()->with('message', $message);
+            return $this->backSuccess($message);
         } catch (\Exception $e) {
-            Log::error('Error in WebsiteUsersController@changeStatus: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while changing status. Please try again.');
+            return $this->logResponse('WebsiteUsersController@changeStatus', $e, 'An error occurred while changing the website user status');
         }
     }
 }

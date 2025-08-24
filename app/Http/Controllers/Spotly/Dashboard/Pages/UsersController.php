@@ -7,12 +7,10 @@ use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\User;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\Users\StoreUserRequest;
 use App\Http\Requests\Dashboard\Pages\Users\UpdateUserRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Country;
-use Illuminate\Support\Facades\Log;
 
 class UsersController extends Controller
 {
@@ -29,9 +27,7 @@ class UsersController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching);
 
-        return Inertia::render('dashboard/pages/users/Users', [
-            'users' => $data,
-        ]);
+        return $this->inertiaRender('dashboard/pages/users/Users', ['users' => $data]);
     }
 
     /**
@@ -46,14 +42,11 @@ class UsersController extends Controller
                 return $item;
             });
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'countries' => $countries,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on UsersController@create',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('UsersController@create', $e, 'An error when fetching the create page');
         }
     }
 
@@ -70,12 +63,9 @@ class UsersController extends Controller
                 'phone_number' => $request->phone_number,
             ]);
 
-            return redirect()->route('dashboard.users.index')->with('message', 'User created successfully');
+            return $this->redirectSuccess('dashboard.users.index', 'User created successfully');
         } catch (\Exception $e) {
-            Log::error('Error in UsersController@store: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while creating the user. Please try again.');
+            return $this->logResponse('UsersController@store', $e, 'An error occurred while creating the user');
         }
     }
 
@@ -87,14 +77,11 @@ class UsersController extends Controller
         try {
             $user = User::findOrFail($id);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $user,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on UsersController@show',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('UsersController@show', $e, 'An error when fetching the show page');
         }
     }
 
@@ -112,15 +99,12 @@ class UsersController extends Controller
                 return $item;
             });
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $user,
                 'countries' => $countries,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on UsersController@edit',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('UsersController@edit', $e, 'An error when fetching the edit page');
         }
     }
 
@@ -140,12 +124,9 @@ class UsersController extends Controller
 
             $user->update($data);
 
-            return redirect()->route('dashboard.users.index')->with('message', 'User updated successfully');
+            return $this->redirectSuccess('dashboard.users.index', 'User updated successfully');
         } catch (\Exception $e) {
-            Log::error('Error in UsersController@update: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the user. Please try again.');
+            return $this->logResponse('UsersController@update', $e, 'An error occurred while updating the user');
         }
     }
 
@@ -162,12 +143,9 @@ class UsersController extends Controller
 
             User::destroy($validated['ids']);
 
-            return redirect()->back()->with('message', __('User(s) deleted successfully.'));
+            return $this->backSuccess('User(s) deleted successfully');
         } catch (\Exception $e) {
-            Log::error('Error in UsersController@destroy: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while deleting the user(s). Please try again.');
+            return $this->logResponse('UsersController@destroy', $e, 'An error occurred while deleting the user(s)');
         }
     }
 
@@ -191,12 +169,9 @@ class UsersController extends Controller
             if ($validated['status'] === 'inactive') $message = 'The user is now inactive.';
             if ($validated['status'] === 'banned') $message = 'The user is now banned.';
 
-            return redirect()->back()->with('message', $message);
+            return $this->backSuccess($message);
         } catch (\Exception $e) {
-            Log::error('Error in UsersController@changeStatus: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the user status. Please try again.');
+            return $this->logResponse('UsersController@changeStatus', $e, 'An error occurred while updating the user status');
         }
     }
 }

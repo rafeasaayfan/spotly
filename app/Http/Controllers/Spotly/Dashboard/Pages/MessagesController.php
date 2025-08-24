@@ -7,8 +7,6 @@ use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\Message;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Log;
 
 class MessagesController extends Controller
 {
@@ -25,9 +23,7 @@ class MessagesController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching);
 
-        return Inertia::render('dashboard/pages/messages/Messages', [
-            'messages' => $data,
-        ]);
+        return $this->inertiaRender('dashboard/pages/messages/Messages', ['messages' => $data]);
     }
 
     /**
@@ -54,14 +50,12 @@ class MessagesController extends Controller
         try {
             $message = Message::findOrFail($id);
 
-            return response()->json([
+
+            return $this->jsonSuccess('', [
                 'data' => $message,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on MessagesController@show',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('MessagesController@show', $e, 'An error when fetching the show page');
         }
     }
 
@@ -94,12 +88,9 @@ class MessagesController extends Controller
 
             Message::destroy($validated['ids']);
 
-            return redirect()->back()->with('message', __('Message(s) deleted successfully.'));
+            return $this->backSuccess('Message(s) deleted successfully');
         } catch (\Exception $e) {
-            Log::error('Error in MessagesController@destroy: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while deleting the message(s). Please try again.');
+            return $this->logResponse('MessagesController@destroy', $e, 'An error occurred while deleting the message(s)');
         }
     }
 
@@ -128,11 +119,9 @@ class MessagesController extends Controller
             }
 
             return redirect()->back()->with('message', $msg);
+            return $this->backSuccess($msg);
         } catch (\Exception $e) {
-            Log::error('Error in MessagesController@changeStatus: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the message status. Please try again.');
+            return $this->logResponse('MessagesController@changeStatus', $e, 'An error occurred while updating the message status');
         }
     }
 }

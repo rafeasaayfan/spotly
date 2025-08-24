@@ -7,10 +7,8 @@ use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\WebsiteTemplate;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\WebsiteTemplates\StoreWebsiteTemplateRequest;
 use App\Http\Requests\Dashboard\Pages\WebsiteTemplates\UpdateWebsiteTemplateRequest;
-use Illuminate\Support\Facades\Log;
 
 class WebsiteTemplatesController extends Controller
 {
@@ -29,10 +27,7 @@ class WebsiteTemplatesController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
-
-        return Inertia::render('dashboard/pages/websiteTemplates/WebsiteTemplates', [
-            'websiteTemplates' => $data,
-        ]);
+        return $this->inertiaRender('dashboard/pages/websiteTemplates/WebsiteTemplates', ['websiteTemplates' => $data]);
     }
 
     /**
@@ -45,16 +40,13 @@ class WebsiteTemplatesController extends Controller
             $templates = $this->getRelation('template', ['name']);
             $templateColors = $this->getRelation('templateColor', ['name']);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'websites' => $websites,
                 'templates' => $templates,
                 'templateColors' => $templateColors,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on WebsiteTemplatesController@create',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('WebsiteTemplatesController@create', $e, 'An error when fetching the create page');
         }
     }
 
@@ -70,10 +62,9 @@ class WebsiteTemplatesController extends Controller
 
             $websiteTemplate->save();
 
-            return redirect()->route('dashboard.websiteTemplates.index')->with('message', 'Website Template created successfully');
+            return $this->redirectSuccess('dashboard.websiteTemplates.index', 'Website Template created successfully');
         } catch (\Exception $e) {
-            Log::error('Error in WebsiteTemplatesController@store: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            return redirect()->back()->withErrors('An error occurred while creating the Website Template. Please try again.');
+            return $this->logResponse('WebsiteTemplatesController@store', $e, 'An error occurred while creating the Website Template');
         }
     }
 
@@ -85,14 +76,11 @@ class WebsiteTemplatesController extends Controller
         try {
             $websiteTemplate = WebsiteTemplate::findOrFail($id);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $websiteTemplate,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on WebsiteTemplatesController@show',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('WebsiteTemplatesController@show', $e, 'An error when fetching the show page');
         }
     }
 
@@ -107,17 +95,14 @@ class WebsiteTemplatesController extends Controller
             $templates = $this->getRelation('template', ['name']);
             $templateColors = $this->getRelation('templateColor', ['name']);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $websiteTemplate,
                 'websites' => $websites,
                 'templates' => $templates,
                 'templateColors' => $templateColors,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on WebsiteTemplatesController@edit',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('WebsiteTemplatesController@edit', $e, 'An error when fetching the edit page');
         }
     }
 
@@ -133,12 +118,9 @@ class WebsiteTemplatesController extends Controller
 
             $websiteTemplate->save();
 
-            return redirect()->route('dashboard.websiteTemplates.index')->with('message', 'Website Template updated successfully');
+            return $this->redirectSuccess('dashboard.websiteTemplates.index', 'Website Template updated successfully');
         } catch (\Exception $e) {
-            Log::error('Error in WebsiteTemplatesController@update: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the Website Template. Please try again.');
+            return $this->logResponse('WebsiteTemplatesController@update', $e, 'An error occurred while updating the Website Template');
         }
     }
 
@@ -155,12 +137,9 @@ class WebsiteTemplatesController extends Controller
 
             WebsiteTemplate::destroy($validated['ids']);
 
-            return redirect()->back()->with('message', __('Website Template(s) deleted successfully.'));
+            return $this->backSuccess('Website Template(s) deleted successfully');
         } catch (\Exception $e) {
-            Log::error('Error in WebsiteTemplatesController@destroy: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while deleting the Website Template(s). Please try again.');
+            return $this->logResponse('WebsiteTemplatesController@destroy', $e, 'An error occurred while deleting the Website Template(s)');
         }
     }
 
@@ -184,12 +163,9 @@ class WebsiteTemplatesController extends Controller
                 ? 'Website Template activated successfully.'
                 : 'Website Template deactivated successfully.';
 
-            return redirect()->back()->with('message', $message);
+            return $this->backSuccess($message);
         } catch (\Exception $e) {
-            Log::error('Error in WebsiteTemplatesController@toggleActive: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the Website Template status. Please try again.');
+            return $this->logResponse('WebsiteTemplatesController@toggleActive', $e, 'An error occurred while updating the Website Template status');
         }
     }
 }

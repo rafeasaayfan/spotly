@@ -7,10 +7,8 @@ use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\Plan;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\Plans\StorePlanRequest;
 use App\Http\Requests\Dashboard\Pages\Plans\UpdatePlanRequest;
-use Illuminate\Support\Facades\Log;
 
 class PlansController extends Controller
 {
@@ -27,9 +25,7 @@ class PlansController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching);
 
-        return Inertia::render('dashboard/pages/plans/Plans', [
-            'plans' => $data,
-        ]);
+        return $this->inertiaRender('dashboard/pages/plans/Plans', ['plans' => $data]);
     }
 
     /**
@@ -52,12 +48,9 @@ class PlansController extends Controller
 
             $plan->save();
 
-            return redirect()->route('dashboard.plans.index')->with('message', 'Plan created successfully');
+            return $this->redirectSuccess('dashboard.plans.index', 'Plan created successfully');
         } catch (\Exception $e) {
-            Log::error('Error in PlansController@store: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while creating the plan. Please try again.');
+            return $this->logResponse('PlansController@store', $e, 'An error occurred while creating the plan');
         }
     }
 
@@ -69,14 +62,11 @@ class PlansController extends Controller
         try {
             $plan = Plan::findOrFail($id);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $plan,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on PlansController@show',
-                'error'   => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('PlansController@show', $e, 'An error when fetching the show page');
         }
     }
 
@@ -88,14 +78,11 @@ class PlansController extends Controller
         try {
             $plan = Plan::findOrFail($id);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $plan,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on PlansController@edit',
-                'error'   => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('PlansController@edit', $e, 'An error when fetching the edit page');
         }
     }
 
@@ -111,12 +98,9 @@ class PlansController extends Controller
 
             $plan->save();
 
-            return redirect()->route('dashboard.plans.index')->with('message', 'Plan updated successfully');
+            return $this->redirectSuccess('dashboard.plans.index', 'Plan updated successfully');
         } catch (\Exception $e) {
-            Log::error('Error in PlansController@update: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the plan. Please try again.');
+            return $this->logResponse('PlansController@update', $e, 'An error occurred while updating the plan');
         }
     }
 
@@ -133,12 +117,9 @@ class PlansController extends Controller
 
             Plan::destroy($validated['ids']);
 
-            return redirect()->back()->with('message', __('Plan(s) deleted successfully.'));
+            return $this->backSuccess('Plan(s) deleted successfully');
         } catch (\Exception $e) {
-            Log::error('Error in PlansController@destroy: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while deleting the plan(s). Please try again.');
+            return $this->logResponse('PlansController@destroy', $e, 'An error occurred while deleting the plan(s)');
         }
     }
 
@@ -162,12 +143,9 @@ class PlansController extends Controller
                 ? 'Plan activated successfully.'
                 : 'Plan deactivated successfully.';
 
-            return redirect()->back()->with('message', $message);
+            return $this->backSuccess($message);
         } catch (\Exception $e) {
-            Log::error('Error in PlansController@toggleActive: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the plan status. Please try again.');
+            return $this->logResponse('PlansController@toggleActive', $e, 'An error occurred while updating the plan status');
         }
     }
 }

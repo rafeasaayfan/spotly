@@ -7,10 +7,8 @@ use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\Category;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\Categories\StoreCategoryRequest;
 use App\Http\Requests\Dashboard\Pages\Categories\UpdateCategoryRequest;
-use Illuminate\Support\Facades\Log;
 
 class CategoriesController extends Controller
 {
@@ -29,9 +27,7 @@ class CategoriesController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
-        return Inertia::render('dashboard/pages/categories/Categories', [
-            'categories' => $data,
-        ]);
+        return $this->inertiaRender('dashboard/pages/categories/Categories', ['categories' => $data]);
     }
 
     public function create()
@@ -40,15 +36,12 @@ class CategoriesController extends Controller
             $websites = $this->getRelation('website', ['name']);
             $parents = Category::active()->get();
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'websites' => $websites,
                 'parents' => $parents,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on CategoriesController@create',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('CategoriesController@create', $e, 'An error when fetching the create page');
         }
     }
 
@@ -60,12 +53,9 @@ class CategoriesController extends Controller
             $category = new Category($validated);
             $category->save();
 
-            return redirect()->route('dashboard.categories.index')->with('message', 'Category created successfully');
+            return $this->redirectSuccess('dashboard.categories.index', 'Category created successfully');
         } catch (\Exception $e) {
-            Log::error('Error in CategoriesController@store: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while creating the category. Please try again.');
+            return $this->logResponse('CategoriesController@store', $e, 'An error occurred while creating the category');
         }
     }
 
@@ -75,14 +65,11 @@ class CategoriesController extends Controller
             $query = Category::with(['website', 'parent'])->findOrFail($id);
             $category = $this->flattenRelationData($query, ['website_name', 'parent_name']);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $category,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on CategoriesController@show',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('CategoriesController@show', $e, 'An error when fetching the show page');
         }
     }
 
@@ -99,16 +86,13 @@ class CategoriesController extends Controller
                 ->whereNotIn('id', $childrenIds)
                 ->get();
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $category,
                 'websites' => $websites,
                 'parents' => $parents,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on CategoriesController@edit',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('CategoriesController@edit', $e, 'An error when fetching the edit page');
         }
     }
 
@@ -120,12 +104,9 @@ class CategoriesController extends Controller
             $category->fill($validated);
             $category->save();
 
-            return redirect()->route('dashboard.categories.index')->with('message', 'Category updated successfully');
+            return $this->redirectSuccess('dashboard.categories.index', 'Category updated successfully');
         } catch (\Exception $e) {
-            Log::error('Error in CategoriesController@update: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the category. Please try again.');
+            return $this->logResponse('CategoriesController@update', $e, 'An error occurred while updating the category');
         }
     }
 
@@ -139,12 +120,9 @@ class CategoriesController extends Controller
 
             Category::destroy($validated['ids']);
 
-            return redirect()->back()->with('message', __('Category(s) deleted successfully.'));
+            return $this->backSuccess('Category(s) deleted successfully');
         } catch (\Exception $e) {
-            Log::error('Error in CategoriesController@destroy: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while deleting the category(s). Please try again.');
+            return $this->logResponse('CategoriesController@destroy', $e, 'An error occurred while deleting the category(s)');
         }
     }
 
@@ -168,12 +146,9 @@ class CategoriesController extends Controller
                 ? 'Category activated successfully.'
                 : 'Category deactivated successfully.';
 
-            return redirect()->back()->with('message', $message);
+            return $this->backSuccess($message);
         } catch (\Exception $e) {
-            Log::error('Error in CategoriesController@toggleActive: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the category status. Please try again.');
+            return $this->logResponse('CategoriesController@toggleActive', $e, 'An error occurred while updating the category status');
         }
     }
 }

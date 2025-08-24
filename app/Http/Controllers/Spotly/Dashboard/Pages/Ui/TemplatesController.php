@@ -7,11 +7,9 @@ use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\Template;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\Ui\Templates\StoreTemplateRequest;
 use App\Http\Requests\Dashboard\Pages\Ui\Templates\UpdateTemplateRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class TemplatesController extends Controller
 {
@@ -30,14 +28,7 @@ class TemplatesController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
-        // $data->transform(function ($item) {
-        //    $item->image = $item->getFirstMediaUrl('image');
-        //    return $item;
-        // });
-
-        return Inertia::render('dashboard/pages/ui/templates/Templates', [
-            'data' => $data,
-        ]);
+        return $this->inertiaRender('dashboard/pages/ui/templates/Templates', ['templates' => $data]);
     }
 
     /**
@@ -48,14 +39,11 @@ class TemplatesController extends Controller
         try {
             $websiteTypes = $this->getRelation('websiteType', ['type']);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'websiteTypes' => $websiteTypes,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on TemplatesController@create',
-                'error'   => config('app.debug') ? $e->getMessage() : null
-            ], 500);
+            return $this->logJsonResponse('TemplatesController@create', $e, 'An error when fetching the create page');
         }
     }
 
@@ -66,24 +54,15 @@ class TemplatesController extends Controller
     {
         try {
             $validated = $request->validated();
-            // unset($validated['image']);
-
-            // if ($request->hasFile('image') && $request->file('image')->isValid()) {
-            //    $ui->addMediaFromRequest('image')
-            //        ->toMediaCollection('image');
-            // }
 
             $template = new Template($validated);
             $template->created_by = Auth::id();
 
             $template->save();
 
-            return redirect()->route('dashboard.templates.index')->with('message', 'Template created successfully');
+            return $this->redirectSuccess('dashboard.templates.index', 'Template created successfully');
         } catch (\Exception $e) {
-            Log::error('Error in TemplatesController@store: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while creating the template. Please try again.');
+            return $this->logResponse('TemplatesController@store', $e, 'An error occurred while creating the template');
         }
     }
 
@@ -96,16 +75,11 @@ class TemplatesController extends Controller
             $query = Template::with(['createdBy', 'websiteType'])->findOrFail($id);
             $template = $this->flattenRelationData($query, ['createdBy_name', 'websiteType_type']);
 
-            // $ui->image = $ui->getFirstMediaUrl('image');
-
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $template,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on TemplatesController@show',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('TemplatesController@show', $e, 'An error when fetching the show page');
         }
     }
 
@@ -117,17 +91,13 @@ class TemplatesController extends Controller
         try {
             $template = Template::findOrFail($id);
             $websiteTypes = $this->getRelation('websiteType', ['type']);
-            // $ui->image = $ui->getFirstMediaUrl('image');
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $template,
                 'websiteTypes' => $websiteTypes,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on TemplatesController@edit',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('TemplatesController@edit', $e, 'An error when fetching the edit page');
         }
     }
 
@@ -138,22 +108,13 @@ class TemplatesController extends Controller
     {
         try {
             $validated = $request->validated();
-            // unset($validated['image']);
-            // if ($request->hasFile('image') && $request->file('image')->isValid()) {
-            //    $ui->clearMediaCollection('image');
-            //    $ui->addMediaFromRequest('image')
-            //        ->toMediaCollection('image');
-            // }
 
             $template->fill($validated);
             $template->save();
 
-            return redirect()->route('dashboard.templates.index')->with('message', 'Template updated successfully');
+            return $this->redirectSuccess('dashboard.templates.index', 'Template updated successfully');
         } catch (\Exception $e) {
-            Log::error('Error on TemplatesController@update: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the template. Please try again.');
+            return $this->logResponse('TemplatesController@update', $e, 'An error occurred while updating the template');
         }
     }
 
@@ -170,12 +131,9 @@ class TemplatesController extends Controller
 
             Template::destroy($validated['ids']);
 
-            return redirect()->back()->with('message', __('Template(s) deleted successfully.'));
+            return $this->backSuccess('Template(s) deleted successfully');
         } catch (\Exception $e) {
-            Log::error('Error on TemplatesController@destroy: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while deleting the template(s). Please try again.');
+            return $this->logResponse('TemplatesController@destroy', $e, 'An error occurred while deleting the template(s)');
         }
     }
 
@@ -199,12 +157,9 @@ class TemplatesController extends Controller
                 ? 'Template activated successfully.'
                 : 'Template deactivated successfully.';
 
-            return redirect()->back()->with('message', $message);
+            return $this->backSuccess($message);
         } catch (\Exception $e) {
-            Log::error('Error in TemplatesController@toggleActive: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the template status. Please try again.');
+            return $this->logResponse('TemplatesController@toggleActive', $e, 'An error occurred while updating the template status');
         }
     }
 }

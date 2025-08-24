@@ -7,11 +7,9 @@ use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\WebsiteType;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\WebsiteTypes\StoreWebsiteTypeRequest;
 use App\Http\Requests\Dashboard\Pages\WebsiteTypes\UpdateWebsiteTypeRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class WebsiteTypesController extends Controller
 {
@@ -30,9 +28,7 @@ class WebsiteTypesController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
-        return Inertia::render('dashboard/pages/websiteTypes/WebsiteTypes', [
-            'websiteTypes' => $data,
-        ]);
+        return $this->inertiaRender('dashboard/pages/websiteTypes/WebsiteTypes', ['websiteTypes' => $data]);
     }
 
     /**
@@ -61,12 +57,9 @@ class WebsiteTypesController extends Controller
 
             $websiteType->save();
 
-            return redirect()->route('dashboard.websiteTypes.index')->with('message', 'Website type created successfully');
+            return $this->redirectSuccess('dashboard.websiteTypes.index', 'Website Type created successfully');
         } catch (\Exception $e) {
-            Log::error('Error in WebsiteTypesController@store: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while creating the Website Type. Please try again.');
+            return $this->logResponse('WebsiteTypesController@store', $e, 'An error occurred while creating the Website Type');
         }
     }
 
@@ -79,14 +72,11 @@ class WebsiteTypesController extends Controller
             $result = WebsiteType::with('user')->findOrFail($id);
             $websiteType = $this->flattenRelationData($result, ['user_name']);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $websiteType,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error fetching Website Type details',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('WebsiteTypesController@show', $e, 'An error when fetching the show page');
         }
     }
 
@@ -98,14 +88,11 @@ class WebsiteTypesController extends Controller
         try {
             $websiteType = WebsiteType::findOrFail($id);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $websiteType,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error fetching Website Type for edit',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('WebsiteTypesController@edit', $e, 'An error when fetching the edit page');
         }
     }
 
@@ -121,12 +108,9 @@ class WebsiteTypesController extends Controller
 
             $websiteType->save();
 
-            return redirect()->route('dashboard.websiteTypes.index')->with('message', 'Website type updated successfully');
+            return $this->redirectSuccess('dashboard.websiteTypes.index', 'Website Type updated successfully');
         } catch (\Exception $e) {
-            Log::error('Error in WebsiteTypesController@update: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the Website Type. Please try again.');
+            return $this->logResponse('WebsiteTypesController@update', $e, 'An error occurred while updating the Website Type');
         }
     }
 
@@ -143,12 +127,9 @@ class WebsiteTypesController extends Controller
 
             WebsiteType::destroy($validated['ids']);
 
-            return redirect()->back()->with('message', __('Website type(s) deleted successfully.'));
+            return $this->backSuccess('Website Type(s) deleted successfully');
         } catch (\Exception $e) {
-            Log::error('Error in WebsiteTypesController@destroy: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while deleting the Website Type(s). Please try again.');
+            return $this->logResponse('WebsiteTypesController@destroy', $e, 'An error occurred while deleting the Website Type(s)');
         }
     }
 
@@ -170,12 +151,9 @@ class WebsiteTypesController extends Controller
                 ? 'Website type activated successfully.'
                 : 'Website type deactivated successfully.';
 
-            return redirect()->back()->with('message', $message);
+            return $this->backSuccess($message);
         } catch (\Exception $e) {
-            Log::error('Error in WebsiteTypesController@toggleActive: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the Website Type status. Please try again.');
+            return $this->logResponse('WebsiteTypesController@toggleActive', $e, 'An error occurred while updating the Website Type status');
         }
     }
 }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Spotly;
 
 use App\Http\Controllers\Controller;
 use App\Models\WebsiteType;
-use Inertia\Inertia;
 use App\Models\EmailSubscriber;
 use App\Models\Message;
 use Illuminate\Http\Request;
@@ -15,9 +14,7 @@ class LandingController extends Controller
     {
         $websiteTypes = WebsiteType::all();
 
-        return Inertia::render('landing/Landing')->with([
-            'websiteTypes' => $websiteTypes,
-        ]);
+        return $this->inertiaRender('landing/Landing', ['websiteTypes' => $websiteTypes]);
     }
 
     public function subscribe(Request $request)
@@ -28,7 +25,7 @@ class LandingController extends Controller
 
         EmailSubscriber::create($validated);
 
-        return redirect()->back()->with('message', 'Subscription successful!');
+        return $this->backSuccess('Subscription successful!');
     }
 
     public function contactUs(Request $request)
@@ -45,6 +42,6 @@ class LandingController extends Controller
         $message->status = 'new';
         $message->save();
 
-        return redirect()->back()->with('message', 'Thank you for your message!');
+        return $this->backSuccess('Thank you for your message!');
     }
 }

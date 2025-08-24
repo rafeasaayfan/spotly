@@ -7,10 +7,8 @@ use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\Brand;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Http\Requests\Dashboard\Pages\Brands\StoreBrandRequest;
 use App\Http\Requests\Dashboard\Pages\Brands\UpdateBrandRequest;
-use Illuminate\Support\Facades\Log;
 
 class BrandsController extends Controller
 {
@@ -29,9 +27,7 @@ class BrandsController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
-        return Inertia::render('dashboard/pages/brands/Brands', [
-            'brands' => $data,
-        ]);
+        return $this->inertiaRender('dashboard/pages/brands/Brands', ['brands' => $data]);
     }
 
     /**
@@ -42,15 +38,9 @@ class BrandsController extends Controller
         try {
             $websites = $this->getRelation('website', ['name']);
 
-            return response()->json([
-                'websites' => $websites,
-            ]);
-
+            return $this->jsonSuccess('', ['websites' => $websites]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on BrandsController@create',
-                'error'   => config('app.debug') ? $e->getMessage() : null
-            ], 500);
+            return $this->logJsonResponse('BrandsController@create', $e, 'An error when fetching the create page');
         }
     }
 
@@ -66,13 +56,9 @@ class BrandsController extends Controller
 
             $brand->save();
 
-            return redirect()->route('dashboard.brands.index')->with('message', 'Brand created successfully');
-
+            return $this->redirectSuccess('dashboard.brands.index', 'Brand created successfully');
         } catch (\Exception $e) {
-            Log::error('Error in BrandsController@store: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while creating the brand. Please try again.');
+            return $this->logResponse('BrandsController@store', $e, 'An error occurred while creating the brand');
         }
     }
 
@@ -86,14 +72,11 @@ class BrandsController extends Controller
 
             $brand = $this->flattenRelationData($query, ['website_name']);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $brand,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on BrandsController@show',
-                'error'   => config('app.debug') ? $e->getMessage() : null
-            ], 500);
+            return $this->logJsonResponse('BrandsController@show', $e, 'An error when fetching the show page');
         }
     }
 
@@ -107,16 +90,12 @@ class BrandsController extends Controller
 
             $websites = $this->getRelation('website', ['name']);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $brand,
                 'websites' => $websites,
             ]);
-
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on BrandsController@edit',
-                'error'   => config('app.debug') ? $e->getMessage() : null
-            ], 500);
+            return $this->logJsonResponse('BrandsController@edit', $e, 'An error when fetching the edit page');
         }
     }
 
@@ -132,13 +111,9 @@ class BrandsController extends Controller
 
             $brand->save();
 
-            return redirect()->route('dashboard.brands.index')->with('message', 'Brand updated successfully');
-
+            return $this->redirectSuccess('dashboard.brands.index', 'Brand updated successfully');
         } catch (\Exception $e) {
-            Log::error('Error in BrandsController@store: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the brand. Please try again.');
+            return $this->logResponse('BrandsController@update', $e, 'An error occurred while updating the brand');
         }
     }
 
@@ -152,16 +127,12 @@ class BrandsController extends Controller
                 'ids' => 'required|array',
                 'ids.*' => 'integer|exists:brands,id',
             ]);
-    
-            Brand::destroy($validated['ids']);
-    
-            return redirect()->back()->with('message', __('Brand(s) deleted successfully.'));
 
+            Brand::destroy($validated['ids']);
+
+            return $this->backSuccess('Brand(s) deleted successfully');
         } catch (\Exception $e) {
-            Log::error('Error in BrandsController@destroy: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while deleting the brand(s). Please try again.');
+            return $this->logResponse('BrandsController@destroy', $e, 'An error occurred while deleting the brand(s)');
         }
     }
 
@@ -172,26 +143,22 @@ class BrandsController extends Controller
     {
         try {
             $brand = Brand::findOrFail($id);
-    
+
             $validated = $request->validate([
                 'is_active' => 'required|boolean',
             ]);
-    
+
             $brand->update([
                 'is_active' => $validated['is_active'],
             ]);
-    
+
             $message = $validated['is_active']
                 ? 'Brand activated successfully.'
                 : 'Brand deactivated successfully.';
-    
-            return redirect()->back()->with('message', $message);
-            
+
+            return $this->backSuccess($message);
         } catch (\Exception $e) {
-            Log::error('Error in BrandsController@toggleActive: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the brand status. Please try again.');
+            return $this->logResponse('BrandsController@toggleActive', $e, 'An error occurred while updating the brand status');
         }
     }
 }

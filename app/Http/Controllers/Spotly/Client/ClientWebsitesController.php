@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Website;
 use App\Models\WebsiteType;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use App\Http\Requests\Client\ClientWebsitesIndexRequest;
 use App\Http\Requests\Client\UpdateWebsiteRequest;
 use App\Models\Country;
-use Inertia\Inertia;
+use App\Models\User;
+use App\Services\OtpService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ClientWebsitesController extends Controller
 {
@@ -18,7 +20,7 @@ class ClientWebsitesController extends Controller
      * Display a listing of the user's websites.
      */
     public function index(ClientWebsitesIndexRequest $request)
-    { 
+    {
         $search = trim($request->input('search', ''));
         $sort_by = $request->input('sort_by', 'newest');
         $website_type_id = $request->input('website_type', '');
@@ -30,7 +32,7 @@ class ClientWebsitesController extends Controller
             $websites = Website::where('owner_id', Auth::id())
                 ->when($search, function ($query, $search) {
                     $query->where('name', 'like', '%' . $search . '%')
-                          ->orWhere('subdomain', 'like', '%' . $search . '%');
+                        ->orWhere('subdomain', 'like', '%' . $search . '%');
                 })
                 ->when($website_type_id, function ($query, $website_type_id) {
                     $query->where('website_type_id', $website_type_id);
@@ -47,13 +49,13 @@ class ClientWebsitesController extends Controller
                     'websiteActiveTemplateColor.template:id,name',
                     'websiteActiveTemplateColor.templateColor:id,name',
                 ])
-                ->orderBy(match($sort_by) {
+                ->orderBy(match ($sort_by) {
                     'newest' => 'created_at',
                     'oldest' => 'created_at',
                     'name_asc' => 'name',
                     'name_desc' => 'name',
                     default => 'created_at',
-                }, match($sort_by) {
+                }, match ($sort_by) {
                     'newest' => 'desc',
                     'oldest' => 'asc',
                     'name_asc' => 'asc',
@@ -64,47 +66,53 @@ class ClientWebsitesController extends Controller
 
             $websiteTypes = WebsiteType::active()->select('id', 'title')->get();
 
-            return Inertia::render('client/myWebsites/Websites', [
+            return $this->inertiaRender('client/myWebsites/Websites', [
                 'websites' => $websites,
                 'websiteTypes' => $websiteTypes
             ]);
+
         } catch (\Exception $e) {
-            Log::error('Error in ClientWebsitesController@index: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while fetching the websites. Please try again.');
+            return $this->logResponse('ClientWebsitesController@index', $e, 'An error occurred while fetching the websites');
         }
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $websiteId)
-    { 
-        $website = Website::with('media')->findOrFail($websiteId);
-        $website->light_logo = $website->getFirstMediaUrl('light_logo');
-        $website->dark_logo = $website->getFirstMediaUrl('dark_logo');
+    public function edit(Website $website)
+    {
+        Gate::authorize('view', $website);
 
-        $countries = Country::with('media')->active()->get();
-        $countries->transform(function ($country) {
-            $country->flag = $country->getFirstMediaUrl('flag');
-            return $country;
-        });
+        try {
+            $website->light_logo = $website->getFirstMediaUrl('light_logo');
+            $website->dark_logo = $website->getFirstMediaUrl('dark_logo');
 
-        $cities = config('cities.lebanon');
+            $countries = Country::with('media')->active()->get();
+            $countries->transform(function ($country) {
+                $country->flag = $country->getFirstMediaUrl('flag');
+                return $country;
+            });
 
-        return Inertia::render('client/myWebsites/actions/Edit', [
-            'website' => $website,
-            'countries' => $countries,
-            'cities' => $cities,
-        ]);
+            $cities = config('cities.lebanon');
+
+            return $this->inertiaRender('client/myWebsites/actions/Edit', [
+                'website' => $website,
+                'countries' => $countries,
+                'cities' => $cities,
+            ]);
+
+        } catch (\Exception $e) {
+            return $this->logResponse('ClientWebsitesController@edit', $e, 'An error occurred while showing the edit resource');
+        }
     }
 
     /**
      * Update the specified resource in storage.
-    */
+     */
     public function update(UpdateWebsiteRequest $request, Website $website)
-    { 
+    {
+        Gate::authorize('update', $website);
+
         try {
             $validated = $request->validated();
             unset($validated['light_logo'], $validated['dark_logo']);
@@ -124,13 +132,87 @@ class ClientWebsitesController extends Controller
 
             $website->save();
 
-            return redirect()->back()->with('message', 'Website updated successfully');
+            return $this->backSuccess('Website updated successfully');
+
         } catch (\Exception $e) {
-            Log::error('Error in ClientWebsitesController@update: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
+            return $this->logResponse('ClientWebsitesController@update', $e, 'An error occurred while updating the website');
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Request $request, Website $website, OtpService $otpService)
+    {
+        Gate::authorize('delete', $website);
+
+        try {
+            $validate = $request->validate([
+                'code' => 'required|digits:6'
             ]);
-            dd($e->getTraceAsString());
-            return redirect()->back()->withErrors('An error occurred while updating the website. Please try again.');
+
+            $user = User::findOrFail(Auth::id());
+
+            if ($otpService->verify($user->id, 'delete_website', $validate['code'])) {
+                $website->delete();
+
+                return $this->redirectSuccess('client.myWebsites', 'Your Website deleted successfully');
+            }
+
+            return $this->redirectError('client.myWebsites', 'Invalid or expired OTP');
+
+        } catch (\Exception $e) {
+            return $this->logResponse('ClientWebsitesController@destroy', $e, 'An error occurred while deleting the website');
+        }
+    }
+
+    /**
+     * Update the website activation.
+     */
+    public function activateWebsite(Request $request, Website $website)
+    {
+        Gate::authorize('activate', $website);
+
+        try {
+            $validated = $request->validate([
+                'is_active' => 'required|boolean',
+            ]);
+
+            if ($website->status !== 'approved') {
+                $this->backError('You cant Activate your website because it not approved from admins');
+            }
+
+            $website->update([
+                'is_active' => $validated['is_active'],
+            ]);
+
+            $message = $validated['is_active']
+                ? 'Your Website activated successfully.'
+                : 'Your Website deactivated successfully.';
+
+            return $this->backSuccess($message);
+        } catch (\Exception $e) {
+            return $this->logResponse('ClientWebsitesController@activateWebsite', $e, 'An error occurred while updating the website status');
+        }
+    }
+
+    /**
+     * Send a new OTP CODE.
+     */
+    public function sendOtp(OtpService $otpService)
+    {
+        try {
+            $user = User::findOrFail(Auth::id());
+
+            $otp = $otpService->generate($user, 'delete_website');
+
+            if (!$otp) {
+                $this->jsonError('You have reached the maximum OTP requests for this hour');
+            }
+
+            $this->jsonSuccess('OTP sent successfully');
+        } catch (\Exception $e) {
+            $this->logJsonResponse('ClientWebsitesController@sendOtp', $e);
         }
     }
 }

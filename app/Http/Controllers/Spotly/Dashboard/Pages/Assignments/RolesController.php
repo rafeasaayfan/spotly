@@ -8,8 +8,6 @@ use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Log;
 
 class RolesController extends Controller
 {
@@ -26,9 +24,7 @@ class RolesController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching);
 
-        return Inertia::render('dashboard/pages/assignments/roles/Roles', [
-            'roles' => $data,
-        ]);
+        return $this->inertiaRender('dashboard/pages/assignments/roles/Roles', ['roles' => $data]);
     }
 
     /**
@@ -54,12 +50,9 @@ class RolesController extends Controller
             $role = new Role($validated);
             $role->save();
 
-            return redirect()->route('dashboard.roles.index')->with('message', 'Role created successfully');
+            return $this->redirectSuccess('dashboard.roles.index', 'Role created successfully');
         } catch (\Exception $e) {
-            Log::error('Error on RolesController@store: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while creating the role. Please try again.');
+            return $this->logResponse('RolesController@store', $e, 'An error occurred while creating the role');
         }
     }
 
@@ -71,14 +64,11 @@ class RolesController extends Controller
         try {
             $role = Role::findOrFail($id);
 
-            return response()->json([
-                'data' => $role
+            return $this->jsonSuccess('', [
+                'data' => $role,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on RolesController@show',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('RolesController@show', $e, 'An error when fetching the show page');
         }
     }
 
@@ -90,14 +80,11 @@ class RolesController extends Controller
         try {
             $role = Role::findOrFail($id);
 
-            return response()->json([
-                'data' => $role
+            return $this->jsonSuccess('', [
+                'data' => $role,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on RolesController@edit',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('RolesController@edit', $e, 'An error when fetching the edit page');
         }
     }
 
@@ -117,12 +104,9 @@ class RolesController extends Controller
 
             $role->update($validated);
 
-            return redirect()->route('dashboard.roles.index')->with('message', 'Role updated successfully');
+            return $this->redirectSuccess('dashboard.roles.index', 'Role updated successfully');
         } catch (\Exception $e) {
-            Log::error('Error on RolesController@update: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating the role. Please try again.');
+            return $this->logResponse('RolesController@update', $e, 'An error occurred while updating the role');
         }
     }
 
@@ -140,12 +124,9 @@ class RolesController extends Controller
 
             Role::destroy($validated['ids']);
 
-            return redirect()->back()->with('message', __('Role(s) deleted successfully.'));
+            return $this->backSuccess('Role(s) deleted successfully');
         } catch (\Exception $e) {
-            Log::error('Error on RolesController@destroy: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while deleting role(s). Please try again.');
+            return $this->logResponse('RolesController@destroy', $e, 'An error occurred while deleting the role(s)');
         }
     }
 
@@ -160,15 +141,12 @@ class RolesController extends Controller
                 $query->where('roles.id', $id);
             })->get();
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'attachedPermissions' => $attachedPermissions,
                 'availablePermissions' => $availablePermissions,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on RolesController@assignment',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('RolesController@assignment', $e, 'An error when fetching the assignment page');
         }
     }
 
@@ -188,16 +166,13 @@ class RolesController extends Controller
 
             if ($validated['action'] === 'add') {
                 $role->givePermissionTo($permission);
-                return redirect()->back()->with('message', 'Permission assigned to role successfully.');
+                return $this->backSuccess('Permission assigned to role successfully');
             } else {
                 $role->revokePermissionTo($permission);
-                return redirect()->back()->with('message', 'Permission revoked from role successfully.');
+                return $this->backSuccess('Permission revoked from role successfully');
             }
         } catch (\Exception $e) {
-            Log::error('Error on RolesController@storeAssignments: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->withErrors('An error occurred while updating permission assignments. Please try again.');
+            return $this->logResponse('RolesController@storeAssignments', $e, 'An error occurred while updating the permission assignments');
         }
     }
 }

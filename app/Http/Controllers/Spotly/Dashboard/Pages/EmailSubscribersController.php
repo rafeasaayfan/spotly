@@ -7,8 +7,6 @@ use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\EmailSubscriber;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Log;
 
 class EmailSubscribersController extends Controller
 {
@@ -25,9 +23,7 @@ class EmailSubscribersController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching);
 
-        return Inertia::render('dashboard/pages/emailSubscribers/EmailSubscribers', [
-            'emailSubscribers' => $data,
-        ]);
+        return $this->inertiaRender('dashboard/pages/emailSubscribers/EmailSubscribers', ['emailSubscribers' => $data]);
     }
 
     /**
@@ -54,14 +50,11 @@ class EmailSubscribersController extends Controller
         try {
             $emailsubscriber = EmailSubscriber::findOrFail($id);
 
-            return response()->json([
+            return $this->jsonSuccess('', [
                 'data' => $emailsubscriber,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error on EmailSubscribersController@show',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
+            return $this->logJsonResponse('EmailSubscribersController@show', $e, 'An error when fetching the show page');
         }
     }
 
@@ -94,12 +87,9 @@ class EmailSubscribersController extends Controller
 
             EmailSubscriber::destroy($validated['ids']);
 
-            return redirect()->back()->with('message', __('Subscriber(s) deleted successfully.'));
+            return $this->backSuccess('Subscriber(s) deleted successfully');
         } catch (\Exception $e) {
-            Log::error('Error in EmailSubscribersController@destroy: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect()->back()->withErrors('An error occurred while deleting the subscriber(s). Please try again.');
+            return $this->logResponse('EmailSubscribersController@destroy', $e, 'An error occurred while deleting the subscriber(s)');
         }
     }
 }
