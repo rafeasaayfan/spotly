@@ -24,7 +24,7 @@ function updateValue(event: Event) {
 </script>
 
 <template>
-    <div :class="cn('relative w-full flex items-center bg-field border-none rounded-md cursor-pointer duration-150 ease-in-out min-h-5 h-9',
+    <div :class="cn('relative w-full flex items-center bg-field border border-muted rounded-md cursor-pointer duration-150 ease-in-out min-h-5 h-9',
         props.parentClass)">
         <select :name="props.name" :id="props.id" :value="modelValue" @change="updateValue" :class="cn(
             'appearance-none border-none rounded-md cursor-pointer duration-150 ease-in-out',
