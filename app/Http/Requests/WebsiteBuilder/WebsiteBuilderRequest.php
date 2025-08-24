@@ -44,7 +44,7 @@ class WebsiteBuilderRequest extends FormRequest
                         'unique:websites,phone_number',
                         'regex:/^(?:\+961|961|0)?((03\d{6})|(71\d{6})|(78\d{6})|(76\d{6})|(01\d{6})|(70\d{6}))$/'
                     ],
-                    'email' => ['nullable', 'string', 'min:3', 'unique:websites,email'],
+                    'email' => ['nullable', 'email', 'min:3', 'unique:websites,email'],
                     'address' => ['nullable', 'string', 'max:15', 'min:3'],
                     'country' => [
                         'nullable',
