@@ -25,7 +25,8 @@ import {
     LoaderCircle,
     Search,
 } from 'lucide-vue-next';
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, reactive, ref, watch, watchEffect } from 'vue';
+import { toast } from '@/lib/sweetAlert';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -37,7 +38,17 @@ const breadcrumbs: BreadcrumbItem[] = [
 const props = defineProps<{
     websites: DataTableProps;
     websiteTypes: Record<string, any>;
+    flash?: {
+        message: string,
+    }
 }>();
+
+watchEffect(() => {
+    const message = props.flash?.message;
+    if (message) {
+        toast.fire({ icon: 'success', title: message });
+    }
+});
 
 function createPaginationMeta(paginationData: DataTableProps) {
     return computed(() => ({

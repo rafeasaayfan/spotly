@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { File, Input, InputError, PhoneNumberField, Select, SelectWithSearch, Textarea, Toggle } from '@/components/ui/fields';
 import { Label } from '@/components/ui/label';
+import { Dialog, DialogDescription, DialogHeader, DialogScrollContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 import DashboardLayout from '@/layouts/DashboardLayout.vue';
 import { toast } from '@/lib/sweetAlert';
@@ -17,10 +18,11 @@ import {
     LoaderCircle,
     Locate,
     Mail,
-    MessageSquareWarning,
+    AlertTriangle,
     Phone,
     Youtube,
 } from 'lucide-vue-next';
+import Delete from './Delete.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -68,6 +70,19 @@ const submit = () => {
         },
     });
 };
+
+const activate = (toggleVal: boolean) => {
+    form.is_active = toggleVal;
+    
+    form.patch(route('client.myWebsite.activate', props.website.id), {
+        onSuccess: () => {
+            toast.fire({ icon: 'success', title: props.flash?.message });
+        },
+        onError: (errors) => {
+            toast.fire({ icon: 'error', title: errors.message });
+        },
+    });
+}
 </script>
 
 <template>
@@ -84,19 +99,18 @@ const submit = () => {
             <div class="flex flex-col gap-6 rounded-s-md">
                 <!-- Logo -->
                 <div
-                    class="border-muted flex flex-wrap items-center gap-5 border-b p-6"
-                    :class="props.website.light_logo || props.website.dark_logo ? 'flex-row' : 'flex-col'"
+                    class="border-muted flex flex-col flex-wrap items-center gap-5 border-b p-6"
                 >
-                    <div class="flex flex-col gap-2">
-                        <Label for="light_logo">Light Logo</Label>
+                    <div class="flex flex-col gap-1">
+                        <Label for="light_logo" class="mb-1">Light Logo</Label>
                         <File id="light_logo" v-model="form.light_logo" :src="props.website.light_logo" label="Light Logo" />
-                        <InputError v-if="form.errors?.light_logo" :message="form.errors.light_logo" />
+                        <InputError v-if="form.errors?.light_logo" :message="form.errors.light_logo" class="text-xs" />
                     </div>
 
-                    <div class="flex flex-col gap-2">
-                        <Label for="dark_logo">Dark Logo</Label>
+                    <div class="flex flex-col gap-1">
+                        <Label for="dark_logo" class="mb-1">Dark Logo</Label>
                         <File id="dark_logo" v-model="form.dark_logo" :src="props.website.dark_logo" label="Dark Logo" />
-                        <InputError v-if="form.errors?.dark_logo" :message="form.errors.dark_logo" />
+                        <InputError v-if="form.errors?.dark_logo" :message="form.errors.dark_logo" class="text-xs" />
                     </div>
                 </div>
 
@@ -107,23 +121,36 @@ const submit = () => {
                         :btnClass="['w-12 h-6', props.website.status === 'approved' ? '' : 'pointer-events-none']"
                         circleClass="size-4"
                         :modelValue="props.website.is_active === 1"
+                        @update:modelValue="(val) => activate(val)"
                     />
-                    <div class="mt-2 flex items-center gap-1 text-yellow-700/90">
-                        <MessageSquareWarning class="size-4.5" />
+                    <div v-if="props.website.status !== 'approved'" class="mt-2 flex items-center gap-1 text-yellow-700/90">
+                        <AlertTriangle class="size-4" />
                         <span class="text-[11.5px] font-extrabold">Your Website is {{ props.website.status }}, so you cant activate it</span>
                     </div>
-                    <!-- @update:modelValue="(val) => updateCol(column.key, val, row.id)" -->
                 </div>
 
                 <div class="flex flex-col gap-2 px-6 pb-6">
-                    <Button class="opacity-70 hover:opacity-100" variant="destructive">Delete This Website</Button>
+                    <Dialog>
+                        <DialogTrigger as-child>
+                            <Button size="sm" class="opacity-70 hover:opacity-100" variant="destructive">Delete This Website</Button>
+                        </DialogTrigger>
+
+                        <DialogScrollContent>
+                            <DialogHeader>
+                                <DialogTitle>Delete {{ props.website.name }}</DialogTitle>
+                                <DialogDescription class="sr-only"> No description provided. </DialogDescription>
+                            </DialogHeader>
+
+                            <Delete :websiteId="props.website.id" />
+                        </DialogScrollContent>
+                    </Dialog>
                 </div>
             </div>
 
             <div class="border-muted flex flex-1 flex-col gap-6 border-s px-10 py-6">
                 <div class="grid grid-cols-2 gap-5 rounded-md">
-                    <div class="flex flex-col gap-2">
-                        <Label for="phone_number">
+                    <div class="flex flex-col gap-1">
+                        <Label for="phone_number" class="mb-1">
                             <Phone class="size-3.5" />
                             Phone Number
                         </Label>
@@ -131,27 +158,27 @@ const submit = () => {
                         <InputError v-if="form.errors?.phone_number" :message="form.errors.phone_number" />
                     </div>
 
-                    <div class="flex flex-col gap-2">
-                        <Label for="email">
+                    <div class="flex flex-col gap-1">
+                        <Label for="email" class="mb-1">
                             <Mail class="size-3.5" />
                             Email Address
                         </Label>
-                        <Input id="email" v-model="form.email" placeholder="Enter your business phone number" required />
+                        <Input type="email" id="email" v-model="form.email" placeholder="Enter your business phone number" required />
                         <InputError v-if="form.errors?.email" :message="form.errors.email" />
                     </div>
                 </div>
 
                 <div class="border-muted grid grid-cols-2 gap-5 border-t pt-6">
-                    <div class="flex flex-col gap-2">
-                        <Label for="country">
+                    <div class="flex flex-col gap-1">
+                        <Label for="country" class="mb-1">
                             <Flag class="size-3.5" />
                             Country
                         </Label>
                         <SelectWithSearch v-model="form.country" placeholder="Select a country..." :options="mappedCountries" />
                         <InputError v-if="form.errors?.country" :message="form.errors.country" />
                     </div>
-                    <div class="flex flex-col gap-2">
-                        <Label for="city">
+                    <div class="flex flex-col gap-1">
+                        <Label for="city" class="mb-1">
                             <Building2 class="size-3.5" />
                             City
                         </Label>
@@ -162,16 +189,16 @@ const submit = () => {
                         />
                         <InputError v-if="form.errors?.city" :message="form.errors.city" />
                     </div>
-                    <div class="flex flex-col gap-2">
-                        <Label for="address">
+                    <div class="flex flex-col gap-1">
+                        <Label for="address" class="mb-1">
                             <Locate class="size-3.5" />
                             Address
                         </Label>
                         <Input id="address" v-model="form.address" placeholder="Enter your business Address" required />
                         <InputError v-if="form.errors?.address" :message="form.errors.address" />
                     </div>
-                    <div class="flex flex-col gap-2">
-                        <Label for="language">
+                    <div class="flex flex-col gap-1">
+                        <Label for="language" class="mb-1">
                             <Languages class="size-3.5" />
                             Default Language
                         </Label>
@@ -193,16 +220,16 @@ const submit = () => {
                 </div>
 
                 <div class="border-muted grid grid-cols-2 gap-5 border-t pt-6">
-                    <div class="flex flex-col gap-2">
-                        <Label for="instagram">
+                    <div class="flex flex-col gap-1">
+                        <Label for="instagram" class="mb-1">
                             <Instagram class="size-3.5" />
                             Instagram
                         </Label>
-                        <Input id="instagram" v-model="form.instagram" placeholder="Enter your business Instagram" required />
+                        <Input type="url" id="instagram" v-model="form.instagram" placeholder="Enter your business Instagram" required />
                         <InputError v-if="form.errors?.instagram" :message="form.errors.instagram" />
                     </div>
-                    <div class="flex flex-col gap-2">
-                        <Label for="tiktok">
+                    <div class="flex flex-col gap-1">
+                        <Label for="tiktok" class="mb-1">
                             <svg viewBox="0 0 256 256" class="size-3.5 stroke-black transition-all duration-300 dark:stroke-white">
                                 <path
                                     d="M168,106a95.9,95.9,0,0,0,56,18V84a56,56,0,0,1-56-56H128V156a28,28,0,1,1-40-25.3V89.1A68,68,0,1,0,168,156Z"
@@ -214,15 +241,15 @@ const submit = () => {
                             </svg>
                             TikTok
                         </Label>
-                        <Input id="tiktok" v-model="form.tiktok" placeholder="Enter your business TikTok" required />
+                        <Input type="url" id="tiktok" v-model="form.tiktok" placeholder="Enter your business TikTok" required />
                         <InputError v-if="form.errors?.tiktok" :message="form.errors.tiktok" />
                     </div>
-                    <div class="flex flex-col gap-2">
-                        <Label for="youtube">
+                    <div class="flex flex-col gap-1">
+                        <Label for="youtube" class="mb-1">
                             <Youtube class="size-3.5" />
                             Youtube
                         </Label>
-                        <Input id="youtube" v-model="form.youtube" placeholder="Enter your business Youtube" required />
+                        <Input type="url" id="youtube" v-model="form.youtube" placeholder="Enter your business Youtube" required />
                         <InputError v-if="form.errors?.youtube" :message="form.errors.youtube" />
                     </div>
                     <div class="flex flex-col gap-2">
@@ -230,13 +257,13 @@ const submit = () => {
                             <Facebook class="size-3.5" />
                             Facebook
                         </Label>
-                        <Input id="facebook" v-model="form.facebook" placeholder="Enter your business Facebook" required />
+                        <Input type="url" id="facebook" v-model="form.facebook" placeholder="Enter your business Facebook" required />
                         <InputError v-if="form.errors?.facebook" :message="form.errors.facebook" />
                     </div>
                 </div>
 
-                <div class="border-muted flex w-full flex-col gap-2 border-t pt-6">
-                    <Label for="about_us">
+                <div class="border-muted flex w-full flex-col border-t pt-6">
+                    <Label for="about_us" class="mb-2">
                         <Info class="size-3.5" />
                         About Us Section
                     </Label>
@@ -247,7 +274,7 @@ const submit = () => {
         </form>
 
         <div class="flex w-full justify-end px-4 pb-4">
-            <Button @click="submit" size="lg" :disabled="form.processing">
+            <Button @click="submit" :disabled="form.processing">
                 <LoaderCircle v-if="form.processing" class="size-4.5 animate-spin" />
                 Save Change
             </Button>
