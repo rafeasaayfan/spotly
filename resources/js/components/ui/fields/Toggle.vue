@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, type HTMLAttributes } from 'vue';
+import { computed, type HTMLAttributes } from 'vue';
 import { cn } from '@/lib/utils';
 import { usePage } from '@inertiajs/vue3';
 import { SharedData } from '@/types';
@@ -9,6 +9,8 @@ const page = usePage<SharedData>();
 const props = defineProps<{
   id?: string
   class?: HTMLAttributes['class']
+  btnClass?: HTMLAttributes['class']
+  circleClass?: HTMLAttributes['class']
   label?: string
   modelValue: boolean
 }>()
@@ -30,12 +32,12 @@ const isRTL = computed(() => page.props.lang === 'ar')
 <template>
   <div
     @click="toggleChecked = !toggleChecked"
-    :class="cn('group flex items-center gap-2 cursor-pointer transition-all ease-in-out duration-150 ease-in-out', props.class)"
+    :class="cn('group flex items-center gap-2 w-fit transition-all ease-in-out duration-150 ease-in-out', props.class)"
     :id="props.id"
   >
     <button
       :class="[
-        'relative flex items-center w-8 h-5 rounded-full border cursor-pointer transition-all ease-in-out duration-150 active:scale-96',
+        cn('relative flex items-center w-8 h-5 rounded-full border cursor-pointer transition-all ease-in-out duration-150 active:scale-96', props.btnClass),
         toggleChecked
           ? 'bg-primary border-muted'
           : 'bg-gray-200 dark:bg-gray-900 hover:bg-gray-300 dark:hover:bg-gray-950 border-muted'
@@ -43,7 +45,7 @@ const isRTL = computed(() => page.props.lang === 'ar')
     >
       <div
         :class="[
-          'absolute w-3 h-3 rounded-full transition-all ease-in-out duration-500',
+          cn('absolute size-3 rounded-full transition-all ease-in-out duration-500', props.circleClass),
           toggleChecked
             ? isRTL
               ? 'left-[2.5px] bg-white'
