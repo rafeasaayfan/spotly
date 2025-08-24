@@ -61,7 +61,7 @@ onMounted(async () => {
 
     try {
         const response = await axios.get(endpoint);
-        record.value = response.data;
+        record.value = response.data.props;
     } catch (error) {
         console.error('Failed to fetch record:', error);
     } finally {
