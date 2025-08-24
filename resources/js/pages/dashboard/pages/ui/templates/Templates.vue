@@ -40,7 +40,7 @@ const filter = [
 ];
 
 const props = defineProps<{
-    data: DataTableProps;
+    templates: DataTableProps;
     flash?: {
         message?: string;
     };
@@ -63,7 +63,7 @@ const tableConditions = {
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <DataTable
-            :tableData="props.data"
+            :tableData="props.templates"
             :filter="filter"
             :columns="columns"
             routeName="dashboard.templates"
