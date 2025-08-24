@@ -117,7 +117,7 @@
     --success-active: hsl(120, 65%, 30%);
     --success-foreground: hsl(0 0% 100%);
 
-    --border: hsl(0, 0%, 5%);
+    --border: hsl(0, 0%, 7%);
 }
 
 body {
