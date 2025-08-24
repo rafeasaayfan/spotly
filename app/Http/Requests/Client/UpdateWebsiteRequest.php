@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Client;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateWebsiteRequest extends FormRequest
 {
@@ -22,11 +23,27 @@ class UpdateWebsiteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'light_logo' => ['nullable', 'file', 'mimes:svg', 'max:2048', 'required_with:dark_logo'],
-            'dark_logo' => ['nullable', 'file', 'mimes:svg', 'max:2048', 'required_with:light_logo'],
+            'light_logo' => [
+                'nullable',
+                'file',
+                'mimes:svg',
+                'max:2048',
+                when(!$this->route('website')->hasMedia('dark_logo'), 'required_with:dark_logo')
+            ],
+            'dark_logo' => [
+                'nullable',
+                'file',
+                'mimes:svg',
+                'max:2048',
+                when(!$this->route('website')->hasMedia('dark_logo'), 'required_with:light_logo')
+            ],
 
-            'about_us' => ['required', 'string', 'max:255', 'min:30'],
-            'language' => ['required', 'string', 'in:en,ar,fr'],
+            'phone_number' => [
+                'required',
+                'regex:/^(?:\+961|961|0)?((03\d{6})|(71\d{6})|(78\d{6})|(76\d{6})|(01\d{6})|(70\d{6}))$/',
+                Rule::unique('websites', 'phone_number')->ignore($this->route('website')->id)
+            ],
+            'email' => ['nullable', 'email', Rule::unique('websites', 'email')->ignore($this->route('website')->id)],
 
             'address' => ['nullable', 'string', 'max:15', 'min:3'],
             'country' => [
@@ -52,11 +69,14 @@ class UpdateWebsiteRequest extends FormRequest
                     }
                 }
             ],
+            'language' => ['required', 'string', 'in:en,ar,fr'],
 
             'instagram' => ['nullable', 'url', 'max:255'],
             'facebook' => ['nullable', 'url', 'max:255'],
             'tiktok' => ['nullable', 'url', 'max:255'],
             'youtube' => ['nullable', 'url', 'max:255'],
+
+            'about_us' => ['required', 'string', 'max:255', 'min:30'],
         ];
     }
 }
