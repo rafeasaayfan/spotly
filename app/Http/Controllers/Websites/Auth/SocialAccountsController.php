@@ -22,7 +22,7 @@ class SocialAccountsController extends Controller
         $googleUser = Socialite::driver('google')->user();
 
         //* Check if user exists
-        $user = User::where('email', $googleUser->getEmail())->first();
+        $user = User::where('email', $googleUser->getEmail())->firstOrFail();
         if (!$user) {
             // Create user if not exists
             $user = User::create([

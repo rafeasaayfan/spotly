@@ -46,7 +46,7 @@ class OtpService
      */
     public function sendCode()
     {
-        $lastOtp = Otp::where('user_id', $this->user->id)->where('website_id', $this->websiteId)->first();
+        $lastOtp = Otp::where('user_id', $this->user->id)->where('website_id', $this->websiteId)->firstOrFail();
         if ($lastOtp && !($lastOtp->isExpired())) {
             return 'find';
         }
@@ -69,7 +69,7 @@ class OtpService
      */
     public function checkLastOtp()
     {
-        $otp = Otp::where('user_id', $this->user->id)->where('website_id', $this->websiteId)->first();
+        $otp = Otp::where('user_id', $this->user->id)->where('website_id', $this->websiteId)->firstOrFail();
         if (!$otp) {
             return null;
         }
@@ -132,7 +132,8 @@ class OtpService
      */
     public function verify(string $code): bool
     {
-        $otp = Otp::where('user_id', $this->user->id)->where('website_id', $this->websiteId)->where('purpose', $this->purpose)->where('code', $code)->first();
+        $otp = Otp::where('user_id', $this->user->id)->where('website_id', $this->websiteId)->where('purpose', $this->purpose)->where('code', $code)
+        ->firstOrFail();
 
         if (!$otp) {
             return false;

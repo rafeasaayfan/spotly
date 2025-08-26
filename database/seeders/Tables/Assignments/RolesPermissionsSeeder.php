@@ -15,11 +15,11 @@ class RolesPermissionsSeeder extends Seeder
     public function run(): void
     {
         // Super Admin Role
-        $superAdminRole = Role::where('name', 'super_admin')->first();
+        $superAdminRole = Role::where('name', 'super_admin')->firstOrFail();
         $superAdminRole->givePermissionTo(Permission::all());
 
         // Admin Role
-        $adminRole = Role::where('name', 'admin')->first();
+        $adminRole = Role::where('name', 'admin')->firstOrFail();
         // $adminPermissions = Permission::whereNotIn('name', ['users_delete'])->pluck('id')->toArray();
         $adminRole->givePermissionTo('dashboard_access');
     }
