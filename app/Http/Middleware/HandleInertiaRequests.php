@@ -58,6 +58,8 @@ class HandleInertiaRequests extends Middleware
             'lang' => $locale,
             'flash' => [
                 'message' => fn() => $request->session()->get('message'),
+                'success' => fn() => $request->session()->get('success'),
+                'toastType' => fn() => $request->session()->get('toastType'),
             ],
         ];
     }
