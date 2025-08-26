@@ -54,8 +54,8 @@ const fetchTemplateTemplateColors = async (val: string, fromOnMounted: boolean =
 
         const response = await axios.post(route('websiteBuilder.getTemplateTemplateColors'), { templateId: val });
 
-        if (response.data?.templateTemplateColors) {
-            templateTemplateColors.value = response.data?.templateTemplateColors;
+        if (response.data?.props?.templateTemplateColors) {
+            templateTemplateColors.value = response.data.props.templateTemplateColors;
 
             if(!fromOnMounted) {
                 template_color_id.value = '';
