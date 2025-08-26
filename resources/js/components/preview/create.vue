@@ -2,7 +2,7 @@
 import { DialogDescription, DialogHeader, DialogScrollContent, DialogTitle } from '@/components/ui/dialog';
 import { toast } from '@/lib/sweetAlert';
 import axios from 'axios';
-import { Menu } from 'lucide-vue-next';
+import { LoaderCircle, Menu } from 'lucide-vue-next';
 import { computed, defineAsyncComponent, DefineComponent, ref, watch } from 'vue';
 import HeadingSmall from '../headers/HeadingSmall.vue';
 import { Button } from '../ui/button';
@@ -99,7 +99,11 @@ const validateColors = () => {
     return valid;
 };
 
+const isSubmitColors = ref(false);
+
 const handleSubmit = async () => {
+    isSubmitColors.value = true;
+
     if (validateColors()) {
         try {
             const response = await axios.post(route('websiteBuilder.customColors'), formColors.value);
@@ -113,8 +117,10 @@ const handleSubmit = async () => {
             if (error.response && error.response.status === 422) {
                 for (const [key, message] of Object.entries(error.response.data.errors)) {
                     if (key === 'name') {
+                        toast.fire({icon: 'error', title: Array.isArray(message) ? message[0] : message});
                         nameError.value = Array.isArray(message) ? message[0] : message;
                     } else if (key === 'description') {
+                        toast.fire({icon: 'error', title: Array.isArray(message) ? message[0] : message});
                         descriptionError.value = Array.isArray(message) ? message[0] : message;
                     } else {
                         colorErrors.value[key] = Array.isArray(message) ? message[0] : message;
@@ -123,6 +129,8 @@ const handleSubmit = async () => {
             }
         }
     }
+
+    isSubmitColors.value = false;
 };
 
 const reset = () => {
@@ -191,7 +199,10 @@ const showForm = () => {
                         </div>
 
                         <div class="col-span-2">
-                            <Button @click="handleSubmit" class="w-full">Submit</Button>
+                            <Button @click="handleSubmit" type="button" class="w-full" :disabled="isSubmitColors">
+                                <LoaderCircle v-if="isSubmitColors" class="size-4 animate-spin" />
+                                Submit
+                            </Button>
                         </div>
                     </div>
                 </div>
