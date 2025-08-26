@@ -26,13 +26,19 @@ trait ResponseTrait
      *
      * @param string $route
      * @param string $message
+     * @param string $toastType = 'success' | 'info' 
      * @param array $params
      * @return RedirectResponse
      */
-    public function redirectSuccess(string $route, string $message, array $params = []): RedirectResponse
+    public function redirectSuccess(string $route, string $message, $toastType = 'success', array $params = []): RedirectResponse
     {
+        if (!in_array($toastType, ['success', 'info'])) {
+            $toastType = 'success';
+        }
+
         return redirect()->route($route, $params)->with([
             'success' => true,
+            'toastType' => $toastType,
             'message' => $message
         ]);
     }
@@ -42,13 +48,19 @@ trait ResponseTrait
      *
      * @param string $route
      * @param string $message
+     * @param string $toastType = 'error' | 'warning' 
      * @param array $params
      * @return RedirectResponse
      */
-    public function redirectError(string $route, string $message, array $params = []): RedirectResponse
+    public function redirectError(string $route, string $message, $toastType = 'error', array $params = []): RedirectResponse
     {
+        if (!in_array($toastType, ['error', 'warning'])) {
+            $toastType = 'error';
+        }
+
         return redirect()->route($route, $params)->with([
             'success' => false,
+            'toastType' => $toastType,
             'message' => $message
         ]);
     }
@@ -57,12 +69,18 @@ trait ResponseTrait
      * Redirect back with a success message.
      *
      * @param string $message
+     * @param string $toastType = 'success' | 'info' 
      * @return RedirectResponse
      */
-    public function backSuccess(string $message): RedirectResponse
+    public function backSuccess(string $message, $toastType = 'success'): RedirectResponse
     {
+        if (!in_array($toastType, ['success', 'info'])) {
+            $toastType = 'success';
+        }
+
         return redirect()->back()->with([
             'success' => true,
+            'toastType' => $toastType,
             'message' => $message
         ]);
     }
@@ -71,12 +89,18 @@ trait ResponseTrait
      * Redirect back with an error message.
      *
      * @param string $message
+     * @param string $toastType = 'error' | 'warning' 
      * @return RedirectResponse
      */
-    public function backError(string $message): RedirectResponse
+    public function backError(string $message, $toastType = 'error'): RedirectResponse
     {
+        if (!in_array($toastType, ['error', 'warning'])) {
+            $toastType = 'error';
+        }
+
         return redirect()->back()->with([
             'success' => false,
+            'toastType' => $toastType,
             'message' => $message
         ])->withInput();
     }
