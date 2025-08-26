@@ -12,7 +12,7 @@ const props = defineProps<{
     data-slot="table"
     :class="
       cn(
-        'min-w-[900px] min-h-20 md:w-full rounded-md border-y border-muted',
+        'min-w-[1300px] lg:min-w-[900px] min-h-20 md:w-full rounded-md border-y border-muted',
         props.class,
       )
     "
