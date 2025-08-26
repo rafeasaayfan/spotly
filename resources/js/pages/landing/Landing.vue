@@ -61,15 +61,16 @@ onMounted(() => {
 
 const props = defineProps<{
     websiteTypes: Record<string, any>;
-    flash?: {
-        message?: string;
-    };
+        flash?: {
+        toastType: 'success' | 'error' | 'warning' | 'info',
+        message: string,
+    }
 }>();
 
 watchEffect(() => {
     const message = props.flash?.message;
     if (message) {
-        toast.fire({ icon: 'success', title: message });
+        toast.fire({ icon: props.flash?.toastType, title: message });
     }
 });
 </script>
