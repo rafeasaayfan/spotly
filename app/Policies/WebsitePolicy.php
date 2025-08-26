@@ -65,7 +65,7 @@ class WebsitePolicy
             return true;
         }
 
-        if (in_array($user->role, ['admin', 'super_admin'])) {
+        if (in_array($user->role, ['super_admin'])) {
             return true;
         }
 
@@ -92,6 +92,22 @@ class WebsitePolicy
      * Determine if the user can activate/deactivate the website.
      */
     public function activate(User $user, Website $website)
+    {
+        if ($user->id === $website->owner_id) {
+            return true;
+        }
+
+        if (in_array($user->role, ['admin', 'super_admin'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the user can make/change/delete the website ui.
+    */
+    public function ui(User $user, Website $website)
     {
         if ($user->id === $website->owner_id) {
             return true;
