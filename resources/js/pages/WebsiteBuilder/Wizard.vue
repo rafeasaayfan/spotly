@@ -13,6 +13,7 @@ import FourthStep from './steps/FourthStep.vue';
 import { useWizard } from '@/composables/useWizard';
 import { toast } from '@/lib/sweetAlert';
 import Icons from './Icons.vue';
+import { LoaderCircle } from 'lucide-vue-next';
 
 const props = defineProps<{
     websiteTypes: Record<string, any>;
@@ -21,15 +22,16 @@ const props = defineProps<{
     countries: Record<string, any>;
     cities: Array<string>;
     templates: Record<string, any>;
-    flash?: {
-        message?: string;
-    };
+        flash?: {
+        toastType: 'success' | 'error' | 'warning' | 'info',
+        message: string,
+    }
 }>();
 
 watchEffect(() => {
     const message = props.flash?.message;
     if (message) {
-        toast.fire({ icon: 'success', title: message });
+        toast.fire({ icon: props.flash?.toastType, title: message });
     }
 });
 
@@ -165,7 +167,8 @@ const fetchNewType = async () => {
                             Previous
                         </Button>
                         <Button type="button" @click="submitForm" :class="currentStep < totalSteps ? '' : 'glow-button'"
-                            :disabled="currentStep === totalSteps && !form.acceptSteps">
+                            :disabled="(currentStep === totalSteps && !form.acceptSteps) || form.processing">
+                            <LoaderCircle v-if="form.processing" class="size-4 animate-spin" />
                             <template v-if="currentStep < totalSteps">Next Step</template>
                             <template v-else>Create Website</template>
                         </Button>
