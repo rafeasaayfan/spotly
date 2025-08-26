@@ -41,7 +41,6 @@ class Website extends Model implements HasMedia
         'status',
     ];
 
-
     /**
      * The website has owner.
      */
