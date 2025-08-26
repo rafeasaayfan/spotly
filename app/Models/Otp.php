@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Otp extends Model
 {
-    protected $fillable = ['user_id', 'code', 'purpose', 'attempts', 'expires_at'];
+    protected $fillable = ['user_id', 'website_id', 'code', 'purpose', 'attempts', 'expires_at'];
 
     protected $casts = [
         'expires_at' => 'datetime',
@@ -18,6 +18,14 @@ class Otp extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     *  OTP belong to one website.
+    */
+    public function website()
+    {
+        return $this->belongsTo(Website::class);
     }
 
     /**
@@ -34,5 +42,13 @@ class Otp extends Model
     public function canRequest(int $maxAttempts = 3): bool
     {
         return $this->attempts < $maxAttempts || $this->updated_at->diffInHours(now()) >= 1;
+    }
+    
+    /**
+     * Get the number of seconds remaining until expiration (now - expires_at).
+     */
+    public function secondsUntilExpiration()
+    {
+        return intval(now()->diffInSeconds($this->expires_at, false));
     }
 }
