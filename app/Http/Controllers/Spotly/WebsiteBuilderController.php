@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Spotly;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WebsiteBuilder\CustomColorsRequest;
 use App\Http\Requests\WebsiteBuilder\WebsiteBuilderRequest;
+use App\Jobs\WebsiteCreationMailJob;
 use App\Models\Country;
 use App\Models\Template;
 use App\Models\TemplateColor;
@@ -103,12 +104,12 @@ class WebsiteBuilderController extends Controller
             case 1:
             case 2:
             case 3:
-                return $this->backSuccess('Step {$step} completed!');
+                return $this->backSuccess('Step ' . $step . ' completed!');
             case 4:
                 if (!Auth::check()) {
                     session(['pending_website_creation' => true]);
 
-                    return $this->redirectSuccess('register', 'Please register or login to continue');
+                    return $this->redirectSuccess('register', 'Please register or login to continue', 'info');
                 }
                 return $this->store();
                 break;
@@ -138,7 +139,9 @@ class WebsiteBuilderController extends Controller
             session()->forget(['wizard_step_1', 'wizard_step_2', 'wizard_step_3', 'pending_website_creation']);
             session()->regenerate();
 
-            return $this->redirectSuccess('e-commerce.dashboard.index', 'Your website has been created!');
+            WebsiteCreationMailJob::dispatch($website->owner_id, $website->name);
+
+            return $this->redirectSuccess('client.myWebsites', 'Your website has been created!');
 
         } catch (\Exception $e) {
             return $this->logResponse('WebsiteBuilderController@store', $e, 'An error occurred while creating the website');
