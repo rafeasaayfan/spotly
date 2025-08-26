@@ -9,6 +9,7 @@ use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use App\Http\Requests\Dashboard\Pages\Websites\StoreWebsiteRequest;
 use App\Http\Requests\Dashboard\Pages\Websites\UpdateWebsiteRequest;
+use App\Jobs\WebsiteStatusMailJob;
 use App\Models\Country;
 use App\Models\WebsiteType;
 use Illuminate\Support\Facades\Auth;
@@ -196,6 +197,10 @@ class WebsitesController extends Controller
         try {
             $website = Website::findOrFail($id);
 
+            if ($website->status !== 'approved') {
+                return $this->backError('This website is not approved yet');
+            }
+
             $validated = $request->validate([
                 'is_active' => 'required|boolean',
             ]);
@@ -203,6 +208,14 @@ class WebsitesController extends Controller
             $website->update([
                 'is_active' => $validated['is_active'],
             ]);
+
+            WebsiteStatusMailJob::dispatch(
+                $website->owner_id,
+                $website->name,
+                $website->subdomain,
+                'is_active',
+                $validated['is_active'] ? 1 : 0
+            );
 
             $message = $validated['is_active']
                 ? 'Website activated successfully.'
@@ -222,6 +235,10 @@ class WebsitesController extends Controller
         try {
             $website = Website::findOrFail($id);
 
+            if ($website->status !== 'approved') {
+                return $this->backError('This website is not approved yet');
+            }
+
             $validated = $request->validate([
                 'is_verified' => 'required|boolean',
             ]);
@@ -229,6 +246,14 @@ class WebsitesController extends Controller
             $website->update([
                 'is_verified' => $validated['is_verified'],
             ]);
+
+            WebsiteStatusMailJob::dispatch(
+                $website->owner_id,
+                $website->name,
+                $website->subdomain,
+                'is_verified',
+                $validated['is_verified'] ? 1 : 0
+            );
 
             $message = $validated['is_verified']
                 ? 'Website verified successfully.'
@@ -252,16 +277,26 @@ class WebsitesController extends Controller
                 'status' => 'required|in:pending,denied,approved',
             ]);
 
+            if ($validated['status'] === 'pending') {
+                return $this->backError('Cant make the website pending', 'warning');
+            }
+
             $website->update([
                 'status' => $validated['status'],
                 'approved_or_denied_by' => Auth::id(),
             ]);
 
+            WebsiteStatusMailJob::dispatch(
+                $website->owner_id,
+                $website->name,
+                $website->subdomain,
+                'status',
+                $validated['status'] === 'approved' ? 1 : 0
+            );
+
             $message = $validated['status'] === 'approved'
                 ? 'Website approved successfully.'
                 : 'Website denied successfully.';
-
-            if ($validated['status'] === 'pending') $message = 'The website is now pending.';
 
             return $this->backSuccess($message);
         } catch (\Exception $e) {
