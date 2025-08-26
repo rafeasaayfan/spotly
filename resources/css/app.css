@@ -396,9 +396,17 @@ body {
 .popup {
     border: 1px solid var(--border);
     box-shadow: 0.5px 0.5px 12px 0px rgba(0, 0, 0, 0.5);
-    font-size: 15px !important;
+    font-size: 16px !important;
     text-wrap: nowrap !important;
     overflow: hidden;
+}
+
+@media (max-width: 750px) {
+    .popup {
+        font-size: 13px !important;
+        text-wrap: wrap !important;
+        overflow: auto;
+    }
 }
 
 .popup .swal2-icon.swal2-error .swal2-x-mark-line-left,
@@ -419,9 +427,17 @@ body {
     background-color: var(--success) !important;
 }
 
+.popup .swal2-icon.swal2-info {
+    color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+.popup .swal2-icon.swal2-info::before {
+    color: var(--primary) !important; 
+}
+
 /* Dialog */
-.popup .swal2-icon.swal2-warning,
-.popup .swal2-icon-content {
+.popup .swal2-icon.swal2-warning {
     color: hsl(48, 96%, 58%);
     border-color: hsl(48, 96%, 58%);
 }
