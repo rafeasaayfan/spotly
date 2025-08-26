@@ -1,11 +1,24 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Label } from '@/components/ui/label';
-import Delete from '@/components/ui/table/actions/Delete.vue';
 import Edit from '@/components/ui/table/actions/Edit.vue';
 import View from '@/components/ui/table/actions/View.vue';
 import { Link } from '@inertiajs/vue3';
-import { Activity, CalendarClock, CalendarIcon, CalendarMinus, CheckCircle, Clock, CopyIcon, DiamondPlus, Globe, XCircle } from 'lucide-vue-next';
+import {
+    Activity,
+    CalendarClock,
+    CalendarIcon,
+    CalendarMinus,
+    CheckCircle,
+    Clock,
+    CopyIcon,
+    DiamondPlus,
+    EllipsisVertical,
+    Globe,
+    LayoutTemplate,
+    XCircle,
+} from 'lucide-vue-next';
 
 const props = defineProps<{
     websites: Record<string, any>;
@@ -26,13 +39,45 @@ const props = defineProps<{
                 </span>
             </div>
 
-            <div class="flex items-center gap-2">
-                <View />
-                <Link :href="route('client.myWebsite.edit', website.id)">
-                    <Edit />
-                </Link>
-                <Delete />
-            </div>
+            <DropdownMenu>
+                <DropdownMenuTrigger :as-child="true">
+                    <Button variant="ghost" size="icon" class="relative flex cursor-pointer items-center justify-center rounded-md">
+                        <EllipsisVertical class="size-5" />
+                    </Button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent align="end" class="w-28 p-0 py-1">
+                    <DropdownMenuGroup>
+                        <div class="grid h-full w-full gap-1">
+                            <Link
+                                v-for="action in ['edit', 'ui', 'show']"
+                                :key="action"
+                                :href="route('client.myWebsite.' + action, website.id)"
+                                class="bg-content-2 flex cursor-pointer items-center gap-2 rounded-md px-2 py-2 text-sm transition-all duration-100 ease-in-out"
+                            >
+                                <template v-if="action === 'edit'">
+                                    <Edit class="size-5" />
+                                    <span>Edit</span>
+                                </template>
+                                <template v-else-if="action === 'ui'">
+                                    <div
+                                        class="flex size-5 cursor-pointer items-center justify-center rounded-md 
+                                        bg-yellow-700/25 text-green-700 hover:bg-yellow-700/35 dark:bg-yellow-600/25 dark:text-yellow-600 
+                                        hover:dark:bg-yellow-600/35"
+                                    >
+                                        <LayoutTemplate class="size-3.5" />
+                                    </div>
+                                    <span>UI</span>
+                                </template>
+                                <template v-else-if="action === 'show'">
+                                    <View class="size-5" />
+                                    <span>View</span>
+                                </template>
+                            </Link>
+                        </div>
+                    </DropdownMenuGroup>
+                </DropdownMenuContent>
+            </DropdownMenu>
         </div>
 
         <div class="mt-1 flex flex-col gap-4">

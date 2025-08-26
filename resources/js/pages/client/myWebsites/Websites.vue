@@ -39,6 +39,7 @@ const props = defineProps<{
     websites: DataTableProps;
     websiteTypes: Record<string, any>;
     flash?: {
+        toastType: 'success' | 'error' | 'warning' | 'info',
         message: string,
     }
 }>();
@@ -46,7 +47,7 @@ const props = defineProps<{
 watchEffect(() => {
     const message = props.flash?.message;
     if (message) {
-        toast.fire({ icon: 'success', title: message });
+        toast.fire({ icon: props.flash?.toastType, title: message });
     }
 });
 
@@ -84,6 +85,7 @@ const applyFilters = () => {
     isApplied.value = true;
     router.get(
         route('client.myWebsites'),
+        
         { ...filters },
         {
             preserveState: true,

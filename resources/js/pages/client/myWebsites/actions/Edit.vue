@@ -23,6 +23,7 @@ import {
     Youtube,
 } from 'lucide-vue-next';
 import Delete from './Delete.vue';
+import { watchEffect } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -40,9 +41,17 @@ const props = defineProps<{
     countries: Record<string, any>;
     cities: Array<string>;
     flash?: {
+        toastType: 'success' | 'error' | 'warning' | 'info',
         message: string,
     }
 }>();
+
+watchEffect(() => {
+    const message = props.flash?.message;
+    if (message) {
+        toast.fire({ icon: props.flash?.toastType, title: message });
+    }
+});
 
 const mappedCountryPhones = props.countries.map((item: any) => ({
     value: item.phone_code,
@@ -64,24 +73,13 @@ const form = useForm<Record<string, any>>({
 });
 
 const submit = () => {
-    form.post(route('client.myWebsite.update', props.website.id), {
-        onSuccess: () => {
-            toast.fire({icon:'success', title: props.flash?.message});
-        },
-    });
+    form.post(route('client.myWebsite.update', props.website.id));
 };
 
 const activate = (toggleVal: boolean) => {
     form.is_active = toggleVal;
     
-    form.patch(route('client.myWebsite.activate', props.website.id), {
-        onSuccess: () => {
-            toast.fire({ icon: 'success', title: props.flash?.message });
-        },
-        onError: (errors) => {
-            toast.fire({ icon: 'error', title: errors.message });
-        },
-    });
+    form.patch(route('client.myWebsite.activate', props.website.id));
 }
 </script>
 
