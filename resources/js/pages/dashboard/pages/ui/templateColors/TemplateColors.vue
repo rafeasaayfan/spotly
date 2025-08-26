@@ -56,14 +56,15 @@ const filter = [
 const props = defineProps<{
     templateColors: DataTableProps;
     flash?: {
-        message?: string;
-    };
+        toastType: 'success' | 'error' | 'warning' | 'info',
+        message: string,
+    }
 }>();
 
 watchEffect(() => {
     const message = props.flash?.message;
     if (message) {
-        toast.fire({ icon: 'success', title: message });
+        toast.fire({ icon: props.flash?.toastType, title: message });
     }
 });
 
