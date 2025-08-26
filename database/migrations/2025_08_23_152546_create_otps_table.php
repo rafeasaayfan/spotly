@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('otps', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('website_id')->constrained('websites')->onDelete('cascade');
             $table->string('code');
             $table->string('purpose');
             $table->integer('attempts')->default(0);
