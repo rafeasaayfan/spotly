@@ -11,11 +11,24 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
 import { LoaderCircle } from 'lucide-vue-next';
+import { watchEffect } from 'vue';
+import { toast } from '@/lib/sweetAlert';
 
-defineProps<{
+const props = defineProps<{
     status?: string;
     canResetPassword: boolean;
+    flash?: {
+        toastType: 'success' | 'error' | 'warning' | 'info';
+        message: string;
+    };
 }>();
+
+watchEffect(() => {
+    const message = props.flash?.message;
+    if (message) {
+        toast.fire({ icon: props.flash?.toastType, title: message });
+    }
+});
 
 const form = useForm({
     email: '',
@@ -54,7 +67,7 @@ const submit = () => {
                 <div class="grid gap-2">
                     <div class="flex items-center justify-between">
                         <Label for="password">Password</Label>
-                        <TextLink v-if="canResetPassword" :href="route('password.request')" class="text-sm" :tabindex="5">
+                        <TextLink v-if="props.canResetPassword" :href="route('password.request')" class="text-sm" :tabindex="5">
                             Forgot password?
                         </TextLink>
                     </div>

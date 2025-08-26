@@ -11,6 +11,22 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
 import { LoaderCircle } from 'lucide-vue-next';
+import { watchEffect } from 'vue';
+import { toast } from '@/lib/sweetAlert';
+
+const props = defineProps<{
+    flash?: {
+        toastType: 'success' | 'error' | 'warning' | 'info';
+        message: string;
+    };
+}>();
+
+watchEffect(() => {
+    const message = props.flash?.message;
+    if (message) {
+        toast.fire({ icon: props.flash?.toastType, title: message });
+    }
+});
 
 const form = useForm({
     name: '',
@@ -78,7 +94,7 @@ const submit = () => {
                 </Button>
             </div>
 
-            <div class="text-center text-sm flex items-center justify-center gap-2">
+            <div class="flex items-center justify-center gap-2 text-center text-sm">
                 <span class="text-body-muted">Already have an account?</span>
                 <TextLink :href="route('login')" :tabindex="6">Log in</TextLink>
             </div>
