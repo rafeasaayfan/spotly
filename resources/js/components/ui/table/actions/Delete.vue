@@ -14,7 +14,7 @@ const props = defineProps<{
     data-slot="action-delete"
     :class="
       cn(
-        'bg-red-600/25 dark:bg-red-500/25 hover:bg-red-600/35 hover:dark:bg-red-500/35 text-red-600 dark:text-red-500 w-6.5 h-6.5 rounded-md flex items-center justify-center cursor-pointer',
+        'bg-red-600/25 dark:bg-red-500/25 hover:bg-red-600/35 hover:dark:bg-red-500/35 text-red-600 dark:text-red-500 size-6.5 rounded-md flex items-center justify-center cursor-pointer',
         props.class,
       )
     "

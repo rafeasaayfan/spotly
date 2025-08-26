@@ -14,7 +14,7 @@ const props = defineProps<{
     data-slot="action-view"
     :class="
       cn(
-        'bg-green-700/25 dark:bg-green-600/25 hover:bg-green-700/35 hover:dark:bg-green-600/35 text-green-700 dark:text-green-600 w-6.5 h-6.5 rounded-md flex items-center justify-center cursor-pointer',
+        'bg-green-700/25 dark:bg-green-600/25 hover:bg-green-700/35 hover:dark:bg-green-600/35 text-green-700 dark:text-green-600 size-6.5 rounded-md flex items-center justify-center cursor-pointer',
         props.class,
       )
     "
