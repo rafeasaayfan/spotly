@@ -61,7 +61,7 @@ class OtpService
     }
 
     /**
-     * Check the latest OTP for the user and return the seconds until expiration.
+     * Check the latest OTP for the user and return athe seconds until expiration.
      *
      * - Returns null if no OTP exists or if the last OTP has expired.
      *
@@ -69,16 +69,16 @@ class OtpService
      */
     public function checkLastOtp()
     {
-        $otp = Otp::where('user_id', $this->user->id)->where('website_id', $this->websiteId)->firstOrFail();
-        if (!$otp) {
-            return null;
+        $otp = Otp::where('user_id', $this->user->id)
+            ->where('website_id', $this->websiteId)
+            ->where('purpose', $this->purpose)
+            ->first();
+
+        if ($otp && !$otp->isExpired()) {
+            return $otp->secondsUntilExpiration();
         }
 
-        if ($otp->isExpired()) {
-            return null;
-        }
-
-        return $otp->secondsUntilExpiration();
+        return null;
     }
 
     /**
