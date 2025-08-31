@@ -5,7 +5,7 @@ import CreatorLogoIcon from '../logo/CreatorLogoIcon.vue';
 
 <template>
     <footer
-        class="bg-nav border-muted absolute bottom-0 flex h-10 shrink-0 items-center justify-between gap-2 border-t px-4
+        class="bg-nav border-muted absolute bottom-0 flex h-10 shrink-0 items-center justify-between gap-2 border-t px-2 md:px-4
         transition-[width,height] ease-linear z-10
         group-has-data-[collapsible=icon]/sidebar-wrapper:h-9
         w-full

@@ -57,7 +57,7 @@ const { handleAction } = useTableActions(selectedIds, props.routeName);
 </script>
 
 <template>
-    <div class="flex flex-col m-4 border border-muted rounded-md">
+    <div class="flex flex-col my-4 mx-2 md:mx-4 border border-muted rounded-md">
         <!-- Table header with search and column visibility -->
         <TableHeader
             :columns="props.columns"

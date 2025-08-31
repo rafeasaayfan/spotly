@@ -37,7 +37,7 @@ onUnmounted(() => {
 <template>
     <div :class="scrolled ? 'mt-0 bg-black/5 pt-0 backdrop-blur-lg dark:bg-white/5' : 'mt-2'" class="fixed z-20 w-full transition-all duration-300">
         <div
-            :class="scrolled ? 'px-4' : 'px-4 md:px-10'"
+            :class="scrolled ? 'px-2 md:px-4' : 'px-2 md:px-10'"
             class="mx-auto flex h-16 items-center justify-between transition-all duration-300 md:max-w-7xl"
         >
             <!-- Mobile Menu -->

@@ -17,7 +17,7 @@ withDefaults(
 
 <template>
     <header
-        class="bg-nav border-muted fixed top-0 w-full flex h-16 shrink-0 items-center justify-between gap-2 border-b px-4
+        class="bg-nav border-muted fixed top-0 w-full flex h-16 shrink-0 items-center justify-between gap-2 border-b px-2 md:px-4
         transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-14 z-20
         max-w-full xl:max-w-[calc(100%-16rem)] xl:group-has-data-[collapsible=icon]/sidebar-wrapper:max-w-[calc(100%-3rem)]
         xl:group-has-data-[collapsible=offcanvas]/sidebar-wrapper:max-w-full"
