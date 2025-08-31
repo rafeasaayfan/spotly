@@ -32,7 +32,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
       <DialogContent
         :class="
           cn(
-            'relative z-50 grid w-full my-10 border border-muted bg-popover py-3 shadow-lg rounded-lg transition-all duration-100 ease-in-out',
+            'relative z-50 grid w-full my-10 border border-muted bg-popover shadow-lg rounded-lg transition-all duration-100 ease-in-out',
             'max-w-[calc(100%-1rem)] sm:max-w-lg md:max-w-xl lg:max-w-2xl',
             props.class,
           )

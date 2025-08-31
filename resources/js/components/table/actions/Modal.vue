@@ -71,7 +71,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="min-h-20 transition-all duration-100 ease-in-out px-4 pt-5">
+    <div class="min-h-20 transition-all duration-100 ease-in-out pt-5">
         <div v-if="!loaded" class="flex h-full items-center justify-center">
             <span class="text-body-muted text-base font-medium">Please wait...</span>
         </div>

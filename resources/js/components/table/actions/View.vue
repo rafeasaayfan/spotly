@@ -10,13 +10,16 @@ const props = defineProps<{
 </script>
 
 <template>
-    <div class="grid grid-cols-1 gap-3 rounded-md lg:grid-cols-2">
+    <div class="grid grid-cols-1 gap-3 rounded-md lg:grid-cols-2 px-4 pb-3">
         <div
             v-for="column in props.columns"
             :key="column.key"
             :class="['textarea', 'image'].includes(column.type ?? '') ? 'lg:col-span-2' : ''"
-            class="border-muted bg-body flex flex-col gap-3 rounded-md border p-4 shadow-sm"
+            class="border-muted relative flex flex-col gap-3 rounded-md border p-4 shadow-sm"
         >
+            <div class="absolute inset-0 w-full h-full bg-gradient-to-br 
+            from-[var(--primary)]/5 via-[var(--success)]/5 to-[var(--destructive)]/5 blur-xl"></div>
+
             <div class="flex items-center gap-2">
                 <p class="text-body-muted">{{ column.label.charAt(0).toUpperCase() + column.label.slice(1) }}</p>
             </div>

@@ -54,9 +54,9 @@ function submit() {
 </script>
 
 <template>
-    <form class="grid gap-4 grid-cols-1 lg:grid-cols-2 pb-5" @submit.prevent="submit" enctype="multipart/form-data">
-        <div class="flex flex-col gap-1" :class="['textarea'].includes(column.type ?? '') ? 'lg:col-span-2' : ''" v-for="(column, index) in props.columns" :key="index">
-            <Label :for="column.label">{{ column.label.charAt(0).toUpperCase() + column.label.slice(1) }}</Label>
+    <form class="grid gap-4 grid-cols-1 lg:grid-cols-2 pb-5 px-4" @submit.prevent="submit" enctype="multipart/form-data">
+        <div class="flex flex-col gap-1.5" :class="['textarea'].includes(column.type ?? '') ? 'lg:col-span-2' : ''" v-for="(column, index) in props.columns" :key="index">
+            <Label class="text-body-muted" :for="column.label">{{ column.label.charAt(0).toUpperCase() + column.label.slice(1) }}</Label>
 
             <Input
                 v-if="column.type && ['text', 'email', 'password', 'time', 'datetime', 'date', 'tel', 'number'].includes(column.type)"

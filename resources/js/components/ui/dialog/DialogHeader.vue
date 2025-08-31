@@ -14,7 +14,7 @@ const props = defineProps<{
 <template>
   <div
     data-slot="dialog-header"
-    :class="cn('w-full flex justify-between items-center gap-4 px-4 pb-2 border-b border-muted', props.class)"
+    :class="cn('w-full flex justify-between items-center gap-4 px-4 py-3 rounded-t-lg border-b border-muted bg-body', props.class)"
   >
     <slot />
 
