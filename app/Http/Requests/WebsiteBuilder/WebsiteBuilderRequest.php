@@ -98,8 +98,20 @@ class WebsiteBuilderRequest extends FormRequest
                             ['required', 'exists:template_colors,id']
                         )
                     ],
-                    'custom_template_color' => ['nullable', 'boolean'],
-                    'colors' => ['nullable', 'array'],
+                    'custom_template_color' => [
+                        Rule::when(
+                            $this->input('template_color_id') > 0,
+                            ['nullable'],
+                            ['required', 'boolean'],
+                        )
+                    ],
+                    'colors' => [
+                        Rule::when(
+                            $this->input('custom_template_color'),
+                            ['required', 'array'],
+                            ['nullable']
+                        )
+                    ],
                 ];
                 break;
 
