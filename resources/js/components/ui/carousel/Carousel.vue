@@ -4,6 +4,7 @@ import { Button } from '../button'
 import { ChevronLeft, ChevronRight } from 'lucide-vue-next'
 import { SharedData } from '@/types'
 import { usePage } from '@inertiajs/vue3'
+import { cn } from '@/lib/utils';
 
 const page = usePage<SharedData>();
 
@@ -14,8 +15,8 @@ interface CarouselProps {
   showDots?: boolean
   showArrows?: boolean
   loop?: boolean
-  height?: string
-  width?: string
+  parentClass?: string
+  imgClass?: string
   title?: string
   description?: string
 }
@@ -27,8 +28,8 @@ const props = withDefaults(defineProps<CarouselProps>(), {
   showDots: true,
   showArrows: true,
   loop: true,
-  height: '500px',
-  width: '500px',
+  parentClass: '',
+  imgClass: 'w-full h-full',
   title: '',
   description: ''
 })
@@ -123,30 +124,28 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="relative overflow-hidden rounded-md" :style="{ height: height, width: width }"
-    @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
+  <div :class="cn('relative overflow-hidden rounded-md', props.parentClass)" @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave">
     <!-- Main Carousel -->
-    <div>
-      <div class="carousel-track flex w-full h-full" :style="{
-        transform: page.props.lang === 'ar'
-          ? `translateX(${currentIndex * 100}%)`
-          : `translateX(-${currentIndex * 100}%)`,
-        transition: isTransitioning ? 'transform 0.3s ease-in-out' : 'none'
-      }">
-        <div v-for="(item, index) in items" :key="index"
-          class="carousel-slide w-full h-full flex-shrink-0 flex-grow-0 flex-basis-full">
-          <slot name="slide" :item="item" :index="index">
-            <div class="w-full h-full">
-              <img :src="item.original_url ?? item" :alt="item.title || `Slide ${index + 1}`"
-                class="object-cover rounded-md" :style="{ height: height, width: width }" />
+    <div class="carousel-track flex w-full h-full" :style="{
+      transform: page.props.lang === 'ar'
+        ? `translateX(${currentIndex * 100}%)`
+        : `translateX(-${currentIndex * 100}%)`,
+      transition: isTransitioning ? 'transform 0.3s ease-in-out' : 'none'
+    }">
+      <div v-for="(item, index) in items" :key="index"
+        class="carousel-slide w-full h-full flex-shrink-0 flex-grow-0 flex-basis-full">
+        <slot name="slide" :item="item" :index="index">
+          <div class="w-full h-full">
+            <img :src="item.original_url ?? item" :alt="item.title || `Slide ${index + 1}`"
+              :class="cn('object-cover rounded-md', props.imgClass)" />
 
-              <div class="absolute bottom-0 top-0 start-0 text-center text-white z-20 pb-8">
-                <h3 v-if="props.title" class="text-2xl font-bold mb-2">{{ props.title }}</h3>
-                <p v-if="props.description" class="text-base text-white/80">{{ props.description }}</p>
-              </div>
+            <div class="absolute bottom-0 top-0 start-0 text-center text-white z-20 pb-8">
+              <h3 v-if="props.title" class="text-2xl font-bold mb-2">{{ props.title }}</h3>
+              <p v-if="props.description" class="text-base text-white/80">{{ props.description }}</p>
             </div>
-          </slot>
-        </div>
+          </div>
+        </slot>
       </div>
     </div>
 
