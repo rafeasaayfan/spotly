@@ -261,7 +261,7 @@ const updateField = (field: string, value: any) => {
                     <div
                         v-for="item in templateTemplateColors"
                         :key="item.id"
-                        class="border-muted relative flex min-h-[280px] min-w-[450px] flex-col rounded-lg border bg-black/3 transition-all duration-200 ease-in-out hover:-translate-y-1 hover:bg-black/4 dark:bg-white/3 dark:hover:bg-white/4"
+                        class="border-muted relative flex max-h-[280px] max-w-[450px] flex-col rounded-lg border bg-black/3 transition-all duration-200 ease-in-out hover:-translate-y-1 hover:bg-black/4 dark:bg-white/3 dark:hover:bg-white/4"
                         :class="template_color_id === item.template_color.id ? '-translate-y-1 bg-black/4 dark:bg-white/4' : ''"
                     >
                         <div class="z-20 flex items-center justify-between rounded-md bg-black/1 p-2">
@@ -305,7 +305,7 @@ const updateField = (field: string, value: any) => {
                             </div>
                         </div>
 
-                        <Carousel :items="item.uiImages" height="250px" width="450px" :showArrows="false" />
+                        <Carousel :items="item.uiImages" class="w-full h-full" :showArrows="false" />
                     </div>
                 </div>
 
