@@ -28,7 +28,7 @@ function updateValue(event: Event) {
         props.parentClass)">
         <select :name="props.name" :id="props.id" :value="modelValue" @change="updateValue" :class="cn(
             'appearance-none border-none rounded-md cursor-pointer duration-150 ease-in-out',
-            'placeholder:text-slate-800 dark:placeholder:text-slate-200 text-slate-900 dark:text-slate-100 text-sm',
+            'placeholder:text-slate-800 dark:placeholder:text-slate-200 text-active text-sm',
             'w-full ps-3 h-full bg-field',
             'focus:ring active:ring-blue-500 focus:ring-blue-600/90 outline-none',
             props.class

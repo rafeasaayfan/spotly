@@ -60,7 +60,7 @@ function toggleDropdown() {
 <template>
     <div ref="selectRef" :class="cn('relative w-full', props.parentClass)">
         <button type="button" :class="cn('w-full text-start border border-muted bg-field text-sm px-2 py-1 h-9 rounded-md z-5', 
-           'cursor-pointer transition duration-150 ease-in-out focus:ring active:ring-blue-500 focus:ring-blue-600/90',
+           'cursor-pointer transition duration-150 ease-in-out focus:ring active:ring-blue-500 focus:ring-blue-600/90 text-active',
             props.class
         )" @click="toggleDropdown">
             <div class="flex items-center justify-between">
