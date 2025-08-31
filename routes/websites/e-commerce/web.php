@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/e-commerce', function() {
-    return Inertia::render('websites/e-commerce/spotly-ui/pages/home/Home');
+    return Inertia::render('websites/e-commerce/templates/spotly-ui/pages/home/Home');
 });
 
 Route::get('/shop', function() {
