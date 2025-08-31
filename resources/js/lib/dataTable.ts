@@ -43,8 +43,8 @@ export const formatters = {
     // Boolean formatter (Yes/No)
     boolean: (value: any) =>
         value
-            ? `<span class="bg-success text-for-bg-success px-2 py-1 rounded-sm text-xs border border-muted shadow">Yes</span>`
-            : `<span class="bg-destructive text-for-bg-destructive px-2 py-1 rounded-sm text-xs border border-muted shadow">No</span>`,
+            ? `<span class="bg-success text-for-bg-success px-2 py-1 rounded-sm text-xs">Yes</span>`
+            : `<span class="bg-destructive text-for-bg-destructive px-2 py-1 rounded-sm text-xs">No</span>`,
 
     // Active formatter (Yes/No)
     active: (value: any) =>
