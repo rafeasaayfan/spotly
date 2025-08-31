@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import { DialogClose } from '@/components/ui/dialog';
+import { DialogClose, DialogFooter } from '@/components/ui/dialog';
 import { Digits, InputError } from '@/components/ui/fields';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/lib/sweetAlert';
@@ -46,6 +46,8 @@ const checkLastOtp = async () => {
         }
 
     } catch (error: any) {
+        console.log(error);
+        
         toast.fire({ icon: 'error', title: error.response?.data.message });
     }
 }
@@ -89,18 +91,18 @@ const sendCode = async () => {
     <form class="mt-4 flex flex-col gap-6" @submit.prevent="submit">
         <p class="flex items-center gap-1.5 px-4 font-medium text-yellow-600">
             <AlertTriangle class="size-5" />
-            <span>You can request a code only 3 times per hour!</span>
+            <span class="text-sm sm:text-md">You can request a code only 3 times per hour!</span>
         </p>
 
         <div class="flex flex-col gap-1 px-4">
             <Label for="code" class="mb-1">Code</Label>
-            <div class="flex w-full items-center justify-between gap-2">
+            <div class="flex w-full items-center justify-between sm:gap-2">
                 <Digits v-model="form.code" />
             </div>
             <div class="flex items-center gap-2" :class="form.errors?.code ? 'justify-between' : 'justify-end'">
                 <InputError v-if="form.errors?.code" :message="form.errors.code" />
 
-                <Button type="button" variant="link" size="sm" class="mt-1 h-fit p-0" :disabled="timer > 0 || sendingCode" @click="sendCode">
+                <Button type="button" variant="link" size="sm" class="mt-1 h-fit p-0" :disabled="form.processing || timer > 0 || sendingCode" @click="sendCode">
                     <span v-if="sendingCode" class="flex items-center gap-2">
                         <LoaderCircle class="size-3.5 animate-spin" />
                         Sending...
@@ -111,14 +113,14 @@ const sendCode = async () => {
             </div>
         </div>
 
-        <div class="border-muted mt-1 flex items-center justify-end gap-3 border-t px-4 pt-3">
+        <DialogFooter>
             <DialogClose as-child>
                 <Button type="button">Cancel</Button>
             </DialogClose>
-            <Button type="submit" variant="destructive" :disabled="isCodeSended || form.processing">
+            <Button type="submit" variant="destructive" :disabled="isCodeSended || form.processing || sendingCode">
                 <LoaderCircle v-if="form.processing" class="size-4 animate-spin" />
                 Submit
             </Button>
-        </div>
+        </DialogFooter>
     </form>
 </template>
