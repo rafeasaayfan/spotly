@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Spotly\Client\Websites\Actions;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Client\CreateWebsiteUiRequest;
+use App\Models\Template;
 use App\Models\Website;
-use Illuminate\Support\Facades\Auth;
+use App\Models\WebsiteTemplate;
+use App\Services\UiService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class UiWebsiteController extends Controller
@@ -17,15 +21,120 @@ class UiWebsiteController extends Controller
         Gate::authorize('ui', $website);
 
         try {
-            $website->with([
-                'websiteActiveTemplateColor',
-                'websiteActiveTemplateColor.template:id,name',
-                'websiteActiveTemplateColor.templateColor:id,name',
-            ]);
+            $websiteTemplate = WebsiteTemplate::where('website_id', $website->id)
+                ->with(['template:id,name', 'templateColor:id,name'])->get();
 
-            return $this->inertiaRender('', ['websiteTemplet' => ])
+            $website->load(['websiteType:id,type']);
+
+            $templates = Template::active()->get();
+
+            return $this->inertiaRender('client/myWebsites/actions/Ui', [
+                'websiteTemplates' => $websiteTemplate,
+                'website' => $website,
+                'templates' => $templates,
+            ]);
         } catch (\Exception $e) {
-            return $this->logResponse('ClientWebsitesController@destroy', $e, 'An error occurred while deleting the website');
+            return $this->logResponse('UiWebsiteController@index', $e, 'An error occurred while loading the website UI templates');
+        }
+    }
+
+    /**
+     * Change the template Activation for a website.
+     */
+    public function toggleActive(Request $request, Website $website)
+    {
+        Gate::authorize('ui', $website);
+
+        $validate = $request->validate([
+            'is_active' => 'required|boolean',
+            'websiteTemplateId' => 'required|exists:website_templates,id'
+        ]);
+
+        try {
+            $requestWebsiteTemplate = WebsiteTemplate::where('id', $validate['websiteTemplateId'])
+                ->where('website_id', $website->id)
+                ->firstOrFail();
+
+            $activeWebsiteTemplate = WebsiteTemplate::where('website_id', $website->id)
+                ->where('is_active', true)
+                ->firstOrFail();
+
+            if (!$validate['is_active'] && $requestWebsiteTemplate->id === $activeWebsiteTemplate->id) {
+                return $this->backError('You can\'t deactivate your active template!');
+            }
+
+            if ($validate['is_active'] && $requestWebsiteTemplate->id !== $activeWebsiteTemplate->id) {
+                $activeWebsiteTemplate->is_active = false;
+                $activeWebsiteTemplate->save();
+                $requestWebsiteTemplate->is_active = true;
+                $requestWebsiteTemplate->save();
+            }
+
+            return $this->backSuccess('Your website template activated succesfully!');
+        } catch (\Exception $e) {
+            return $this->logResponse('UiWebsiteController@toggleActive', $e, 'An error occurred while change the website template status');
+        }
+    }
+
+    /**
+     * Create the specified resource to storage.
+     */
+    public function create(CreateWebsiteUiRequest $request, Website $website)
+    {
+        Gate::authorize('ui', $website);
+
+        try {
+            $uiService = new UiService(
+                $website->id,
+                $request->template_color_id,
+                $request->template_id,
+                $request->template_images,
+                $request->is_custom,
+                $request->colors
+            );
+            $result = $uiService->storeTemplate(0);
+
+            if($result === true) {
+                return $this->redirectSuccess('client.myWebsite.ui', 'Your website template created succesfully', 'success', [
+                    'website' => $website->id
+                ]);
+            } 
+
+            return $this->backError($result ?? '');
+        } catch (\Exception $e) {
+            return $this->logResponse('UiWebsiteController@create', $e, 'An error occurred while creating the website template');
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Request $request, Website $website)
+    {
+        Gate::authorize('ui', $website);
+
+        $validate = $request->validate([
+            'websiteTemplateId' => 'required|exists:website_templates,id'
+        ]);
+
+        try {
+            $websiteTemplates = WebsiteTemplate::where('website_id', $website->id);
+            if ($websiteTemplates->count() === 1) {
+                return $this->backError('You can\'t delete the last template!');
+            }
+
+            $websiteTemplate = $websiteTemplates->findOrFail($validate['websiteTemplateId']);
+            if ($websiteTemplate->is_active) {
+                return $this->backError('You can\'t delete the active template!');
+            }
+
+            $websiteTemplate->delete();
+
+            return $this->redirectSuccess('client.myWebsite.ui', 'Your website template deleted succesfully', 'success', [
+                'website' => $website->id
+            ]);
+        } catch (\Exception $e) {
+            return $this->logResponse('UiWebsiteController@destroy', $e, 'An error occurred while deleting the website template');
         }
     }
 }
