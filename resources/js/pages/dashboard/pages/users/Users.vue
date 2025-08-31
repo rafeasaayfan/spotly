@@ -1,3 +1,4 @@
+
 <script setup lang="ts">
 import DataTable from '@/components/table/DataTable.vue';
 import DashboardLayout from '@/layouts/DashboardLayout.vue';
