@@ -8,11 +8,10 @@ use App\Http\Requests\WebsiteBuilder\WebsiteBuilderRequest;
 use App\Jobs\WebsiteCreationMailJob;
 use App\Models\Country;
 use App\Models\Template;
-use App\Models\TemplateColor;
 use App\Models\TemplateTemplateColor;
 use App\Models\Website;
-use App\Models\WebsiteTemplate;
 use App\Models\WebsiteType;
+use App\Services\UiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -59,26 +58,27 @@ class WebsiteBuilderController extends Controller
      */
     public function getTemplateTemplateColors(Request $request)
     {
-        try {
-            $templateId = $request->input('templateId');
+        $validate = $request->validate([
+            'templateId' => 'required|exists:templates,id'
+        ]);
 
+        try {
             $templateTemplateColors = TemplateTemplateColor::with([
-                'media' => function($query) {
+                'media' => function ($query) {
                     $query->where('collection_name', 'uiImages');
                 },
-                'template:id,name', 
+                'template:id,name',
                 'templateColor'
             ])
-            ->where('template_id', $templateId)
-            ->get()
-            ->transform(function ($item) {
-                $item->uiImages = $item->media->toArray();
-                unset($item->media); 
-                return $item;
-            });
-    
-            return $this->jsonSuccess('', ['templateTemplateColors' => $templateTemplateColors]);
+                ->where('template_id', $validate['templateId'])
+                ->get()
+                ->transform(function ($item) {
+                    $item->uiImages = $item->media->toArray();
+                    unset($item->media);
+                    return $item;
+                });
 
+            return $this->jsonSuccess('', ['templateTemplateColors' => $templateTemplateColors]);
         } catch (\Exception $e) {
             return $this->logJsonResponse('WebsiteBuilderController@getTemplateTemplateColors', $e, 'An error occurred while fetching template');
         }
@@ -142,7 +142,6 @@ class WebsiteBuilderController extends Controller
             WebsiteCreationMailJob::dispatch($website->owner_id, $website->name);
 
             return $this->redirectSuccess('client.myWebsites', 'Your website has been created!');
-
         } catch (\Exception $e) {
             return $this->logResponse('WebsiteBuilderController@store', $e, 'An error occurred while creating the website');
         }
@@ -177,27 +176,20 @@ class WebsiteBuilderController extends Controller
      */
     public function storeTemplate($websiteId, $websiteTemplateData)
     {
-        $templarecolorId = '';
-        $template_images = [''];
-
         try {
-            // check if is a custom colors
-            if (!empty($websiteTemplateData['custom_template_color']) && $websiteTemplateData['custom_template_color']) {
-                $templarecolors = TemplateColor::create($websiteTemplateData['colors']);
-                $templarecolorId = $templarecolors->id;
-            } else {
-                $templarecolorId = $websiteTemplateData['template_color_id'];
-                $template_images = $websiteTemplateData['template_images'];
-            }
+            $uiService = new UiService(
+                $websiteId,
+                $websiteTemplateData['template_color_id'],
+                $websiteTemplateData['template_id'],
+                $websiteTemplateData['template_images'],
+                $websiteTemplateData['custom_template_color'],
+                $websiteTemplateData['colors']
+            );
+            $result = $uiService->storeTemplate(1);
 
-            WebsiteTemplate::create([
-                'website_id' => $websiteId,
-                'template_id' => $websiteTemplateData['template_id'],
-                'template_color_id' => $templarecolorId,
-                'template_images' => $template_images,
-                'is_custom' => $websiteTemplateData['custom_template_color'],
-                'is_active' => 1
-            ]);
+            if($result !== true) {
+                return $this->backError($result ?? '');
+            }
         } catch (\Exception $e) {
             return $this->logResponse('WebsiteBuilderController@storeTemplate', $e, 'An error occurred while storing the website template');
         }
