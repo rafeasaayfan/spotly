@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/navigation-menu';
 
 import { useNavigation } from '@/composables/navigation/useNavigation';
-import { navbarItems } from '@/pages/websites/e-commerce/spotly-ui/config/navbar';
+import { navbarItems } from '@/pages/websites/e-commerce/templates/spotly-ui/config/navbar';
 import type { SharedData } from '@/types';
 
 import { Link, usePage } from '@inertiajs/vue3';
