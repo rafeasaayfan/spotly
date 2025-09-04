@@ -1,26 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\Spotly\Auth;
+namespace App\Http\Controllers\Websites\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Http\Requests\Websites\Auth\RegisterRequest;
+use App\Models\WebsiteUser;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class RegisteredUserController extends Controller
 {
     /**
      * Show the registration page.
      */
-    public function create(): Response
+    public function create()
     {
-        return Inertia::render('auth/Register');
+        return $this->inertiaRender('auth/Register', [], true);
     }
 
     /**
@@ -28,29 +26,21 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(RegisterRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        $website = app('website');
 
-        $user = User::create([
+        $websiteUser = WebsiteUser::create([
+            'website_id' => $website->id,
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        event(new Registered($user));
+        event(new Registered($websiteUser));
 
-        Auth::login($user);
+        Auth::guard('website')->login($websiteUser);
 
-        // If wizard was pending, create website now
-        if (session('pending_website_creation')) {
-            return app(\App\Http\Controllers\Spotly\WebsiteBuilderController::class)->store();
-        }
-
-        return redirect(route('dashboard.index', absolute: false));
+        return $this->redirectSuccess('dashboard.index', '', forWebsite: true);
     }
 }

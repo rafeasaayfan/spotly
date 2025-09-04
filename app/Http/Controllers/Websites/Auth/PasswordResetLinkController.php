@@ -1,24 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\Spotly\Auth;
+namespace App\Http\Controllers\Websites\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\WebsiteUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class PasswordResetLinkController extends Controller
 {
     /**
      * Show the password reset link request page.
      */
-    public function create(Request $request): Response
+    public function create(Request $request)
     {
-        return Inertia::render('auth/ForgotPassword', [
+        return $this->inertiaRender('auth/ForgotPassword', [
             'status' => $request->session()->get('status'),
-        ]);
+        ], true);
     }
 
     /**
@@ -31,10 +30,18 @@ class PasswordResetLinkController extends Controller
         $request->validate([
             'email' => 'required|email',
         ]);
+    
+        $website = app('website');
 
-        Password::sendResetLink(
-            $request->only('email')
-        );
+        $user = WebsiteUser::where('email', $request->email)
+            ->where('website_id', $website->id)
+            ->first();
+    
+        if ($user) {
+            Password::broker('website_users')->sendResetLink([
+                'email' => $user->email,
+            ]);
+        }
 
         return back()->with('status', __('A reset link will be sent if the account exists.'));
     }

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Spotly\Auth;
+namespace App\Http\Controllers\Websites\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\SocialAccount;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
+use App\Models\WebsiteSocialAccount;
+use App\Models\WebsiteUser;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -19,39 +19,39 @@ class SocialAccountsController extends Controller
 
     public function callbackFromGoogle(): RedirectResponse
     {
-        $googleUser = Socialite::driver('google')->user();
+        try {
+            $googleUser = Socialite::driver('google')->user();
 
-        //* Check if user exists
-        $user = User::where('email', $googleUser->getEmail())->firstOrFail();
-        if (!$user) {
-            // Create user if not exists
-            $user = User::create([
+        } catch (\Exception $e) {
+            return $this->logResponse('SocialAccountsController@callbackFromGoogle', $e);
+        }
+
+        //* Check if website user exists
+        $websiteUser = WebsiteUser::where('website_id', app('website')->id)->where('email', $googleUser->getEmail())->firstOrFail();
+        if (!$websiteUser) {
+            // Create website user if not exists
+            $websiteUser = WebsiteUser::create([
+                'website_id' => app('website')->id,
                 'name' => $googleUser->getName(),
                 'email' => $googleUser->getEmail(),
                 'password' => bcrypt(str()->random(16)), // Generate random password
             ]);
 
-            event(new Registered($user));
+            event(new Registered($websiteUser));
         }
 
         //* Update or create social account
-        SocialAccount::updateOrCreate(
-            ['provider_id' => $googleUser->id],
+        WebsiteSocialAccount::updateOrCreate(
+            ['website_id' => app('website')->id, 'provider_id' => $googleUser->id, 'provider' => 'google'],
             [
-                'user_id' => $user->id,
-                'provider' => 'google',
+                'website_user_id' => $websiteUser->id,
                 'token' => $googleUser->token,
                 'refresh_token' => $googleUser->refreshToken,
             ]
         );
 
-        Auth::login($user);
+        Auth::guard('website')->login($websiteUser);
 
-        // If wizard was pending, create website now
-        if (session('pending_website_creation')) {
-            return app(\App\Http\Controllers\Spotly\WebsiteBuilderController::class)->store();
-        }
-
-        return redirect()->intended(route('dashboard.index', absolute: false));
+        return $this->redirectSuccess('dashboard.index', '', forWebsite: true);
     }
 }

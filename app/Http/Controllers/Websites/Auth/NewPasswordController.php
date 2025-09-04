@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Spotly\Auth;
+namespace App\Http\Controllers\Websites\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\WebsiteUser;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,20 +12,18 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class NewPasswordController extends Controller
 {
     /**
      * Show the password reset page.
      */
-    public function create(Request $request): Response
+    public function create(Request $request)
     {
-        return Inertia::render('auth/ResetPassword', [
+        return $this->inertiaRender('auth/ResetPassword', [
             'email' => $request->email,
             'token' => $request->route('token'),
-        ]);
+        ], true);
     }
 
     /**
@@ -40,10 +39,23 @@ class NewPasswordController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        $website = app('website');
+        $websiteId = $website->id;
+
+        $user = WebsiteUser::where('email', $request->email)
+            ->where('website_id', $websiteId)
+            ->first();
+
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'email' => ['No user found for this website with this email.'],
+            ]);
+        }
+
         // Here we will attempt to reset the user's password. If it is successful we
         // will update the password on an actual user model and persist it to the
         // database. Otherwise we will parse the error and return the response.
-        $status = Password::reset(
+        $status = Password::broker('website_users')->reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) use ($request) {
                 $user->forceFill([
@@ -59,7 +71,7 @@ class NewPasswordController extends Controller
         // the application's home authenticated view. If there is an error we can
         // redirect them back to where they came from with their error message.
         if ($status == Password::PasswordReset) {
-            return to_route('login')->with('status', __($status));
+            return to_route('website.login')->with('status', __($status));
         }
 
         throw ValidationException::withMessages([

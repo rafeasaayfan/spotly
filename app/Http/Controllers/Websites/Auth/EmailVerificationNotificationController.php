@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Spotly\Auth;
+namespace App\Http\Controllers\Websites\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -13,11 +13,11 @@ class EmailVerificationNotificationController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(route('landing', absolute: false));
+        if ($request->user('website')->hasVerifiedEmail()) {
+            return $this->redirectSuccess('dashboard.index', '', forWebsite: true);
         }
 
-        $request->user()->sendEmailVerificationNotification();
+        $request->user('website')->sendEmailVerificationNotification();
 
         return back()->with('status', 'verification-link-sent');
     }

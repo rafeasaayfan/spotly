@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Spotly\Auth;
+namespace App\Http\Controllers\Websites\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Verified;
@@ -14,8 +14,11 @@ class VerifyEmailController extends Controller
      */
     public function __invoke(EmailVerificationRequest $request): RedirectResponse
     {
+        $website = app('website');
+        $websiteType = $website->websiteType?->type;
+
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
+            return redirect()->intended(route('website.' . $websiteType . '.dashboard', absolute: false).'?verified=1');
         }
 
         if ($request->user()->markEmailAsVerified()) {
@@ -24,6 +27,6 @@ class VerifyEmailController extends Controller
             event(new Verified($user));
         }
 
-        return redirect()->intended(route('landing', absolute: false).'?verified=1');
+        return redirect()->intended(route('website.' . $websiteType . '.dashboard.index', absolute: false).'?verified=1');
     }
 }

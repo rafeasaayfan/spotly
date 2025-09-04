@@ -1,23 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Spotly\Auth;
+namespace App\Http\Controllers\Websites\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class ConfirmablePasswordController extends Controller
 {
     /**
      * Show the confirm password page.
      */
-    public function show(): Response
+    public function show()
     {
-        return Inertia::render('auth/ConfirmPassword');
+        return $this->inertiaRender('auth/ConfirmPassword', [], true);
     }
 
     /**
@@ -25,7 +23,7 @@ class ConfirmablePasswordController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        if (! Auth::guard('web')->validate([
+        if (! Auth::guard('website')->validate([
             'email' => $request->user()->email,
             'password' => $request->password,
         ])) {
@@ -36,6 +34,6 @@ class ConfirmablePasswordController extends Controller
 
         $request->session()->put('auth.password_confirmed_at', time());
 
-        return redirect()->intended(route('landing', absolute: false));
+        return $this->redirectSuccess('dashboard.index', '', forWebsite: true);
     }
 }

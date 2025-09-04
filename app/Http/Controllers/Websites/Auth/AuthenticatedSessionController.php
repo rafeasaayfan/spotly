@@ -1,27 +1,25 @@
 <?php
 
-namespace App\Http\Controllers\Spotly\Auth;
+namespace App\Http\Controllers\Websites\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Websites\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class AuthenticatedSessionController extends Controller
 {
     /**
      * Show the login page.
      */
-    public function create(Request $request): Response
+    public function create(Request $request)
     {
-        return Inertia::render('auth/Login', [
+        return $this->inertiaRender('auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => $request->session()->get('status'),
-        ]);
+        ], true);
     }
 
     /**
@@ -31,14 +29,9 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
-        // If wizard was pending, create website now
-        if (session('pending_website_creation')) {
-            return app(\App\Http\Controllers\Spotly\WebsiteBuilderController::class)->store();
-        }
-
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard.index', absolute: false));
+        return $this->redirectSuccess('dashboard.index', '', forWebsite: true);
     }
 
     /**
@@ -46,7 +39,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
+        Auth::guard('website')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
