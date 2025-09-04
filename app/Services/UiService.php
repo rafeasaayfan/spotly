@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\TemplateColor;
 use App\Models\WebsiteTemplate;
+use Illuminate\Support\Facades\Log;
 
 class UiService
 {
@@ -42,43 +43,49 @@ class UiService
      *
      * @return void
      */
-    public function storeTemplate(bool $is_active = false): string | bool
+    public function storeTemplate(bool $is_active = false)
     {
-        $checkDuplicateTemplate = WebsiteTemplate::where('website_id', $this->websiteId)
-        ->where('template_id', $this->template_id)->where('template_color_id', $this->template_color_id)
-        ->where('is_custom', false)->first();
-        if($checkDuplicateTemplate) {
-            return 'You already have this template!';
-        }
-
-        $websiteTemplateCount = WebsiteTemplate::where('website_id', $this->websiteId)->count();
-        if ($websiteTemplateCount === 4) {
-            return 'You can\'t create more then four templates!';
-        }
-
-        $templateColorId = '';
-        $template_images = [''];
-
-        if (!empty($this->is_custom) && $this->is_custom && !empty($this->colors)) {
-            $templateColors = TemplateColor::create([
-                ...$this->colors,
+        try {
+            $checkDuplicateTemplate = WebsiteTemplate::where('website_id', $this->websiteId)
+            ->where('template_id', $this->template_id)->where('template_color_id', $this->template_color_id)
+            ->where('is_custom', false)->first();
+            if($checkDuplicateTemplate) {
+                return 'You already have this template!';
+            }
+    
+            $websiteTemplateCount = WebsiteTemplate::where('website_id', $this->websiteId)->count();
+            if ($websiteTemplateCount === 4) {
+                return 'You can\'t create more then four templates!';
+            }
+    
+            $templateColorId = '';
+            $template_images = [''];
+    
+            if (!empty($this->is_custom) && $this->is_custom && !empty($this->colors)) {
+                $templateColors = TemplateColor::create([
+                    ...$this->colors,
+                    'is_custom' => $this->is_custom,
+                ]);
+                $templateColorId = $templateColors->id;
+            } else {
+                $templateColorId = $this->template_color_id;
+                $template_images = $this->template_images;
+            }
+    
+            WebsiteTemplate::create([
+                'website_id' => $this->websiteId,
+                'template_id' => $this->template_id,
+                'template_color_id' => $templateColorId,
+                'template_images' => $template_images,
                 'is_custom' => $this->is_custom,
+                'is_active' => $is_active
             ]);
-            $templateColorId = $templateColors->id;
-        } else {
-            $templateColorId = $this->template_color_id;
-            $template_images = $this->template_images;
+    
+            return true;
+        } catch (\Exception $e) {
+            Log::error('Ui Service Error, Failed to create the website template', [
+                'error' => $e->getMessage()
+            ]);
         }
-
-        WebsiteTemplate::create([
-            'website_id' => $this->websiteId,
-            'template_id' => $this->template_id,
-            'template_color_id' => $templateColorId,
-            'template_images' => $template_images,
-            'is_custom' => $this->is_custom,
-            'is_active' => $is_active
-        ]);
-
-        return true;
     }
 }
