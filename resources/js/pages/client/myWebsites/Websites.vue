@@ -74,6 +74,9 @@ const filters = reactive({
     page: Number(query.page || 1),
 });
 
+const hasWebsites = computed(() => props.websites.total > 0);
+const hasFilteredResults = computed(() => props.websites.data.length > 0);
+
 const isApplied = ref(false);
 const applyFilters = () => {
     isApplied.value = true;
@@ -129,7 +132,7 @@ const searching = (event: Event) => {
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <div
-            v-if="props.websites.data.length >= 0"
+            v-if="hasWebsites"
             class="bg-card border-muted relative mx-2 my-4 flex h-full flex-col justify-between gap-3 rounded-md border p-2 sm:p-4 md:mx-4"
         >
             <PlaceholderPattern class="opacity-40" />
@@ -241,7 +244,7 @@ const searching = (event: Event) => {
                 </div>
 
                 <!-- Websites Cards -->
-                <div v-if="props.websites.data.length > 0" class="grid h-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                <div v-if="hasFilteredResults" class="grid h-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
                     <Cards :websites="props.websites.data" />
                 </div>
 
