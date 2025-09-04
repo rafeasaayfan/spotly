@@ -20,6 +20,7 @@ const props = defineProps<{
     routeName: string;
     tableConditions: TableConditions;
     path: string;
+    dashboardFor?: string,
 }>();
 
 // Manage selected rows
@@ -87,6 +88,7 @@ const { handleAction } = useTableActions(selectedIds, props.routeName);
             :tableConditions="tableConditions"
             :path="props.path"
             :routeName="props.routeName"
+            :dashboardFor="props.dashboardFor"
         />
 
         <!-- Table footer with pagination -->

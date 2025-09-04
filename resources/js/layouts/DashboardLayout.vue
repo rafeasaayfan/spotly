@@ -8,15 +8,16 @@ const page = usePage<SharedData>();
 
 interface Props {
     breadcrumbs?: BreadcrumbItemType[];
+    dashboardFor?: string;
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
 });
 </script>
 
 <template>
-    <AppSidebarLayout :breadcrumbs="breadcrumbs" :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'">
+    <AppSidebarLayout :breadcrumbs="breadcrumbs" :dashboardFor="props.dashboardFor" :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'">
         <slot />
     </AppSidebarLayout>
 </template>

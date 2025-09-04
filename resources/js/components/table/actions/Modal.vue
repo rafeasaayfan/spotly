@@ -2,17 +2,24 @@
 import axios from 'axios';
 import { defineAsyncComponent, DefineComponent, onMounted, ref } from 'vue';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     action: string;
     path: string;
     routeName: string;
     id?: number;
-}>();
+    dashboardFor?: string;
+}>(), {
+    dashboardFor: 'default',
+});
 
 const record = ref<Record<string, any>>({});
 const loaded = ref(false);
 
-const components = import.meta.glob('@/pages/dashboard/pages/**/actions/*.vue');
+const defaultComponents = import.meta.glob('@/pages/dashboard/pages/**/actions/*.vue');
+const websiteComponents = import.meta.glob('@/websites/*/dashboard/pages/**/actions/*.vue');
+const components = props.dashboardFor === 'default'
+  ? defaultComponents
+  : websiteComponents;
 const matchingPath = Object.keys(components).find((path) =>
     path.includes(`/pages/${props.path}/actions/${props.action.charAt(0).toUpperCase() + props.action.slice(1)}.vue`),
 );

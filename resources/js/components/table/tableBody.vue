@@ -20,6 +20,7 @@ const props = defineProps<{
     path: string;
     routeName: string;
     handleAction: (action: 'delete', idOrIds: number | number[]) => Promise<void>;
+    dashboardFor?: string,
 }>();
 
 function updateCol(key: string, value: any, id: number) {
@@ -144,7 +145,7 @@ function updateCol(key: string, value: any, id: number) {
                                 <DialogDescription class="sr-only"> No description provided. </DialogDescription>
                             </DialogHeader>
 
-                            <Modal :action="action" :path="props.path" :routeName="props.routeName" :id="row.id" />
+                            <Modal :action="action" :path="props.path" :routeName="props.routeName" :id="row.id" :dashboardFor="props.dashboardFor" />
                         </DialogScrollContent>
                     </Dialog>
 

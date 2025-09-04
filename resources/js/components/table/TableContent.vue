@@ -19,6 +19,7 @@ interface TableProps {
     tableConditions: TableConditions;
     path: string;
     routeName: string;
+    dashboardFor?: string,
 }
 
 const props = defineProps<TableProps>();
@@ -76,6 +77,7 @@ const props = defineProps<TableProps>();
                 :path="props.path"
                 :routeName="props.routeName"
                 :handleAction="props.handleAction"
+                :dashboardFor="props.dashboardFor"
             />
         </Table>
     </div>

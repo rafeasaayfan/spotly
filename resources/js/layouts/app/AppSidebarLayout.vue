@@ -8,16 +8,17 @@ import type { BreadcrumbItemType } from '@/types';
 
 interface Props {
     breadcrumbs?: BreadcrumbItemType[];
+    dashboardFor?: string;
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
 });
 </script>
 
 <template>
     <AppShell variant="sidebar">
-        <AppSidebar />
+        <AppSidebar :dashboardForProps="props.dashboardFor" />
         <AppContent variant="sidebar">
             <AppSidebarHeader :breadcrumbs="breadcrumbs" />
             <slot />
