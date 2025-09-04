@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone_number')->unique()->nullable();
             $table->enum('status', ['active', 'inactive', 'banned'])->default('active');
+            $table->enum('role', ['owner', 'admin', 'user'])->default('user');
             $table->rememberToken();
             $table->timestamps();
 

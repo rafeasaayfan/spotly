@@ -4,8 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class WebsiteUser extends Model
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+class WebsiteUser extends Authenticatable implements MustVerifyEmail
 {
+    use Notifiable;
+
+    protected $guard_name = 'website';
+
     protected $fillable = [
         'website_id',
         'name',
@@ -15,6 +23,29 @@ class WebsiteUser extends Model
         'phone_number',
         'status'
     ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var list<string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
 
     /**
      * Get the website that the user is associated with.
