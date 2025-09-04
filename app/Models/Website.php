@@ -113,4 +113,28 @@ class Website extends Model implements HasMedia
     {
         return $this->hasMany(WebsiteUser::class, 'website_id');
     }
+
+    /**
+     * The website active.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', 1);
+    }
+
+    /**
+     * The website verified.
+     */
+    public function scopeVerified($query)
+    {
+        return $query->where('is_verified', 1);
+    }
+
+    /**
+     * The website status.
+     */
+    public function scopeStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
 }
