@@ -43,6 +43,8 @@ const submit = () => {
                 </div>
             </form>
 
+            <p v-if="status" class="text-[var(--success)]">{{ status }}</p>
+
             <div class="flex items-center justify-center text-sm gap-2">
                 <span class="text-body-muted">Or, return to</span>
                 <TextLink :href="route('login')">log in</TextLink>
