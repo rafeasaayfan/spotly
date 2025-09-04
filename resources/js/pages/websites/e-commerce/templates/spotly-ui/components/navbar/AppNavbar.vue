@@ -59,7 +59,7 @@ const auth = computed(() => page.props.auth);
                 </div>
 
                 <AuthAvatar v-if="auth.website_user" />
-                <Link v-else href="/register">
+                <Link v-else :href="route('website.register')">
                     <Button variant="outline" size="sm"> Login / Register </Button>
                 </Link>
             </div>
