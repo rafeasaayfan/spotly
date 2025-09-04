@@ -5,11 +5,13 @@ import LanguagesMenu from '@/components/languages/Languages.vue';
 // import AppLogo from '@/components/logo/AppLogo.vue';
 // import AppLogoIcon from '@/components/logo/AppLogoIcon.vue';
 import type { BreadcrumbItem, SharedData } from '@/types';
-import { usePage } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 // import { Link } from '@inertiajs/vue3';
 import DesktopNav from './content/DesktopNav.vue';
 import MobileNav from './content/MobileNav.vue';
-// import AuthAvatar from '@/components/AuthAvatar.vue';
+import AuthAvatar from '@/components/AuthAvatar.vue';
+import { computed } from 'vue';
+import { Button } from '@/components/ui/button';
 
 interface Props {
     breadcrumbs?: BreadcrumbItem[];
@@ -20,6 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const page = usePage<SharedData>();
+const auth = computed(() => page.props.auth);
 </script>
 
 <template>
@@ -55,7 +58,10 @@ const page = usePage<SharedData>();
                     <LanguagesMenu />
                 </div>
 
-                <!-- <AuthAvatar /> -->
+                <AuthAvatar v-if="auth.website_user" />
+                <Link v-else href="/register">
+                    <Button variant="outline" size="sm"> Login / Register </Button>
+                </Link>
             </div>
         </div>
     </div>

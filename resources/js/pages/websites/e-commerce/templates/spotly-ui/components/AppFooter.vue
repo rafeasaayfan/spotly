@@ -2,7 +2,7 @@
 // import AppLogoIcon from '@/components/logo/AppLogoIcon.vue';
 
 import { useNavigation } from '@/composables/navigation/useNavigation';
-import { navbarItems } from '../config/navbar';
+import { navbarItems } from '../../../config/navigations/navbar';
 import { Link, usePage } from '@inertiajs/vue3';
 import { ArrowUp, ChevronRight, Facebook, Instagram, Mail, MapPin, Phone, Youtube } from 'lucide-vue-next';
 import { onMounted } from 'vue';
