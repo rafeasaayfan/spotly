@@ -41,7 +41,6 @@ return new class extends Migration
             $table->boolean('is_in_home')->default(false);
             $table->boolean('is_special')->default(false);
             $table->boolean('is_active')->default(true);
-            $table->boolean('is_downloadable')->default(false);
 
             $table->timestamps();
             $table->softDeletes();
