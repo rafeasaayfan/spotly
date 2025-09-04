@@ -46,7 +46,7 @@ class OtpService
      */
     public function sendCode()
     {
-        $lastOtp = Otp::where('user_id', $this->user->id)->where('website_id', $this->websiteId)->firstOrFail();
+        $lastOtp = Otp::where('user_id', $this->user->id)->where('website_id', $this->websiteId)->first();
         if ($lastOtp && !($lastOtp->isExpired())) {
             return 'find';
         }
