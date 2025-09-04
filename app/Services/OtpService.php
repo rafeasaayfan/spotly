@@ -133,7 +133,7 @@ class OtpService
     public function verify(string $code): bool
     {
         $otp = Otp::where('user_id', $this->user->id)->where('website_id', $this->websiteId)->where('purpose', $this->purpose)->where('code', $code)
-        ->firstOrFail();
+        ->first();
 
         if (!$otp) {
             return false;
