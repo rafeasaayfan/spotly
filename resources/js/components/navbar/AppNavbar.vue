@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import AppearenceBtn from '@/components/appearance/AppearanceBtn.vue';
+import AuthAvatar from '@/components/AuthAvatar.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import LanguagesMenu from '@/components/languages/Languages.vue';
 import AppLogo from '@/components/logo/AppLogo.vue';
 import AppLogoIcon from '@/components/logo/AppLogoIcon.vue';
 import type { BreadcrumbItem } from '@/types';
-import { Link } from '@inertiajs/vue3';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { SharedData } from '@/types';
+import { Link, usePage } from '@inertiajs/vue3';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { Button } from '../ui/button';
 import DesktopNav from './content/DesktopNav.vue';
 import MobileNav from './content/MobileNav.vue';
-import AuthAvatar from '@/components/AuthAvatar.vue';
+
+const page = usePage<SharedData>();
+const auth = computed(() => page.props.auth);
 
 interface Props {
     breadcrumbs?: BreadcrumbItem[];
@@ -63,7 +68,10 @@ onUnmounted(() => {
                     <LanguagesMenu />
                 </div>
 
-                <AuthAvatar />
+                <AuthAvatar v-if="auth.user" />
+                <Link v-else :href="route('register')">
+                    <Button variant="outline" size="sm"> Login / Register </Button>
+                </Link>
             </div>
         </div>
     </div>
