@@ -14,10 +14,19 @@ trait ResponseTrait
      *
      * @param string $component
      * @param array $props
+     * @param boolean $forWebsite
      * @return RedirectResponse
      */
-    public function inertiaRender(string $component, array $props = []): \Inertia\Response
+    public function inertiaRender(string $component, array $props = [], bool $forWebsite = false): \Inertia\Response
     {
+        if($forWebsite) {
+            $website = app('website');
+            $websiteType = $website->websiteType?->type;
+            $websiteTemplate = $website->activeWebsiteTemplate?->template?->name;
+
+            return Inertia::render("websites/$websiteType/templates/$websiteTemplate/$component", $props);
+        }
+
         return Inertia::render($component, $props);
     }
 
@@ -28,12 +37,24 @@ trait ResponseTrait
      * @param string $message
      * @param string $toastType = 'success' | 'info' 
      * @param array $params
+     * @param boolean $forWebsite
      * @return RedirectResponse
      */
-    public function redirectSuccess(string $route, string $message, $toastType = 'success', array $params = []): RedirectResponse
+    public function redirectSuccess(string $route, string $message, $toastType = 'success', array $params = [], bool $forWebsite = false): RedirectResponse
     {
         if (!in_array($toastType, ['success', 'info'])) {
             $toastType = 'success';
+        }
+
+        if($forWebsite) {
+            $website = app('website');
+            $websiteType = $website->websiteType?->type;
+
+            return redirect()->route("website.$websiteType.$route", $params)->with([
+                'success' => true,
+                'toastType' => $toastType,
+                'message' => $message
+            ]);
         }
 
         return redirect()->route($route, $params)->with([
@@ -50,12 +71,24 @@ trait ResponseTrait
      * @param string $message
      * @param string $toastType = 'error' | 'warning' 
      * @param array $params
+     * @param boolean $forWebsite
      * @return RedirectResponse
      */
-    public function redirectError(string $route, string $message, $toastType = 'error', array $params = []): RedirectResponse
+    public function redirectError(string $route, string $message, $toastType = 'error', array $params = [], bool $forWebsite = false): RedirectResponse
     {
         if (!in_array($toastType, ['error', 'warning'])) {
             $toastType = 'error';
+        }
+
+        if($forWebsite) {
+            $website = app('website');
+            $websiteType = $website->websiteType?->type;
+
+            return redirect()->route("website.$websiteType.$route", $params)->with([
+                'success' => false,
+                'toastType' => $toastType,
+                'message' => $message
+            ]);
         }
 
         return redirect()->route($route, $params)->with([
