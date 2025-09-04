@@ -19,7 +19,12 @@ class SocialAccountsController extends Controller
 
     public function callbackFromGoogle(): RedirectResponse
     {
-        $googleUser = Socialite::driver('google')->user();
+        try {
+            $googleUser = Socialite::driver('google')->user();
+
+        } catch (\Exception $e) {
+            return $this->logResponse('SocialAccountsController@callbackFromGoogle', $e);
+        }
 
         //* Check if user exists
         $user = User::where('email', $googleUser->getEmail())->firstOrFail();
@@ -36,10 +41,9 @@ class SocialAccountsController extends Controller
 
         //* Update or create social account
         SocialAccount::updateOrCreate(
-            ['provider_id' => $googleUser->id],
+            ['provider_id' => $googleUser->id, 'provider' => 'google'],
             [
                 'user_id' => $user->id,
-                'provider' => 'google',
                 'token' => $googleUser->token,
                 'refresh_token' => $googleUser->refreshToken,
             ]
