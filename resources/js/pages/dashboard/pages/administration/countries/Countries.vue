@@ -12,16 +12,19 @@ import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Categories',
-        href: '/dashboard/categories',
+        title: 'Countries',
+        href: '/dashboard/countries',
     },
 ];
 
 const columns = [
-    { key: 'website_name', label: 'Website Name' },
-    { key: 'parent_name', label: 'Parent Category' },
-    { key: 'name', label: 'Category Name' },
-    { key: 'description', label: 'Description' },
+    { key: 'flag', label: 'Flag', type: 'image' },
+    { key: 'country', label: 'Country' },
+    { key: 'country_ar', label: 'Country AR' },
+    { key: 'country_fr', label: 'Country FR' },
+    { key: 'code', label: 'Code' },
+    { key: 'phone_code', label: 'Phone Code' },
+    { key: 'region', label: 'Region' },
     { key: 'is_active', label: 'Active', type: 'toggle' },
     { key: 'created_at', label: 'Created At', type: 'date' },
 ];
@@ -29,17 +32,17 @@ const columns = [
 const filter = [
     {
         key: 'is_active',
-        label: 'Status',
+        label: 'Active',
         type: 'select',
         options: [
-            { label: 'Active', value: '1' },
-            { label: 'Inactive', value: '0' },
+            { value: '0', label: 'Inactive' },
+            { value: '1', label: 'Active' },
         ],
     },
 ];
 
 const props = defineProps<{
-    categories: DataTableProps;
+    countries: DataTableProps;
     flash?: {
         toastType: 'success' | 'error' | 'warning' | 'info',
         message: string,
@@ -59,16 +62,16 @@ const tableConditions = {
 </script>
 
 <template>
-    <Head title="Categories" />
+    <Head title="Countries" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <DataTable
-            :tableData="props.categories"
+            :tableData="props.countries"
             :filter="filter"
             :columns="columns"
-            routeName="dashboard.categories"
+            routeName="dashboard.countries"
             :tableConditions="tableConditions"
-            path="categories"
+            path="administration/countries"
         />
     </DashboardLayout>
 </template>

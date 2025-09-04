@@ -6,14 +6,14 @@ const props = defineProps<{
 }>();
 
 const columns = [
-    { key: 'website_name', label: 'Website Name' },
     { key: 'name', label: 'Name' },
-    { key: 'email', label: 'Email', type: 'email' },
-    { key: 'subject', label: 'Subject' },
-    { key: 'type', label: 'Type', type: 'status' },
-    { key: 'status', label: 'Status', type: 'status' },
-    { key: 'message', label: 'Message', type: 'textarea' },
+    { key: 'code', label: 'Method Code' },
+    { key: 'settings', label: 'Settings', type: '' },
+    { key: 'sort_order', label: 'Sort Order', },
+    { key: 'is_active', label: 'Active', type: 'active' },
+    { key: 'description', label: 'Description', type: 'textarea' },
     { key: 'created_at', label: 'Created At', type: 'date' },
+    { key: 'updated_at', label: 'Updated At', type: 'date' },
 ];
 </script>
 

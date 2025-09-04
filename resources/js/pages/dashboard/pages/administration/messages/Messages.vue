@@ -12,13 +12,13 @@ import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Website Messages',
-        href: '/dashboard/website-messages',
+        title: 'Messages',
+        href: '/dashboard/messages',
     },
 ];
 
 const columns = [
-    { key: 'website_name', label: 'Website Name' },
+    { key: 'id', label: 'ID' },
     { key: 'name', label: 'Name' },
     { key: 'email', label: 'Email', type: 'email' },
     { key: 'subject', label: 'Subject' },
@@ -63,7 +63,7 @@ const filter = [
 ];
 
 const props = defineProps<{
-    websiteMessages: DataTableProps;
+    messages: DataTableProps;
     flash?: {
         toastType: 'success' | 'error' | 'warning' | 'info',
         message: string,
@@ -85,15 +85,15 @@ const tableConditions = {
 </script>
 
 <template>
-    <Head title="Website Messages" />
+    <Head title="Messages" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <DataTable
-            :tableData="props.websiteMessages"
+            :tableData="props.messages"
             :columns="columns"
-            routeName="dashboard.websiteMessages"
+            routeName="dashboard.messages"
             :tableConditions="tableConditions"
-            path="websiteMessages"
+            path="administration/messages"
             :filter="filter"
         />
     </DashboardLayout>

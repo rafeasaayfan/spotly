@@ -12,15 +12,16 @@ import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Website Templates',
-        href: '/dashboard/website-templates',
+        title: 'Payment Methods',
+        href: '/dashboard/payment-methods',
     },
 ];
 
 const columns = [
-    { key: 'website_name', label: 'Website Name' },
-    { key: 'template_name', label: 'Template Name' },
-    { key: 'templateColor_name', label: 'Template Color Name' },
+    { key: 'name', label: 'Name' },
+    { key: 'code', label: 'Method Code' },
+    { key: 'description', label: 'Description', type: 'textarea' },
+    { key: 'sort_order', label: 'Sort Order' },
     { key: 'is_active', label: 'Active', type: 'toggle' },
     { key: 'created_at', label: 'Created At', type: 'date' },
 ];
@@ -30,7 +31,6 @@ const filter = [
         key: 'is_active',
         label: 'Active',
         type: 'select',
-        placeholder: 'Select status',
         options: [
             { value: '0', label: 'Inactive' },
             { value: '1', label: 'Active' },
@@ -39,7 +39,7 @@ const filter = [
 ];
 
 const props = defineProps<{
-    websiteTemplates: DataTableProps;
+    paymentMethods: DataTableProps;
     flash?: {
         toastType: 'success' | 'error' | 'warning' | 'info',
         message: string,
@@ -59,16 +59,16 @@ const tableConditions = {
 </script>
 
 <template>
-    <Head title="Website Templates" />
+    <Head title="Payment Methods" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <DataTable
-            :tableData="props.websiteTemplates"
+            :tableData="props.paymentMethods"
             :filter="filter"
             :columns="columns"
-            routeName="dashboard.websiteTemplates"
+            routeName="dashboard.paymentMethods"
             :tableConditions="tableConditions"
-            path="websiteTemplates"
+            path="subscription/paymentMethods"
         />
     </DashboardLayout>
 </template>

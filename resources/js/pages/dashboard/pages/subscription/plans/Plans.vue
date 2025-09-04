@@ -12,23 +12,43 @@ import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Brands',
-        href: '/dashboard/brands',
+        title: 'Plans',
+        href: '/dashboard/plans',
     },
 ];
 
 const columns = [
-    { key: 'website_name', label: 'Website Name' },
     { key: 'name', label: 'Name' },
-    { key: 'description', label: 'Description' },
+    { key: 'price', label: 'Price' },
+    { key: 'currency', label: 'Currency' },
+    { key: 'duration', label: 'Duration' },
+    { key: 'features', label: 'Features' },
     { key: 'is_active', label: 'Is Active', type: 'toggle' },
-    { key: 'created_at', label: 'Created At', type: 'date' },
+    { key: 'created_at', label: 'Created At', type: "date" },
 ];
 
 const filter = [
     {
+        key: 'currency',
+        label: 'Currency',
+        type: 'select',
+        options: [
+            { value: 'USD', label: 'USD' },
+            { value: 'LBP', label: 'LBP' },
+        ],
+    },
+    {
+        key: 'duration',
+        label: 'Duration',
+        type: 'select',
+        options: [
+            { value: 'monthly', label: 'Monthly' },
+            { value: 'yearly', label: 'Yearly' },
+        ],
+    },
+    {
         key: 'is_active',
-        label: 'Active',
+        label: 'Active status',
         type: 'select',
         options: [
             { value: '0', label: 'Inactive' },
@@ -38,7 +58,7 @@ const filter = [
 ];
 
 const props = defineProps<{
-    brands: DataTableProps;
+    plans: DataTableProps;
     flash?: {
         toastType: 'success' | 'error' | 'warning' | 'info',
         message: string,
@@ -58,16 +78,16 @@ const tableConditions = {
 </script>
 
 <template>
-    <Head title="Brands" />
+    <Head title="Plans" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <DataTable
-            :tableData="props.brands"
+            :tableData="props.plans"
             :filter="filter"
             :columns="columns"
-            routeName="dashboard.brands"
+            routeName="dashboard.plans"
             :tableConditions="tableConditions"
-            path="brands"
+            path="subscription/plans"
         />
     </DashboardLayout>
 </template>

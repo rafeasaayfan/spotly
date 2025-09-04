@@ -55,7 +55,7 @@ const tableConditions = {
             :columns="columns"
             routeName="dashboard.emailSubscribers"
             :tableConditions="tableConditions"
-            path="emailSubscribers"
+            path="administration/emailSubscribers"
         />
     </DashboardLayout>
 </template>
