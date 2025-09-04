@@ -9,6 +9,7 @@ use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use App\Http\Requests\Dashboard\Pages\Websites\StoreWebsiteRequest;
 use App\Http\Requests\Dashboard\Pages\Websites\UpdateWebsiteRequest;
+use App\Jobs\InsertWebsiteOnwerToWebsiteUsers;
 use App\Jobs\WebsiteStatusMailJob;
 use App\Models\Country;
 use App\Models\WebsiteType;
@@ -281,10 +282,20 @@ class WebsitesController extends Controller
                 return $this->backError('Cant make the website pending', 'warning');
             }
 
-            $website->update([
+            $data = $validated['status'] === 'approved' ? [
+                'is_active' => true,
                 'status' => $validated['status'],
                 'approved_or_denied_by' => Auth::id(),
-            ]);
+            ] : [
+                'status' => $validated['status'],
+                'approved_or_denied_by' => Auth::id(),
+            ];
+
+            $website->update($data);
+
+            $message = $validated['status'] === 'approved'
+                ? 'Website approved successfully.'
+                : 'Website denied successfully.';
 
             WebsiteStatusMailJob::dispatch(
                 $website->owner_id,
@@ -294,9 +305,7 @@ class WebsitesController extends Controller
                 $validated['status'] === 'approved' ? 1 : 0
             );
 
-            $message = $validated['status'] === 'approved'
-                ? 'Website approved successfully.'
-                : 'Website denied successfully.';
+            InsertWebsiteOnwerToWebsiteUsers::dispatch($website);
 
             return $this->backSuccess($message);
         } catch (\Exception $e) {
