@@ -3,7 +3,6 @@ import DashboardLayout from '@/layouts/DashboardLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import PlaceholderPattern from '@/components/PlaceholderPattern.vue';
-import { useSidebar } from '@/components/ui/sidebar/utils';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -11,16 +10,12 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
 ];
-
-const { dashboardFor } = useSidebar();
-
-dashboardFor.value = 'e-commerce';
 </script>
 
 <template>
     <Head title="Dashboard" />
 
-    <DashboardLayout :breadcrumbs="breadcrumbs">
+    <DashboardLayout :breadcrumbs="breadcrumbs" dashboardFor="e-commerce">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <div class="grid auto-rows-min gap-4 md:grid-cols-3">
                 <div class="relative aspect-video overflow-hidden rounded-xl border border-muted">
