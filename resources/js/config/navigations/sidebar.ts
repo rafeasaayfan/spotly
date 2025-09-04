@@ -7,7 +7,7 @@ export const mainSidebarItems: SidebarSection[] = [
         name: 'Platform',
         items: [
             {
-               permission: ['dashboard_access'],
+                permission: ['dashboard_access'],
                 title: 'Dashboard',
                 href: '/dashboard',
                 icon: icons.LayoutGrid,
@@ -24,14 +24,14 @@ export const mainSidebarItems: SidebarSection[] = [
         permission: ['dashboard_access'],
         items: [
             {
-                title: 'Spotly',
+                title: 'Users',
+                href: '/dashboard/users',
+                icon: icons.Users,
+            },
+            {
+                title: 'Administration',
                 icon: icons.Settings,
                 children: [
-                    {
-                        title: 'Users',
-                        href: '/dashboard/users',
-                        icon: icons.Users,
-                    },
                     {
                         title: 'Website Types',
                         href: '/dashboard/website-types',
@@ -43,11 +43,6 @@ export const mainSidebarItems: SidebarSection[] = [
                         icon: icons.Flag,
                     },
                     {
-                        title: 'Payment Methods',
-                        href: '/dashboard/payment-methods',
-                        icon: icons.CreditCard,
-                    },
-                    {
                         title: 'Messages',
                         href: '/dashboard/messages',
                         icon: icons.MessageCircle,
@@ -57,15 +52,26 @@ export const mainSidebarItems: SidebarSection[] = [
                         href: '/dashboard/email-subscribers',
                         icon: icons.Mail,
                     },
+                ],
+            },
+            {
+                title: 'Subscription',
+                icon: icons.CreditCard,
+                children: [
+                    {
+                        title: 'Payment Methods',
+                        href: '/dashboard/payment-methods',
+                        icon: icons.DollarSign,
+                    },
                     {
                         title: 'Plans',
                         href: '/dashboard/plans',
-                        icon: icons.CreditCard,
+                        icon: icons.Map,
                     },
                 ],
             },
             {
-                title: 'UI',
+                title: 'UI Templates',
                 icon: icons.LayoutTemplate,
                 children: [
                     {
@@ -89,60 +95,12 @@ export const mainSidebarItems: SidebarSection[] = [
         permission: ['dashboard_access'],
         items: [
             {
-                title: 'Management',
-                icon: icons.Settings,
-                children: [
-                    {
-                        title: 'Websites',
-                        href: '/dashboard/websites',
-                        icon: icons.Monitor,
-                    },
-                    {
-                        title: 'Website Users',
-                        href: '/dashboard/website-users',
-                        icon: icons.Users,
-                    },
-                    {
-                        title: 'Categories',
-                        href: '/dashboard/categories',
-                        icon: icons.Tag,
-                    },
-                    {
-                        title: 'Brands',
-                        href: '/dashboard/brands',
-                        icon: icons.Building2,
-                    },
-                    {
-                        title: 'Website Templates',
-                        href: '/dashboard/website-templates',
-                        icon: icons.LayoutTemplate,
-                    },
-                    {
-                        title: 'Website Methods',
-                        href: '/dashboard/website-payment-methods',
-                        icon: icons.CreditCard,
-                    },
-                    {
-                        title: 'Website Messages',
-                        href: '/dashboard/website-messages',
-                        icon: icons.MessageCircle,
-                    },
-                ],
+                title: 'All Websites',
+                href: '/dashboard/websites',
+                icon: icons.Monitor,
             },
-            {
-                title: 'E-Commerce',
-                icon: icons.ShoppingCart,
-                children: [
-                    {
-                        title: 'Products',
-                        href: '/dashboard/products',
-                        icon: icons.Package,
-                    },
-                    
-                ],
-            }
         ],
-    }
+    },
 ];
 
 export const footerSidebarItems: SidebarSection[] = [
