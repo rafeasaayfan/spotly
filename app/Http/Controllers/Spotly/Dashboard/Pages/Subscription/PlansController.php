@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Spotly\Dashboard\Pages;
+namespace App\Http\Controllers\Spotly\Dashboard\Pages\Subscription;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\FilterRequest;
@@ -25,7 +25,7 @@ class PlansController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching);
 
-        return $this->inertiaRender('dashboard/pages/plans/Plans', ['plans' => $data]);
+        return $this->inertiaRender('dashboard/pages/subscription/plans/Plans', ['plans' => $data]);
     }
 
     /**

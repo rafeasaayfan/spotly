@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Spotly\Dashboard\Pages;
+namespace App\Http\Controllers\Spotly\Dashboard\Pages\Administration;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\FilterRequest;
@@ -23,7 +23,7 @@ class EmailSubscribersController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching);
 
-        return $this->inertiaRender('dashboard/pages/emailSubscribers/EmailSubscribers', ['emailSubscribers' => $data]);
+        return $this->inertiaRender('dashboard/pages/administration/emailSubscribers/EmailSubscribers', ['emailSubscribers' => $data]);
     }
 
     /**

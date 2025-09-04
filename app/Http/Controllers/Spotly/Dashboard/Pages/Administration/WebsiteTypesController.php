@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Spotly\Dashboard\Pages;
+namespace App\Http\Controllers\Spotly\Dashboard\Pages\Administration;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\FilterRequest;
@@ -19,7 +19,7 @@ class WebsiteTypesController extends Controller
      * Display a listing of the resource.
      */
     public function index(FilterRequest $request)
-    {
+    {   
         $query = WebsiteType::query();
 
         $columnsSearching = ['user_name', 'type'];
@@ -28,7 +28,7 @@ class WebsiteTypesController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
-        return $this->inertiaRender('dashboard/pages/websiteTypes/WebsiteTypes', ['websiteTypes' => $data]);
+        return $this->inertiaRender('dashboard/pages/administration/websiteTypes/WebsiteTypes', ['websiteTypes' => $data]);
     }
 
     /**

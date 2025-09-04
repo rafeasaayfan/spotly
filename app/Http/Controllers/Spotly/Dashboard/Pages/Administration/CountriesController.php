@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Spotly\Dashboard\Pages;
+namespace App\Http\Controllers\Spotly\Dashboard\Pages\Administration;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\FilterRequest;
@@ -32,7 +32,7 @@ class CountriesController extends Controller
             return $item;
         });
 
-        return $this->inertiaRender('dashboard/pages/countries/Countries', ['countries' => $data]);
+        return $this->inertiaRender('dashboard/pages/administration/countries/Countries', ['countries' => $data]);
     }
 
     /**

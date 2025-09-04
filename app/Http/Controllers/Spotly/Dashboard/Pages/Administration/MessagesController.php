@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Spotly\Dashboard\Pages;
+namespace App\Http\Controllers\Spotly\Dashboard\Pages\Administration;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\FilterRequest;
@@ -23,7 +23,7 @@ class MessagesController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching);
 
-        return $this->inertiaRender('dashboard/pages/messages/Messages', ['messages' => $data]);
+        return $this->inertiaRender('dashboard/pages/administration/messages/Messages', ['messages' => $data]);
     }
 
     /**

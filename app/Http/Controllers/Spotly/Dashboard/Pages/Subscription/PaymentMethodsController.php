@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Spotly\Dashboard\Pages;
+namespace App\Http\Controllers\Spotly\Dashboard\Pages\Subscription;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\FilterRequest;
@@ -25,7 +25,7 @@ class PaymentMethodsController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching);
 
-        return $this->inertiaRender('dashboard/pages/paymentMethods/PaymentMethods', ['paymentMethods' => $data]);
+        return $this->inertiaRender('dashboard/pages/subscription/paymentMethods/PaymentMethods', ['paymentMethods' => $data]);
     }
 
     /**
