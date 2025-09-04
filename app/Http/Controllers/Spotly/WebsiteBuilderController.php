@@ -183,7 +183,7 @@ class WebsiteBuilderController extends Controller
                 $websiteTemplateData['template_id'],
                 $websiteTemplateData['template_images'],
                 $websiteTemplateData['custom_template_color'],
-                $websiteTemplateData['colors']
+                $websiteTemplateData['colors'] ?? [],
             );
             $result = $uiService->storeTemplate(1);
 
