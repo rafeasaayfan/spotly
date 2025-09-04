@@ -20,7 +20,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 const columns = [
     { key: 'owner_name', label: 'Owner' },
     { key: 'websiteType_type', label: 'Type' },
-    { key: 'viewedBy_name', label: 'Viewed By' },
+    { key: 'approvedOrDeniedBy_name', label: 'Viewed By' },
     { key: 'subdomain', label: 'Sub Domain' },
     { key: 'phone_number', label: 'Phone Number', type: 'phone_number' },
     { key: 'address', label: 'Address' },
