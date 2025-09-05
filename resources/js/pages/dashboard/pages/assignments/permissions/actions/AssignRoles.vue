@@ -47,8 +47,9 @@ function submit(action: 'delete' | 'add', roleId: number, permissionId: number) 
             async onSuccess() {
                 try {
                     const response = await axios.get(route('dashboard.permissions.assignRoles', permissionId));
-                    attachedRoles.value = response.data.attachedRoles;
-                    availableRoles.value = response.data.availableRoles;
+                    
+                    attachedRoles.value = response.data.props.attachedRoles;
+                    availableRoles.value = response.data.props.availableRoles;
 
                     disabledSubmit.value = false;
 
@@ -62,7 +63,8 @@ function submit(action: 'delete' | 'add', roleId: number, permissionId: number) 
 </script>
 
 <template>
-    <div class="border-muted grid w-full rounded border lg:grid-cols-2">
+    <div class="px-4 pb-3">
+        <div class="border-muted grid w-full rounded border lg:grid-cols-2">
         <!-- Attached Roles -->
         <div class="border-muted col-span-1 flex flex-col border-e">
             <div class="bg-body text-body rounded-ss p-4 text-center font-medium">Attached Roles</div>
@@ -126,5 +128,6 @@ function submit(action: 'delete' | 'add', roleId: number, permissionId: number) 
     <div class="flex items-center gap-1 pt-2 text-base">
         <span class="text-body-muted font-medium">Permission:</span>
         <span class="text-active-link font-bold">{{ attachedRoleList?.name }}</span>
+    </div>
     </div>
 </template>

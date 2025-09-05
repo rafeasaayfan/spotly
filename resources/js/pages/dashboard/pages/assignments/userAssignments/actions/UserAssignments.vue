@@ -63,9 +63,10 @@ function submit(action: 'delete' | 'add', assignmentId: number, type: string, us
             async onSuccess() {
                 try {
                     const response = await axios.get(route('dashboard.userAssignments.assignment', userId));
-                    attached.value = response.data.attached;
-                    availableRoles.value = response.data.availableRoles;
-                    availablePermissions.value = response.data.availablePermissions;
+
+                    attached.value = response.data.props.attached;
+                    availableRoles.value = response.data.props.availableRoles;
+                    availablePermissions.value = response.data.props.availablePermissions;
 
                     disabledSubmit.value = false;
 
@@ -79,7 +80,7 @@ function submit(action: 'delete' | 'add', assignmentId: number, type: string, us
 </script>
 
 <template>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 pb-3 px-4">
         <div class="flex w-fit gap-2 rounded-md">
             <Button :variant="type === 'roles' ? 'default' : 'outline'" @click="type = 'roles'">Roles</Button>
 
