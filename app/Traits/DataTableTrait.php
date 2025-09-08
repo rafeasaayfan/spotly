@@ -10,12 +10,12 @@ trait DataTableTrait
     protected function dataTable($query, $request, $columsSearching = [], $columnsSelection = [], $relations = [])
     {
         try {
-            $search = trim($request->input('search', ''));
-            $filters = $request->input('filter', []);
-            $sortBy = $request->input('sort_by', 'id');
-            $sortDir = $request->input('sort_dir', 'desc');
+            $search          = trim($request->search ?? null);
+            $filters         = $request->filter ?? [];
+            $sortBy          = $request->sortBy ?? 'id';
+            $sortDir         = $request->sort_dir ?? 'desc';
             // $page = (int)$request->get('page', 1);
-            $perPage = (int)$request->input('limit', 10);
+            $perPage         = (int) ($request->limit ?? 10);
             $model = $query->getModel();
 
             // Apply column selection
