@@ -26,11 +26,6 @@ class {{ controllerName }} extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
-        // $data->transform(function ($item) {
-        //    $item->image = $item->getFirstMediaUrl('image');
-        //    return $item;
-        // });
-
         return $this->inertiaRender('dashboard/pages/{{ folder }}/{{ pluralModel }}', ['{{ pluralVariable }}' => $data]);
     }
 
@@ -82,8 +77,6 @@ class {{ controllerName }} extends Controller
         try {
             ${{ modelVariable }} = {{ model }}::findOrFail($id);
 
-            // ${{ modelVariable }}->image = ${{ modelVariable }}->getFirstMediaUrl('image');
-
             // ${{ modelVariable }} = $this->flattenRelationData($query, ['..._name']);
 
             return $this->jsonSuccess('', [
@@ -101,8 +94,6 @@ class {{ controllerName }} extends Controller
     {
         try {
             ${{ modelVariable }} = {{ model }}::findOrFail($id);
-
-            // ${{ modelVariable }}->image = ${{ modelVariable }}->getFirstMediaUrl('image');
 
             {{ createEditrelations }}
 
