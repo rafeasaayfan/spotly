@@ -10,8 +10,8 @@ export const confirmDialog = (options = {}) => {
         icon: 'warning',
 
         background: isDark.value ? 'hsl(0 0% 4%)' : 'hsl(0 0% 96%)',
-        confirmButtonColor: isDark.value ? 'hsl(0, 74%, 40%)' : 'hsl(0 80% 40%)',
-        cancelButtonColor: isDark.value ? 'hsl(221, 83%, 50%)' : 'hsl(221 80% 30%)',
+        confirmButtonColor: isDark.value ? 'hsl(0, 74%, 45%)' : 'hsl(0 80% 50%)',
+        cancelButtonColor: isDark.value ? 'hsl(221, 83%, 45%)' : 'hsl(221 80% 40%)',
 
         color: isDark.value ? '#fff' : '#000',
 
