@@ -2,16 +2,15 @@
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
-// Components
 import HeadingSmall from '@/components/headers/HeadingSmall.vue';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogClose,
-    DialogContent,
     DialogDescription,
     DialogFooter,
     DialogHeader,
+    DialogScrollContent,
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
@@ -44,10 +43,10 @@ const closeModal = () => {
 </script>
 
 <template>
-    <div class="space-y-6">
+    <div class="flex flex-col gap-6">
         <HeadingSmall title="Delete account" description="Delete your account and all of its resources" />
 
-        <div class="space-y-4 rounded-md border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
+        <div class="space-y-4 rounded-md border border-red-300/50 bg-red-300/20 dark:bg-red-700/10 p-4 dark:border-red-500/10">
             <div class="relative space-y-0.5 text-red-600 dark:text-red-100">
                 <p class="font-semibold">Warning</p>
                 <p class="text-body-muted text-sm">Please proceed with caution, this cannot be undone.</p>
@@ -58,7 +57,7 @@ const closeModal = () => {
                     <Button variant="destructive">Delete account</Button>
                 </DialogTrigger>
 
-                <DialogContent>
+                <DialogScrollContent>
                     <form class="space-y-4" @submit="deleteUser">
                         <DialogHeader>
                             <DialogTitle>Are you sure you want to delete your account?</DialogTitle>
@@ -84,7 +83,7 @@ const closeModal = () => {
                             </div>
                         </div>
 
-                        <DialogFooter class="px-4">
+                        <DialogFooter>
                             <DialogClose as-child>
                                 <Button variant="secondary" @click="closeModal">Cancel</Button>
                             </DialogClose>
@@ -95,7 +94,7 @@ const closeModal = () => {
                             </Button>
                         </DialogFooter>
                     </form>
-                </DialogContent>
+                </DialogScrollContent>
             </Dialog>
         </div>
     </div>
