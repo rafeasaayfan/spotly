@@ -157,7 +157,7 @@ function updateCol(key: string, value: any, id: number) {
 
     <Tbody v-else>
         <Tr class="text-body-muted w-3 w-full text-sm">
-            <Td colspan="20">
+            <Td colspan="20" class="border-none">
                 <div class="flex w-full flex-col items-center justify-center gap-2 py-3">
                     <Inbox class="size-10" />
                     <span class="text-body-muted text-sm font-semibold">No data founded</span>

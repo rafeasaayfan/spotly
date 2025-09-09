@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Chevron, Table, Th, Thead, Tr } from '@/components/ui/table';
 import { Checkbox } from '../ui/fields';
-import TableBody from './tableBody.vue';
+import TableBody from './TableBody.vue';
 
 import { type Column } from '@/composables/dataTable/useDataTable';
 import { type TableConditions } from '@/lib/dataTable';
