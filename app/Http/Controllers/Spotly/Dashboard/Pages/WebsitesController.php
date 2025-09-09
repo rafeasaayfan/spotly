@@ -9,11 +9,10 @@ use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use App\Http\Requests\Dashboard\Pages\Websites\StoreWebsiteRequest;
 use App\Http\Requests\Dashboard\Pages\Websites\UpdateWebsiteRequest;
-use App\Jobs\InsertWebsiteOnwerToWebsiteUsers;
 use App\Jobs\WebsiteStatusMailJob;
 use App\Models\Country;
 use App\Models\WebsiteType;
-use Illuminate\Support\Facades\Auth;
+use App\Services\WebsiteStatusService;
 
 class WebsitesController extends Controller
 {
@@ -45,10 +44,6 @@ class WebsitesController extends Controller
             $websiteTypes = WebsiteType::select(['id', 'type'])->active()->get();
             $cities = config('cities.lebanon');
             $countries = Country::with('media')->active()->get();
-            $countries->transform(function ($item) {
-                $item->flag = $item->getFirstMediaUrl('flag');
-                return $item;
-            });
 
             return $this->jsonSuccess('', [
                 'users' => $users,
@@ -98,8 +93,6 @@ class WebsitesController extends Controller
     {
         try {
             $website = Website::with(['media', 'owner', 'websiteType', 'approvedOrDeniedBy'])->findOrFail($id);
-            $website->light_logo = $website->getFirstMediaUrl('light_logo');
-            $website->dark_logo = $website->getFirstMediaUrl('dark_logo');
             $result = $this->flattenRelationData($website, ['owner_name', 'websiteType_type', 'approvedOrDeniedBy_name']);
 
             return $this->jsonSuccess('', [
@@ -121,13 +114,6 @@ class WebsitesController extends Controller
             $websiteTypes = $this->getRelation('websiteType', ['type']);
             $cities = config('cities.lebanon');
             $countries = Country::with('media')->active()->get();
-            $countries->transform(function ($item) {
-                $item->flag = $item->getFirstMediaUrl('flag');
-                return $item;
-            });
-
-            $website->light_logo = $website->getFirstMediaUrl('light_logo');
-            $website->dark_logo = $website->getFirstMediaUrl('dark_logo');
 
             return $this->jsonSuccess('', [
                 'data' => $website,
@@ -195,34 +181,21 @@ class WebsitesController extends Controller
      */
     public function toggleActive(Request $request, $id)
     {
+        $validated = $request->validate([
+            'is_active' => 'required|boolean',
+        ]);
+
         try {
             $website = Website::findOrFail($id);
 
-            if ($website->status !== 'approved') {
-                return $this->backError('This website is not approved yet');
+            $WebsiteStatusService = new WebsiteStatusService($website);
+            $result = $WebsiteStatusService->toggleActivation($validated['is_active']);
+
+            if(!$result['success']) {
+                return $this->backError($result['message']);
             }
 
-            $validated = $request->validate([
-                'is_active' => 'required|boolean',
-            ]);
-
-            $website->update([
-                'is_active' => $validated['is_active'],
-            ]);
-
-            WebsiteStatusMailJob::dispatch(
-                $website->owner_id,
-                $website->name,
-                $website->subdomain,
-                'is_active',
-                $validated['is_active'] ? 1 : 0
-            );
-
-            $message = $validated['is_active']
-                ? 'Website activated successfully.'
-                : 'Website deactivated successfully.';
-
-            return $this->backSuccess($message);
+            return $this->backSuccess($result['message']);
         } catch (\Exception $e) {
             return $this->logResponse('WebsitesController@toggleActive', $e, 'An error occurred while updating the website status');
         }
@@ -271,43 +244,25 @@ class WebsitesController extends Controller
      */
     public function changeStatus(Request $request, $id)
     {
+        $validated = $request->validate([
+            'status' => 'required|in:pending,denied,approved',
+        ]);
+
         try {
             $website = Website::findOrFail($id);
-
-            $validated = $request->validate([
-                'status' => 'required|in:pending,denied,approved',
-            ]);
 
             if ($validated['status'] === 'pending') {
                 return $this->backError('Cant make the website pending', 'warning');
             }
 
-            $data = $validated['status'] === 'approved' ? [
-                'is_active' => true,
-                'status' => $validated['status'],
-                'approved_or_denied_by' => Auth::id(),
-            ] : [
-                'status' => $validated['status'],
-                'approved_or_denied_by' => Auth::id(),
-            ];
+            $WebsiteStatusService = new WebsiteStatusService($website);
+            $result = $WebsiteStatusService->setStatus($validated['status']);
 
-            $website->update($data);
+            if(!$result['success']) {
+                return $this->backError($result['message']);
+            }
 
-            $message = $validated['status'] === 'approved'
-                ? 'Website approved successfully.'
-                : 'Website denied successfully.';
-
-            WebsiteStatusMailJob::dispatch(
-                $website->owner_id,
-                $website->name,
-                $website->subdomain,
-                'status',
-                $validated['status'] === 'approved' ? 1 : 0
-            );
-
-            InsertWebsiteOnwerToWebsiteUsers::dispatch($website);
-
-            return $this->backSuccess($message);
+            return $this->backSuccess($result['message']);
         } catch (\Exception $e) {
             return $this->logResponse('WebsitesController@changeStatus', $e, 'An error occurred while changing the website status');
         }
