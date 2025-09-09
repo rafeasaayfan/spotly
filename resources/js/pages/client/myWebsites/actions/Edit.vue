@@ -86,7 +86,7 @@ const activate = (toggleVal: boolean) => {
                 </div>
 
                 <!-- Logo -->
-                <div class="border-muted flex flex-col gap-5 border-b p-4 md:p-6">
+                <div class="border-muted flex flex-col items-center gap-5 border-b p-4 md:p-6">
                     <div class="flex flex-col gap-1">
                         <Label for="light_logo" class="mb-1 text-xs text-body-muted">Light Logo</Label>
                         <File id="light_logo" v-model="form.light_logo" :src="props.website.light_logo" label="Light Logo" />

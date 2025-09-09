@@ -128,7 +128,7 @@ const copyUrl = async () => {
                 </div>
 
                 <!-- Logo -->
-                <div class="border-muted flex flex-col gap-5 border-b p-4 md:p-6">
+                <div class="border-muted flex flex-col items-center gap-5 border-b p-4 md:p-6">
                     <template v-if="props.website.light_logo && props.website.dark_logo">
                         <div class="flex flex-col gap-1">
                             <Label for="light_logo" class="text-body-muted mb-1 text-xs">Light Logo</Label>
@@ -219,7 +219,7 @@ const copyUrl = async () => {
                     </div>
                 </div>
 
-                <div class="border-muted flex flex-wrap justify-between gap-2 border-b p-4 md:p-6">
+                <div class="flex flex-wrap justify-between gap-2 p-4 md:p-6">
                     <div class="flex flex-col gap-1">
                         <span class="text-body-muted text-xs">Created At:</span>
                         <span class="text-active text-sm font-medium">{{ formatters.date(props.website.created_at) }}</span>
