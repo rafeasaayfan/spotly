@@ -16,10 +16,12 @@ return new class extends Migration
             $table->foreignId('website_user_id')->constrained('website_users')->onDelete('cascade');
             $table->foreignId('website_id')->constrained('websites')->onDelete('cascade');
             $table->string('provider'); // e.g., "google"
-            $table->string('provider_id')->unique(); // Google ID
+            $table->string('provider_id'); // Google ID
             $table->text('token')->nullable();
             $table->text('refresh_token')->nullable();
             $table->timestamps();
+
+            $table->unique(['website_id', 'provider_id']); 
         });
     }
 
