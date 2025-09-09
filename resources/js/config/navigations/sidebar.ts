@@ -17,6 +17,22 @@ export const mainSidebarItems: SidebarSection[] = [
                 href: '/dashboard/my-websites',
                 icon: icons.Globe,
             },
+            {
+                title: 'Payments',
+                icon: icons.CreditCard,
+                children: [
+                    {
+                        title: 'Make a Payment',
+                        href: '/dashboard/make-payment',
+                        icon: icons.Send,
+                    },
+                    {
+                        title: 'Payment History',
+                        href: '/dashboard/countries',
+                        icon: icons.Receipt,
+                    },
+                ],
+            },
         ],
     },
     {
@@ -55,22 +71,6 @@ export const mainSidebarItems: SidebarSection[] = [
                 ],
             },
             {
-                title: 'Subscription',
-                icon: icons.CreditCard,
-                children: [
-                    {
-                        title: 'Payment Methods',
-                        href: '/dashboard/payment-methods',
-                        icon: icons.DollarSign,
-                    },
-                    {
-                        title: 'Plans',
-                        href: '/dashboard/plans',
-                        icon: icons.Map,
-                    },
-                ],
-            },
-            {
                 title: 'UI Templates',
                 icon: icons.LayoutTemplate,
                 children: [
@@ -85,6 +85,22 @@ export const mainSidebarItems: SidebarSection[] = [
                     {
                         title: 'Template Template Colors',
                         href: '/dashboard/ui/template-template-colors',
+                    },
+                ],
+            },
+            {
+                title: 'Subscription',
+                icon: icons.Wallet,
+                children: [
+                    {
+                        title: 'Payment Methods',
+                        href: '/dashboard/payment-methods',
+                        icon: icons.Banknote,
+                    },
+                    {
+                        title: 'Plans',
+                        href: '/dashboard/plans',
+                        icon: icons.Layers,
                     },
                 ],
             },
