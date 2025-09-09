@@ -8,6 +8,8 @@ use App\Models\WebsiteType;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Client\ClientWebsitesIndexRequest;
 
+use function Laravel\Prompts\search;
+
 class ClientWebsitesController extends Controller
 {
     /**
@@ -15,47 +17,42 @@ class ClientWebsitesController extends Controller
      */
     public function index(ClientWebsitesIndexRequest $request)
     {
-        $search = trim($request->input('search', ''));
-        $sort_by = $request->input('sort_by', 'newest');
-        $website_type_id = $request->input('website_type', '');
-        $status = $request->input('status', '');
-        $is_active = $request->input('active', '');
-        $limit = (int)$request->input('limit', 6);
-
         try {
-            $websites = Website::where('owner_id', Auth::id())
-                ->when($search, function ($query, $search) {
-                    $query->where('name', 'like', '%' . $search . '%')
-                        ->orWhere('subdomain', 'like', '%' . $search . '%');
-                })
-                ->when($website_type_id, function ($query, $website_type_id) {
-                    $query->where('website_type_id', $website_type_id);
-                })
-                ->when($status, function ($query, $status) {
-                    $query->where('status', $status);
-                })
-                ->when($is_active !== '', function ($query) use ($is_active) {
-                    $query->where('is_active', (bool) $is_active);
-                })
-                ->with([
-                    'websiteType:id,type',
-                ])
-                ->orderBy(match ($sort_by) {
-                    'newest' => 'created_at',
-                    'oldest' => 'created_at',
-                    'name_asc' => 'name',
-                    'name_desc' => 'name',
-                    default => 'created_at',
-                }, match ($sort_by) {
-                    'newest' => 'desc',
-                    'oldest' => 'asc',
-                    'name_asc' => 'asc',
-                    'name_desc' => 'desc',
-                    default => 'desc',
-                })
-                ->paginate($limit);
-
             $websiteTypes = WebsiteType::active()->select('id', 'title')->get();
+            $query = Website::where('owner_id', Auth::id())->with(['websiteType:id,type']);
+
+            if (!empty($request->search)) {
+                $query->where('name', 'like', '%' . trim($request->search) . '%')
+                    ->orWhere('subdomain', 'like', '%' . trim($request->search) . '%');
+            }
+            switch ($request->sort_by) {
+                case 'newest':
+                    $query->orderBy('created_at', 'desc');
+                    break;
+                case 'oldest':
+                    $query->orderBy('created_at', 'asc');
+                    break;
+                case 'name_asc':
+                    $query->orderBy('name', 'asc');
+                    break;
+                case 'name_desc':
+                    $query->orderBy('name', 'desc');
+                    break;
+                default:
+                    $query->orderBy('created_at', 'desc');
+                    break;
+            };
+            if ($request->website_type !== null) {
+                $query->where('website_type_id', $request->website_type);
+            }
+            if (!empty($request->status)) {
+                $query->where('status', $request->status);
+            }
+            if ($request->is_active !== null) {
+                $query->where('is_active', (bool) $request->is_active);
+            }
+
+            $websites = $query->paginate((int) $request->limit ?? 6);
 
             return $this->inertiaRender('client/myWebsites/Websites', [
                 'websites' => $websites,

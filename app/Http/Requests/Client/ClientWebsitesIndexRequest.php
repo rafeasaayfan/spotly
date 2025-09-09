@@ -26,7 +26,7 @@ class ClientWebsitesIndexRequest extends FormRequest
             'sort_by' => ['nullable', 'string', 'in:newest,oldest,name_asc,name_desc'],
             'website_type' => ['nullable', 'exists:website_types,id'],
             'status' => ['nullable', 'string', 'in:pending,denied,approved'],
-            'active' => ['nullable', 'boolean'],
+            'is_active' => ['nullable', 'boolean'],
             'limit' => ['nullable', 'in:3,6,9,12'],
             'page' => ['nullable', 'integer', 'min:1']
         ];

@@ -69,12 +69,12 @@ const filters = reactive({
     sort_by: String(query.sort_by || ''),
     website_type: String(query.website_type || ''),
     status: String(query.status || ''),
-    active: String(query.active || ''),
+    is_active: String(query.is_active || ''),
     limit: Number(query.limit || 6),
     page: Number(query.page || 1),
 });
 
-const hasWebsites = computed(() => props.websites.total > 0);
+const hasWebsites = props.websites.total > 0;
 const hasFilteredResults = computed(() => props.websites.data.length > 0);
 
 const isApplied = ref(false);
@@ -108,11 +108,11 @@ const resetDropDownFilter = async () => {
     isResetting.value = true;
 
     setTimeout(() => {
-        filters.active = '';
+        filters.is_active = '';
         filters.status = '';
         filters.website_type = '';
+        filters.page = 1;
         isResetting.value = false;
-        applyFilters();
     }, 500);
 };
 
@@ -203,11 +203,11 @@ const searching = (event: Event) => {
 
                                             <div class="flex flex-col gap-1">
                                                 <Label class="text-xs" for="active">Active</Label>
-                                                <Select id="active" v-model="filters.active" placeholder="Select active website">
+                                                <Select id="active" v-model="filters.is_active" placeholder="Select active website">
                                                     <option
                                                         v-for="(option, index) in [
-                                                            { value: '1', label: 'active' },
-                                                            { value: '0', label: 'inactive' },
+                                                            { value: 1, label: 'active' },
+                                                            { value: 0, label: 'inactive' },
                                                         ]"
                                                         :key="index"
                                                         :value="option.value"
