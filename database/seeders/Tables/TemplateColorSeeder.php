@@ -6,7 +6,7 @@ use App\Models\TemplateColor;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class TemplateColorsSeeder extends Seeder
+class TemplateColorSeeder extends Seeder
 {
     /**
      * Run the database seeds.

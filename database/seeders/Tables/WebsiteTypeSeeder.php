@@ -5,7 +5,7 @@ namespace Database\Seeders\Tables;
 use Illuminate\Database\Seeder;
 use App\Models\WebsiteType;
 
-class WebsiteTypesSeeder extends Seeder
+class WebsiteTypeSeeder extends Seeder
 {
     /**
      * Run the database seeds.

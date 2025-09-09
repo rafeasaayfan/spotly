@@ -3,11 +3,12 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Database\Seeders\Tables\Assignments\PermissionsSeeder;
-use Database\Seeders\Tables\Assignments\RolesPermissionsSeeder;
-use Database\Seeders\Tables\Assignments\RolesSeeder;
-use Database\Seeders\Tables\WebsiteTypesSeeder;
-use Database\Seeders\Tables\TemplateColorsSeeder;
+use Database\Seeders\Tables\Assignments\PermissionSeeder;
+use Database\Seeders\Tables\Assignments\RolePermissionSeeder;
+use Database\Seeders\Tables\Assignments\RoleSeeder;
+use Database\Seeders\Tables\PlanSeeder;
+use Database\Seeders\Tables\WebsiteTypeSeeder;
+use Database\Seeders\Tables\TemplateColorSeeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -19,9 +20,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            PermissionsSeeder::class,
-            RolesSeeder::class,
-            RolesPermissionsSeeder::class,
+            PermissionSeeder::class,
+            RoleSeeder::class,
+            RolePermissionSeeder::class,
         ]);
 
         User::factory()->create([
@@ -35,8 +36,9 @@ class DatabaseSeeder extends Seeder
         ])->assignRole('admin');
 
         $this->call([
-            WebsiteTypesSeeder::class,
-            TemplateColorsSeeder::class,
+            WebsiteTypeSeeder::class,
+            TemplateColorSeeder::class,
+            PlanSeeder::class
         ]);
 
         User::factory(1000)->create();
