@@ -29,10 +29,6 @@ class WebsiteBuilderController extends Controller
             $typeId = $websiteTypes->firstWhere('type', $type)?->id;
 
             $countries = Country::with('media')->active()->get();
-            $countries->transform(function ($item) {
-                $item->flag = $item->getFirstMediaUrl('flag');
-                return $item;
-            });
 
             $cities = config('cities.lebanon');
 
@@ -64,19 +60,12 @@ class WebsiteBuilderController extends Controller
 
         try {
             $templateTemplateColors = TemplateTemplateColor::with([
-                'media' => function ($query) {
-                    $query->where('collection_name', 'uiImages');
-                },
+                'media',
                 'template:id,name',
                 'templateColor'
             ])
                 ->where('template_id', $validate['templateId'])
-                ->get()
-                ->transform(function ($item) {
-                    $item->uiImages = $item->media->toArray();
-                    unset($item->media);
-                    return $item;
-                });
+                ->get();
 
             return $this->jsonSuccess('', ['templateTemplateColors' => $templateTemplateColors]);
         } catch (\Exception $e) {
