@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Listeners\WebsiteApproved;
+
+use App\Events\WebsiteApproved;
+use App\Models\Subscription;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Log;
+
+class CreateFreeSubscription implements ShouldQueue
+{
+    /**
+     * Create the event listener.
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Handle the event.
+     */
+    public function handle(WebsiteApproved $event): void
+    {
+        try {
+            Subscription::firstOrCreate(
+                [
+                    'user_id' => $event->website->owner_id,
+                    'website_id' => $event->website->id,
+                    'plan_id' => 1,
+                ],
+                [
+                    'status' => 'free_trial',
+                    'start_date' => now(),
+                    'end_date' => now()->addDays(3),
+                ]
+            );
+
+        } catch (\Exception $e) {
+            Log::error('Failed to create the website free trial subscription', [
+                'error' => $e->getMessage()
+            ]);
+
+            throw $e;
+        }
+    }
+}
