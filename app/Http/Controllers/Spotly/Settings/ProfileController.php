@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Spotly\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
+use App\Models\Country;
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,9 +20,15 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $countries = Country::with('media')->active()->get();
+
+        $phoneNumber = User::where('id', $request->user()->id)->pluck('phone_number')->first();
+
         return Inertia::render('settings/Profile', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => $request->session()->get('status'),
+            'countries' => $countries,
+            'phone_number' => $phoneNumber,
         ]);
     }
 
