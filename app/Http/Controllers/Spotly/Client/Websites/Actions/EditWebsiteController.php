@@ -23,10 +23,6 @@ class EditWebsiteController extends Controller
             $website->dark_logo = $website->getFirstMediaUrl('dark_logo');
 
             $countries = Country::with('media')->active()->get();
-            $countries->transform(function ($country) {
-                $country->flag = $country->getFirstMediaUrl('flag');
-                return $country;
-            });
 
             $cities = config('cities.lebanon');
 
