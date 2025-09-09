@@ -18,6 +18,7 @@ class ViewWebsiteController extends Controller
 
         try {
             $data = Website::with([
+                'media',
                 'websiteType:id,type',
                 'activeWebsiteTemplate.template:id,name',
                 'activeWebsiteTemplate.templateColor:id,name'
