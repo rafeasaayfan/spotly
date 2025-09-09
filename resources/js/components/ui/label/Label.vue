@@ -18,7 +18,7 @@ const delegatedProps = computed(() => {
     v-bind="delegatedProps"
     :class="
       cn(
-        'w-fit flex items-center gap-1.5 text-sm leading-none font-medium select-none text-body', 
+        'w-fit flex items-center gap-1.5 text-sm leading-none font-medium select-none text-body-muted', 
         'transition-all duration-100 ease-in-out',
         'group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50',
         props.class,

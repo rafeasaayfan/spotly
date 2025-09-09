@@ -30,7 +30,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
       v-bind="forwarded"
       :class="
         cn(
-          'bg-popover z-50 grid rounded-lg border border-muted py-3 shadow-lg transition-all duration-100 ease-in-out',
+          'bg-popover z-50 grid rounded-lg border border-muted shadow-lg transition-all duration-100 ease-in-out',
           'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
           'w-full max-w-[calc(100%-1rem)] sm:max-w-lg md:max-w-xl lg:max-w-2xl min-h-20',
           'fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]',
