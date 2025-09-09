@@ -21,7 +21,8 @@ class WebsiteUser extends Authenticatable implements MustVerifyEmail
         'email_verified_at',
         'password',
         'phone_number',
-        'status'
+        'status',
+        'role'
     ];
 
     /**
