@@ -10,6 +10,8 @@ class Website extends Model implements HasMedia
 {
     use InteractsWithMedia;
 
+    protected $appends = ['light_logo', 'dark_logo'];
+
     protected $fillable = [
         'owner_id',
         'website_type_id',
@@ -58,6 +60,14 @@ class Website extends Model implements HasMedia
     }
 
     /**
+     * The website subscription.
+     */
+    public function subscription()
+    {
+        return $this->hasOne(Subscription::class);
+    }
+
+    /**
      * The website reviewed by admin.
      */
     public function approvedOrDeniedBy()
@@ -70,7 +80,7 @@ class Website extends Model implements HasMedia
      */
     public function paymentMethods()
     {
-        return $this->hasMany(websitePaymentMethod::class, 'website_id');
+        return $this->hasMany(WebsitePaymentMethod::class, 'website_id');
     }
 
     /**
@@ -136,5 +146,21 @@ class Website extends Model implements HasMedia
     public function scopeStatus($query, $status)
     {
         return $query->where('status', $status);
+    }
+
+    /**
+     * Get the light logo from media.
+    */
+    public function getLightLogoAttribute()
+    {
+        return $this->getFirstMediaUrl('light_logo');
+    }
+
+    /**
+     * Get the dark logo from media.
+    */
+    public function getDarkLogoAttribute()
+    {
+        return $this->getFirstMediaUrl('dark_logo');
     }
 }

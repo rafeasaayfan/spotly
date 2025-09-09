@@ -23,14 +23,9 @@ class TemplateTemplateColorsController extends Controller
 
         $columnsSearching = ['template.name', 'templateColor.name'];
         $columnsSelection = [];
-        $relations = ['template_name', 'templateColor_name'];
+        $relations = ['template_name', 'templateColor_name', 'media'];
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
-
-        $data->transform(function ($item) {
-            $item->uiImages = $item->getMedia('uiImages');
-            return $item;
-        });
 
         return $this->inertiaRender('dashboard/pages/ui/templateTemplateColors/TemplateTemplateColors', ['templateTemplateColors' => $data]);
     }
@@ -89,7 +84,6 @@ class TemplateTemplateColorsController extends Controller
     {
         try {
             $query = TemplateTemplateColor::with(['media', 'template', 'templateColor'])->findOrFail($id);
-            $query->uiImages = $query->getMedia('uiImages');
 
             $templateTemplateColor = $this->flattenRelationData($query, ['template_name', 'templateColor_name']);
 
@@ -108,7 +102,6 @@ class TemplateTemplateColorsController extends Controller
     {
         try {
             $templateTemplateColor = TemplateTemplateColor::with('media')->findOrFail($id);
-            $templateTemplateColor->uiImages = $templateTemplateColor->getMedia('uiImages');
 
             $templates = $this->getRelation('template', ['name']);
             $templateColors = $this->getRelation('templateColor', ['name']);
@@ -205,3 +198,4 @@ class TemplateTemplateColorsController extends Controller
         }
     }
 }
+ 

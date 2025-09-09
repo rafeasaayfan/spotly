@@ -23,14 +23,9 @@ class CountriesController extends Controller
 
         $columnsSearching = ['country', 'country_ar', 'country_fr', 'code', 'phone_code'];
         $columnsSelection = [];
-        $relations = [];
+        $relations = ['media'];
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
-
-        $data->transform(function ($item) {
-            $item->flag = $item->getFirstMediaUrl('flag');
-            return $item;
-        });
 
         return $this->inertiaRender('dashboard/pages/administration/countries/Countries', ['countries' => $data]);
     }
@@ -73,8 +68,7 @@ class CountriesController extends Controller
     public function show(string $id)
     {
         try {
-            $country = Country::findOrFail($id);
-            $country->flag = $country->getFirstMediaUrl('flag');
+            $country = Country::with('media')->findOrFail($id);
 
             return $this->jsonSuccess('', [
                 'data' => $country,
@@ -90,9 +84,7 @@ class CountriesController extends Controller
     public function edit(string $id)
     {
         try {
-            $country = Country::findOrFail($id);
-
-            $country->flag = $country->getFirstMediaUrl('flag');
+            $country = Country::with('media')->findOrFail($id);
 
             return $this->jsonSuccess('', [
                 'data' => $country,

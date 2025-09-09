@@ -10,6 +10,8 @@ class TemplateTemplateColor extends Model implements HasMedia
 {
     use InteractsWithMedia;
 
+    protected $appends = ['uiImages'];
+
     protected $fillable = [
         'template_id',
         'template_color_id',
@@ -35,4 +37,12 @@ class TemplateTemplateColor extends Model implements HasMedia
     //         ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
     //         ->withResponsiveImages();
     // }
+
+    /**
+     * Get the uiImages from media.
+     */
+    public function getUiImagesAttribute()
+    {
+        return $this->getMedia('uiImages');
+    }
 }

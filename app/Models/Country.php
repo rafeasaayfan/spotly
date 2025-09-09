@@ -10,6 +10,8 @@ class Country extends Model implements HasMedia
 {
     use InteractsWithMedia;
 
+    protected $appends = ['flag'];
+
     protected $fillable = [
         'country',
         'country_ar',
@@ -26,5 +28,13 @@ class Country extends Model implements HasMedia
     public function scopeActive($query)
     {
         return $query->where('is_active', 1);
+    }
+
+    /**
+     * Get the flags from media.
+     */
+    public function getFlagAttribute()
+    {
+        return $this->getFirstMediaUrl('flag');
     }
 }

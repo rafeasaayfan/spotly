@@ -11,6 +11,7 @@ use App\Http\Requests\Dashboard\Pages\Users\StoreUserRequest;
 use App\Http\Requests\Dashboard\Pages\Users\UpdateUserRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Country;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
@@ -37,10 +38,6 @@ class UsersController extends Controller
     {
         try {
             $countries = Country::with('media')->active()->get();
-            $countries->transform(function ($item) {
-                $item->flag = $item->getFirstMediaUrl('flag');
-                return $item;
-            });
 
             return $this->jsonSuccess('', [
                 'countries' => $countries,
@@ -94,10 +91,6 @@ class UsersController extends Controller
             $user = User::findOrFail($id);
 
             $countries = Country::with('media')->active()->get();
-            $countries->transform(function ($item) {
-                $item->flag = $item->getFirstMediaUrl('flag');
-                return $item;
-            });
 
             return $this->jsonSuccess('', [
                 'data' => $user,
@@ -160,14 +153,19 @@ class UsersController extends Controller
             ]);
 
             $user = User::findOrFail($id);
+            if(($user->id === Auth::id() || $user->hasRole('super_admin')) && $validated['status'] !== 'active') {
+                return $this->backError('You can\'t ban or deactivate this account');
+            }
+
             $user->update(['status' => $validated['status']]);
 
-            $message = $validated['status'] === 'active'
-                ? 'User activated successfully.'
-                : 'User deactivated successfully.';
-
-            if ($validated['status'] === 'inactive') $message = 'The user is now inactive.';
-            if ($validated['status'] === 'banned') $message = 'The user is now banned.';
+            if ($validated['status'] === 'active') {
+                $message = 'User activated successfully.';
+            } elseif ($validated['status'] === 'inactive') {
+                $message = 'User deactivated successfully.';
+            } elseif ($validated['status'] === 'banned') {
+                $message = 'User has been banned.';
+            }
 
             return $this->backSuccess($message);
         } catch (\Exception $e) {
