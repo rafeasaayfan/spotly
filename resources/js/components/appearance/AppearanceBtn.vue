@@ -13,6 +13,7 @@ function toggleTheme() {
 <template>
   <Button
     variant="ghost"
+    type="button"
     size="icon"
     class="relative cursor-pointer rounded-full"
     @click="toggleTheme"
