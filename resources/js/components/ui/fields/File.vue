@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, HtmlHTMLAttributes } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { SharedData } from '@/types';
+import { cn } from '@/lib/utils'
+import type { HTMLAttributes } from 'vue'
 
 import { Edit2Icon } from 'lucide-vue-next';
 
@@ -14,6 +16,8 @@ const props = defineProps<{
   label?: string;
   src?: string | Record<string, any>;
   multiple?: boolean;
+  fileClass? : HTMLAttributes['class']
+  fileInputClass? : HTMLAttributes['class']
 }>();
 
 const filesUpdatedName = ref<string[]>([]);
@@ -59,14 +63,14 @@ const src = props.src;
     <!-- If no preview image (basic file input) -->
     <div v-if="!src" class="relative">
       <label
-        class="relative flex items-center justify-center w-full text-sm cursor-pointer
-          bg-field
-          rounded-md border border-muted active:scale-98 transition-all duration-150 ease-in-out focus:ring active:ring-blue-800 focus:ring-blue-800/50">
+        :class="cn('relative flex items-center justify-center w-full text-sm cursor-pointer',
+          'bg-field rounded-md border border-muted active:scale-98 transition-all duration-150 ease-in-out', 
+          'focus:ring active:ring-blue-800 focus:ring-blue-800/50', props.fileClass)">
         <input :multiple="props.multiple || false" type="file" :id="props.id || props.name"
-          :name="props.multiple ? `${props.name}[]` : props.name" class="w-full text-sm focus:outline-none file:py-2 file:px-4 file:border-0 file:text-sm file:font-medium
-            file:bg-zinc-100 file:text-black/80 hover:file:bg-zinc-200
-            dark:file:bg-zinc-900 dark:file:text-white/80 dark:hover:file:bg-zinc-800 rounded-md
-            file:cursor-pointer" :class="isRTL ? 'file:me-3 file:rounded-e-md' : 'file:mr-3 file:rounded-s-md'"
+          :name="props.multiple ? `${props.name}[]` : props.name" :class="cn('w-full text-sm focus:outline-none file:py-2 file:px-4 file:border-0 file:text-sm file:font-medium',
+            'file:bg-zinc-100 file:text-black/80 hover:file:bg-zinc-200',
+            'dark:file:bg-zinc-900 dark:file:text-white/80 dark:hover:file:bg-zinc-800 rounded-md',
+            'file:cursor-pointer', isRTL ? 'file:me-3 file:rounded-e-md' : 'file:mr-3 file:rounded-s-md', props.fileInputClass)"
           @change="handleFileChange" />
       </label>
     </div>
