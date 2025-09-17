@@ -8,8 +8,6 @@ use App\Models\WebsiteType;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Client\ClientWebsitesIndexRequest;
 
-use function Laravel\Prompts\search;
-
 class ClientWebsitesController extends Controller
 {
     /**
@@ -19,11 +17,13 @@ class ClientWebsitesController extends Controller
     {
         try {
             $websiteTypes = WebsiteType::active()->select('id', 'title')->get();
-            $query = Website::where('owner_id', Auth::id())->with(['websiteType:id,type']);
+            $query = Website::where('owner_id', Auth::id())->with(['websiteType:id,type', 'subscription:website_id,status,start_date,end_date']);
 
             if (!empty($request->search)) {
-                $query->where('name', 'like', '%' . trim($request->search) . '%')
-                    ->orWhere('subdomain', 'like', '%' . trim($request->search) . '%');
+                $query->where(function ($q) use ($request) {
+                    $q->where('name', 'like', '%' . trim($request->search) . '%')
+                      ->orWhere('subdomain', 'like', '%' . trim($request->search) . '%');
+                });
             }
             switch ($request->sort_by) {
                 case 'newest':
