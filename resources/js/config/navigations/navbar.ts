@@ -1,5 +1,5 @@
 import { type NavItem } from '@/types';
-import { HelpCircle, Home, Mail, PlayCircle, Rocket, Users } from 'lucide-vue-next';
+import { HelpCircle, Home, PlayCircle, Rocket, Users } from 'lucide-vue-next';
 
 export const navbarItems: NavItem[] = [
     {
@@ -26,10 +26,5 @@ export const navbarItems: NavItem[] = [
         title: 'About Us',
         href: '#about-us',
         icon: Users,
-    },
-    {
-        title: 'Contact Us',
-        href: '#contact-us',
-        icon: Mail,
     },
 ];
