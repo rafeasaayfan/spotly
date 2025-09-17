@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import HeadingSmall from '@/components/headers/HeadingSmall.vue';
-import Create from '@/components/preview/create.vue';
-import View from '@/components/preview/View.vue';
 import { Button } from '@/components/ui/button';
 import { Carousel } from '@/components/ui/carousel';
 import {
@@ -16,14 +14,13 @@ import {
 } from '@/components/ui/dialog';
 import { InputError, Toggle } from '@/components/ui/fields';
 import Delete from '@/components/ui/table/actions/Delete.vue';
-import Edit from '@/components/ui/table/actions/Edit.vue';
-import ViewBtn from '@/components/ui/table/actions/View.vue';
+import { TemplateBtn, TemplateColorsCard } from '@/components/ui/templatesBuilder';
 import DashboardLayout from '@/layouts/DashboardLayout.vue';
 import { confirmDialog, toast } from '@/lib/sweetAlert';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/vue3';
 import axios from 'axios';
-import { CheckCircle, LoaderCircle, PlusCircle } from 'lucide-vue-next';
+import { LoaderCircle, PlusCircle } from 'lucide-vue-next';
 import { ref, watchEffect } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -129,20 +126,6 @@ const selectingItem = (item: any, is_custom: boolean = false) => {
     }
 };
 
-const modalType = ref<'view' | 'create' | null>(null);
-const previewData = ref<any>(null);
-
-const preview = (action: 'create' | 'view', templateName: string, colors: Record<string, string>) => {
-    const path = `preview/${props.website.website_type.type}/${templateName}/pages/home/Home`;
-    previewData.value = { path, colors, closeModals, custom_template_color: createForm.is_custom } as any;
-    modalType.value = action;
-};
-
-const closeModals = () => {
-    modalType.value = null;
-    previewData.value = null;
-};
-
 const updateField = (field: string, value: any) => {
     (createForm as any)[field] = value;
 
@@ -167,7 +150,7 @@ const submitTemplate = () => {
     <Head title="Website-UI" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
-        <div class="border-muted mx-2 md:mx-4 my-4 flex flex-col gap-4 rounded-md border p-4">
+        <div class="border-muted mx-2 my-4 flex flex-col gap-4 rounded-md border p-4 md:mx-4">
             <!-- Header -->
             <div class="border-muted flex w-full flex-wrap items-center justify-between gap-2 rounded-md border bg-black/1 p-2 dark:bg-white/1">
                 <h1 class="text-active rounded-md bg-gradient-to-br from-blue-500/40 via-blue-500/30 to-blue-500/60 px-4 py-2 font-extrabold">
@@ -190,35 +173,16 @@ const submitTemplate = () => {
                             <HeadingSmall title="Website Template*" description="Select the template design for your business." />
 
                             <div class="custom-scrollbar flex w-full items-center gap-3 overflow-x-auto p-2">
-                                <button
-                                    type="button"
+                                <TemplateBtn
                                     v-for="template in props.templates"
                                     :key="template.id"
-                                    class="border-muted text-body relative flex min-h-26 min-w-40 cursor-pointer items-center justify-center rounded-lg border bg-black/3 transition-all duration-200 ease-in-out hover:-translate-y-1 hover:scale-102 hover:bg-black/4 active:scale-98 dark:bg-white/3 dark:hover:bg-white/4"
-                                    :class="
-                                        createForm.template_id === template.id
-                                            ? 'text-active -translate-y-1 scale-102 bg-black/4 font-bold dark:bg-white/4'
-                                            : ''
-                                    "
+                                    :template_id="template.id"
                                     @click="fetchTemplateTemplateColors(template.id)"
-                                >
-                                    <div
-                                        v-if="createForm.template_id === template.id"
-                                        class="absolute top-0 left-0 m-5 h-1/2 w-1/2 bg-[var(--success)]/10 blur-xl"
-                                    ></div>
-
-                                    <h2 class="text-lg font-bold">{{ template.name }}</h2>
-
-                                    <div
-                                        v-if="createForm.template_id === template.id"
-                                        class="translate-all absolute end-1 top-1 z-10 flex size-6 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--primary)] to-[var(--destructive)] transition-all duration-300 ease-in-out"
-                                        :class="
-                                            animate ? 'translate-x-0 scale-100 rotate-0 opacity-100' : 'translate-x-1 scale-75 rotate-90 opacity-0'
-                                        "
-                                    >
-                                        <CheckCircle class="size-4 text-white" />
-                                    </div>
-                                </button>
+                                    :animate="animate"
+                                    :templateId="template.id"
+                                    :selectedTemplateId="createForm.template_id"
+                                    :templateName="template.name"
+                                />
                             </div>
 
                             <div class="ps-2">
@@ -239,125 +203,28 @@ const submitTemplate = () => {
 
                             <div class="custom-scrollbar flex w-full items-center gap-3 overflow-x-auto p-2">
                                 <!-- Customed Colors -->
-                                <div
-                                    class="border-muted relative flex min-h-[280px] min-w-[450px] flex-col rounded-lg border bg-black/3 transition-all duration-200 ease-in-out hover:-translate-y-1 hover:bg-black/4 dark:bg-white/3 dark:hover:bg-white/4"
-                                    :class="createForm.is_custom || Object.keys(createForm.colors).length > 0 ? '' : 'hidden'"
-                                >
-                                    <div
-                                        v-if="createForm.is_custom"
-                                        class="absolute inset-0 top-0 left-0 h-full w-full bg-[var(--success)]/10 blur-xl"
-                                    ></div>
-
-                                    <div class="z-20 flex items-center justify-between rounded-md p-2">
-                                        <span class="text-active text-lg">
-                                            {{ createForm.colors.name }}
-                                        </span>
-
-                                        <div class="flex items-center gap-1">
-                                            <Dialog>
-                                                <DialogTrigger
-                                                    as-child
-                                                    @click="preview('create', templateTemplateColors[0].template.name, createForm.colors)"
-                                                >
-                                                    <Edit class="size-7 rounded-full" />
-                                                </DialogTrigger>
-                                                <Create
-                                                    v-if="modalType === 'create' && previewData"
-                                                    :data="previewData"
-                                                    @close="closeModals"
-                                                    @update="updateField"
-                                                />
-                                            </Dialog>
-
-                                            <Dialog>
-                                                <DialogTrigger
-                                                    as-child
-                                                    @click="preview('view', templateTemplateColors[0].template.name, createForm.colors)"
-                                                >
-                                                    <ViewBtn class="size-7 rounded-full" />
-                                                </DialogTrigger>
-                                                <View v-if="modalType === 'view' && previewData" :data="previewData" @close="closeModals" />
-                                            </Dialog>
-
-                                            <button
-                                                type="button"
-                                                class="bg-content flex cursor-pointer items-center justify-center rounded-md text-xs backdrop-blur-3xl"
-                                                @click="selectingItem(0, true)"
-                                            >
-                                                <div
-                                                    v-if="createForm.is_custom"
-                                                    class="h-full w-full rounded-md bg-gradient-to-r from-[var(--primary)] to-[var(--destructive)] px-3 py-2 font-bold text-white"
-                                                >
-                                                    Selected
-                                                </div>
-                                                <div v-else class="bg-content h-full w-full rounded-md px-3 py-2">Select</div>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="relative flex min-h-[200px] w-full items-center justify-center">
-                                        <div class="bg-black-4 absolute inset-0 top-0 left-0 h-full w-full blur-[3px] dark:bg-white/4"></div>
-                                        Your Custom Colors
-                                    </div>
-                                </div>
+                                <TemplateColorsCard
+                                    :isDefault="false"
+                                    :colors="createForm.colors"
+                                    :templateTemplateColors="templateTemplateColors"
+                                    :updateField="updateField"
+                                    :type="props.website.website_type.type"
+                                    :custom_template_color="createForm.is_custom"
+                                    :selectingItem="selectingItem"
+                                />
 
                                 <!-- Default Colors -->
-                                <div
+                                <TemplateColorsCard
+                                    :isDefault="true"
                                     v-for="item in templateTemplateColors"
                                     :key="item.id"
-                                    class="border-muted relative flex max-h-[280px] max-w-[450px] flex-col rounded-lg border bg-black/3 transition-all duration-200 ease-in-out hover:-translate-y-1 hover:bg-black/4 dark:bg-white/3 dark:hover:bg-white/4"
-                                    :class="
-                                        createForm.template_color_id === item.template_color.id ? '-translate-y-1 bg-black/4 dark:bg-white/4' : ''
-                                    "
-                                >
-                                    <div
-                                        v-if="createForm.template_color_id === item.template_color.id"
-                                        class="absolute inset-0 top-0 left-0 bg-[var(--success)]/10 blur-xl"
-                                    ></div>
-
-                                    <div class="z-20 flex items-center justify-between rounded-md bg-black/1 p-2">
-                                        <span class="text-active text-lg">
-                                            {{ item.template_color.name }}
-                                        </span>
-
-                                        <div class="flex items-center gap-1">
-                                            <Dialog>
-                                                <DialogTrigger as-child @click="preview('create', item.template.name, item.template_color)">
-                                                    <Edit class="size-7 rounded-full" />
-                                                </DialogTrigger>
-                                                <Create
-                                                    v-if="modalType === 'create' && previewData"
-                                                    :data="previewData"
-                                                    @close="closeModals"
-                                                    @update="updateField"
-                                                />
-                                            </Dialog>
-
-                                            <Dialog>
-                                                <DialogTrigger as-child @click="preview('view', item.template.name, item.template_color)">
-                                                    <ViewBtn class="size-7 rounded-full" />
-                                                </DialogTrigger>
-                                                <View v-if="modalType === 'view' && previewData" :data="previewData" @close="closeModals" />
-                                            </Dialog>
-
-                                            <button
-                                                type="button"
-                                                class="bg-content flex cursor-pointer items-center justify-center rounded-md text-xs backdrop-blur-3xl"
-                                                @click="selectingItem(item)"
-                                            >
-                                                <div
-                                                    v-if="createForm.template_color_id === item.template_color.id"
-                                                    class="h-full w-full rounded-md bg-gradient-to-r from-[var(--primary)] to-[var(--destructive)] px-3 py-2 font-bold text-white"
-                                                >
-                                                    Selected
-                                                </div>
-                                                <div v-else class="bg-content h-full w-full rounded-md px-3 py-2">Select</div>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <Carousel :items="item.uiImages" class="h-full w-full" :showArrows="false" />
-                                </div>
+                                    :item="item"
+                                    :selectedTemplateColorId="createForm.template_color_id"
+                                    :type="props.website.website_type.type"
+                                    :updateField="updateField"
+                                    :custom_template_color="createForm.is_custom"
+                                    :selectingItem="selectingItem"
+                                />
                             </div>
 
                             <div class="ps-2">

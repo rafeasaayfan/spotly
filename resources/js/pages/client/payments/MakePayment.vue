@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/fields';
+import { Input, Radio } from '@/components/ui/fields';
 import DashboardLayout from '@/layouts/DashboardLayout.vue';
 import { toast } from '@/lib/sweetAlert';
 import { type BreadcrumbItem } from '@/types';
@@ -25,7 +25,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const props = defineProps<{
-    unpaidWebsites: Record<string, any>;
+    websites: Record<string, any>;
     paymentWebsite: Record<string, any>;
     flash?: {
         toastType: 'success' | 'error' | 'warning' | 'info';
@@ -42,16 +42,21 @@ watchEffect(() => {
 
 const query = route().queryParams;
 const search = ref(query.search || '');
+const status = ref(query.status as string || '');
 
 watch(search, (val) => {
-    fetchPlansBySearch(val as string);
+    fetchPlansBySearch(val as string, status.value as string);
+});
+watch(status, (val) => {
+    fetchPlansBySearch(search.value as string, val as string);
 });
 
-const fetchPlansBySearch = (searchTerm: string) => {
+const fetchPlansBySearch = (searchTerm: string, status: string) => {
     router.get(
         route('client.makePayment'),
         {
             search: searchTerm,
+            status: status,
         },
         {
             preserveState: true,
@@ -193,7 +198,13 @@ const totalAmount = computed(() => {
             <div class="md:col-span-3 lg:col-span-6 flex flex-col gap-5">
                 <div class="bg-card flex flex-col rounded-md">
                     <div class="flex flex-wrap gap-2 w-full items-center justify-between border-muted border-b px-2 pt-2 pb-2 md:px-4 md:pt-4">
-                        <h3 class="text-active font-medium">Unpaid Websites:</h3>
+                        <div class="flex flex-col gap-1">
+                            <h3 class="text-active font-medium">Websites:</h3>
+                            <div class="flex items-center gap-4">
+                                <Radio v-model="status" value="expiredSoon" label="Expired Soon" />
+                                <Radio v-model="status" value="notPaid" label="Not Paid" />
+                            </div>
+                        </div>
 
                         <div class="relative">
                             <Input
@@ -211,9 +222,9 @@ const totalAmount = computed(() => {
                         </div>
                     </div>
 
-                    <div v-if="props.unpaidWebsites.length > 0" class="custom-scrollbar flex w-full items-center gap-3.5 overflow-auto p-2 md:p-4">
+                    <div v-if="props.websites.length > 0" class="custom-scrollbar flex w-full items-center gap-3.5 overflow-auto p-2 md:p-4">
                         <Button
-                            v-for="website in props.unpaidWebsites"
+                            v-for="website in props.websites"
                             :key="website.id"
                             @click="fetchPlans(website)"
                             type="button"
@@ -241,7 +252,7 @@ const totalAmount = computed(() => {
                             <p class="text-body-muted text-sm font-medium">No Approved Website Founded</p>
                         </div>
 
-                        <Link :href="route('websiteBuilder.index')" v-if="search === ''">
+                        <Link :href="route('websiteBuilder.index')" v-if="search === '' && status === ''">
                             <Button type="button">Create</Button>
                         </Link>
                     </div>

@@ -8,7 +8,6 @@ import { formatters } from '@/lib/dataTable';
 import { Link } from '@inertiajs/vue3';
 import {
     Activity,
-    AlertCircle,
     CalendarClock,
     CalendarIcon,
     CalendarMinus,
@@ -41,6 +40,66 @@ const copyUrl = async (subdomain: string) => {
     } catch (err) {
         console.error('Failed to copy: ', err);
     }
+};
+
+const calculateTime = (end_date: string) => {
+    const now = new Date();
+    const endDate = new Date(end_date);
+    const diff = endDate.getTime() - now.getTime();
+
+    if (diff <= 0) {
+        return 'Expired';
+    }
+
+    const diffInHours = diff / (1000 * 60 * 60);
+
+    if (diffInHours >= 24) {
+        const diffInDays = Math.ceil(diffInHours / 24);
+        return `${diffInDays} days`;
+    } else if (diffInHours >= 1) {
+        const roundedHours = Math.ceil(diffInHours);
+        return `${roundedHours} hours`;
+    } else {
+        return 'less 1 hour';
+    }
+};
+
+const subscriptionStatus = (status: string) => {
+    const result = {
+        class: '',
+        text: '',
+    };
+
+    switch (status) {
+        case 'free_trial':
+            result.class = 'text-body-muted border-muted';
+            result.text = 'Free Trial';
+            break;
+
+        case 'active':
+            result.class = 'text-active-link border-[var(--primary)]/20';
+            result.text = 'Paid';
+            break;
+
+        case 'cancelled':
+            result.class = 'text-active-link-2 border-[var(--destructive)]/20';
+            result.text = 'Canceled';
+            break;
+
+        case 'expired':
+            result.class = 'text-active-link-2 border-[var(--destructive)]/20';
+            result.text = 'Expired';
+            break;
+
+        case 'pending':
+            result.class = 'text-body-muted border-muted';
+            result.text = 'Pending';
+            break;
+
+        default:
+            break;
+    }
+    return result;
 };
 </script>
 
@@ -119,7 +178,8 @@ const copyUrl = async (subdomain: string) => {
                     <button
                         type="button"
                         @click="copyUrl(website.subdomain)"
-                        class="bg-primary text-for-bg-primary flex h-full w-9 cursor-pointer items-center justify-center rounded-e-md transition-all duration-200 ease-in-out"
+                        class="bg-[var(--primary)]/80 dark:bg-[var(--primary)]/50 hover:bg-[var(--primary)] hover:dark:bg-[var(--primary)] text-for-bg-primary flex h-full w-9 cursor-pointer items-center 
+                        justify-center rounded-e-md transition-all duration-200 ease-in-out"
                         :class="copied ? 'pointer-events-none opacity-50' : ''"
                     >
                         <CopyCheck v-if="copied" class="size-3.5 sm:size-4" />
@@ -188,14 +248,14 @@ const copyUrl = async (subdomain: string) => {
             </div>
         </div>
 
-        <div v-if="website.status !== 'denied'" class="border-muted border-t pt-3">
-            <div v-if="false" class="flex flex-col gap-3">
+        <div v-if="website.status === 'approved' && website.subscription?.end_date" class="border-muted border-t pt-3">
+            <div class="flex flex-col gap-3">
                 <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
                     <div class="flex items-center gap-1.5 sm:gap-2">
                         <CalendarClock class="text-body-muted size-3.5" />
                         <div class="flex flex-col">
-                            <span class="text-body-muted text-xs">Paid At:</span>
-                            <span class="text-sm">2025/8/5</span>
+                            <span class="text-body-muted text-xs">{{ website.subscription.status === 'free_trial' ? 'Start At:' : 'Paid At:' }}</span>
+                            <span class="text-sm">{{ formatters.date(website.subscription.start_date) }}</span>
                         </div>
                     </div>
 
@@ -203,25 +263,36 @@ const copyUrl = async (subdomain: string) => {
                         <CalendarMinus class="text-body-muted size-3.5" />
                         <div class="flex flex-col">
                             <span class="text-body-muted text-xs">End At:</span>
-                            <span class="text-sm">2025/9/5</span>
+                            <span class="text-sm">{{ formatters.date(website.subscription.end_date) }}</span>
                         </div>
                     </div>
                 </div>
 
-                <Button type="button" variant="ghost" class="mt-1">Make a Future Paid</Button>
-            </div>
-            <div v-else class="flex flex-col gap-2">
-                <div class="flex items-center justify-between gap-2">
-                    <div class="flex items-center justify-between gap-2">
-                        <div class="flex size-6.5 items-center justify-center rounded-full bg-[var(--destructive)]/70 text-sm text-white sm:size-7.5">
-                            <AlertCircle class="size-3.5 sm:size-4.5" />
-                        </div>
-                        <span class="text-xs sm:text-sm">Not Paid</span>
-                    </div>
-                    <span class="text-body-muted text-xs">The Free 3 Days Finished</span>
-                </div>
+                <div
+                    class="border-muted flex w-full items-center justify-between gap-2 border-t pt-3"
+                >
+                    <div class="flex items-center gap-1" 
+                    :class="new Date(website.subscription.end_date) < new Date() ? 'w-full justify-between' : ''">
+                        <p class="bg-content border px-2 py-1 text-xs font-medium" 
+                            :class="subscriptionStatus(website.subscription.status).class">
+                            {{ subscriptionStatus(website.subscription.status).text }} 
+                        </p>
 
-                <Button type="button" class="mt-1">Pay Now</Button>
+                        <Link
+                            :href="route('client.makePayment', {search: website.name})"
+                            v-if="['free_trial', 'expired', 'cancelled'].includes(website.subscription.status) || 
+                            (new Date(website.subscription.end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24) <= 3"
+                            class="text-white bg-primary border border-[var(--primary)] px-2 py-1 text-xs"
+                        >
+                            Pay Now
+                        </Link>
+                    </div>
+
+                    <div class="flex items-end gap-1" v-if="new Date(website.subscription.end_date) > new Date()">
+                        <span class="text-body-muted text-xs">Time Left:</span>
+                        <span class="text-sm">{{ calculateTime(website.subscription.end_date) }}</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

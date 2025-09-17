@@ -267,12 +267,11 @@ const searching = (event: Event) => {
             <div
                 class="bg-body border-muted flex flex-col-reverse flex-wrap items-center justify-between gap-4 rounded-md border p-2.5 backdrop-blur sm:flex-row"
             >
-                <div class="flex flex-wrap items-center gap-3">
+                <div class="flex flex-wrap justify-center md:justify-start items-center gap-3">
                     <Select
                         v-if="props.websites.data.length > 1"
                         v-model="filters.limit"
-                        parentClass="h-8 w-14"
-                        class="ps-1.5"
+                        class="h-8 w-16"
                         :option="'Items per page'"
                         @change="filters.page = 1"
                     >
