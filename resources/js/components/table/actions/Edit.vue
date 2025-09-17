@@ -64,14 +64,14 @@ function submit() {
                 :type="column.type"
                 :id="column.label"
                 :placeholder="column.placeholder"
-                class="block w-full"
+                class="w-full"
                 :autocomplete="column.type"
             />
 
             <Select
                 v-else-if="column.type === 'select'"
                 :id="column.label"
-                class="block w-full"
+                class="w-full"
                 v-model="form[column.key]"
                 :placeholder="column.placeholder ?? column.label"
                 :required="column.required"
@@ -83,7 +83,7 @@ function submit() {
                 v-else-if="column.type === 'textarea'"
                 :id="column.label"
                 v-model="form[column.key]"
-                class="block w-full"
+                class="w-full"
                 :placeholder="column.placeholder ?? column.label"
                 :required="column.required"
                 :maxlength="column.maxlength"
@@ -91,7 +91,7 @@ function submit() {
 
             <File
                 v-else-if="column.type === 'file'"
-                class="block w-full"
+                class="w-full"
                 :id="column.label"
                 v-model="form[column.key]"
                 :name="column.key"
@@ -102,7 +102,7 @@ function submit() {
             <SelectWithSearch
                 v-else-if="column.type === 'select_with_search'"
                 :id="column.label"
-                class="block w-full"
+                class="w-full"
                 v-model="form[column.key]"
                 :required="column.required"
                 :placeholder="column.label"
@@ -117,7 +117,7 @@ function submit() {
             <PhoneNumberField
                 v-else-if="column.type === 'phone_number'"
                 :id="column.label"
-                class="block w-full"
+                class="w-full"
                 v-model="form[column.key]"
                 :required="column.required"
                 :options="column.options ?? []"
@@ -126,7 +126,7 @@ function submit() {
             <Color
                 v-else-if="column.type === 'color'"
                 :id="column.label"
-                class="block w-full"
+                class="w-full"
                 v-model="form[column.key]"
                 :required="column.required"
             />
@@ -134,7 +134,7 @@ function submit() {
             <MultiInput
                 v-else-if="column.type === 'multiInput'"
                 :id="column.label"
-                class="block w-full"
+                class="w-full"
                 v-model="form[column.key]"
                 :label="column.label"
                 :placeholder="column.placeholder"
