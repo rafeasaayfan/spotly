@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\Spotly\Client\MakePaymentController;
+use App\Http\Controllers\Spotly\Client\Payments\MakePaymentController;
+use App\Http\Controllers\Spotly\Client\Payments\PaymentsController;
 use App\Http\Controllers\Spotly\Client\Websites\ClientWebsitesController;
 use App\Http\Controllers\Spotly\Client\Websites\Actions\DeleteWebsiteController;
 use App\Http\Controllers\Spotly\Client\Websites\Actions\EditWebsiteController;
@@ -33,4 +34,6 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard/')->name('client.')->
     // Make a Payment
     Route::get('/make-payment', [MakePaymentController::class, 'index'])->name('makePayment');
     Route::post('/make-payment/get-plans', [MakePaymentController::class, 'getPlans'])->name('makePayment.getPlans');
+    // Payments
+    Route::get('/my-payments', [PaymentsController::class, 'index'])->name('payments.index');
 });
