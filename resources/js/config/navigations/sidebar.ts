@@ -10,7 +10,7 @@ export const mainSidebarItems: SidebarSection[] = [
                 permission: ['dashboard_access'],
                 title: 'Dashboard',
                 href: '/dashboard',
-                icon: icons.LayoutGrid,
+                icon: icons.LayoutDashboard,
             },
             {
                 title: 'My Websites',
@@ -22,14 +22,14 @@ export const mainSidebarItems: SidebarSection[] = [
                 icon: icons.CreditCard,
                 children: [
                     {
+                        title: 'Overview',
+                        href: '/dashboard/my-payments',
+                        icon: icons.ChartPie,
+                    },
+                    {
                         title: 'Make a Payment',
                         href: '/dashboard/make-payment',
                         icon: icons.Send,
-                    },
-                    {
-                        title: 'Payment History',
-                        href: '/dashboard/countries',
-                        icon: icons.Receipt,
                     },
                 ],
             },
@@ -89,18 +89,28 @@ export const mainSidebarItems: SidebarSection[] = [
                 ],
             },
             {
-                title: 'Subscription',
+                title: 'Subscriptions',
                 icon: icons.Wallet,
                 children: [
+                    {
+                        title: 'Overview',
+                        href: '/dashboard/subscriptions',
+                        icon: icons.ChartPie,
+                    },
+                    {
+                        title: 'Plans',
+                        href: '/dashboard/plans',
+                        icon: icons.Layers,
+                    },
                     {
                         title: 'Payment Methods',
                         href: '/dashboard/payment-methods',
                         icon: icons.Banknote,
                     },
                     {
-                        title: 'Plans',
-                        href: '/dashboard/plans',
-                        icon: icons.Layers,
+                        title: 'Payments',
+                        href: '/dashboard/payments',
+                        icon: icons.CreditCard,
                     },
                 ],
             },
