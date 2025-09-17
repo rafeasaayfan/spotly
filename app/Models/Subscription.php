@@ -22,7 +22,7 @@ class Subscription extends Model
 
     /**
      * has one user.
-    */
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -30,7 +30,7 @@ class Subscription extends Model
 
     /**
      * has one website.
-    */
+     */
     public function website()
     {
         return $this->belongsTo(Website::class);
@@ -38,7 +38,7 @@ class Subscription extends Model
 
     /**
      * has one plan.
-    */
+     */
     public function plan()
     {
         return $this->belongsTo(Plan::class);
@@ -46,9 +46,25 @@ class Subscription extends Model
 
     /**
      * Get status.
-    */
+     */
     public function scopeStatus($query, $status)
     {
         return $query->where('status', $status);
+    }
+
+    /**
+     * Scope a query to only include subscriptions expiring within the next given number of days.
+     */
+    public function scopeExpiringSoon($query, $days = 3)
+    {
+        return $query->whereDate('end_date', '<=', now()->addDays($days));
+    }
+
+    /**
+     * Scope a query to only include expired subscriptions.
+     */
+    public function scopeExpired($query)
+    {
+        return $query->whereDate('end_date', '<', now());
     }
 }
