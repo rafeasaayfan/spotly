@@ -10,8 +10,10 @@ use App\Http\Controllers\Spotly\Dashboard\Pages\Administration\MessagesControlle
 use App\Http\Controllers\Spotly\Dashboard\Pages\UsersController;
 use App\Http\Controllers\Spotly\Dashboard\Pages\WebsitesController;
 use App\Http\Controllers\Spotly\Dashboard\Pages\Administration\WebsiteTypesController;
-use App\Http\Controllers\Spotly\Dashboard\Pages\Subscription\PaymentMethodsController;
-use App\Http\Controllers\Spotly\Dashboard\Pages\Subscription\PlansController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\Subscriptions\PaymentMethodsController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\Subscriptions\PaymentsController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\Subscriptions\PlansController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\Subscriptions\SubscriptionsController;
 use App\Http\Controllers\Spotly\Dashboard\Pages\Ui\TemplatesController;
 use App\Http\Controllers\Spotly\Dashboard\Pages\Ui\TemplateColorsController;
 use App\Http\Controllers\Spotly\Dashboard\Pages\Ui\TemplateTemplateColorsController;
@@ -36,12 +38,17 @@ Route::middleware(['auth', 'verified', 'can:dashboard_access'])->prefix('dashboa
     dashboardPagesRoutes('countries', CountriesController::class);
     Route::patch('countries/{id}/is_active', [CountriesController::class, 'toggleActive'])->name('countries.is_active');
 
-    //* Payment Methods
-    dashboardPagesRoutes('payment-methods', PaymentMethodsController::class);
-    Route::patch('payment-methods/{id}/is_active', [PaymentMethodsController::class, 'toggleActive'])->name('paymentMethods.is_active');
+    //* Subscriptions
+    dashboardPagesRoutes('subscriptions', SubscriptionsController::class);
+    Route::patch('subscriptions/{id}/status', [SubscriptionsController::class, 'changeStatus'])->name('subscriptions.status');
     //* Plans
     dashboardPagesRoutes('plans', PlansController::class);
     Route::patch('plans/{id}/is_active', [PlansController::class, 'toggleActive'])->name('plans.is_active');
+    //* Payment Methods
+    dashboardPagesRoutes('payment-methods', PaymentMethodsController::class);
+    Route::patch('payment-methods/{id}/is_active', [PaymentMethodsController::class, 'toggleActive'])->name('paymentMethods.is_active');
+    //* Payments
+    dashboardPagesRoutes('payments', PaymentsController::class);
 
     //* Websites
     dashboardPagesRoutes('websites', WebsitesController::class);
