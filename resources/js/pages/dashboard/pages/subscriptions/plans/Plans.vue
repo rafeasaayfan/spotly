@@ -87,7 +87,7 @@ const tableConditions = {
             :columns="columns"
             routeName="dashboard.plans"
             :tableConditions="tableConditions"
-            path="subscription/plans"
+            path="subscriptions/plans"
         />
     </DashboardLayout>
 </template>
