@@ -66,6 +66,24 @@ class Website extends Model implements HasMedia
     {
         return $this->hasOne(Subscription::class);
     }
+    /**
+     * Scope a query to only include websites with expired subscriptions.
+     */
+    public function scopeExpiredSubscription($query)
+    {
+        return $query->withWhereHas('subscription', function ($q) {
+            $q->expired();
+        });
+    }
+    /**
+     * Scope a query to only include websites with subscriptions expiring within the next given number of days.
+     */
+    public function scopeExpiringSubscription($query, $days = 3)
+    {
+        return $query->withWhereHas('subscription', function ($q) use ($days) {
+            $q->expiringSoon($days);
+        });
+    }
 
     /**
      * The website reviewed by admin.
@@ -89,7 +107,7 @@ class Website extends Model implements HasMedia
     public function activePaymentMethods()
     {
         return $this->hasMany(WebsitePaymentMethod::class, 'website_id')
-                    ->where('is_active', true);
+            ->where('is_active', true);
     }
 
     /**
@@ -150,7 +168,7 @@ class Website extends Model implements HasMedia
 
     /**
      * Get the light logo from media.
-    */
+     */
     public function getLightLogoAttribute()
     {
         return $this->getFirstMediaUrl('light_logo');
@@ -158,7 +176,7 @@ class Website extends Model implements HasMedia
 
     /**
      * Get the dark logo from media.
-    */
+     */
     public function getDarkLogoAttribute()
     {
         return $this->getFirstMediaUrl('dark_logo');
