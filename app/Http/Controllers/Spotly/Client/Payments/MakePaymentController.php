@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Spotly\Client;
+namespace App\Http\Controllers\Spotly\Client\Payments;
 
 use App\Http\Controllers\Controller;
 use App\Models\Plan;
@@ -16,6 +16,7 @@ class MakePaymentController extends Controller
     {
         $validated = $request->validate([
             'search' => ['sometimes', 'string', 'nullable'],
+            'status' => ['sometimes', 'string', 'nullable', 'in:expiredSoon,notPaid'],
         ]);
 
         $query = Website::status('approved')->with(['websiteType:id,type']);
@@ -23,11 +24,16 @@ class MakePaymentController extends Controller
         if (!empty($validated['search'])) {
             $query->where('name', 'like', '%' . $validated['search'] . '%');
         }
+        if (!empty($validated['status']) && $validated['status'] === 'expiredSoon') {
+            $query->expiringSubscription();
+        } else if (!empty($validated['status']) && $validated['status'] === 'notPaid') {
+            $query->expiredSubscription();
+        }
 
-        $unpaidWebsites = $query->get();
+        $websites = $query->get();
 
-        return $this->inertiaRender('client/MakePayment', [
-            'unpaidWebsites' => $unpaidWebsites
+        return $this->inertiaRender('client/payments/MakePayment', [
+            'websites' => $websites
         ]);
     }
 
