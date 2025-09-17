@@ -23,7 +23,7 @@
     --secondary-background: hsl(0 0% 97%);
 
     --foreground: hsl(0 0% 16%);
-    --foreground-muted: hsl(0 0% 30%);
+    --foreground-muted: oklch(55.1% 0.027 264.364);
     --foreground-hover: hsl(0 0% 10%);
     --foreground-active: hsl(0 0% 0%);
     --foreground-active-link: hsl(221 80% 40%);
@@ -73,7 +73,7 @@
     --secondary-background: hsl(0, 0%, 3%);
 
     --foreground: hsl(0 0% 78%);
-    --foreground-muted: hsl(0 0% 40%);
+    --foreground-muted: oklch(55.1% 0.027 264.364);
     --foreground-hover: hsl(0 0% 95%);
     --foreground-active: hsl(0 0% 100%);
     --foreground-active-link: hsl(221, 83%, 45%);
