@@ -62,7 +62,7 @@ function updateCol(key: string, value: any, id: number) {
                     <span v-html="formatters.emailVerified(row[column.key])"></span>
                 </template>
                 <template v-else-if="column.type === 'date'">
-                    {{ formatters.date(row[column.key], 'short') }}
+                    {{ formatters.date(row[column.key], 'long') }}
                 </template>
                 <template v-else-if="column.type === 'highlight'">
                     <div class="flex flex-wrap gap-1">
