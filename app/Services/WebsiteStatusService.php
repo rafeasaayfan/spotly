@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Events\WebsiteApproved;
 use App\Jobs\WebsiteStatusMailJob;
 use App\Models\Website;
+use Illuminate\Support\Facades\Auth;
 
 class WebsiteStatusService
 {
@@ -38,14 +39,19 @@ class WebsiteStatusService
                 return ['success' => false, 'message' => 'Cannot set website to pending'];
 
             case 'denied':
-                $this->website->update(['is_active' => false, 'status' => $status]);
+                $this->website->update([
+                    'is_active' => false,
+                    'status' => $status,
+                    'approved_or_denied_by' => Auth::id(),
+                ]);
                 $this->sendMailStatus('status', false);
                 return ['success' => true, 'message' => 'Website denied successfully'];
 
             case 'approved':
                 $this->website->update([
                     'is_active' => $this->hasValidSubscription(),
-                    'status' => $status
+                    'status' => $status,
+                    'approved_or_denied_by' => Auth::id(),
                 ]);
                 event(new WebsiteApproved($this->website));
                 $this->sendMailStatus('status', true);
