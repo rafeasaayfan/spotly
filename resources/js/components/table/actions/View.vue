@@ -26,7 +26,7 @@ const props = defineProps<{
 
             <p class="text-base font-medium">
                 <template v-if="column.type === 'date'">
-                    {{ formatters.date(props.data[column.key], 'short') }}
+                    {{ formatters.date(props.data[column.key], 'long') }}
                 </template>
 
                 <template v-else-if="column.type === 'image'">
