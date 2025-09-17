@@ -64,20 +64,24 @@ onMounted(() => {
 
 const steps = [
     {
-        title: 'Choose a Template',
-        description: 'Start with a professionally designed template that fits your niche.',
+        title: 'Create Your Website',
+        description: 'Fill in your website details and customize it to match your brand',
+        class: 'rounded-ss-none rounded-se-[1.5rem] rounded-ee-[1.5rem] rounded-es-none md:rounded-es-[5rem]',
     },
     {
-        title: 'Customize Your Design',
-        description: 'Personalize colors, fonts, and layouts with our easy-to-use editor.',
+        title: 'Submit for Approval',
+        description: 'Our team reviews your website to make sure everything is ready',
+        class: 'rounded-se-[1.5rem] md:rounded-se-none md:rounded-es-[1.5rem] md:rounded-ss-[1.5rem] rounded-ee-[1.5rem] md:rounded-ee-[5rem]',
     },
     {
-        title: 'Add Your Content',
-        description: 'Upload images, write text, and integrate your unique brand elements.',
+        title: 'Go Live Instantly',
+        description: 'Once approved, your website is deployed online with a free trial',
+        class: 'rounded-ss-none rounded-se-[1.5rem] rounded-ee-[1.5rem] rounded-es-none md:rounded-es-[5rem]',
     },
     {
-        title: 'Launch & Grow',
-        description: 'Publish your site with one click and start reaching your audience.',
+        title: 'Choose Your Plan',
+        description: 'Keep your website running by subscribing monthly or yearly',
+        class: 'rounded-se-[1.5rem] md:rounded-se-none md:rounded-es-[1.5rem] md:rounded-ss-[1.5rem] rounded-ee-[1.5rem] md:rounded-ee-[5rem]',
     },
 ];
 </script>
@@ -85,28 +89,24 @@ const steps = [
 <template>
     <section id="how-it-works" class="relative px-4 py-22">
         <div class="mx-auto">
-            <div class="w-full mb-16 flex flex-col items-start gap-3">
-                <h2 class="section-title section-title-underline text-active text-3xl font-bold sm:text-4xl md:text-4xl lg:text-5xl">
+            <div class="mb-16 flex w-full flex-col items-start gap-3">
+                <h2 class="section-title section-title-underline text-active text-3xl font-bold sm:text-4xl lg:text-5xl">
                     How <span class="gradient-text">Spotly</span> Works
                 </h2>
                 <p class="text-body-muted">The Steps to create your webiste</p>
             </div>
 
-                    <!-- Floating blurred circles -->
-        <div class="pointer-events-none absolute inset-0 z-0">
-            <span class="floating-circle bg-[var(--primary)] opacity-10 blur-2xl absolute left-10 top-32 w-40 h-40 rounded-full"></span>
-            <span class="floating-circle bg-[var(--destructive)] opacity-10 blur-2xl absolute right-24 top-60 w-32 h-32 rounded-full"></span>
-            <span class="floating-circle bg-[var(--primary)] opacity-10 blur-2xl absolute left-1/2 bottom-20 w-48 h-48 rounded-full"></span>
-        </div>
+            <!-- Floating blurred circles -->
+            <div class="pointer-events-none absolute inset-0 z-0">
+                <span class="floating-circle absolute top-32 start-10 size-20 md:size-40 rounded-full bg-[var(--primary)] opacity-20 dark:opacity-10 blur-2xl"></span>
+                <span class="floating-circle absolute bottom-20 start-1/2 size-20 md:size-48 rounded-full bg-[var(--primary)] opacity-20 dark:opacity-10 blur-2xl"></span>
+            </div>
 
             <div class="timeline relative min-h-[800px]">
-                <!-- Rounded circle -->
-                <div class="relative top-0 start-0 z-10 hidden w-fit md:start-1/2 md:block">
-                    <p class="-ms-2 h-4 w-4 rounded-full bg-blue-700"></p>
-                </div>
                 <!-- Timeline line -->
                 <div
-                    class="timeline-line absolute top-0 left-0 h-full w-0.5 -translate-x-1/2 bg-gradient-to-b from-blue-700 to-red-700 md:left-1/2 shadow-[0_0_16px_2px_rgba(99,102,241,0.2)] animate-glow"
+                    class="timeline-line animate-glow absolute start-0 top-0 h-full w-0.5 -translate-x-1/2 md:start-1/2
+                    bg-gradient-to-b from-[var(--enhancement-color)] via-[var(--primary-hover)] to-[var(--primary-active)]"
                 ></div>
 
                 <!-- Steps container -->
@@ -118,13 +118,10 @@ const steps = [
                         :class="index % 2 === 0 ? 'md:justify-end' : 'md:justify-start'"
                         class="step-card-container flex items-center justify-center"
                     >
-                        <div
-                            :class="index % 2 === 0 ? 'step-card-right' : 'step-card-left'"
-                            class="step-card relative w-full max-w-md p-9 backdrop-blur hover:-translate-y-2 md:max-w-xl"
-                        >
+                        <div :class="step.class" class="step-card relative w-full max-w-md p-9 backdrop-blur hover:-translate-y-2 md:max-w-xl">
                             <div class="step-content flex flex-col gap-5">
                                 <div>
-                                    <span class="gradient-text text-5xl font-bold">0{{ index + 1 }}</span>
+                                    <span class="text-active-link text-5xl font-bold">0{{ index + 1 }}</span>
                                 </div>
                                 <div class="flex flex-col gap-2">
                                     <h3 class="text-active text-2xl font-semibold">{{ step.title }}</h3>
@@ -147,24 +144,5 @@ const steps = [
 }
 .step-card:hover {
     border-color: #6b7280;
-}
-
-.step-card-right {
-    border-radius: 0rem 1.5rem 1.5rem 5rem;
-}
-
-.step-card-left {
-    border-radius: 1.5rem 0rem 5rem 1.5rem;
-}
-
-/* Mobile layout */
-@media (max-width: 767px) {
-    .step-card-right {
-        border-radius: 0rem 1.5rem 1.5rem 0rem;
-    }
-
-    .step-card-left {
-        border-radius: 0rem 1.5rem 1.5rem 0rem;
-    }
 }
 </style>

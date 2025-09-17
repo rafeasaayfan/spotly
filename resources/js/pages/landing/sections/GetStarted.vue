@@ -111,13 +111,13 @@ function handleIcon(type: string) {
                 <h2 class="section-title section-title-underline text-active text-3xl font-bold sm:text-4xl md:text-4xl lg:text-5xl">
                     Start Your <span class="gradient-text">Project Now</span>
                 </h2>
-                <p class="t ext-body-muted max-w-3xl">Choose your project type and get started created your website with Spotly.</p>
+                <p class="text-body-muted max-w-3xl">Choose your project type and get started created your website with Spotly.</p>
             </div>
 
             <!-- Floating blurred circles -->
             <div class="pointer-events-none absolute inset-0 z-0">
-                <span class="floating-circle absolute top-32 left-10 h-40 w-40 rounded-full bg-[var(--primary)] opacity-10 blur-2xl"></span>
-                <span class="floating-circle absolute top-60 right-24 h-32 w-32 rounded-full bg-[var(--destructive)] opacity-10 blur-2xl"></span>
+                <span class="floating-circle absolute top-32 start-10 h-40 w-40 rounded-full bg-[var(--primary)] opacity-20 dark:opacity-10 blur-2xl"></span>
+                <!-- <span class="floating-circle absolute top-120 end-24 h-32 w-32 rounded-full bg-black opacity-25 blur-2xl"></span> -->
             </div>
 
             <div class="group relative overflow-hidden" @mouseenter="pauseAutoScroll" @mouseleave="resumeAutoScroll">
@@ -129,18 +129,22 @@ function handleIcon(type: string) {
                             class="cards-landing-animation group/card relative min-w-[380px] rounded-xl"
                         >
                             <div
-                                class="absolute end-3 top-3 z-10 flex size-10 scale-75 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--primary)] to-[var(--destructive)] opacity-0 transition-all duration-300 group-hover/card:scale-100 group-hover/card:rotate-12 group-hover/card:opacity-100"
+                                class="absolute end-3 top-3 z-10 flex size-10 scale-75 items-center justify-center rounded-lg 
+                                bg-gradient-to-br from-[var(--primary)] via-[var(--primary-hover)] to-[var(--primary-active)] 
+                                opacity-0 transition-all duration-300 group-hover/card:scale-100 group-hover/card:rotate-12 group-hover/card:opacity-100"
                             >
                                 <component :is="CheckCircle" class="size-6 text-white" />
                             </div>
 
                             <div
-                                class="text-body border-muted flex h-full w-full flex-col gap-3 rounded-xl border bg-black/4 p-8 text-center backdrop-blur-lg transition-all duration-200 hover:translate-y-[-2px] hover:scale-102 hover:bg-black/6 active:scale-98 dark:bg-white/4 hover:dark:bg-white/6"
+                                class="text-body border-[var(--border-landing)] flex h-full w-full flex-col gap-3 rounded-xl border bg-black/7 p-8 text-center backdrop-blur-lg 
+                                transition-all duration-200 hover:translate-y-[-2px] hover:scale-102 hover:bg-white
+                                active:scale-98 dark:bg-white/7 hover:dark:bg-black hover:border-[var(--primary)]"
                             >
-                                <component :is="handleIcon(item.type)" class="mx-auto size-16" />
+                                <component :is="handleIcon(item.title)" class="mx-auto size-16" />
 
                                 <div class="flex flex-col items-center justify-center gap-2">
-                                    <h3 class="text-xl font-semibold">{{ item.type }}</h3>
+                                    <h3 class="text-xl font-semibold">{{ item.title }}</h3>
                                     <p class="text-body-muted text-sm">{{ item.description }}</p>
                                 </div>
                             </div>
@@ -148,16 +152,17 @@ function handleIcon(type: string) {
 
                         <div v-else class="cards-landing-animation group/card relative min-w-[380px] rounded-xl">
                             <div
-                                class="border-muted absolute inset-0 z-10 rounded-lg border bg-gradient-to-br from-gray-900/30 to-black/30 backdrop-blur-[1.2px] transition-all duration-300"
+                                class="border-[var(--border-landing)]/50 absolute inset-0 z-10 rounded-lg border 
+                                bg-black/1 backdrop-blur-[1px] transition-all duration-300"
                             >
-                                <h1 class="p-2 text-sm font-medium">Coming Soon</h1>
+                                <h1 class="p-2 text-body-muted text-sm font-medium">Coming Soon</h1>
                             </div>
 
-                            <div class="text-body flex h-full w-full flex-col gap-3 rounded-xl p-8 text-center backdrop-blur-lg">
-                                <component :is="handleIcon(item.type)" class="mx-auto size-16" />
+                            <div class="text-body flex h-full w-full flex-col gap-3 rounded-xl p-8 text-center blur-[1px]">
+                                <component :is="handleIcon(item.title)" class="mx-auto size-16" />
 
                                 <div class="flex flex-col items-center justify-center gap-2">
-                                    <h3 class="text-xl font-semibold">{{ item.type }}</h3>
+                                    <h3 class="text-xl font-semibold">{{ item.title }}</h3>
                                     <p class="text-body-muted text-sm">{{ item.description }}</p>
                                 </div>
                             </div>
