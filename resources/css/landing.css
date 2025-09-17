@@ -1,8 +1,49 @@
+:root {
+    --enhancement-color: #000000;
+    --body: white;
+    --border-landing: var(--border);
+    --field-landing: hsl(218, 92%, 95%);
+}
+
+.dark {
+    --enhancement-color: #FFFFFF; 
+    --body: oklch(13% 0.028 261.692);
+    --border-landing: oklch(21% 0.034 264.665);
+    --field-landing: oklch(18% 0.034 264.665);
+}
+
+body {
+    background-color: var(--body) !important;
+}
+
+.border-muted {
+    border-color: var(--border-landing) !important;
+}
+
+.bg-field {
+    background-color: var(--field-landing) !important;
+}
+
 .gradient-text {
-    background: linear-gradient(50deg, var(--primary), var(--destructive)) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-    background-clip: text !important;
+    background-image:
+        linear-gradient(to right, transparent 0%, var(--background) 20%, transparent 40%),
+        linear-gradient(50deg, var(--primary), var(--primary-hover), var(--primary-active));
+    background-size: 200% 100%, 100% 100%;
+    background-position: -200% 0, 0 0;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: text-shine 3s infinite linear;
+}
+
+@keyframes text-shine {
+    0% {
+        background-position: 200% 0, 0 0;
+    }
+    100% {
+        background-position: -200% 0, 0 0;
+    }
 }
 
 .glow-button {
@@ -10,7 +51,12 @@
     overflow: hidden;
     z-index: 1;
     transition: all 0.3s ease-in-out;
-    background-image: linear-gradient(to right, var(--primary), var(--destructive));
+    background-image: linear-gradient(
+        to right,
+        var(--primary) 50%,
+        var(--primary-hover) 80%,
+        var(--primary-active) 100%
+    );
 }
 .glow-button:before {
     content: '';
@@ -19,7 +65,7 @@
     left: 50%;
     width: 300%;
     height: 300%;
-    background: radial-gradient(circle, var(--primary), var(--destructive), transparent, transparent);
+    background: radial-gradient(circle, var(--primary), var(--primary-active), transparent, transparent);
     z-index: -1;
     transform: translate(-50%, -50%) scale(0);
     transition: transform 0.8s ease;
@@ -53,7 +99,7 @@
     transform: translateX(-50%);
     width: var(--underline-width, 0%);
     height: 3px;
-    background: linear-gradient(90deg, var(--primary), var(--destructive));
+    background: linear-gradient(90deg, var(--primary), var(--background));
     border-radius: 2px;
     transition: width 0.5s ease-out;
 }
@@ -65,9 +111,58 @@
     background: var(--background);
 }
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--primary), var(--destructive));
+    background: linear-gradient(180deg, var(--primary), var(--primary-active));
     border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 80%, white), color-mix(in srgb, var(--destructive) 80%, white));
+    background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 80%, white), color-mix(in srgb, var(--primary-active) 80%, white));
 }
+
+.landing-background-decor {
+    background-color: var(--body);
+    background-image: radial-gradient(var(--border-landing) 1px, transparent 0.5px),
+                      radial-gradient(var(--border-landing) 1px, transparent 0.5px);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    position: relative;
+}
+
+.landing-background-decor::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, var(--background), transparent, var(--secondary-background));
+    opacity: 0.2;
+    z-index: -1;
+}
+
+/* .wizard-background {
+    background: linear-gradient(135deg, var(--background) 0%, var(--secondary-background) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.wizard-background::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 20% 80%, var(--primary) 0%, transparent 20%),
+                radial-gradient(circle at 80% 20%, var(--primary) 0%, transparent 20%);
+    opacity: 1; 
+    animation: moveGradient 10s infinite alternate ease-in-out;
+} */
+
+/* @keyframes moveGradient {
+    0% {
+        transform: translate(0%, 0%);
+    }
+    100% {
+        transform: translate(-50%, -50%);
+    }
+} */
