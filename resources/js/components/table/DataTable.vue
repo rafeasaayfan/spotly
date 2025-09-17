@@ -93,7 +93,7 @@ const { handleAction } = useTableActions(selectedIds, props.routeName);
 
         <!-- Table footer with pagination -->
         <div class="flex flex-col-reverse sm:flex-row flex-wrap items-center justify-between gap-4 p-3">
-            <div class="flex items-center gap-3 flex-wrap">
+            <div class="flex items-center justify-center md:justify-start gap-3 flex-wrap">
                 <TableLimit
                     :applyFilters="applyFilters"
                     :selectedLimit="Number(filters.limit ?? 10)"
