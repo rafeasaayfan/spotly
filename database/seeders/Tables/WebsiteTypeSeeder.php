@@ -16,7 +16,7 @@ class WebsiteTypeSeeder extends Seeder
             'created_by' => 1,
             'title' => 'E-commerce',
             'type' => 'e-commerce',
-            'description' => 'E-commerce website for selling products and services to customers ',
+            'description' => 'E-commerce website for selling products and services to customers',
             'priority' => 1,
             'is_active' => true,
         ]);
