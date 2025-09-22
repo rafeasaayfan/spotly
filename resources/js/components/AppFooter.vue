@@ -18,6 +18,15 @@ const scrollToTop = () => {
         behavior: 'smooth',
     });
 };
+
+const spotlyArrayName = () => {
+    if(page.props.lang === 'ar') {
+        // return ['س', 'ب', 'و', 'ت', 'ل', 'ي'];
+        return ['سبوتلي'];
+    }
+
+    return ['S', 'P', 'O', 'T', 'L', 'Y'];
+}
 </script>
 
 <template>
@@ -27,16 +36,15 @@ const scrollToTop = () => {
                 <!-- Company Info -->
                 <div class="flex flex-col gap-4 lg:col-span-2 lg:max-w-3/4">
                     <div class="flex flex-col justify-center gap-1">
-                        <h3 class="text-active-link text-xl font-bold">SPOTLY</h3>
+                        <h3 class="text-active-link text-xl font-bold uppercase">{{ $t('spotly') }}</h3>
                         <p class="text-body-muted text-sm leading-relaxed">
-                            Spotly empowers you to bring your ideas to life by creating stunning new websites with ease. A better, more trusted way
-                            for creating your next website.
+                            {{ $t('footer.paragraph') }}
                         </p>
                     </div>
 
                     <!-- Social Links -->
                     <div class="social-section">
-                        <h4 class="text-active mb-3 text-sm font-semibold">Follow Us</h4>
+                        <h4 class="text-active mb-3 text-sm font-semibold">{{ $t('footer.followUs') }}</h4>
                         <div class="flex gap-3">
                             <a
                                 href="#"
@@ -85,7 +93,7 @@ const scrollToTop = () => {
                 <div class="col-span-3 flex flex-col justify-between gap-8 md:flex-row">
                     <!-- Quick Links -->
                     <div class="">
-                        <h3 class="text-active mb-3 text-lg font-semibold">Quick Links</h3>
+                        <h3 class="text-active mb-3 text-lg font-semibold">{{ $t('footer.quickLinks') }}</h3>
                         <div class="flex flex-col gap-3">
                             <button
                                 type="button"
@@ -98,28 +106,30 @@ const scrollToTop = () => {
                                     class="size-3.5 transition-transform duration-300"
                                     :class="page.props.lang === 'ar' ? 'rotate-180 group-hover:-translate-x-1' : 'group-hover:translate-x-1'"
                                 />
-                                {{ item.title }}
+                                {{ $t(item.title) }}
                             </button>
                         </div>
                     </div>
 
                     <!-- Contact Info -->
                     <div class="">
-                        <h3 class="text-active mb-3 text-lg font-semibold">Contact Info</h3>
+                        <h3 class="text-active mb-3 text-lg font-semibold">{{ $t('footer.contact') }}</h3>
                         <div class="space-y-4">
                             <div class="flex items-start gap-2">
-                                <Mail class="text-body mt-0.5 size-4" />
+                                <Mail class="text-body-muted mt-0.5 size-4" />
                                 <div>
-                                    <p class="text-body text-sm font-medium">Email</p>
-                                    <a href="mailto:spotly.lb@gmail.com" class="text-body-muted text-sm">spotly.lb@gmail.com</a>
+                                    <p class="text-body-muted text-sm font-medium">{{ $t('email') }}</p>
+                                    <a href="mailto:spotly.lb@gmail.com" class="text-body-muted text-sm underline underline-offset-2">spotly.lb@gmail.com</a>
                                 </div>
                             </div>
 
                             <div class="flex items-start gap-2">
-                                <Phone class="text-body mt-0.5 size-4" />
+                                <Phone class="text-body-muted mt-0.5 size-4" />
                                 <div>
-                                    <p class="text-body text-sm font-medium">Phone</p>
-                                    <a href="tel:+96171412898" class="text-body-muted text-sm">+961 71 412 898</a>
+                                    <p class="text-body-muted text-sm font-medium">{{ $t('phone') }}</p>
+                                    <a href="tel:+96171412898" class="text-body-muted text-sm underline underline-offset-2">
+                                        <p class="[direction:ltr]">+961 71 412 898</p>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -127,10 +137,10 @@ const scrollToTop = () => {
 
                     <!-- Customer Service -->
                     <div class="">
-                        <h3 class="text-active mb-3 text-lg font-semibold">Customer Service</h3>
+                        <h3 class="text-active mb-3 text-lg font-semibold">{{ $t('footer.custom') }}</h3>
                         <div class="flex flex-col gap-3">
                             <Link
-                                v-for="item in ['Help Center', 'Privacy Policy', 'Terms of Service']"
+                                v-for="item in [ $t('footer.help'), $t('footer.privacy'), $t('footer.terms')]"
                                 :key="item"
                                 :href="item"
                                 target="_blank"
@@ -156,8 +166,7 @@ const scrollToTop = () => {
                 <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
                     <div class="text-center md:text-left">
                         <p class="text-body-muted text-sm">
-                            &copy; 2025 Spotly Store | All rights reserved
-                            <!-- Powered by <a href="https://spotly.com" class="gradient-text font-bold">Spotly</a> -->
+                            &copy; {{ $t('footer.rights') }}
                         </p>
                     </div>
 
@@ -171,12 +180,13 @@ const scrollToTop = () => {
                 </div>
             </div>
 
-            <div class="flex w-full items-center flex-col gap-2 lg:flex-row justify-between pt-30">
+            <div class="flex w-full items-center flex-col gap-2 lg:flex-row justify-between pt-30" 
+            :class="page.props.lang === 'ar' ? 'lg:flex-row-reverse' : ''">
                 <div>
                     <AppLogoIcon class="size-30 sm:size-35 md:size-45" />
                 </div>
                 <div class="flex items-center gap-2.5 sm:gap-4">
-                    <h1 v-for="letter in ['S', 'P', 'O', 'T', 'L', 'Y']" :key="letter" class="text-active text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold">
+                    <h1 v-for="letter in spotlyArrayName()" :key="letter" class="text-active text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold">
                         {{ letter }}
                     </h1>
                 </div>

@@ -47,7 +47,7 @@ const svgClass = computed(() =>
 
         <!-- Centered S -->
         <text x="40" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="var(--foreground-active)">
-            S
+            {{ $t('s') }}
         </text>
     </svg>
 </template>

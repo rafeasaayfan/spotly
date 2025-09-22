@@ -53,7 +53,7 @@ watch([phone, code], () => {
 </script>
 
 <template>
-    <div :class="cn('w-full w-full grid grid-cols-7 gap-[1px]', props.parentClass)">
+    <div :class="cn('w-full w-full grid grid-cols-7 gap-[1px] [direction:ltr]', props.parentClass)">
         <SelectWithSearch
             v-model="code"
             placeholder="Code"

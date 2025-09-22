@@ -7,8 +7,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Bell, Gift, LoaderCircle, Mail, Sparkles } from 'lucide-vue-next';
 import { onMounted } from 'vue';
 
-// const isSubscribed = ref(false);
-
 onMounted(() => {
     gsap.registerPlugin(ScrollTrigger);
 
@@ -63,18 +61,18 @@ const subscribe = () => {
 
 const cards = [
     {
-        title: 'Exclusive Features',
-        description: 'Unlock early access to new templates, tools, and premium features before anyone else',
+        title: 'landing.newsletter.card1_title',
+        description: 'landing.newsletter.card1_description',
         icon: Gift,
     },
     {
-        title: 'Latest Updates',
-        description: 'Stay informed about new UI designs, and performance improvements in Spotly',
+        title: 'landing.newsletter.card2_title',
+        description: 'landing.newsletter.card2_description',
         icon: Bell,
     },
     {
-        title: 'Growth Tips',
-        description: 'Receive expert tips, best practices, and offers to help your online business grow faster',
+        title: 'landing.newsletter.card3_title',
+        description: 'landing.newsletter.card3_description',
         icon: Sparkles,
     },
 ];
@@ -96,7 +94,7 @@ const cards = [
 
             <div class="flex w-full flex-col items-start justify-center gap-3 md:items-center">
                 <h2 class="section-title section-title-underline text-active font-display text-3xl font-bold sm:text-4xl lg:text-5xl">
-                    Stay Updated with Our <span class="gradient-text">Newsletter</span>
+                    {{ $t('landing.newsletter.title_part1') }} <span class="gradient-text">{{ $t('landing.newsletter.title_part2') }}</span>
                 </h2>
             </div>
 
@@ -109,7 +107,7 @@ const cards = [
                                 <Input
                                     v-model="form.email"
                                     type="email"
-                                    placeholder="Enter your email"
+                                    :placeholder="$t('landing.newsletter.email_placeholder')"
                                     autocomplete="email"
                                     required
                                     class="h-9 md:h-12 rounded-none rounded-s border-none bg-transparent"
@@ -123,7 +121,7 @@ const cards = [
                                 >
                                     <LoaderCircle v-if="form.processing" class="size-4 animate-spin" />
                                     <Mail v-else class="size-4" />
-                                    Subscribe
+                                    {{ $t('landing.newsletter.subscribe_button') }}
                                 </Button>
                             </div>
                             <InputError v-if="form.errors" :message="form.errors.email" />
@@ -148,19 +146,19 @@ const cards = [
                             >
                                 <component :is="item.icon" class="size-5 text-white" />
                             </div>
-                            <h3 class="text-active mb-4 font-semibold">{{ item.title }}</h3>
+                            <h3 class="text-active mb-4 font-semibold">{{ $t(item.title) }}</h3>
                             <p class="text-body-muted text-sm">
-                                {{ item.description }}
+                                {{ $t(item.description) }}
                             </p>
                         </div>
                     </div>
                 </div>
 
                 <div class="border-muted flex flex-col items-start justify-center gap-4 border-t pt-8 md:items-center">
-                    <p class="text-body-muted text-sm">🔒 We respect your privacy — unsubscribe anytime.</p>
+                    <p class="text-body-muted text-sm">{{ $t('landing.newsletter.privacy_note') }}</p>
                     <div class="flex items-center justify-center gap-4 text-xs md:gap-6">
-                        <p class="text-body-muted">✓ Only Spotly updates</p>
-                        <p class="text-body-muted">✓ Secure & private</p>
+                        <p class="text-body-muted">{{ $t('landing.newsletter.only_spotly_updates') }}</p>
+                        <p class="text-body-muted">{{ $t('landing.newsletter.secure_private') }}</p>
                     </div>
                 </div>
             </div>

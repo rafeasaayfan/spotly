@@ -12,13 +12,15 @@ import { AlertTriangle, Building2, Facebook, Flag, Info, Instagram, Languages, L
 import { watchEffect } from 'vue';
 import Delete from './Delete.vue';
 
+const page = usePage<SharedData>();
+
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'My Websites',
+        title: page.props.lang === 'ar' ? 'مواقعي' : 'My Websites',
         href: '/dashboard/my-websites',
     },
     {
-        title: 'Edit',
+        title: page.props.lang === 'ar' ? 'تعديل' : 'Edit',
         href: '/dashboard/my-website/edit',
     },
 ];
@@ -46,7 +48,6 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
     icon: item.flag,
 }));
 
-const page = usePage<SharedData>();
 const mappedCountries = props.countries.map((item: any) => ({
     value: item.country,
     label: page.props.lang === 'ar' ? item.country_ar : page.props.lang === 'en' ? item.country : item.country_fr,
@@ -71,7 +72,7 @@ const activate = (toggleVal: boolean) => {
 </script>
 
 <template>
-    <Head title="Website-Edit" />
+    <Head :title="$t('edit')" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <form
@@ -88,20 +89,20 @@ const activate = (toggleVal: boolean) => {
                 <!-- Logo -->
                 <div class="border-muted flex flex-col items-center gap-5 border-b p-4 md:p-6">
                     <div class="flex flex-col gap-1">
-                        <Label for="light_logo" class="mb-1 text-xs text-body-muted">Light Logo</Label>
-                        <File id="light_logo" v-model="form.light_logo" :src="props.website.light_logo" label="Light Logo" />
+                        <Label for="light_logo" class="mb-1 text-xs text-body-muted">{{ $t('myWebsites.light_logo') }}</Label>
+                        <File id="light_logo" v-model="form.light_logo" :src="props.website.light_logo" :label="$t('myWebsites.light_logo')" />
                         <InputError v-if="form.errors?.light_logo" :message="form.errors.light_logo" class="text-xs" />
                     </div>
 
                     <div class="flex flex-col gap-1">
-                        <Label for="dark_logo" class="mb-1 text-xs text-body-muted">Dark Logo</Label>
-                        <File id="dark_logo" v-model="form.dark_logo" :src="props.website.dark_logo" label="Dark Logo" />
+                        <Label for="dark_logo" class="mb-1 text-xs text-body-muted">{{ $t('myWebsites.dark_logo') }}</Label>
+                        <File id="dark_logo" v-model="form.dark_logo" :src="props.website.dark_logo" :label="$t('myWebsites.dark_logo')" />
                         <InputError v-if="form.errors?.dark_logo" :message="form.errors.dark_logo" class="text-xs" />
                     </div>
                 </div>
 
                 <div class="border-muted flex flex-col gap-2 border-b p-4 md:p-6">
-                    <Label class="font-bold">Active Your Website</Label>
+                    <Label class="font-bold">{{ $t('myWebsites.active_your_website') }}</Label>
                     <Toggle
                         :class="form.processing ? 'pointer-events-none opacity-50' : ''"
                         :btnClass="['w-12 h-6', props.website.status === 'approved' ? '' : 'cursor-not-allowed']"
@@ -111,19 +112,19 @@ const activate = (toggleVal: boolean) => {
                     />
                     <div v-if="props.website.status !== 'approved'" class="mt-2 flex items-center gap-1 text-yellow-700/90">
                         <AlertTriangle class="size-4" />
-                        <span class="text-[11.5px] font-extrabold">Your Website is {{ props.website.status }}, so you cant activate it</span>
+                        <span class="text-[11.5px] font-extrabold">{{ $t('myWebsites.your_website_is') }} {{ props.website.status }}, {{ $t('myWebsites.so_you_cant_activate_it') }}</span>
                     </div>
                 </div>
 
                 <div class="hidden flex-col gap-2 p-4 p-6 sm:flex md:p-6">
                     <Dialog>
                         <DialogTrigger as-child>
-                            <Button size="sm" class="opacity-70 hover:opacity-100" variant="destructive">Delete This Website</Button>
+                            <Button size="sm" class="opacity-70 hover:opacity-100" variant="destructive">{{ $t('myWebsites.delete_this_website') }}</Button>
                         </DialogTrigger>
 
                         <DialogScrollContent>
                             <DialogHeader>
-                                <DialogTitle>Delete {{ props.website.name }}</DialogTitle>
+                                <DialogTitle>{{ $t('delete') }} {{ props.website.name }}</DialogTitle>
                                 <DialogDescription class="sr-only"> No description provided. </DialogDescription>
                             </DialogHeader>
 
@@ -138,7 +139,7 @@ const activate = (toggleVal: boolean) => {
                     <div class="flex flex-col gap-1">
                         <Label for="phone_number" class="mb-1 text-xs text-body-muted">
                             <Phone class="size-3.5" />
-                            Phone Number
+                            {{ $t('phone') }}
                         </Label>
                         <PhoneNumberField id="phone_number" v-model="form.phone_number" :options="mappedCountryPhones" selectedCode="+961" required />
                         <InputError v-if="form.errors?.phone_number" :message="form.errors.phone_number" />
@@ -147,9 +148,9 @@ const activate = (toggleVal: boolean) => {
                     <div class="flex flex-col gap-1">
                         <Label for="email" class="mb-1 text-xs text-body-muted">
                             <Mail class="size-3.5" />
-                            Email Address
+                            {{ $t('email') }}
                         </Label>
-                        <Input type="email" id="email" v-model="form.email" placeholder="Enter your business phone number" required />
+                        <Input type="email" id="email" v-model="form.email" placeholder="contact@yourbusiness.com" required />
                         <InputError v-if="form.errors?.email" :message="form.errors.email" />
                     </div>
                 </div>
@@ -158,7 +159,7 @@ const activate = (toggleVal: boolean) => {
                     <div class="flex flex-col gap-1">
                         <Label for="country" class="mb-1 text-xs text-body-muted">
                             <Flag class="size-3.5" />
-                            Country
+                            {{ $t('country') }}
                         </Label>
                         <SelectWithSearch v-model="form.country" placeholder="Select a country..." :options="mappedCountries" />
                         <InputError v-if="form.errors?.country" :message="form.errors.country" />
@@ -166,7 +167,7 @@ const activate = (toggleVal: boolean) => {
                     <div class="flex flex-col gap-1">
                         <Label for="city" class="mb-1 text-xs text-body-muted">
                             <Building2 class="size-3.5" />
-                            City
+                            {{ $t('city') }}
                         </Label>
                         <SelectWithSearch
                             v-model="form.city"
@@ -178,22 +179,21 @@ const activate = (toggleVal: boolean) => {
                     <div class="flex flex-col gap-1">
                         <Label for="address" class="mb-1 text-xs text-body-muted">
                             <Locate class="size-3.5" />
-                            Address
+                            {{ $t('address') }}
                         </Label>
-                        <Input id="address" v-model="form.address" placeholder="Enter your business Address" required />
+                        <Input id="address" v-model="form.address" :placeholder="$t('street_address_placeholder')" required />
                         <InputError v-if="form.errors?.address" :message="form.errors.address" />
                     </div>
                     <div class="flex flex-col gap-1">
                         <Label for="language" class="mb-1 text-xs text-body-muted">
                             <Languages class="size-3.5" />
-                            Default Language
+                            {{ $t('default_language') }}
                         </Label>
                         <Select id="language" option="Select a language" v-model="form.language" required>
                             <option
                                 v-for="lang in [
-                                    { value: 'en', label: 'English' },
-                                    { value: 'ar', label: 'Arabic' },
-                                    { value: 'fr', label: 'Frensh' },
+                                    { value: 'en', label: page.props.lang === 'ar' ? 'الإنجليزية' : 'English' },
+                                    { value: 'ar', label: page.props.lang === 'ar' ? 'العربية' : 'Arabic' },
                                 ]"
                                 :key="lang.value"
                                 :value="lang.value"
@@ -209,9 +209,9 @@ const activate = (toggleVal: boolean) => {
                     <div class="flex flex-col gap-1">
                         <Label for="instagram" class="mb-1 text-xs text-body-muted">
                             <Instagram class="size-3.5" />
-                            Instagram
+                            {{ $t('instagram') }}
                         </Label>
-                        <Input type="url" id="instagram" v-model="form.instagram" placeholder="Enter your business Instagram" required />
+                        <Input type="url" id="instagram" v-model="form.instagram" placeholder="https://instagram.com/yourbusiness" required />
                         <InputError v-if="form.errors?.instagram" :message="form.errors.instagram" />
                     </div>
                     <div class="flex flex-col gap-1">
@@ -225,25 +225,25 @@ const activate = (toggleVal: boolean) => {
                                     stroke-width="22"
                                 />
                             </svg>
-                            TikTok
+                            {{ $t('tiktok') }}
                         </Label>
-                        <Input type="url" id="tiktok" v-model="form.tiktok" placeholder="Enter your business TikTok" required />
+                        <Input type="url" id="tiktok" v-model="form.tiktok" placeholder="https://tiktok.com/yourbusiness" required />
                         <InputError v-if="form.errors?.tiktok" :message="form.errors.tiktok" />
                     </div>
                     <div class="flex flex-col gap-1">
                         <Label for="youtube" class="mb-1 text-xs text-body-muted">
                             <Youtube class="size-3.5" />
-                            Youtube
+                            {{ $t('youtube') }}
                         </Label>
-                        <Input type="url" id="youtube" v-model="form.youtube" placeholder="Enter your business Youtube" required />
+                        <Input type="url" id="youtube" v-model="form.youtube" placeholder="https://youtube.com/yourbusiness" required />
                         <InputError v-if="form.errors?.youtube" :message="form.errors.youtube" />
                     </div>
                     <div class="flex flex-col gap-2">
                         <Label for="facebook">
                             <Facebook class="size-3.5" />
-                            Facebook
+                            {{ $t('facebook') }}
                         </Label>
-                        <Input type="url" id="facebook" v-model="form.facebook" placeholder="Enter your business Facebook" required />
+                        <Input type="url" id="facebook" v-model="form.facebook" placeholder="https://facebook.com/yourbusiness" required />
                         <InputError v-if="form.errors?.facebook" :message="form.errors.facebook" />
                     </div>
                 </div>
@@ -251,7 +251,7 @@ const activate = (toggleVal: boolean) => {
                 <div class="border-muted flex w-full flex-col border-t pt-6">
                     <Label for="about_us" class="mb-2">
                         <Info class="size-3.5" />
-                        About Us Section
+                        {{ $t('about_us_section') }}
                     </Label>
                     <Textarea id="about_us" v-model="form.about_us" :maxlength="255" required />
                     <InputError v-if="form.errors?.about_us" :message="form.errors.about_us" />
@@ -263,7 +263,7 @@ const activate = (toggleVal: boolean) => {
             <div class="block sm:hidden">
                 <Dialog>
                     <DialogTrigger as-child>
-                        <Button size="sm" class="opacity-70 hover:opacity-100" variant="destructive">Delete This Website</Button>
+                        <Button size="sm" class="opacity-70 hover:opacity-100" variant="destructive">{{ $t('myWebsites.delete_this_website') }}</Button>
                     </DialogTrigger>
 
                     <DialogScrollContent>
@@ -278,7 +278,7 @@ const activate = (toggleVal: boolean) => {
             </div>
             <Button @click="submit" :disabled="form.processing">
                 <LoaderCircle v-if="form.processing" class="size-4.5 animate-spin" />
-                Save Change
+                {{ $t('save_change') }}
             </Button>
         </div>
     </DashboardLayout>

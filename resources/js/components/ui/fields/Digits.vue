@@ -77,7 +77,7 @@ function onKeydown(e: KeyboardEvent, index: number) {
         type="text" 
         inputmode="numeric"
         pattern="[0-9]*" maxlength="1"
-        :class="cn('px-0 py-0 min-w-0 h-0 w-0 size-10 sm:size-18 text-center text-sm sm:text-lg', props.class)"
+        :class="cn('px-0 py-0 min-w-0 h-0 w-0 size-10 sm:size-18 text-center text-sm sm:text-lg [direction:ltr]', props.class)"
         @input="onInput($event, index)"
         @keydown="onKeydown($event, index)"
     />

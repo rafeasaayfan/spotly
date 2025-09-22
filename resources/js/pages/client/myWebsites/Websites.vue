@@ -16,15 +16,17 @@ import { Label } from '@/components/ui/label';
 import { type DataTableProps } from '@/composables/dataTable/useDataTable';
 import DashboardLayout from '@/layouts/DashboardLayout.vue';
 import { toast } from '@/lib/sweetAlert';
-import { type BreadcrumbItem } from '@/types';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { SharedData, type BreadcrumbItem } from '@/types';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { FilterIcon, Inbox, LoaderCircle, Search } from 'lucide-vue-next';
 import { computed, reactive, ref, watch, watchEffect } from 'vue';
 import Cards from './Cards.vue';
 
+const page = usePage<SharedData>();
+
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'My Websites',
+        title: page.props.lang === 'ar' ? 'مواقعي' : 'My Websites',
         href: '/dashboard/my-websites',
     },
 ];
@@ -128,7 +130,7 @@ const searching = (event: Event) => {
 </script>
 
 <template>
-    <Head title="My Websites" />
+    <Head :title="$t('myWebsites.title')" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <div
@@ -147,8 +149,8 @@ const searching = (event: Event) => {
                                 id="search"
                                 type="search"
                                 autofocus
-                                :tabindex="1"
-                                placeholder="searching..."
+                                tabindex="1"
+                                :placeholder="$t('myWebsites.search_placeholder')"
                                 @input="searching"
                             />
 
@@ -158,13 +160,13 @@ const searching = (event: Event) => {
                         <div class="flex items-center gap-2">
                             <SelectWithSearch
                                 :options="[
-                                    { value: 'newest', label: 'Newest' },
-                                    { value: 'oldest', label: 'Oldest' },
-                                    { value: 'name_asc', label: 'Name (A-Z)' },
-                                    { value: 'name_desc', label: 'Name (Z-A)' },
+                                    { value: 'newest', label: $t('myWebsites.newest') },
+                                    { value: 'oldest', label: $t('myWebsites.oldest') },
+                                    { value: 'name_asc', label: $t('myWebsites.name_asc') },
+                                    { value: 'name_desc', label: $t('myWebsites.name_desc') },
                                 ]"
                                 v-model="filters.sort_by"
-                                placeholder="Sort by"
+                                :placeholder="$t('myWebsites.sort_by')"
                                 class="max-w-30 min-w-30"
                             />
 
@@ -176,38 +178,46 @@ const searching = (event: Event) => {
                                 </DropdownMenuTrigger>
 
                                 <DropdownMenuContent align="end" class="w-70">
-                                    <DropdownMenuShortcut>Filter options</DropdownMenuShortcut>
+                                    <DropdownMenuShortcut>{{ $t('myWebsites.filter_options') }}</DropdownMenuShortcut>
 
                                     <DropdownMenuSeparator />
 
                                     <DropdownMenuGroup>
                                         <div class="grid gap-5">
                                             <div class="flex flex-col gap-1">
-                                                <Label class="text-xs" for="website_type">Website Type</Label>
+                                                <Label class="text-xs" for="website_type">{{ $t('myWebsites.website_type') }}</Label>
                                                 <SelectWithSearch
                                                     id="website_type"
                                                     v-model="filters.website_type"
-                                                    placeholder="Choose a website type"
+                                                    :placeholder="$t('myWebsites.choose_website_type')"
                                                     :options="mappedTypes"
                                                 />
                                             </div>
 
                                             <div class="flex flex-col gap-1">
-                                                <Label class="text-xs" for="status">Status</Label>
-                                                <Select id="status" v-model="filters.status" placeholder="Select website status">
-                                                    <option v-for="(option, index) in ['pending', 'denied', 'approved']" :key="index" :value="option">
-                                                        {{ option }}
+                                                <Label class="text-xs" for="status">{{ $t('myWebsites.status') }}</Label>
+                                                <Select id="status" v-model="filters.status" :placeholder="$t('myWebsites.select_website_status')">
+                                                    <option
+                                                        v-for="(option, index) in [
+                                                            { value: 'pending', label: $t('pending') },
+                                                            { value: 'denied', label: $t('denied') },
+                                                            { value: 'approved', label: $t('approved') },
+                                                        ]"
+                                                        :key="index"
+                                                        :value="option.value"
+                                                    >
+                                                        {{ option.label }}
                                                     </option>
                                                 </Select>
                                             </div>
 
                                             <div class="flex flex-col gap-1">
-                                                <Label class="text-xs" for="active">Active</Label>
-                                                <Select id="active" v-model="filters.is_active" placeholder="Select active website">
+                                                <Label class="text-xs" for="active">{{ $t('active') }}</Label>
+                                                <Select id="active" v-model="filters.is_active" :placeholder="$t('myWebsites.select_active_website')">
                                                     <option
                                                         v-for="(option, index) in [
-                                                            { value: 1, label: 'active' },
-                                                            { value: 0, label: 'inactive' },
+                                                            { value: 1, label: $t('active') },
+                                                            { value: 0, label: $t('inactive') },
                                                         ]"
                                                         :key="index"
                                                         :value="option.value"
@@ -227,7 +237,7 @@ const searching = (event: Event) => {
                                                 @click="resetDropDownFilter()"
                                             >
                                                 <LoaderCircle v-if="isResetting" class="h-4 w-4 animate-spin" />
-                                                <span v-else>Reset</span>
+                                                <span v-else>{{ $t('reset') }}</span>
                                             </Button>
                                         </div>
                                     </DropdownMenuGroup>
@@ -238,7 +248,7 @@ const searching = (event: Event) => {
 
                     <div class="flex items-center gap-2">
                         <Link :href="route('websiteBuilder.index')" target="_blank">
-                            <Button>Create</Button>
+                            <Button>{{ $t('create') }}</Button>
                         </Link>
                     </div>
                 </div>
@@ -252,7 +262,7 @@ const searching = (event: Event) => {
                 <div v-else class="border-muted relative flex h-full items-center justify-center gap-3 rounded-md border p-4">
                     <div class="flex flex-col items-center gap-1">
                         <Inbox class="text-body-muted size-30 md:size-35" />
-                        <span class="text-active text-base font-medium md:text-lg">No Websites Found</span>
+                        <span class="text-active text-base font-medium md:text-lg">{{ $t('myWebsites.no_websites_found') }}</span>
                     </div>
 
                     <div class="pointer-events-none absolute inset-0 z-0 flex h-full w-full items-center justify-center opacity-70 dark:opacity-50">
@@ -267,12 +277,12 @@ const searching = (event: Event) => {
             <div
                 class="bg-body border-muted flex flex-col-reverse flex-wrap items-center justify-between gap-4 rounded-md border p-2.5 backdrop-blur sm:flex-row"
             >
-                <div class="flex flex-wrap justify-center md:justify-start items-center gap-3">
+                <div class="flex flex-wrap items-center justify-center gap-3 md:justify-start">
                     <Select
                         v-if="props.websites.data.length > 1"
                         v-model="filters.limit"
                         class="h-8 w-16"
-                        :option="'Items per page'"
+                        :option="$t('myWebsites.items_per_page')"
                         @change="filters.page = 1"
                     >
                         <option v-for="limitOption in [3, 6, 9, 12]" :key="limitOption" :value="limitOption">
@@ -292,9 +302,9 @@ const searching = (event: Event) => {
 
             <div class="z-5 flex flex-col items-center gap-1">
                 <Inbox class="text-body-muted size-30 md:size-35" />
-                <span class="text-active text-base font-medium md:text-lg">No Websites</span>
+                <span class="text-active text-base font-medium md:text-lg">{{ $t('myWebsites.no_websites') }}</span>
                 <Link :href="route('websiteBuilder.index')" target="_blank" class="mt-8">
-                    <Button size="lg">Create Your First</Button>
+                    <Button size="lg">{{ $t('myWebsites.create_your_first') }}</Button>
                 </Link>
             </div>
 

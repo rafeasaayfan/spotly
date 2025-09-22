@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 const props = defineProps<{
   modelValue: string | number | null
   placeholder?: string
+  parentClass? : HTMLAttributes['class']
   class?: HTMLAttributes['class']
   dropdownClass?: HTMLAttributes['class']
 }>()
@@ -88,7 +89,7 @@ watch(isOpen, (newVal) => {
 </script>
 
 <template>
-  <div class="relative" ref="dropdownRef">
+  <div :class="cn('relative', props.parentClass)" ref="dropdownRef">
     <!-- Hidden native select -->
     <select
       ref="slotEl"
@@ -116,7 +117,7 @@ watch(isOpen, (newVal) => {
     <!-- Custom dropdown -->
     <ul
       v-if="isOpen"
-      :class="cn('absolute border border-muted rounded-md bg-body shadow-lg z-90 min-w-40 max-h-60 overflow-auto p-3',
+      :class="cn('absolute border border-muted rounded-md bg-body shadow-lg z-90 min-w-40 max-h-60 overflow-auto p-3 w-full',
         dropdownYClass,
         dropdownXClass,
         props.dropdownClass

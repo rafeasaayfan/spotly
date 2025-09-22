@@ -76,12 +76,12 @@ function toggleDropdown() {
             props.classDropdown
         )">
             <div class="w-full">
-                <Input v-model="search" type="text" placeholder="Search..." class="mb-2.5" />
+                <Input v-model="search" type="text" :placeholder="$t('search.placeholder')" class="mb-2.5" />
             </div>
 
 
             <div v-if="filteredOptions?.length === 0" class="p-2 text-sm text-slate-500">
-                No result found.
+                {{ $t('no.result') }}
             </div>
 
             <div v-for="option in filteredOptions" :key="option.value" @click="selectOption(option.value)"

@@ -47,7 +47,7 @@ setupScrollTracking();
                                 :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'"
                             >
                                 <component v-if="item.icon" :is="item.icon" class="h-5 w-5" />
-                                {{ item.title }}
+                                {{ $t(item.title) }}
                             </button>
 
                             <Link
@@ -58,7 +58,7 @@ setupScrollTracking();
                                 :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'"
                             >
                                 <component v-if="item.icon" :is="item.icon" class="h-5 w-5" />
-                                {{ item.title }}
+                                {{ $t(item.title) }}
                             </Link>
                         </template>
                     </nav>

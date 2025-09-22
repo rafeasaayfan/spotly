@@ -3,8 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Input, Radio } from '@/components/ui/fields';
 import DashboardLayout from '@/layouts/DashboardLayout.vue';
 import { toast } from '@/lib/sweetAlert';
-import { type BreadcrumbItem } from '@/types';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { SharedData, type BreadcrumbItem } from '@/types';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
 import { Check, CheckCircle, LoaderCircle, LucideShoppingCart, PackageSearch, Search, SearchX } from 'lucide-vue-next';
 import { computed, ref, watch, watchEffect } from 'vue';
@@ -17,9 +17,11 @@ interface PaymentFormProps {
     plan_price: number;
 }
 
+const page = usePage<SharedData>();
+
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Make a Payment',
+        title: page.props.lang === 'ar' ? 'إجراء دفعة' : 'Make a Payment',
         href: '/dashboard/make-payment',
     },
 ];
@@ -191,7 +193,7 @@ const totalAmount = computed(() => {
 </script>
 
 <template>
-    <Head title="Make Payment" />
+    <Head :title="$t('client.payments.make_payment_title')" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <div class="border-muted mx-2 my-4 md:mx-4 grid grid-cols-1 md:grid-cols-5 lg:grid-cols-9 gap-4 border p-2 md:p-4 rounded-md">
@@ -199,10 +201,10 @@ const totalAmount = computed(() => {
                 <div class="bg-card flex flex-col rounded-md">
                     <div class="flex flex-wrap gap-2 w-full items-center justify-between border-muted border-b px-2 pt-2 pb-2 md:px-4 md:pt-4">
                         <div class="flex flex-col gap-1">
-                            <h3 class="text-active font-medium">Websites:</h3>
+                            <h3 class="text-active font-medium">{{ $t('myWebsites.title') }}:</h3>
                             <div class="flex items-center gap-4">
-                                <Radio v-model="status" value="expiredSoon" label="Expired Soon" />
-                                <Radio v-model="status" value="notPaid" label="Not Paid" />
+                                <Radio v-model="status" value="expiredSoon" :label="$t('client.payments.expired_soon')" />
+                                <Radio v-model="status" value="notPaid" :label="$t('client.payments.not_paid')" />
                             </div>
                         </div>
 
@@ -213,7 +215,7 @@ const totalAmount = computed(() => {
                                 type="search"
                                 autofocus
                                 :tabindex="1"
-                                placeholder="searching..."
+                                :placeholder="$t('myWebsites.search_placeholder')"
                                 :value="search"
                                 v-model="search"
                             />
@@ -249,19 +251,19 @@ const totalAmount = computed(() => {
                     <div v-else class="w-full text-center p-2 md:p-4">
                         <div class="mb-4 flex flex-col items-center gap-1">
                             <SearchX class="text-body-muted size-6" />
-                            <p class="text-body-muted text-sm font-medium">No Approved Website Founded</p>
+                            <p class="text-body-muted text-sm font-medium">{{ $t('client.payments.no_approved_website_found') }}</p>
                         </div>
 
                         <Link :href="route('websiteBuilder.index')" v-if="search === '' && status === ''">
-                            <Button type="button">Create</Button>
+                            <Button type="button">{{ $t('create') }}</Button>
                         </Link>
                     </div>
                 </div>
 
                 <div class="bg-card flex min-h-70 flex-col rounded-md">
-                    <h3 class="text-active border-muted border-b pb-2 font-medium pt-2 px-2 md:px-4 md:pt-4">Plans</h3>
+                    <h3 class="text-active border-muted border-b pb-2 font-medium pt-2 px-2 md:px-4 md:pt-4">{{ $t('client.payments.plans_title') }}</h3>
 
-                    <div v-if="plans.length > 0 && !isFetching" class="custom-scrollbar flex flex-col md:flex-row h-full w-full items-center gap-3.5 overflow-x-auto 
+                    <div v-if="plans.length > 0 && !isFetching" class="custom-scrollbar flex flex-col md:flex-row h-full w-full items-center gap-3.5 [direction:ltr] overflow-x-auto 
                     p-2 md:p-4">
                         <button
                             v-for="plan in plans"
@@ -310,8 +312,8 @@ const totalAmount = computed(() => {
                     <div v-else class="flex h-full w-full items-center justify-center p-2 md:p-4">
                         <div v-if="!isFetching" class="flex flex-col items-center gap-1">
                             <PackageSearch class="text-body-muted size-6" />
-                            <p class="text-body-muted text-sm font-medium">No Plans Founded</p>
-                            <p class="text-body-muted text-sm font-medium">Select a Website First</p>
+                            <p class="text-body-muted text-sm font-medium">{{ $t('client.payments.no_plans_found') }}</p>
+                            <p class="text-body-muted text-sm font-medium">{{ $t('client.payments.select_website_first') }}</p>
                         </div>
                         <div v-else class="flex w-full items-center justify-center">
                             <LoaderCircle class="size-8 animate-spin" />
@@ -322,7 +324,7 @@ const totalAmount = computed(() => {
 
             <div class="md:col-span-2 lg:col-span-3 flex flex-col gap-5">
                 <div class="bg-card flex h-full flex-col rounded-md">
-                    <h3 class="text-active border-muted border-b pb-2 pt-2 px-2 md:px-4 md:pt-4 font-medium">Your Cart</h3>
+                    <h3 class="text-active border-muted border-b pb-2 pt-2 px-2 md:px-4 md:pt-4 font-medium">{{ $t('client.payments.your_cart') }}</h3>
 
                     <template v-if="paymentCart.length > 0">
                         <div class="custom-scrollbar flex max-h-35 flex-col gap-3 overflow-y-auto p-2 md:p-4">
@@ -336,13 +338,13 @@ const totalAmount = computed(() => {
                                     <p class="text-body-muted text-sm">{{ item.plan_name }} - {{ item.plan_price }}$</p>
                                 </div>
                                 <button @click="removeFromCard(item)" class="text-xs px-2.5 py-1.5 bg-red-500/90 text-white
-                                dark:bg-red-800/90 cursor-pointer hover:bg-red-500 dark:hover:bg-red-800">Remove</button>
+                                dark:bg-red-800/90 cursor-pointer hover:bg-red-500 dark:hover:bg-red-800">{{ $t('remove') }}</button>
                             </div>
                         </div>
 
                         <div class="border-muted flex flex-col gap-4 border-t p-2 md:p-4">
                             <div class="flex items-center justify-between">
-                                <p class="font-medium">Total:</p>
+                                <p class="font-medium">{{ $t('client.payments.total') }}:</p>
                                 <p class="text-active text-lg font-bold">{{ totalAmount }}$</p>
                             </div>
 
@@ -383,14 +385,14 @@ const totalAmount = computed(() => {
 
                             <Button class="w-full p-2 md:p-4">
                                 <!-- <LoaderCircle v-if="isPaying" class="mr-2 size-4 animate-spin" /> -->
-                                Pay Now
+                                {{ $t('myWebsites.pay_now') }}
                             </Button>
                         </div>
                     </template>
 
                     <div v-else class="flex h-full w-full flex-col items-center justify-center text-center p-2 md:p-4">
                         <LucideShoppingCart class="text-body-muted mb-1 size-6" />
-                        <p class="text-body-muted text-sm font-medium">Your cart is empty.</p>
+                        <p class="text-body-muted text-sm font-medium">{{ $t('client.payments.cart_empty') }}</p>
                     </div>
                 </div>
             </div>

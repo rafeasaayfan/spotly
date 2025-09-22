@@ -5,7 +5,8 @@ import { Label } from '@/components/ui/label';
 import Edit from '@/components/ui/table/actions/Edit.vue';
 import View from '@/components/ui/table/actions/View.vue';
 import { formatters } from '@/lib/dataTable';
-import { Link } from '@inertiajs/vue3';
+import { SharedData } from '@/types';
+import { Link, usePage } from '@inertiajs/vue3';
 import {
     Activity,
     CalendarClock,
@@ -26,6 +27,8 @@ import { ref } from 'vue';
 const props = defineProps<{
     websites: Record<string, any>;
 }>();
+
+const page = usePage<SharedData>();
 
 const copied = ref(false);
 
@@ -48,19 +51,19 @@ const calculateTime = (end_date: string) => {
     const diff = endDate.getTime() - now.getTime();
 
     if (diff <= 0) {
-        return 'Expired';
+        return page.props.lang === 'ar' ? 'منتهية الصلاحية' : 'Expired';
     }
 
     const diffInHours = diff / (1000 * 60 * 60);
 
     if (diffInHours >= 24) {
         const diffInDays = Math.ceil(diffInHours / 24);
-        return `${diffInDays} days`;
+        return `${diffInDays} ${page.props.lang === 'ar' ? 'أيام' : 'days'}`;
     } else if (diffInHours >= 1) {
         const roundedHours = Math.ceil(diffInHours);
-        return `${roundedHours} hours`;
+        return `${roundedHours} ${page.props.lang === 'ar' ? 'ساعات' : 'hours'}`;
     } else {
-        return 'less 1 hour';
+        return page.props.lang === 'ar' ? 'أقل من ساعة' : 'less 1 hour';
     }
 };
 
@@ -73,27 +76,27 @@ const subscriptionStatus = (status: string) => {
     switch (status) {
         case 'free_trial':
             result.class = 'text-body-muted border-muted';
-            result.text = 'Free Trial';
+            result.text = page.props.lang === 'ar' ? 'تجربة مجانية' : 'Free Trial';
             break;
 
         case 'active':
             result.class = 'text-active-link border-[var(--primary)]/20';
-            result.text = 'Paid';
+            result.text = page.props.lang === 'ar' ? 'مدفوع' : 'Paid';
             break;
 
         case 'cancelled':
             result.class = 'text-active-link-2 border-[var(--destructive)]/20';
-            result.text = 'Canceled';
+            result.text = page.props.lang === 'ar' ? 'ملغاة' : 'Cancelled';
             break;
 
         case 'expired':
             result.class = 'text-active-link-2 border-[var(--destructive)]/20';
-            result.text = 'Expired';
+            result.text = page.props.lang === 'ar' ? 'منتهية الصلاحية' : 'Expired';
             break;
 
         case 'pending':
             result.class = 'text-body-muted border-muted';
-            result.text = 'Pending';
+            result.text = page.props.lang === 'ar' ? 'معلقة' : 'Pending';
             break;
 
         default:
@@ -124,10 +127,10 @@ const subscriptionStatus = (status: string) => {
                     </Button>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end" class="w-28 p-0 py-1">
+                <DropdownMenuContent align="end" class="w-fit p-0 py-1">
                     <DropdownMenuGroup>
                         <div class="grid h-full w-full gap-1">
-                            <div v-for="action in ['edit', 'ui', 'show']" :key="action">
+                            <div v-for="action in ['edit', 'show', 'ui']" :key="action">
                                 <Link
                                     :href="route('client.myWebsite.' + action, website.id)"
                                     class="bg-content-2 text-body flex cursor-pointer items-center gap-2 rounded-md px-2 py-2 text-sm transition-all duration-100 ease-in-out"
@@ -135,7 +138,11 @@ const subscriptionStatus = (status: string) => {
                                 >
                                     <template v-if="action === 'edit' && website.status !== 'denied'">
                                         <Edit class="size-5" />
-                                        <span>Edit</span>
+                                        <span>{{ $t('edit') }}</span>
+                                    </template>
+                                    <template v-else-if="action === 'show'">
+                                        <View class="size-5" />
+                                        <span>{{ $t('view') }}</span>
                                     </template>
                                     <template v-else-if="action === 'ui' && website.status !== 'denied'">
                                         <div
@@ -143,11 +150,7 @@ const subscriptionStatus = (status: string) => {
                                         >
                                             <LayoutTemplate class="size-3.5" />
                                         </div>
-                                        <span>UI</span>
-                                    </template>
-                                    <template v-else-if="action === 'show'">
-                                        <View class="size-5" />
-                                        <span>View</span>
+                                        <span>{{ $t('ui') }}</span>
                                     </template>
                                 </Link>
                             </div>
@@ -159,7 +162,7 @@ const subscriptionStatus = (status: string) => {
 
         <div class="flex flex-col gap-5">
             <div class="flex flex-col gap-1">
-                <Label class="text-body-muted text-xs">Website URL</Label>
+                <Label class="text-body-muted text-xs">{{ $t('myWebsites.website_url') }}</Label>
                 <div class="flex h-9 w-full items-center justify-between">
                     <div class="flex h-full flex-1 items-center">
                         <div class="bg-card flex h-full w-9 items-center justify-center rounded-s-md">
@@ -194,7 +197,7 @@ const subscriptionStatus = (status: string) => {
                         <TypeOutline class="text-body-muted size-3.5" />
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-body-muted text-xs">Website Type</span>
+                        <span class="text-body-muted text-xs">{{ $t('myWebsites.website_type') }}</span>
 
                         <span class="text-sm font-medium">
                             {{ website.website_type.type }}
@@ -209,14 +212,14 @@ const subscriptionStatus = (status: string) => {
                         <XCircle v-else-if="website.status === 'denied'" class="text-active-link-2 size-3.5" />
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-body-muted text-xs">Status</span>
+                        <span class="text-body-muted text-xs">{{ $t('myWebsites.status') }}</span>
                         <span
                             class="text-sm font-medium"
                             :class="
                                 website.status === 'pending' ? '' : website.status === 'approved' ? 'text-[var(--success)]' : 'text-active-link-2'
                             "
                         >
-                            {{ website.status }}
+                            {{ $t(website.status) }}
                         </span>
                     </div>
                 </div>
@@ -228,10 +231,10 @@ const subscriptionStatus = (status: string) => {
                         <Activity class="size-3.5" :class="website.is_active ? 'text-[var(--success)]' : 'text-active-link-2'" />
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-body-muted text-xs">Active Status</span>
+                        <span class="text-body-muted text-xs">{{ $t('myWebsites.active_status') }}</span>
 
                         <span class="text-sm font-medium" :class="website.is_active ? 'text-[var(--success)]' : 'text-active-link-2'">
-                            {{ website.is_active ? 'Active' : 'Inactive' }}
+                            {{ website.is_active ? $t('active') : $t('inactive') }}
                         </span>
                     </div>
                 </div>
@@ -241,7 +244,7 @@ const subscriptionStatus = (status: string) => {
                         <CalendarIcon class="text-body-muted size-3.5" />
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-body-muted text-xs">Created At</span>
+                        <span class="text-body-muted text-xs">{{ $t('myWebsites.created_at') }}</span>
                         <span class="text-sm font-medium">{{ formatters.date(website.created_at) }}</span>
                     </div>
                 </div>
@@ -254,7 +257,7 @@ const subscriptionStatus = (status: string) => {
                     <div class="flex items-center gap-1.5 sm:gap-2">
                         <CalendarClock class="text-body-muted size-3.5" />
                         <div class="flex flex-col">
-                            <span class="text-body-muted text-xs">{{ website.subscription.status === 'free_trial' ? 'Start At:' : 'Paid At:' }}</span>
+                            <span class="text-body-muted text-xs">{{ website.subscription.status === 'free_trial' ? $t('myWebsites.start_at') : $t('myWebsites.paid_at') }}</span>
                             <span class="text-sm">{{ formatters.date(website.subscription.start_date) }}</span>
                         </div>
                     </div>
@@ -262,7 +265,7 @@ const subscriptionStatus = (status: string) => {
                     <div class="flex items-center gap-1.5 sm:gap-2">
                         <CalendarMinus class="text-body-muted size-3.5" />
                         <div class="flex flex-col">
-                            <span class="text-body-muted text-xs">End At:</span>
+                            <span class="text-body-muted text-xs">{{ $t('myWebsites.end_at') }}</span>
                             <span class="text-sm">{{ formatters.date(website.subscription.end_date) }}</span>
                         </div>
                     </div>
@@ -284,12 +287,12 @@ const subscriptionStatus = (status: string) => {
                             (new Date(website.subscription.end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24) <= 3"
                             class="text-white bg-primary border border-[var(--primary)] px-2 py-1 text-xs"
                         >
-                            Pay Now
+                            {{ $t('myWebsites.pay_now') }}
                         </Link>
                     </div>
 
                     <div class="flex items-end gap-1" v-if="new Date(website.subscription.end_date) > new Date()">
-                        <span class="text-body-muted text-xs">Time Left:</span>
+                        <span class="text-body-muted text-xs">{{ $t('myWebsites.time_left') }}</span>
                         <span class="text-sm">{{ calculateTime(website.subscription.end_date) }}</span>
                     </div>
                 </div>

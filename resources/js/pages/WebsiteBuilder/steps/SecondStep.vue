@@ -94,7 +94,11 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
     <!-- Phone and Email -->
     <div class="grid grid-cols-1 gap-4 md:col-span-3 lg:grid-cols-2">
         <div class="col-span-1 flex flex-col gap-2">
-            <HeadingSmall title="Phone Number*" titleClass="text-body" description="Enter your business contact number." />
+            <HeadingSmall
+                :title="$t('websiteBuilder.secondStep.phone_number_title')"
+                titleClass="text-body"
+                :description="$t('websiteBuilder.secondStep.phone_number_description')"
+            />
             <div class="flex flex-col gap-1 ps-2">
                 <PhoneNumberField
                     v-model="phone_number"
@@ -109,9 +113,18 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
         </div>
 
         <div class="col-span-1 flex flex-col gap-2">
-            <HeadingSmall title="Email Address" titleClass="text-body" description="Enter your business contact email address." />
+            <HeadingSmall
+                :title="$t('websiteBuilder.secondStep.email_address_title')"
+                titleClass="text-body"
+                :description="$t('websiteBuilder.secondStep.email_address_description')"
+            />
             <div class="flex flex-col gap-1 ps-2">
-                <Input v-model="email" type="email" placeholder="contact@yourbusiness.com" class="h-10" />
+                <Input
+                    v-model="email"
+                    type="email"
+                    placeholder="contact@yourbusiness.com"
+                    class="h-10"
+                />
                 <InputError v-if="props.form.errors?.email" :message="props.form.errors.email" />
             </div>
         </div>
@@ -120,27 +133,37 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
     <div class="grid grid-cols-1 gap-4 md:col-span-3 lg:grid-cols-3">
         <!-- Address, Country, City -->
         <div class="col-span-1 flex flex-col gap-2">
-            <HeadingSmall title="Street Address" titleClass="text-body" />
+            <HeadingSmall :title="$t('websiteBuilder.secondStep.street_address_title')" titleClass="text-body" />
             <div class="flex flex-col gap-1 ps-2">
-                <Input v-model="address" type="text" placeholder="123 Main Street" class="h-10" />
+                <Input
+                    v-model="address"
+                    type="text"
+                    :placeholder="$t('street_address_placeholder')"
+                    class="h-10"
+                />
                 <InputError v-if="props.form.errors?.address" :message="props.form.errors.address" />
             </div>
         </div>
 
         <div class="col-span-1 flex flex-col gap-2">
-            <HeadingSmall title="Country" titleClass="text-body" />
+            <HeadingSmall :title="$t('websiteBuilder.secondStep.country_title')" titleClass="text-body" />
             <div class="flex flex-col gap-1 ps-2">
-                <SelectWithSearch v-model="country" placeholder="Select a country..." :options="mappedCountries" class="h-10" />
+                <SelectWithSearch
+                    v-model="country"
+                    :placeholder="$t('websiteBuilder.secondStep.country_placeholder')"
+                    :options="mappedCountries"
+                    class="h-10"
+                />
                 <InputError v-if="props.form.errors?.country" :message="props.form.errors.country" />
             </div>
         </div>
 
         <div class="col-span-1 flex flex-col gap-2">
-            <HeadingSmall title="City" titleClass="text-body" />
+            <HeadingSmall :title="$t('websiteBuilder.secondStep.city_title')" titleClass="text-body" />
             <div class="flex flex-col gap-1 ps-2">
                 <SelectWithSearch
                     v-model="city"
-                    placeholder="Select a city..."
+                    :placeholder="$t('websiteBuilder.secondStep.city_placeholder')"
                     :options="cities.map((city) => ({ value: city, label: city }))"
                     class="h-10"
                 />
@@ -152,33 +175,53 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
     <!-- Social Media Links -->
     <div class="grid grid-cols-1 gap-4 md:col-span-3 lg:grid-cols-2">
         <div class="col-span-1 flex flex-col gap-2">
-            <HeadingSmall title="Instagram URL" titleClass="text-body" />
+            <HeadingSmall :title="$t('websiteBuilder.secondStep.instagram_url_title')" titleClass="text-body" />
             <div class="flex flex-col gap-2 ps-2">
-                <Input v-model="instagram" type="url" placeholder="https://instagram.com/yourbusiness" class="h-10" />
+                <Input
+                    v-model="instagram"
+                    type="url"
+                    placeholder="https://instagram.com/yourbusiness"
+                    class="h-10"
+                />
                 <InputError v-if="props.form.errors?.instagram" :message="props.form.errors.instagram" />
             </div>
         </div>
 
         <div class="col-span-1 flex flex-col gap-2">
-            <HeadingSmall title="Facebook URL" titleClass="text-body" />
+            <HeadingSmall :title="$t('websiteBuilder.secondStep.facebook_url_title')" titleClass="text-body" />
             <div class="flex flex-col gap-1 ps-2">
-                <Input v-model="facebook" type="url" placeholder="https://facebook.com/yourbusiness" class="h-10" />
+                <Input
+                    v-model="facebook"
+                    type="url"
+                    placeholder="https://facebook.com/yourbusiness"
+                    class="h-10"
+                />
                 <InputError v-if="props.form.errors?.facebook" :message="props.form.errors.facebook" />
             </div>
         </div>
 
         <div class="col-span-1 flex flex-col gap-2">
-            <HeadingSmall title="TikTok URL" titleClass="text-body" />
+            <HeadingSmall :title="$t('websiteBuilder.secondStep.tiktok_url_title')" titleClass="text-body" />
             <div class="flex flex-col gap-1 ps-2">
-                <Input v-model="tiktok" type="url" placeholder="https://tiktok.com/@yourbusiness" class="h-10" />
+                <Input
+                    v-model="tiktok"
+                    type="url"
+                    placeholder="https://tiktok.com/yourbusiness"
+                    class="h-10"
+                />
                 <InputError v-if="props.form.errors?.tiktok" :message="props.form.errors.tiktok" />
             </div>
         </div>
 
         <div class="col-span-1 flex flex-col gap-2">
-            <HeadingSmall title="YouTube URL" titleClass="text-body" />
+            <HeadingSmall :title="$t('websiteBuilder.secondStep.youtube_url_title')" titleClass="text-body" />
             <div class="flex flex-col gap-1 ps-2">
-                <Input v-model="youtube" type="url" placeholder="https://youtube.com/yourbusiness" class="h-10" />
+                <Input
+                    v-model="youtube"
+                    type="url"
+                    placeholder="https://youtube.com/yourbusiness"
+                    class="h-10"
+                />
                 <InputError v-if="props.form.errors?.youtube" :message="props.form.errors.youtube" />
             </div>
         </div>

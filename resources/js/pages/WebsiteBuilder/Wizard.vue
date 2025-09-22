@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import '../../../css/landing.css';
 
-import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
 import { ref, watchEffect } from 'vue';
 
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,7 @@ import LanguagesMenu from '@/components/languages/Languages.vue';
 import { useWizard } from '@/composables/useWizard';
 import { toast } from '@/lib/sweetAlert';
 import { CreditCard, LayoutTemplate, LoaderCircle, Phone, Store } from 'lucide-vue-next';
+import { SharedData } from '@/types';
 // import Icons from './Icons.vue';
 
 const props = defineProps<{
@@ -38,6 +39,8 @@ watchEffect(() => {
         toast.fire({ icon: props.flash?.toastType, title: message });
     }
 });
+
+const page = usePage<SharedData>();
 
 const form = useForm({
     website_type_id: props.typeId ?? null,
@@ -74,7 +77,10 @@ const submitForm = () => {
     const { isValid } = useWizard(currentStep.value, form);
 
     if (!isValid) {
-        toast.fire({ icon: 'error', title: 'Please fix the errors before proceeding.' });
+        toast.fire({
+            icon: 'error',
+            title: page.props.lang === 'ar' ? 'الرجاء إصلاح الأخطاء قبل المتابعة.' : 'Please fix the errors before proceeding.',
+        });
         return;
     }
 
@@ -116,40 +122,30 @@ const fetchNewType = async () => {
 </script>
 
 <template>
-    <Head title="Create Your Website" />
+    <Head :title="$t('websiteBuilder.wizard.head_title')" />
 
-    <section class="relative flex min-h-screen w-full items-center justify-center overflow-hidden px-4 py-12 xl:px-0 wizard-background landing-background-decor">
+    <section
+        class="landing-body wizard-background landing-background-decor relative flex min-h-screen w-full items-center justify-center overflow-hidden px-4 py-12 xl:px-0"
+        :dir="page.props.lang === 'ar' ? 'rtl' : 'ltr'"
+    >
         <!-- <Icons :website_type_id="form.website_type_id" /> -->
 
         <div class="flex w-full max-w-7xl flex-col gap-10">
             <!-- Form Card -->
             <div class="border-muted relative z-10 border-e-3 border-dashed px-3 py-5 md:px-5">
                 <form class="flex flex-col gap-8">
-                    <Transition name="slide-fade" mode="out-in" class="grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-3 md:gap-y-10">
-                        <div v-if="currentStep > 0">
-                            <div class="border-muted relative col-span-1 flex w-full items-center gap-1 flex-wrap justify-between border-b pb-2 md:col-span-3">
+                    <Transition name="slide-fade" mode="out-in">
+                        <div v-if="currentStep === 1" class="grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-3 md:gap-y-10">
+                            <div
+                                class="border-muted relative col-span-1 flex w-full flex-wrap items-center justify-between gap-1 border-b pb-2 md:col-span-3"
+                            >
                                 <div
-                                    class="pointer-events-none absolute start-0 top-0 h-full w-full rounded-full bg-gradient-to-br from-transparent via-black
-                                    dark:via-white to-transparent opacity-15 dark:opacity-5 blur-xl"
+                                    class="pointer-events-none absolute start-0 top-0 h-full w-full rounded-full bg-gradient-to-br from-transparent via-black to-transparent opacity-15 blur-xl dark:via-white dark:opacity-5"
                                 ></div>
 
-                                <h1 class="flex items-center gap-2 text-xl font-bold sm:text-2xl text-active">
-                                    <template v-if="currentStep === 1">
-                                        <Store class="size-5 sm:size-6" />
-                                        <span>Business Information</span>
-                                    </template>
-                                    <template v-else-if="currentStep === 2">
-                                        <Phone class="size-5 sm:size-6" />
-                                        <span>Contact Information</span>
-                                    </template>
-                                    <template v-else-if="currentStep === 3">
-                                        <LayoutTemplate class="size-5 sm:size-6" />
-                                        <span>Templates UI</span>
-                                    </template>
-                                    <template v-else-if="currentStep === 4">
-                                        <CreditCard class="size-5 sm:size-6" />
-                                        <span>Billing & Plan</span>
-                                    </template>
+                                <h1 class="text-active flex items-center gap-2 text-xl font-bold sm:text-2xl">
+                                    <Store class="size-5 sm:size-6" />
+                                    <span>{{ $t('websiteBuilder.wizard.business_information') }}</span>
                                 </h1>
 
                                 <div class="flex items-center space-x-2">
@@ -159,39 +155,111 @@ const fetchNewType = async () => {
                                 </div>
                             </div>
 
-                            <div class="border-muted col-span-1 flex h-full w-full items-center justify-center rounded-md border bg-black/2 dark:bg-white/2
-                            backdrop-blur-[1px] py-10">
+                            <div
+                                class="border-muted col-span-1 flex h-full w-full items-center justify-center rounded-md border bg-black/2 py-10 backdrop-blur-[1px] dark:bg-white/2"
+                            >
                                 <Link :href="route('landing')">
                                     <AppLogoIcon class="size-40 md:size-50" />
                                 </Link>
                             </div>
 
-                            <div class="col-span-1 md:col-span-2 grid grid-cols-1 gap-x-5 gap-y-8 md:grid-cols-3 md:gap-y-10">
-                                <FirstStep
-                                    v-if="currentStep === 1"
-                                    :form="form"
-                                    @update="updateField"
-                                    :websiteTypes="props.websiteTypes"
-                                    :type="type"
-                                />
+                            <div class="col-span-1 grid grid-cols-1 gap-x-5 gap-y-8 md:col-span-2 md:grid-cols-3 md:gap-y-10">
+                                <FirstStep :form="form" @update="updateField" :websiteTypes="props.websiteTypes" :type="type" />
+                            </div>
+                        </div>
+                        <div v-else-if="currentStep === 2" class="grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-3 md:gap-y-10">
+                            <div
+                                class="border-muted relative col-span-1 flex w-full flex-wrap items-center justify-between gap-1 border-b pb-2 md:col-span-3"
+                            >
+                                <div
+                                    class="pointer-events-none absolute start-0 top-0 h-full w-full rounded-full bg-gradient-to-br from-transparent via-black to-transparent opacity-15 blur-xl dark:via-white dark:opacity-5"
+                                ></div>
 
-                                <SecondStep
-                                    v-else-if="currentStep === 2"
-                                    :form="form"
-                                    @update="updateField"
-                                    :countries="props.countries"
-                                    :cities="props.cities"
-                                />
+                                <h1 class="text-active flex items-center gap-2 text-xl font-bold sm:text-2xl">
+                                    <Phone class="size-5 sm:size-6" />
+                                    <span>{{ $t('websiteBuilder.wizard.contact_information') }}</span>
+                                </h1>
 
+                                <div class="flex items-center space-x-2">
+                                    <AppearenceBtn />
+                                </div>
+                            </div>
+
+                            <div
+                                class="border-muted col-span-1 flex h-full w-full items-center justify-center rounded-md border bg-black/2 py-10 backdrop-blur-[1px] dark:bg-white/2"
+                            >
+                                <Link :href="route('landing')">
+                                    <AppLogoIcon class="size-40 md:size-50" />
+                                </Link>
+                            </div>
+
+                            <div class="col-span-1 grid grid-cols-1 gap-x-5 gap-y-8 md:col-span-2 md:grid-cols-3 md:gap-y-10">
+                                <SecondStep :form="form" @update="updateField" :countries="props.countries" :cities="props.cities" />
+                            </div>
+                        </div>
+                        <div v-else-if="currentStep === 3" class="grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-3 md:gap-y-10">
+                            <div
+                                class="border-muted relative col-span-1 flex w-full flex-wrap items-center justify-between gap-1 border-b pb-2 md:col-span-3"
+                            >
+                                <div
+                                    class="pointer-events-none absolute start-0 top-0 h-full w-full rounded-full bg-gradient-to-br from-transparent via-black to-transparent opacity-15 blur-xl dark:via-white dark:opacity-5"
+                                ></div>
+
+                                <h1 class="text-active flex items-center gap-2 text-xl font-bold sm:text-2xl">
+                                    <LayoutTemplate class="size-5 sm:size-6" />
+                                    <span>{{ $t('websiteBuilder.wizard.templates_ui') }}</span>
+                                </h1>
+
+                                <div class="flex items-center space-x-2">
+                                    <AppearenceBtn />
+                                </div>
+                            </div>
+
+                            <div
+                                class="border-muted col-span-1 flex h-full w-full items-center justify-center rounded-md border bg-black/2 py-10 backdrop-blur-[1px] dark:bg-white/2"
+                            >
+                                <Link :href="route('landing')">
+                                    <AppLogoIcon class="size-40 md:size-50" />
+                                </Link>
+                            </div>
+
+                            <div class="col-span-1 grid grid-cols-1 gap-x-5 gap-y-8 md:col-span-2 md:grid-cols-3 md:gap-y-10">
                                 <ThirdStep
-                                    v-else-if="currentStep === 3"
                                     :form="form"
                                     :type="props.type"
                                     :templates="props.templates"
                                     @update="updateField"
                                 />
+                            </div>
+                        </div>
+                        <div v-else-if="currentStep === 4" class="grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-3 md:gap-y-10">
+                            <div
+                                class="border-muted relative col-span-1 flex w-full flex-wrap items-center justify-between gap-1 border-b pb-2 md:col-span-3"
+                            >
+                                <div
+                                    class="pointer-events-none absolute start-0 top-0 h-full w-full rounded-full bg-gradient-to-br from-transparent via-black to-transparent opacity-15 blur-xl dark:via-white dark:opacity-5"
+                                ></div>
 
-                                <FourthStep v-else-if="currentStep === 4" :form="form" @update="updateField" />
+                                <h1 class="text-active flex items-center gap-2 text-xl font-bold sm:text-2xl">
+                                    <CreditCard class="size-5 sm:size-6" />
+                                    <span>{{ $t('websiteBuilder.wizard.billing_plan') }}</span>
+                                </h1>
+
+                                <div class="flex items-center space-x-2">
+                                    <AppearenceBtn />
+                                </div>
+                            </div>
+
+                            <div
+                                class="border-muted col-span-1 flex h-full w-full items-center justify-center rounded-md border bg-black/2 py-10 backdrop-blur-[1px] dark:bg-white/2"
+                            >
+                                <Link :href="route('landing')">
+                                    <AppLogoIcon class="size-40 md:size-50" />
+                                </Link>
+                            </div>
+
+                            <div class="col-span-1 grid grid-cols-1 gap-x-5 gap-y-8 md:col-span-2 md:grid-cols-3 md:gap-y-10">
+                                <FourthStep :form="form" @update="updateField" />
                             </div>
                         </div>
                     </Transition>
@@ -205,7 +273,7 @@ const fetchNewType = async () => {
                             variant="secondary"
                             :class="currentStep === 1 ? 'cursor-not-allowed' : ''"
                         >
-                            Previous
+                            {{ $t('websiteBuilder.wizard.previous') }}
                         </Button>
                         <Button
                             type="button"
@@ -214,26 +282,33 @@ const fetchNewType = async () => {
                             :disabled="(currentStep === totalSteps && !form.acceptSteps) || form.processing"
                         >
                             <LoaderCircle v-if="form.processing" class="size-4 animate-spin" />
-                            <template v-if="currentStep < totalSteps">Next Step</template>
-                            <template v-else>Create Website</template>
+                            <template v-if="currentStep < totalSteps">{{ $t('websiteBuilder.wizard.next_step') }}</template>
+                            <template v-else>{{ $t('websiteBuilder.wizard.create_website') }}</template>
                         </Button>
                     </div>
                 </form>
 
                 <div class="absolute -start-42 top-42 w-full">
-                    <div class="grid w-80 rotate-90 grid-cols-4 gap-2">
+                    <div class="grid w-80 rotate-90 grid-cols-4 gap-2 [direction:ltr]">
                         <div
                             v-for="step in totalSteps"
                             :key="step"
-                            class="h-[5.3px] rounded-full transition-all duration-500 backdrop-blur"
+                            class="h-[5.3px] rounded-full backdrop-blur transition-all duration-500"
                             :class="step <= currentStep ? 'bg-primary w-full' : 'w-full bg-black/15 dark:bg-white/15'"
                         ></div>
                     </div>
                 </div>
 
-                <div class="absolute -bottom-5 start-1/2 -translate-x-1/2 xl:bottom-0 xl:start-[90%] xl:top-1/2 x w-fit h-fit xl:translate-x-0 xl:-translate-y-1/2">
-                    <div class="font-bold h-full text-nowrap text-sm sm:text-lg xl:text-2xl tracking-[1rem] xl:rotate-90 uppercase text-body-muted">
-                        {{ props.websiteTypes.find((type: { id: number; title: string }) => type.id === form.website_type_id)?.title }}
+                <div
+                    v-if="form.website_type_id"
+                    class="absolute -bottom-5 flex h-fit w-full items-center justify-center xl:top-1/2 xl:bottom-0 xl:block xl:w-fit xl:translate-x-0 xl:-translate-y-1/2"
+                    :class="page.props.lang === 'ar' ? 'xl:start-[96%]' : 'xl:start-[90%]'"
+                >
+                    <div
+                        class="text-body-muted h-full text-sm font-bold text-nowrap uppercase sm:text-lg"
+                        :class="page.props.lang === 'ar' ? 'xl:-rotate-90 xl:text-4xl' : 'tracking-[1rem] xl:rotate-90 xl:text-2xl'"
+                    >
+                        {{ $t(props.websiteTypes.find((type: { id: number; title: string }) => type.id === form.website_type_id)?.title) }}
                     </div>
                 </div>
             </div>

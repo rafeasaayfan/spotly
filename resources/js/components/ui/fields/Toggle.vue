@@ -36,6 +36,7 @@ const isRTL = computed(() => page.props.lang === 'ar')
     :id="props.id"
   >
     <button
+      type="button"
       :class="[
         cn('relative flex items-center w-8 h-5 rounded-full border cursor-pointer transition-all ease-in-out duration-150 active:scale-96', props.btnClass),
         toggleChecked

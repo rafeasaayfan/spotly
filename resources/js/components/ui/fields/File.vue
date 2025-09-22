@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, HtmlHTMLAttributes } from 'vue';
+import { ref, computed, HtmlHTMLAttributes, watch } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { SharedData } from '@/types';
 import { cn } from '@/lib/utils'
@@ -55,7 +55,14 @@ const handleFileChange = (event: Event) => {
   emit('update:modelValue', props.multiple ? Array.from(files) : files[0]);
 }
 
-const src = props.src;
+const src = computed(() => props.src);
+
+watch(
+  () => props.src,
+  () => {
+    fileUpdatedName.value = '';
+  }
+);
 </script>
 
 <template>
@@ -70,17 +77,17 @@ const src = props.src;
           :name="props.multiple ? `${props.name}[]` : props.name" :class="cn('w-full text-sm focus:outline-none file:py-2 file:px-4 file:border-0 file:text-sm file:font-medium',
             'file:bg-zinc-100 file:text-black/80 hover:file:bg-zinc-200',
             'dark:file:bg-zinc-900 dark:file:text-white/80 dark:hover:file:bg-zinc-800 rounded-md',
-            'file:cursor-pointer', isRTL ? 'file:me-3 file:rounded-e-md' : 'file:mr-3 file:rounded-s-md', props.fileInputClass)"
+            'file:cursor-pointer file:rounded-s-md', isRTL ? 'file:me-3' : 'file:mr-3', props.fileInputClass)"
           @change="handleFileChange" />
       </label>
     </div>
 
     <!-- If preview image is provided -->
     <div v-else-if="typeof src === 'object'"
-      class="w-fit flex items-center gap-2 overflow-x-auto">
+      class="w-full flex items-center gap-2 overflow-x-auto custom-scrollbar">
       <div class="relative w-fit" v-for="(image, index) in Object.values(src)" :key="image.uuid || index">
         <img :src="image.original_url || '/images/default-image.avif'" alt=""
-          class="rounded-full w-32 h-32 object-cover" />
+          class="rounded-full min-w-32 min-h-32 w-32 h-32 object-cover" />
 
         <div class="absolute top-0 right-3 z-10">
           <input type="file" :id="image.uuid" :name="props.name" class="hidden"
@@ -123,3 +130,18 @@ const src = props.src;
 
   </div>
 </template>
+
+<style scoped>
+.custom-scrollbar::-webkit-scrollbar {
+    width: 1px;
+    height: 1px;
+    scrollbar-width: thin;
+    background: transparent !important;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: transparent !important;
+}
+</style>

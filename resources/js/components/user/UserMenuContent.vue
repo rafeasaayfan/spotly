@@ -35,7 +35,7 @@ const { can } = useAuth();
         <DropdownMenuItem :as-child="true">
             <Link class="flex w-full items-center gap-2 curs2or-pointer" :href="route('profile.edit')" prefetch as="button">
                 <Settings class="h-4 w-4" />
-                Settings
+                {{ $t('settings') }}
             </Link>
         </DropdownMenuItem>
 
@@ -43,7 +43,7 @@ const { can } = useAuth();
         <DropdownMenuItem :as-child="true" v-if="can('dashboard_access')">
             <Link class="flex w-full items-center gap-2 cursor-pointer" :href="route('dashboard.index')" prefetch as="button">
                 <LayoutGrid class="h-4 w-4" />
-                Dashboard
+                {{ $t('dashboard') }}
             </Link>
         </DropdownMenuItem>
     </DropdownMenuGroup>
@@ -53,7 +53,7 @@ const { can } = useAuth();
     <DropdownMenuItem variant="destructive" :as-child="true" class="bg-destructive text-for-bg-destructive">
         <Link class="flex w-full items-center gap-2 cursor-pointer" method="post" :href="route('logout')" @click="handleLogout" as="button">
             <LogOut class="h-4 w-4" />
-            Log out
+            {{ $t('auth.logout') }}
         </Link>
     </DropdownMenuItem>
 </template>

@@ -49,7 +49,6 @@ const columns = [
         key: 'uiImages',
         label: 'Template Images',
         type: 'file',
-        multiple: true,
     },
 ];
 </script>

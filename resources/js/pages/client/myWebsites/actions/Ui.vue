@@ -17,19 +17,21 @@ import Delete from '@/components/ui/table/actions/Delete.vue';
 import { TemplateBtn, TemplateColorsCard } from '@/components/ui/templatesBuilder';
 import DashboardLayout from '@/layouts/DashboardLayout.vue';
 import { confirmDialog, toast } from '@/lib/sweetAlert';
-import { type BreadcrumbItem } from '@/types';
-import { Head, useForm } from '@inertiajs/vue3';
+import { SharedData, type BreadcrumbItem } from '@/types';
+import { Head, useForm, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
 import { LoaderCircle, PlusCircle } from 'lucide-vue-next';
 import { ref, watchEffect } from 'vue';
 
+const page = usePage<SharedData>();
+
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'My Websites',
+        title: page.props.lang === 'ar' ? 'مواقعي' : 'My Websites',
         href: '/dashboard/my-websites',
     },
     {
-        title: 'UI',
+        title: page.props.lang === 'ar' ? 'واجهة المستخدم' : 'UI',
         href: '/dashboard/my-website/ui',
     },
 ];
@@ -147,7 +149,7 @@ const submitTemplate = () => {
 </script>
 
 <template>
-    <Head title="Website-UI" />
+    <Head :title="$t('myWebsites.ui')" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <div class="border-muted mx-2 my-4 flex flex-col gap-4 rounded-md border p-4 md:mx-4">
@@ -159,18 +161,18 @@ const submitTemplate = () => {
 
                 <Dialog>
                     <DialogTrigger as-child>
-                        <Button>Create</Button>
+                        <Button>{{ $t('create') }}</Button>
                     </DialogTrigger>
 
                     <DialogScrollContent class="sm:max-w-[calc(100%-1rem)] md:max-w-[calc(100%-1rem)] lg:max-w-7xl">
                         <DialogHeader>
-                            <DialogTitle>Create Template</DialogTitle>
+                            <DialogTitle>{{ $t('myWebsites.create_template') }}</DialogTitle>
                             <DialogDescription class="sr-only"> No description provided. </DialogDescription>
                         </DialogHeader>
 
                         <!--* Templates -->
                         <div class="flex w-full flex-col px-4 py-5">
-                            <HeadingSmall title="Website Template*" description="Select the template design for your business." />
+                            <HeadingSmall :title="$t('websiteBuilder.thirdStep.website_template_title')" :description="$t('websiteBuilder.thirdStep.website_template_description')" />
 
                             <div class="custom-scrollbar flex w-full items-center gap-3 overflow-x-auto p-2">
                                 <TemplateBtn
@@ -197,8 +199,8 @@ const submitTemplate = () => {
                             :class="animate ? 'translate-y-0 scale-100 rotate-0 opacity-100' : 'translate-y-10 scale-75 rotate-10 opacity-0'"
                         >
                             <HeadingSmall
-                                title="Template Colors*"
-                                description="Choose your template colors (You can also customize them by editing your selection)."
+                                :title="$t('websiteBuilder.thirdStep.template_colors_title')"
+                                :description="$t('websiteBuilder.thirdStep.template_colors_description')"
                             />
 
                             <div class="custom-scrollbar flex w-full items-center gap-3 overflow-x-auto p-2">
@@ -234,12 +236,12 @@ const submitTemplate = () => {
 
                         <DialogFooter class="px-4">
                             <DialogClose as-child>
-                                <Button type="button" variant="secondary">Cancel</Button>
+                                <Button type="button" variant="secondary">{{ $t('myWebsites.cancel') }}</Button>
                             </DialogClose>
 
                             <Button type="button" @click="submitTemplate" :disabled="createForm.processing || form.processing">
                                 <LoaderCircle v-if="createForm.processing" class="size-4 animate-spin" />
-                                Create
+                                {{ $t('create') }}
                             </Button>
                         </DialogFooter>
                     </DialogScrollContent>
@@ -258,7 +260,7 @@ const submitTemplate = () => {
                                     : 'bg-[var(--destructive)]/20 text-[var(--destructive)]'
                             "
                         >
-                            {{ item.is_active ? 'Active' : 'Inactive' }}
+                            {{ item.is_active ? $t('active') : $t('inactive') }}
                         </span>
 
                         <div class="">
@@ -273,7 +275,7 @@ const submitTemplate = () => {
                     </div>
                     <div v-if="item.is_custom" class="relative flex h-60 w-full items-center justify-center sm:h-80 md:h-90 lg:h-80">
                         <div class="absolute top-0 left-0 h-full w-full bg-black/4 blur-[3px] dark:bg-white/4"></div>
-                        <p class="text-sm font-bold sm:text-xl">Custom Template Colors</p>
+                        <p class="text-sm font-bold sm:text-xl">{{ $t('myWebsites.custom_template_colors') }}</p>
                     </div>
                     <template v-else-if="!item.is_custom">
                         <Carousel :items="item.template_images" parentClass="w-full h-60 sm:h-80 md:h-90 lg:h-80" :showArrows="false" />
@@ -296,7 +298,7 @@ const submitTemplate = () => {
             </div>
 
             <div class="border-muted flex w-full flex-wrap items-center justify-between gap-2 rounded-md border bg-black/1 p-2 dark:bg-white/1">
-                <p class="text-body-muted text-sm">You can create just four templates</p>
+                <p class="text-body-muted text-sm">{{ $t('myWebsites.you_can_create_just_four_templates') }}</p>
                 <p class="text-sm font-medium text-[var(--primary)]">{{ props.websiteTemplates.length }}/4</p>
             </div>
         </div>

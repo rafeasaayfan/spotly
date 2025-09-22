@@ -41,10 +41,10 @@ const preview = (action: 'create' | 'view', templateName: string, colors: Record
 <template>
     <div v-if="props.isDefault && props.item !== undefined && props.selectedTemplateColorId !== undefined"
         class="backdrop-blur border-muted relative flex min-h-[280px] min-w-[450px] max-h-[280px] max-w-[450px] flex-col rounded-lg border bg-black/3 transition-all duration-200 ease-in-out hover:-translate-y-1 hover:bg-black/4 dark:bg-white/3 dark:hover:bg-white/4"
-        :class="props.selectedTemplateColorId === props.item.template_color.id ? '-translate-y-1 bg-black/4 dark:bg-white/4' : ''
+        :class="props.selectedTemplateColorId === props.item.template_color.id ? '-translate-y-1 bg-black/6 dark:bg-white/6' : ''
             ">
         <div v-if="props.selectedTemplateColorId === props.item.template_color.id"
-            class="absolute inset-0 top-0 left-0 bg-[var(--success)]/10 blur-xl"></div>
+            class="absolute inset-0 top-0 left-0 bg-[var(--primary)]/10 blur-xl"></div>
 
         <div class="z-20 flex items-center justify-between rounded-md bg-black/1 p-2">
             <span class="text-active text-lg">
@@ -73,10 +73,10 @@ const preview = (action: 'create' | 'view', templateName: string, colors: Record
                     class="bg-content flex cursor-pointer items-center justify-center rounded-md text-xs backdrop-blur-3xl"
                     @click="selectingItem(item, false)">
                     <div v-if="selectedTemplateColorId === props.item.template_color.id"
-                        class="h-full w-full rounded-md bg-gradient-to-r from-[var(--primary)] to-[var(--destructive)] px-3 py-2 font-bold text-white">
-                        Selected
+                        class="h-full w-full rounded-md bg-gradient-to-r from-[var(--primary)] via-[var(--primary-hover)] to-[var(--primary-active)] px-3 py-2 font-bold text-white">
+                        {{ $t('template.btn.selected') }}
                     </div>
-                    <div v-else class="bg-content h-full w-full rounded-md px-3 py-2">Select</div>
+                    <div v-else class="bg-content h-full w-full rounded-md px-3 py-2">{{ $t('template.btn.select') }}</div>
                 </button>
             </div>
         </div>
@@ -88,7 +88,7 @@ const preview = (action: 'create' | 'view', templateName: string, colors: Record
         class="backdrop-blur border-muted relative flex min-h-[280px] min-w-[450px] max-h-[280px] max-w-[450px] flex-col rounded-lg border bg-black/3 transition-all duration-200 ease-in-out hover:-translate-y-1 hover:bg-black/4 dark:bg-white/3 dark:hover:bg-white/4"
         :class="props.custom_template_color || Object.keys(props.colors).length > 0 ? '' : 'hidden'">
         <div v-if="props.custom_template_color"
-            class="absolute inset-0 top-0 left-0 h-full w-full bg-[var(--success)]/10 blur-xl"></div>
+            class="absolute inset-0 top-0 left-0 h-full w-full bg-[var(--primary)]/10 blur-xl"></div>
 
         <div class="z-20 flex items-center justify-between rounded-md p-2">
             <span class="text-active text-lg">
@@ -117,17 +117,17 @@ const preview = (action: 'create' | 'view', templateName: string, colors: Record
                     class="bg-content flex cursor-pointer items-center justify-center rounded-md text-xs backdrop-blur-3xl"
                     @click="selectingItem(0, true)">
                     <div v-if="props.custom_template_color"
-                        class="h-full w-full rounded-md bg-gradient-to-r from-[var(--primary)] to-[var(--destructive)] px-3 py-2 font-bold text-white">
-                        Selected
+                        class="h-full w-full rounded-md bg-gradient-to-r from-[var(--primary)] via-[var(--primary-hover)] to-[var(--primary-active)] px-3 py-2 font-bold text-white">
+                        {{ $t('template.btn.selected') }}
                     </div>
-                    <div v-else class="bg-content h-full w-full rounded-md px-3 py-2">Select</div>
+                    <div v-else class="bg-content h-full w-full rounded-md px-3 py-2">{{ $t('template.btn.select') }}</div>
                 </button>
             </div>
         </div>
 
         <div class="relative flex min-h-[200px] w-full items-center justify-center">
             <div class="bg-black-4 absolute inset-0 top-0 left-0 h-full w-full blur-[3px] dark:bg-white/4"></div>
-            Your Custom Colors
+            {{ $t('template.btn.custom') }}
         </div>
     </div>
 </template>

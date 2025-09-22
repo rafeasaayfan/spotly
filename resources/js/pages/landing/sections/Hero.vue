@@ -75,15 +75,13 @@ const scrollToSection = (id: string) => {
             class="relative z-10 flex min-h-[650px] w-full flex-col items-center justify-center rounded-md backdrop-blur-[2px] lg:px-0 overflow-hiiden"
         >
             <h1 id="hero-title" class="text-active font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-6">
-                Welcome To <span class="relative gradient-text">Spotly,</span> <br class="hidden md:block" />
-                The Website Build Tool
+                {{ $t('landing.hero.title_part1') }} <span class="relative gradient-text">{{ $t('landing.hero.title_part2') }}</span> <br class="hidden md:block" />
+                {{ $t('landing.hero.title_part3') }}
             </h1>
             <p id="hero-subtitle-main" class="mx-auto text-body-muted mb-10 md:max-w-3xl text-center text-sm sm:text-base md:text-lg font-medium">
-                Launch your online business in minutes with no upfront costs. Forget about paying hundreds for developers, domains,
-                and hosting. With Spotly, you get a complete professional website for just $10/month. Simple, fast, and affordable — start
-                your journey to success today!
+                {{ $t('landing.hero.subtitle') }}
             </p>
-            <Button @click="scrollToSection('#get-started')" id="hero-cta" class="glow-button" size="lg">Get Started Now</Button>
+            <Button @click="scrollToSection('#get-started')" id="hero-cta" class="glow-button" size="lg">{{ $t('landing.hero.get_started_button') }}</Button>
 
             <div class="absolute bottom-0 flex w-full items-center justify-center pb-8">
                 <ChevronDown class="size-5 text-[var(--destructive)] animate-bounce" />

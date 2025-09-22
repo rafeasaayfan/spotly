@@ -2,12 +2,12 @@
 import { Label } from '@/components/ui/label';
 
 import { Carousel } from '@/components/ui/carousel';
-import { File, Input } from '@/components/ui/fields';
+import { Input } from '@/components/ui/fields';
 import DashboardLayout from '@/layouts/DashboardLayout.vue';
 import { formatters } from '@/lib/dataTable';
 import { toast } from '@/lib/sweetAlert';
-import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/vue3';
+import { SharedData, type BreadcrumbItem } from '@/types';
+import { Head, usePage } from '@inertiajs/vue3';
 import {
     Activity,
     Building2,
@@ -32,15 +32,18 @@ import {
     Youtube,
 } from 'lucide-vue-next';
 import { ref, watchEffect } from 'vue';
+import { Image } from '@/components/ui/image';
+
+const page = usePage<SharedData>();
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'My Websites',
+        title: page.props.lang === 'ar' ? 'مواقعي' : 'My Websites',
         href: '/dashboard/my-websites',
     },
     {
-        title: 'View',
-        href: '/dashboard/my-website/view',
+        title: page.props.lang === 'ar' ? 'عرض' : 'View',
+        href: '/dashboard/my-website/View',
     },
 ];
 
@@ -89,7 +92,7 @@ const copyUrl = async () => {
 
                 <div class="border-muted flex flex-col gap-2 border-b p-4 md:p-6">
                     <div class="flex flex-col gap-1">
-                        <Label for="website_url" class="text-body-muted mb-1 text-xs">Webiste URL</Label>
+                        <Label for="website_url" class="text-body-muted mb-1 text-xs">{{ $t('myWebsites.website_url') }}</Label>
 
                         <div class="flex w-full items-center justify-between">
                             <div class="flex h-full flex-1 items-center">
@@ -131,13 +134,13 @@ const copyUrl = async () => {
                 <div class="border-muted flex flex-col items-center gap-5 border-b p-4 md:p-6">
                     <template v-if="props.website.light_logo && props.website.dark_logo">
                         <div class="flex flex-col gap-1">
-                            <Label for="light_logo" class="text-body-muted mb-1 text-xs">Light Logo</Label>
-                            <File id="light_logo" :src="props.website.light_logo" label="Light Logo" />
+                            <Label for="light_logo" class="text-body-muted mb-1 text-xs">{{ $t('myWebsites.light_logo') }}</Label>
+                            <Image id="light_logo" class="h-50 rounded-full" :src="props.website.light_logo" label="Light Logo" />
                         </div>
 
                         <div class="flex flex-col gap-1">
-                            <Label for="dark_logo" class="text-body-muted mb-1 text-xs">Dark Logo</Label>
-                            <File id="dark_logo" :src="props.website.dark_logo" label="Dark Logo" />
+                            <Label for="dark_logo" class="text-body-muted mb-1 text-xs">{{ $t('myWebsites.dark_logo') }}</Label>
+                            <Image id="dark_logo" class="h-50 rounded-full" :src="props.website.dark_logo" label="Dark Logo" />
                         </div>
                     </template>
                     <div v-else class="relative flex h-full w-full items-center justify-center rounded-md">
@@ -152,7 +155,7 @@ const copyUrl = async () => {
                         <div class="bg-popover border-muted flex size-5.5 items-center justify-center rounded-md border">
                             <Activity class="size-3.5" />
                         </div>
-                        Active Status
+                        {{ $t('myWebsites.active_status') }}
                     </Label>
 
                     <span
@@ -163,7 +166,7 @@ const copyUrl = async () => {
                                 : 'bg-[var(--destructive)]/20 text-[var(--destructive)]'
                         "
                     >
-                        {{ props.website.is_active ? 'Active' : 'Inactive' }}
+                        {{ props.website.is_active ? $t('active') : $t('inactive') }}
                     </span>
                 </div>
 
@@ -172,7 +175,7 @@ const copyUrl = async () => {
                         <div class="bg-popover border-muted flex size-5.5 items-center justify-center rounded-md border">
                             <ChartPie class="size-3.5" />
                         </div>
-                        Status
+                        {{ $t('myWebsites.status') }}
                     </Label>
 
                     <span
@@ -188,7 +191,7 @@ const copyUrl = async () => {
                         <Clock v-if="props.website.status === 'pending'" class="size-4" />
                         <CheckCheckIcon v-else-if="props.website.status === 'approved'" class="size-4" />
                         <XCircle v-else-if="props.website.status === 'denied'" class="size-4" />
-                        {{ props.website.status }}
+                        {{ $t(props.website.status) }}
                     </span>
                 </div>
 
@@ -197,7 +200,7 @@ const copyUrl = async () => {
                         <div class="bg-popover border-muted flex size-5.5 items-center justify-center rounded-md border">
                             <TypeOutline class="size-3.5" />
                         </div>
-                        Website Type
+                        {{ $t('myWebsites.website_type') }}
                     </Label>
 
                     <span
@@ -209,24 +212,24 @@ const copyUrl = async () => {
 
                 <div class="border-muted flex flex-wrap justify-between gap-2 border-b p-4 md:p-6">
                     <div class="flex flex-col gap-1">
-                        <span class="text-body-muted text-xs">Website Viewers:</span>
+                        <span class="text-body-muted text-xs">{{ $t('myWebsites.website_viewers') }}</span>
                         <span class="text-active text-sm font-medium">{{ props.website.views_count }}</span>
                     </div>
 
                     <div class="flex flex-col gap-1">
-                        <span class="text-body-muted text-xs">Currency:</span>
+                        <span class="text-body-muted text-xs">{{ $t('myWebsites.currency') }}</span>
                         <span class="text-active text-sm font-medium">{{ props.website.currency }}</span>
                     </div>
                 </div>
 
                 <div class="flex flex-wrap justify-between gap-2 p-4 md:p-6">
                     <div class="flex flex-col gap-1">
-                        <span class="text-body-muted text-xs">Created At:</span>
+                        <span class="text-body-muted text-xs">{{ $t('myWebsites.created_at') }}</span>
                         <span class="text-active text-sm font-medium">{{ formatters.date(props.website.created_at) }}</span>
                     </div>
 
                     <div class="flex flex-col gap-1">
-                        <span class="text-body-muted text-xs">Updated At:</span>
+                        <span class="text-body-muted text-xs">{{ $t('myWebsites.updated_at') }}</span>
                         <span class="text-active text-sm font-medium">{{ formatters.date(props.website.updated_at) }}</span>
                     </div>
                 </div>
@@ -237,10 +240,10 @@ const copyUrl = async () => {
                     <div class="flex flex-col gap-1">
                         <Label for="phone_number" class="text-body-muted mb-1 text-xs">
                             <Phone class="size-3.5" />
-                            Phone Number
+                            {{ $t('phone') }}
                         </Label>
 
-                        <a :href="'tel:' + props.website.phone_number" class="w-full cursor-pointer" rel="noopener noreferrer">
+                        <a :href="'tel:' + props.website.phone_number" class="w-full cursor-pointer [direction:ltr]" rel="noopener noreferrer">
                             <Input :defaultValue="props.website.phone_number" class="cursor-pointer text-[var(--primary)]" readonly />
                         </a>
                     </div>
@@ -248,13 +251,13 @@ const copyUrl = async () => {
                     <div class="flex flex-col gap-1">
                         <Label for="email" class="text-body-muted mb-1 text-xs">
                             <Mail class="size-3.5" />
-                            Email Address
+                            {{ $t('email') }}
                         </Label>
 
                         <a v-if="props.website.email" :href="'mailto:' + props.website.email" class="w-full cursor-pointer" rel="noopener noreferrer">
                             <Input :defaultValue="props.website.email" class="cursor-pointer text-[var(--primary)]" readonly />
                         </a>
-                        <Input v-else defaultValue="No email provided" readonly />
+                        <Input v-else :defaultValue="page.props.lang === 'ar' ? 'لا يوجد بريد إلكتروني' : 'No email provided'" readonly />
                     </div>
                 </div>
 
@@ -262,7 +265,7 @@ const copyUrl = async () => {
                     <div class="flex flex-col gap-1">
                         <Label for="country" class="text-body-muted mb-1 text-xs">
                             <Flag class="size-3.5" />
-                            Country
+                            {{ $t('country') }}
                         </Label>
 
                         <Input :defaultValue="props.website.country" readonly />
@@ -270,25 +273,25 @@ const copyUrl = async () => {
                     <div class="flex flex-col gap-1">
                         <Label for="city" class="text-body-muted mb-1 text-xs">
                             <Building2 class="size-3.5" />
-                            City
+                            {{ $t('city') }}
                         </Label>
 
                         <Input v-if="props.website.city" :defaultValue="props.website.city" readonly />
-                        <Input v-else defaultValue="No city provided" readonly />
+                        <Input v-else :defaultValue="page.props.lang === 'ar' ? 'لا توجد مدينة' : 'No city provided'" readonly />
                     </div>
                     <div class="flex flex-col gap-1">
                         <Label for="address" class="text-body-muted mb-1 text-xs">
                             <Locate class="size-3.5" />
-                            Address
+                            {{ $t('address') }}
                         </Label>
 
                         <Input v-if="props.website.address" :defaultValue="props.website.address" readonly />
-                        <Input v-else defaultValue="No address provided" readonly />
+                        <Input v-else :defaultValue="page.props.lang === 'ar' ? 'لا يوجد عنوان' : 'No address provided'" readonly />
                     </div>
                     <div class="flex flex-col gap-1">
                         <Label for="language" class="text-body-muted mb-1 text-xs">
                             <Languages class="size-3.5" />
-                            Default Language
+                            {{ $t('default_language') }}
                         </Label>
 
                         <Input :defaultValue="props.website.language" readonly />
@@ -299,7 +302,7 @@ const copyUrl = async () => {
                     <div class="flex flex-col gap-1">
                         <Label for="instagram" class="text-body-muted mb-1 text-xs">
                             <Instagram class="size-3.5" />
-                            Instagram
+                            {{ $t('instagram') }}
                         </Label>
 
                         <a
@@ -311,7 +314,11 @@ const copyUrl = async () => {
                         >
                             <Input :defaultValue="props.website.instagram" class="cursor-pointer text-[var(--primary)]" readonly />
                         </a>
-                        <Input v-else defaultValue="No account provided" readonly />
+                        <Input
+                            v-else
+                            :defaultValue="page.props.lang === 'ar' ? 'لا يوجد حساب' : 'No account provided'"
+                            readonly
+                        />
                     </div>
                     <div class="flex flex-col gap-1">
                         <Label
@@ -327,7 +334,7 @@ const copyUrl = async () => {
                                     stroke-width="22"
                                 />
                             </svg>
-                            TikTok
+                            {{ $t('tiktok') }}
                         </Label>
 
                         <a
@@ -339,12 +346,16 @@ const copyUrl = async () => {
                         >
                             <Input :defaultValue="props.website.tiktok" class="cursor-pointer text-[var(--primary)]" readonly />
                         </a>
-                        <Input v-else defaultValue="No account provided" readonly />
+                        <Input
+                            v-else
+                            :defaultValue="page.props.lang === 'ar' ? 'لا يوجد حساب' : 'No account provided'"
+                            readonly
+                        />
                     </div>
                     <div class="flex flex-col gap-1">
                         <Label for="youtube" class="text-body-muted mb-1 text-xs">
                             <Youtube class="size-3.5" />
-                            Youtube
+                            {{ $t('youtube') }}
                         </Label>
 
                         <a
@@ -356,12 +367,16 @@ const copyUrl = async () => {
                         >
                             <Input :defaultValue="props.website.youtube" class="cursor-pointer text-[var(--primary)]" readonly />
                         </a>
-                        <Input v-else defaultValue="No account provided" readonly />
+                        <Input
+                            v-else
+                            :defaultValue="page.props.lang === 'ar' ? 'لا يوجد حساب' : 'No account provided'"
+                            readonly
+                        />
                     </div>
                     <div class="flex flex-col gap-2">
                         <Label for="facebook" class="text-body-muted text-xs">
                             <Facebook class="size-3.5" />
-                            Facebook
+                            {{ $t('facebook') }}
                         </Label>
 
                         <a
@@ -373,14 +388,18 @@ const copyUrl = async () => {
                         >
                             <Input :defaultValue="props.website.facebook" class="cursor-pointer text-[var(--primary)]" readonly />
                         </a>
-                        <Input v-else defaultValue="No account provided" readonly />
+                        <Input
+                            v-else
+                            :defaultValue="page.props.lang === 'ar' ? 'لا يوجد حساب' : 'No account provided'"
+                            readonly
+                        />
                     </div>
                 </div>
 
                 <div class="border-muted flex w-full flex-col border-t pt-6">
                     <Label for="about_us" class="text-body-muted mb-2 text-xs">
                         <Info class="size-3.5" />
-                        About Us Section
+                        {{ $t('about_us_section') }}
                     </Label>
 
                     <Input :defaultValue="props.website.about_us" readonly />
@@ -389,7 +408,7 @@ const copyUrl = async () => {
                 <div class="border-muted flex w-full flex-col border-t pt-6">
                     <Label for="about_us" class="text-body-muted mb-2 text-xs">
                         <LayoutTemplate class="size-3.5" />
-                        Active UI Template
+                        {{ page.props.lang === 'ar' ? 'قالب الواجهة النشط' : 'Active UI Template' }}
                     </Label>
 
                     <div v-if="props.website.active_website_template.template_images" 

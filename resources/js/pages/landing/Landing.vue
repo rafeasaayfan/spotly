@@ -2,7 +2,7 @@
 import '../../../css/landing.css';
 
 import { Head } from '@inertiajs/vue3';
-import { onMounted, watchEffect, ref } from 'vue';
+import { onMounted, ref, watchEffect } from 'vue';
 
 import AppLayout from '@/layouts/AppLayout.vue';
 import AboutUs from './sections/AboutUs.vue';
@@ -12,19 +12,13 @@ import Hero from './sections/Hero.vue';
 import HowItWork from './sections/HowItWork.vue';
 import WhySpotly from './sections/WhySpotly.vue';
 
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
+import { Button } from '@/components/ui/button';
+import { toast } from '@/lib/sweetAlert';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { toast } from '@/lib/sweetAlert';
 import { MessageSquare, X } from 'lucide-vue-next';
-import { Button } from '@/components/ui/button';
 import Newsletter from './sections/Newsletter.vue';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -74,10 +68,10 @@ onMounted(() => {
 
 const props = defineProps<{
     websiteTypes: Record<string, any>;
-        flash?: {
-        toastType: 'success' | 'error' | 'warning' | 'info',
-        message: string,
-    }
+    flash?: {
+        toastType: 'success' | 'error' | 'warning' | 'info';
+        message: string;
+    };
 }>();
 
 watchEffect(() => {
@@ -89,41 +83,46 @@ watchEffect(() => {
 </script>
 
 <template>
-    <Head title="Welcome to Spotly" />
+    <Head :title="$t('landing.head_title')" />
 
-    <AppLayout>
-        <Hero />
+    <div class="landing-body">
+        <AppLayout>
+            <Hero />
 
-        <WhySpotly />
+            <WhySpotly />
 
-        <HowItWork />
+            <HowItWork />
 
-        <GetStarted :websiteTypes="props.websiteTypes" />
+            <GetStarted :websiteTypes="props.websiteTypes" />
 
-        <AboutUs />
+            <AboutUs />
 
-        <Newsletter />
+            <Newsletter />
 
-        <div class="fixed bottom-4 end-4 md:bottom-8 md:end-8 z-10">
-            <DropdownMenu v-model:open="isDropdownOpen">
-                <DropdownMenuTrigger as-child>
-                    <Button class="rounded-full h-0 p-0 size-14 sm:size-15 hover:rotate-10 bg-[var(--primary)]/80
-                    hover:bg-[var(--primary)] backdrop-blur-[2px]" :class="isDropdownOpen ? 'bg-[var(--primary)]' : ''">
-                        <MessageSquare v-if="!isDropdownOpen" class="size-5" />
-                        <X v-else class="size-5" />
-                    </Button>
-                </DropdownMenuTrigger>
+            <div class="fixed end-4 bottom-4 z-10 md:end-8 md:bottom-8">
+                <DropdownMenu v-model:open="isDropdownOpen">
+                    <DropdownMenuTrigger as-child>
+                        <Button
+                            class="size-14 h-0 rounded-full bg-[var(--primary)]/80 p-0 backdrop-blur-[2px] hover:rotate-10 hover:bg-[var(--primary)] sm:size-15"
+                            :class="isDropdownOpen ? 'bg-[var(--primary)]' : ''"
+                        >
+                            <MessageSquare v-if="!isDropdownOpen" class="size-5" />
+                            <X v-else class="size-5" />
+                        </Button>
+                    </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end" class="w-70 h-140 sm:w-fit sm:h-auto">
-                    <DropdownMenuShortcut class="px-2 py-2 section-title text-active font-bold text-lg">
-                        Get In <span class="gradient-text">Touch</span>
-                    </DropdownMenuShortcut>
+                    <DropdownMenuContent align="end" class="h-140 w-70 sm:h-auto sm:w-fit">
+                        <DropdownMenuShortcut class="section-title text-active px-2 py-2 text-lg font-bold">
+                            {{ $t('landing.contact_dropdown.title_part1') }}
+                            <span class="gradient-text">{{ $t('landing.contact_dropdown.title_part2') }}</span>
+                        </DropdownMenuShortcut>
 
-                    <DropdownMenuSeparator />
+                        <DropdownMenuSeparator />
 
-                    <ContactUs />
-                </DropdownMenuContent>
-            </DropdownMenu>
-        </div>
-    </AppLayout>
+                        <ContactUs />
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+        </AppLayout>
+    </div>
 </template>

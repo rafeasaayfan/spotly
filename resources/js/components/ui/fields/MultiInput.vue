@@ -68,7 +68,7 @@ function removeField(index: number) {
       @click="addField"
     >
       <Plus class="size-3.5" />
-      <span>Add</span>
+      <span>{{ $t('field.multiInput.add') }}</span>
     </button>
   </div>
 </template>

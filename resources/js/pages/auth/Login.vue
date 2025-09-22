@@ -44,13 +44,15 @@ const submit = () => {
 </script>
 
 <template>
-    <AuthLayout title="Log in to your account" description="Enter your email and password below to log in">
-        <Head title="Log in" />
+    <AuthLayout :title="$t('guest.login.title')" :description="$t('guest.login.subtitle')">
+        <Head :title="$t('guest.login')" />
+
+        <SocialAuth />
 
         <form @submit.prevent="submit" class="flex flex-col gap-6">
             <div class="grid gap-6">
                 <div class="grid gap-2">
-                    <Label for="email">Email address</Label>
+                    <Label for="email">{{ $t('email') }}</Label>
                     <Input
                         id="email"
                         type="email"
@@ -66,9 +68,9 @@ const submit = () => {
 
                 <div class="grid gap-2">
                     <div class="flex items-center justify-between">
-                        <Label for="password">Password</Label>
+                        <Label for="password">{{ $t('password') }}</Label>
                         <TextLink v-if="props.canResetPassword" :href="route('password.request')" class="text-sm" :tabindex="5">
-                            Forgot password?
+                            {{ $t('guest.forgotPassword') }}
                         </TextLink>
                     </div>
                     <Input
@@ -78,30 +80,29 @@ const submit = () => {
                         :tabindex="2"
                         autocomplete="current-password"
                         v-model="form.password"
-                        placeholder="Password"
+                        :placeholder="$t('password')"
                     />
                     <InputError :message="form.errors.password" />
                 </div>
 
                 <div class="flex items-center justify-between">
-                    <Label for="remember" class="flex items-center cursor-pointer text-body">
+                    <Label for="remember" class="flex items-center cursor-pointer" :class="form.remember ? 'text-body' : ''">
                         <Checkbox id="remember" v-model="form.remember" :tabindex="3" />
-                        <span>Remember me</span>
+                        <span>{{ $t('guest.remember') }}</span>
                     </Label>
                 </div>
 
                 <Button type="submit" class="mt-2 w-full" :tabindex="4" :disabled="form.processing">
                     <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-                    Log in
+                    {{ $t('guest.login') }}
                 </Button>
             </div>
 
             <div class="text-center text-sm flex items-center justify-center gap-2">
-                <span class="text-body-muted">Don't have an account?</span>
-                <TextLink :href="route('register')" :tabindex="5">Sign up</TextLink>
+                <span class="text-body-muted">{{ $t('guest.login.noAccount') }}</span>
+                <TextLink :href="route('register')" :tabindex="5">{{ $t('guest.signup') }}</TextLink>
             </div>
         </form>
 
-        <SocialAuth />
     </AuthLayout>
 </template>

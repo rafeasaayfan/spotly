@@ -10,6 +10,6 @@ const { state } = useSidebar()
         <AppLogoIcon :class="state == 'collapsed' ? 'w-9 h-9' : ''" />
     </div>
     <div class="grid flex-1 text-start text-lg" :class="state == 'collapsed' ? 'hidden' : 'block'">
-        <span class="text-active truncate font-bold leading-non">Spotly</span>
+        <span class="text-active truncate font-bold leading-non">{{ $t('spotly') }}</span>
     </div>
 </template>

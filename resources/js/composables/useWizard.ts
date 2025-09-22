@@ -1,3 +1,6 @@
+import { SharedData } from "@/types";
+import { usePage } from "@inertiajs/vue3";
+
 export interface WizardContent {
     website_type_id: number;
     name: string;
@@ -16,22 +19,39 @@ export interface WizardContent {
 
 export function useWizard(step: number, form: WizardContent) {
     const errors: Record<string, string> = {};
+    const page = usePage<SharedData>();
 
     if (step === 1) {
-        if (!form.website_type_id) errors.website_type_id = 'Website type is required.';
-        if (!form.language) errors.language = 'Language is required.';
-        if (!form.name) errors.name = 'Business name is required.';
-        if (!form.subdomain) errors.subdomain = 'Subdomain is required.';
-        if (!form.about_us) errors.about_us = 'About us is required.';
+        if (!form.website_type_id) errors.website_type_id = page.props.lang === 'ar'
+            ? 'نوع الموقع مطلوب.'
+            : 'Website type is required.';
+        if (!form.language) errors.language = page.props.lang === 'ar'
+            ? 'اللغة مطلوبة.'
+            : 'Language is required.';
+        if (!form.name) errors.name = page.props.lang === 'ar'
+            ? 'اسم النشاط التجاري مطلوب.'
+            : 'Business name is required.';
+        if (!form.subdomain) errors.subdomain = page.props.lang === 'ar'
+            ? 'النطاق الفرعي مطلوب.'
+            : 'Subdomain is required.';
+        if (!form.about_us) errors.about_us = page.props.lang === 'ar'
+            ? 'النبذة عن موقعك مطلوبة'
+            : 'About us is required.';
 
     } else if (step === 2) {
-        if (!form.phone_number) errors.phone_number = 'Phone Number is required.';
+        if (!form.phone_number) errors.phone_number = page.props.lang === 'ar'
+            ? 'رقم الهاتف مطلوب.'
+            : 'Phone Number is required.';
 
     } else if (step === 3) {
-        if (!form.template_id) errors.template_id = 'Please choose a template.';
+        if (!form.template_id) errors.template_id = page.props.lang === 'ar'
+            ? 'يرجى اختيار قالب.'
+            : 'Please choose a template.';
 
     } else if (step === 4) {
-        if (!form.acceptSteps) errors.acceptSteps = 'Please accept all steps';
+        if (!form.acceptSteps) errors.acceptSteps = page.props.lang === 'ar'
+            ? 'يرجى قبول جميع الخطوات.'
+            : 'Please accept all steps';
     }
 
     // Set errors into form

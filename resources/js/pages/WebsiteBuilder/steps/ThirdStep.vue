@@ -127,7 +127,11 @@ const updateField = (field: string, value: any) => {
     <!-- Logo -->
     <div class="grid grid-cols-1 gap-4 md:col-span-3 lg:grid-cols-2">
         <div class="flex flex-col gap-2">
-            <HeadingSmall title="Website Light Logo" titleClass="text-body" description="If you don't have logo will make for you a default one." />
+            <HeadingSmall
+                :title="$t('websiteBuilder.thirdStep.light_logo_title')"
+                titleClass="text-body"
+                :description="$t('websiteBuilder.thirdStep.light_logo_description')"
+            />
             <div class="flex flex-col gap-1 ps-2">
                 <File
                     v-model="light_logo"
@@ -139,7 +143,11 @@ const updateField = (field: string, value: any) => {
             </div>
         </div>
         <div class="flex flex-col gap-2">
-            <HeadingSmall title="Website Dark Logo" titleClass="text-body" description="If you don't have logo will make for you a default one." />
+            <HeadingSmall
+                :title="$t('websiteBuilder.thirdStep.dark_logo_title')"
+                titleClass="text-body"
+                :description="$t('websiteBuilder.thirdStep.dark_logo_description')"
+            />
             <div class="flex flex-col gap-1 ps-2">
                 <File
                     v-model="dark_logo"
@@ -156,7 +164,11 @@ const updateField = (field: string, value: any) => {
     <div class="col-span-1 flex w-full flex-col gap-3 md:col-span-3">
         <!--* Templates -->
         <div class="flex w-full flex-col">
-            <HeadingSmall title="Website Template*" titleClass="text-body" description="Select the template design for your business." />
+            <HeadingSmall
+                :title="$t('websiteBuilder.thirdStep.website_template_title')"
+                titleClass="text-body"
+                :description="$t('websiteBuilder.thirdStep.website_template_description')"
+            />
 
             <div class="custom-scrollbar flex w-full items-center gap-3 overflow-x-auto p-2">
                 <TemplateBtn
@@ -182,9 +194,9 @@ const updateField = (field: string, value: any) => {
             :class="animate ? 'translate-y-0 scale-100 rotate-0 opacity-100' : 'translate-y-10 scale-75 rotate-10 opacity-0'"
         >
             <HeadingSmall
-                title="Template Colors*"
+                :title="$t('websiteBuilder.thirdStep.template_colors_title')"
                 titleClass="text-body"
-                description="Choose your template colors (You can also customize them by editing your selection)."
+                :description="$t('websiteBuilder.thirdStep.template_colors_description')"
             />
 
             <div class="custom-scrollbar flex w-full items-center gap-3 overflow-x-auto p-2">

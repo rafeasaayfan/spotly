@@ -17,15 +17,17 @@ const props = defineProps<{
 
 const filterForm = ref({ ...props.form.data() });
 
-function submit() {
+function submit(key: string, val: any) {
+    filterForm.value[key] = val;
+
     Object.keys(filterForm.value).forEach(key => {
         props.setFormData(key, filterForm.value[key]);
     });
 
-    props.applyFilters({ filter: props.form.data() });
+    props.applyFilters({ filter: filterForm });
 }
 
-const isResetting = ref(false)
+const isResetting = ref(false);
 
 function resetForm() {
     filterForm.value = Object.fromEntries((props.filter ?? []).map((column) => [column.key, '']));
@@ -38,7 +40,7 @@ function resetForm() {
     }, 500)
 
     nextTick(() => {
-        submit();
+        props.applyFilters({ filter: '' });
     });
 }
 
@@ -56,7 +58,7 @@ watch(filterForm, (newVal) => {
 </script>
 
 <template>
-    <form class="grid grid-cols-1 gap-5" @submit.prevent="submit" enctype="multipart/form-data">
+    <form class="grid grid-cols-1 gap-5" enctype="multipart/form-data">
         <div class="grid gap-2" v-for="(column, index) in props.filter" :key="index">
             <Label class="text-xs" :for="column.label">{{ column.label.charAt(0).toUpperCase() + column.label.slice(1) }}</Label>
 
@@ -76,8 +78,9 @@ watch(filterForm, (newVal) => {
                 v-model="filterForm[column.key]"
                 :option="column.placeholder ?? null"
                 :placeholder="column.placeholder ?? column.label"
-                @change="submit"
+                @update:modelValue="(val) => submit(column.key, val)"
             >
+
                 <option v-for="option in column.options" :key="option.label" :value="option.value">{{ option.label }}</option>
             </Select>
 

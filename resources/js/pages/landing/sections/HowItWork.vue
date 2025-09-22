@@ -64,23 +64,23 @@ onMounted(() => {
 
 const steps = [
     {
-        title: 'Create Your Website',
-        description: 'Fill in your website details and customize it to match your brand',
+        title: 'landing.how_it_work.step1_title',
+        description: 'landing.how_it_work.step1_description',
         class: 'rounded-ss-none rounded-se-[1.5rem] rounded-ee-[1.5rem] rounded-es-none md:rounded-es-[5rem]',
     },
     {
-        title: 'Submit for Approval',
-        description: 'Our team reviews your website to make sure everything is ready',
+        title: 'landing.how_it_work.step2_title',
+        description: 'landing.how_it_work.step2_description',
         class: 'rounded-se-[1.5rem] md:rounded-se-none md:rounded-es-[1.5rem] md:rounded-ss-[1.5rem] rounded-ee-[1.5rem] md:rounded-ee-[5rem]',
     },
     {
-        title: 'Go Live Instantly',
-        description: 'Once approved, your website is deployed online with a free trial',
+        title: 'landing.how_it_work.step3_title',
+        description: 'landing.how_it_work.step3_description',
         class: 'rounded-ss-none rounded-se-[1.5rem] rounded-ee-[1.5rem] rounded-es-none md:rounded-es-[5rem]',
     },
     {
-        title: 'Choose Your Plan',
-        description: 'Keep your website running by subscribing monthly or yearly',
+        title: 'landing.how_it_work.step4_title',
+        description: 'landing.how_it_work.step4_description',
         class: 'rounded-se-[1.5rem] md:rounded-se-none md:rounded-es-[1.5rem] md:rounded-ss-[1.5rem] rounded-ee-[1.5rem] md:rounded-ee-[5rem]',
     },
 ];
@@ -91,9 +91,9 @@ const steps = [
         <div class="mx-auto">
             <div class="mb-16 flex w-full flex-col items-start gap-3">
                 <h2 class="section-title section-title-underline text-active text-3xl font-bold sm:text-4xl lg:text-5xl">
-                    How <span class="gradient-text">Spotly</span> Works
+                    {{ $t('landing.how_it_work.title_part1') }} <span class="gradient-text">{{ $t('landing.how_it_work.title_part2') }}</span> {{ $t('landing.how_it_work.title_part3') }}
                 </h2>
-                <p class="text-body-muted">The Steps to create your webiste</p>
+                <p class="text-body-muted">{{ $t('landing.how_it_work.subtitle') }}</p>
             </div>
 
             <!-- Floating blurred circles -->
@@ -124,8 +124,8 @@ const steps = [
                                     <span class="text-active-link text-5xl font-bold">0{{ index + 1 }}</span>
                                 </div>
                                 <div class="flex flex-col gap-2">
-                                    <h3 class="text-active text-2xl font-semibold">{{ step.title }}</h3>
-                                    <p class="text-body-muted text-base">{{ step.description }}</p>
+                                    <h3 class="text-active text-2xl font-semibold">{{ $t(step.title) }}</h3>
+                                    <p class="text-body-muted text-base">{{ $t(step.description) }}</p>
                                 </div>
                             </div>
                         </div>

@@ -74,7 +74,7 @@ const tableConditions = {
     <Head title="My Payments" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
-        <DataTable
+        <DataTable dir="ltr"
             :tableData="props.payments"
             :filter="filter"
             :columns="columns"

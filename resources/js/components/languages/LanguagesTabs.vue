@@ -9,13 +9,11 @@ const page = usePage<SharedData>();
 const languages = [
     { key: 'العربية', value: 'ar', src: '/images/flags/ar.avif' },
     { key: 'English', value: 'en', src: '/images/flags/en.png' },
-    { key: 'Germany', value: 'de', src: '/images/flags/de.png' },
-    { key: 'Frensh', value: 'fr', src: '/images/flags/de.png' },
 ];
 </script>
 
 <template>
-    <div class="bg-card inline-flex gap-2 rounded-md p-1 max-w-full overflow-x-auto">
+    <div class="bg-card inline-flex gap-2 rounded-md p-1 max-w-full overflow-x-auto" :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'">
         <button
             v-for="lang in languages"
             :key="lang.value"

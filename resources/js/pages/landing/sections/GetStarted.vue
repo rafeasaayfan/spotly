@@ -109,9 +109,9 @@ function handleIcon(type: string) {
         <div class="mx-auto">
             <div class="mb-14 flex w-full flex-col items-start gap-3">
                 <h2 class="section-title section-title-underline text-active text-3xl font-bold sm:text-4xl md:text-4xl lg:text-5xl">
-                    Start Your <span class="gradient-text">Project Now</span>
+                    {{ $t('landing.get_started.title_part1') }} <span class="gradient-text">{{ $t('landing.get_started.title_part2') }}</span>
                 </h2>
-                <p class="text-body-muted max-w-3xl">Choose your project type and get started created your website with Spotly.</p>
+                <p class="text-body-muted max-w-3xl">{{ $t('landing.get_started.subtitle') }}</p>
             </div>
 
             <!-- Floating blurred circles -->
@@ -144,8 +144,8 @@ function handleIcon(type: string) {
                                 <component :is="handleIcon(item.title)" class="mx-auto size-16" />
 
                                 <div class="flex flex-col items-center justify-center gap-2">
-                                    <h3 class="text-xl font-semibold">{{ item.title }}</h3>
-                                    <p class="text-body-muted text-sm">{{ item.description }}</p>
+                                    <h3 class="text-xl font-semibold">{{ $t(item.title) }}</h3>
+                                    <p class="text-body-muted text-sm">{{ $t(item.description) }}</p>
                                 </div>
                             </div>
                         </Link>
@@ -155,15 +155,15 @@ function handleIcon(type: string) {
                                 class="border-[var(--border-landing)]/50 absolute inset-0 z-10 rounded-lg border 
                                 bg-black/1 backdrop-blur-[1px] transition-all duration-300"
                             >
-                                <h1 class="p-2 text-body-muted text-sm font-medium">Coming Soon</h1>
+                                <h1 class="p-2 text-body-muted text-sm font-medium">{{ $t('landing.get_started.coming_soon') }}</h1>
                             </div>
 
                             <div class="text-body flex h-full w-full flex-col gap-3 rounded-xl p-8 text-center blur-[1px]">
                                 <component :is="handleIcon(item.title)" class="mx-auto size-16" />
 
                                 <div class="flex flex-col items-center justify-center gap-2">
-                                    <h3 class="text-xl font-semibold">{{ item.title }}</h3>
-                                    <p class="text-body-muted text-sm">{{ item.description }}</p>
+                                    <h3 class="text-xl font-semibold">{{ $t(item.title) }}</h3>
+                                    <p class="text-body-muted text-sm">{{ $t(item.description) }}</p>
                                 </div>
                             </div>
                         </div>

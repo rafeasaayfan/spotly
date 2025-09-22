@@ -3,6 +3,8 @@ import AppLogoIcon from '@/components/logo/AppLogoIcon.vue';
 import { Link } from '@inertiajs/vue3';
 import { gsap } from 'gsap';
 import { onMounted } from 'vue';
+import { SharedData } from '@/types';
+import { usePage } from '@inertiajs/vue3';
 
 onMounted(() => {
     // --- About Us Content Animation ---
@@ -66,6 +68,8 @@ onMounted(() => {
         stagger: 0.5,
     });
 });
+
+const page = usePage<SharedData>();
 </script>
 
 <template>
@@ -88,12 +92,11 @@ onMounted(() => {
                 </div> -->
 
                 <h2 class="section-title text-active section-title-underline mb-3 text-4xl leading-tight font-bold sm:text-5xl md:text-6xl">
-                    About <span class="gradient-text relative"> Us </span>
+                    {{ $t('landing.about_us.title_part1') }} <span class="gradient-text relative"> {{ $t('landing.about_us.title_part2') }} </span>
                 </h2>
 
                 <p class="text-body-muted mx-auto max-w-3xl text-base leading-relaxed">
-                    We're revolutionizing web creation by making powerful tools accessible to everyone. Your vision, our expertise, together we build
-                    something extraordinary.
+                    {{ $t('landing.about_us.subtitle') }}
                 </p>
             </div>
 
@@ -108,15 +111,12 @@ onMounted(() => {
                     <div class="grid lg:grid-cols-2 gap-20">
                         <div class="flex flex-col gap-10">
                             <div class="flex flex-col gap-5">
-                                <h3 class="text-active mb-1 text-2xl font-bold md:text-3xl">Our Mission</h3>
+                                <h3 class="text-active mb-1 text-2xl font-bold md:text-3xl">{{ $t('landing.about_us.mission_title') }}</h3>
                                 <p class="text-body-muted text-base leading-relaxed">
-                                    At Spotly, we believe that everyone deserves a beautiful and functional online presence without the traditional
-                                    barriers of cost and complexity. Our mission is to democratize web creation, providing powerful tools that are
-                                    accessible to entrepreneurs, creators, and small businesses alike.
+                                    {{ $t('landing.about_us.mission_paragraph1') }}
                                 </p>
                                 <p class="text-body-muted text-base leading-relaxed">
-                                    We are a passionate team of designers, developers, and dreamers dedicated to helping you succeed online. Your
-                                    vision is our inspiration.
+                                    {{ $t('landing.about_us.mission_paragraph2') }}
                                 </p>
                             </div>
 
@@ -124,19 +124,19 @@ onMounted(() => {
                             <div id="stats-section" class="grid sm:grid-cols-2 gap-6">
                                 <div class="stat-item rounded-md border-b-4 border-[var(--primary)]/20 dark:border-[var(--primary)]/10 bg-black/1 p-6 text-center dark:bg-white/1">
                                     <div class="text-active mb-2 text-3xl font-bold md:text-4xl">10K+</div>
-                                    <div class="text-body text-sm font-medium opacity-70">Happy Users</div>
+                                    <div class="text-body text-sm font-medium opacity-70">{{ $t('landing.about_us.happy_users') }}</div>
                                 </div>
                                 <div class="stat-item rounded-md border-b-4 border-[var(--destructive)]/30 dark:border-[var(--destructive)]/20 bg-black/1 p-6 text-center dark:bg-white/1">
                                     <div class="text-active mb-2 text-3xl font-bold md:text-4xl">500+</div>
-                                    <div class="text-body text-sm font-medium opacity-70">Websites Built</div>
+                                    <div class="text-body text-sm font-medium opacity-70">{{ $t('landing.about_us.websites_built') }}</div>
                                 </div>
                                 <div class="stat-item rounded-md border-b-4 border-[var(--primary)]/20 dark:border-[var(--primary)]/10 bg-black/1 p-6 text-center dark:bg-white/1">
                                     <div class="text-active mb-2 text-3xl font-bold md:text-4xl">24/7</div>
-                                    <div class="text-body text-sm font-medium opacity-70">Support</div>
+                                    <div class="text-body text-sm font-medium opacity-70">{{ $t('landing.about_us.support') }}</div>
                                 </div>
                                 <div class="stat-item rounded-md border-b-4 border-[var(--destructive)]/30 dark:border-[var(--destructive)]/20 bg-black/1 p-6 text-center dark:bg-white/1">
                                     <div class="text-active mb-2 text-3xl font-bold md:text-4xl">99%</div>
-                                    <div class="text-body text-sm font-medium opacity-70">Satisfaction</div>
+                                    <div class="text-body text-sm font-medium opacity-70">{{ $t('landing.about_us.satisfaction') }}</div>
                                 </div>
                             </div>
                         </div>
@@ -162,12 +162,13 @@ onMounted(() => {
                 <div class="mt-8 text-center">
                     <Link
                         href="/websiteBuilder"
-                        class="group inline-flex cursor-pointer items-center gap-3 rounded-full glow-button 
+                        class="group bg-primary inline-flex cursor-pointer items-center gap-3 rounded-full glow-button 
                         px-5 py-3 font-semibold text-white transition-all duration-300 hover:px-6 hover:shadow-lg active:scale-98"
                     >
-                        <span>Start Building Today</span>
+                        <span>{{ $t('landing.about_us.start_building_button') }}</span>
                         <svg
                             class="size-5 transition-all duration-300 group-hover:translate-x-1"
+                            :class="page.props.lang === 'ar' ? 'rotate-180' : ''"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"

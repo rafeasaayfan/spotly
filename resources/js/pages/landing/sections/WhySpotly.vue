@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CircleDollarSign, Shield, Star, Zap } from 'lucide-vue-next';
+import { SharedData } from '@/types';
+import { usePage } from '@inertiajs/vue3';
 
 const cards = [
     {
@@ -35,6 +37,9 @@ const scrollToSection = (id: string) => {
         el.scrollIntoView({ behavior: 'smooth' });
     }
 };
+
+
+const page = usePage<SharedData>();
 </script>
 
 <template>
@@ -42,7 +47,8 @@ const scrollToSection = (id: string) => {
         <div class="relative z-10 mx-auto">
             <div class="mb-16 flex w-full flex-col items-start md:items-center justify-center gap-3">
                 <h2 class="section-title section-title-underline text-active font-display text-3xl font-bold sm:text-4xl lg:text-5xl">
-                    Why Choose <span class="gradient-text">Spotly</span>?
+                    {{ $t('landing.why_spotly.title_part1') }} <span class="gradient-text">{{ $t('landing.why_spotly.title_part2') }}</span>
+                    {{ page.props.lang === 'ar' ? '؟' : '?' }}
                 </h2>
             </div>
 
@@ -65,18 +71,18 @@ const scrollToSection = (id: string) => {
                     </div>
                     <div :class="['text-' + item.color, 'flex items-center gap-2']">
                         <component :is="item.icon" class="size-5" />
-                        <h3 class="text-lg font-medium">{{ item.title }}</h3>
+                        <h3 class="text-lg font-medium">{{ $t(item.title) }}</h3>
                     </div>
                     <p class="text-body-muted text-sm font-bold">
-                        {{ item.description }}
+                        {{ $t(item.description) }}
                     </p>
                 </div>
             </div>
 
             <div class="mt-10 flex w-full justify-end">
                 <Button @click="scrollToSection('#about-us')" class="glow-button hover:px-4">
-                    <span>Learn More</span>
-                    <ArrowRight class="ms-1 size-4" />
+                    <span>{{ $t('landing.why_spotly.learn_more_button') }}</span>
+                    <ArrowRight class="size-4" :class="page.props.lang === 'ar' ? 'rotate-180' : ''" />
                 </Button>
             </div>
         </div>

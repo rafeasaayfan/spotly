@@ -35,7 +35,7 @@ setupScrollTracking();
                             :class="[navigationMenuTriggerStyle(), activeNavStyle(item.href), 'cursor-pointer flex-row items-center gap-2 px-3']"
                         >
                             <component v-if="item.icon" :is="item.icon" class="h-4 w-4" />
-                            <span>{{ item.title }}</span>
+                            <span>{{ $t(item.title) }}</span>
                         </NavigationMenuLink>
                     </button>
 
@@ -48,7 +48,7 @@ setupScrollTracking();
                             ]"
                         >
                             <component v-if="item.icon" :is="item.icon" class="h-4 w-4" />
-                            <span>{{ item.title }}</span>
+                            <span>{{ $t(item.title) }}</span>
                         </NavigationMenuLink>
                     </Link>
 
