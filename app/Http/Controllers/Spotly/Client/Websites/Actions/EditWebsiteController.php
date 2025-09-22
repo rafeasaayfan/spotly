@@ -19,9 +19,6 @@ class EditWebsiteController extends Controller
         Gate::authorize('view', $website);
 
         try {
-            $website->light_logo = $website->getFirstMediaUrl('light_logo');
-            $website->dark_logo = $website->getFirstMediaUrl('dark_logo');
-
             $countries = Country::with('media')->active()->get();
 
             $cities = config('cities.lebanon');
