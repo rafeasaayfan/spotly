@@ -121,6 +121,7 @@ class TemplateTemplateColorsController extends Controller
      */
     public function update(UpdateTemplateTemplateColorRequest $request, TemplateTemplateColor $templateTemplateColor)
     {
+        
         try {
             $validated = $request->validated();
             unset($validated['uiImages']);
