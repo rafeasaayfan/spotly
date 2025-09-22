@@ -6,6 +6,7 @@ import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
+import { i18nVue } from 'laravel-vue-i18n'; 
 
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
@@ -29,6 +30,12 @@ createInertiaApp({
         createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
+            .use(i18nVue, { 
+                resolve: async (lang: any) => {
+                    const langs = import.meta.glob('../../lang/*/*.json');
+                    return await langs[`../../lang/${lang}/${lang}.json`]();
+                }
+            })
             .mount(el);
     },
     progress: {

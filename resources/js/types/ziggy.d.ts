@@ -1,4 +1,5 @@
 import { RouteParams, Router } from 'ziggy-js';
+import 'laravel-vue-i18n';
 
 declare global {
     function route(): Router;
@@ -8,5 +9,6 @@ declare global {
 declare module '@vue/runtime-core' {
     interface ComponentCustomProperties {
         route: typeof route;
+        $t: (key: string) => string;
     }
 }
