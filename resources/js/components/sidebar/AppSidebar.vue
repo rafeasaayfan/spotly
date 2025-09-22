@@ -25,8 +25,8 @@ const getSidebarConfig = (dashboard: string) => {
       };
     default:
       return {
-        main: mainSidebarItems,
-        footer: footerSidebarItems,
+        main: mainSidebarItems(),
+        footer: footerSidebarItems(),
       };
   }
 };
