@@ -24,7 +24,7 @@ class UpdateTemplateTemplateColorRequest extends FormRequest
                     ->ignore($this->route('templateTemplateColor')->id)
             ],
             'is_default' => ['required', 'boolean'],
-            'uiImages.*' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,webp,svg', 'max:5120'], // 5MB max
+            'uiImages.*' => ['nullable', when('string', '', ['file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:5120'])],
         ];
     }
 }

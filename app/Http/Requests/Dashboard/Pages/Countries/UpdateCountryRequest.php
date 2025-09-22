@@ -15,7 +15,7 @@ class UpdateCountryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'flag' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
+            'flag' => ['nullable', when('string', '', ['file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'])],
             'country' => [
                 'required',
                 'string',
