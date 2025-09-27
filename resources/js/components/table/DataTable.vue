@@ -72,6 +72,7 @@ const { handleAction } = useTableActions(selectedIds, props.routeName);
             :handleAction="handleAction"
             :tableConditions="tableConditions"
             :path="props.path"
+            :dashboardFor="props.dashboardFor"
         />
 
         <!-- Table content -->
