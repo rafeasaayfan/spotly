@@ -20,7 +20,7 @@ const filterForm = ref({ ...props.form.data() });
 function submit(key: string, val: any) {
     filterForm.value[key] = val;
 
-    Object.keys(filterForm.value).forEach(key => {
+    Object.keys(filterForm.value).forEach((key) => {
         props.setFormData(key, filterForm.value[key]);
     });
 
@@ -30,31 +30,44 @@ function submit(key: string, val: any) {
 const isResetting = ref(false);
 
 function resetForm() {
-    filterForm.value = Object.fromEntries((props.filter ?? []).map((column) => [column.key, '']));
+    filterForm.value = Object.fromEntries(
+        (props.filter ?? []).map((column) => [
+            column.key,
+            column.type === 'select' ? null : '', 
+        ]),
+    );
 
-    isResetting.value = true
+    isResetting.value = true;
 
     setTimeout(() => {
-        props.form.reset()
-        isResetting.value = false
-    }, 500)
+        props.form.reset();
+        isResetting.value = false;
+    }, 500);
 
     nextTick(() => {
         props.applyFilters({ filter: '' });
     });
 }
 
-watch(() => props.form.data(), (newData) => {
-    filterForm.value = { ...newData };
-}, { deep: true });
+watch(
+    () => props.form.data(),
+    (newData) => {
+        filterForm.value = { ...newData };
+    },
+    { deep: true },
+);
 
-watch(filterForm, (newVal) => {
-    Object.keys(newVal).forEach(key => {
-        if (props.form[key] !== newVal[key]) {
-            props.setFormData(key, newVal[key]);
-        }
-    });
-}, { deep: true });
+watch(
+    filterForm,
+    (newVal) => {
+        Object.keys(newVal).forEach((key) => {
+            if (props.form[key] !== newVal[key]) {
+                props.setFormData(key, newVal[key]);
+            }
+        });
+    },
+    { deep: true },
+);
 </script>
 
 <template>
@@ -80,7 +93,6 @@ watch(filterForm, (newVal) => {
                 :placeholder="column.placeholder ?? column.label"
                 @update:modelValue="(val) => submit(column.key, val)"
             >
-
                 <option v-for="option in column.options" :key="option.label" :value="option.value">{{ option.label }}</option>
             </Select>
 
@@ -118,7 +130,7 @@ watch(filterForm, (newVal) => {
             <InputError class="mt-2" :message="props.form.errors?.[column.key]" />
         </div>
 
-        <div class="mt-1 pt-2 border-t border-muted flex justify-end">
+        <div class="border-muted mt-1 flex justify-end border-t pt-2">
             <Button variant="secondary" size="sm" type="button" :disabled="isResetting" @click="resetForm()">
                 <LoaderCircle v-if="isResetting" class="h-4 w-4 animate-spin" />
                 <span v-else>Reset</span>
