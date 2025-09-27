@@ -64,7 +64,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="relative w-full">
     <div ref="triggerRef" :class="cn(
-      'bg-field border border-muted h-9 w-full min-w-0 rounded-md active:scale-98 cursor-pointer',
+      'bg-field border border-muted h-9 w-full min-w-0 rounded-md cursor-pointer',
       'shadow-xs outline-none transition-all duration-150 ease-in-out focus:ring active:ring-blue-500 focus:ring-blue-600/90',
       'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 text-sm',
       'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
@@ -78,7 +78,7 @@ onBeforeUnmount(() => {
           <span class="truncate max-w-[120px] block pe-2">{{ modelValue }}</span>
         </div>
 
-        <ChevronDown class="size-4 text-body-muted" />
+        <ChevronDown class="size-4 transition-all duration-200" :class="showPicker ? 'rotate-180' : ''" />
       </div>
 
 
