@@ -4,12 +4,42 @@ import { icons } from 'lucide-vue-next';
 //? Sidebar Content
 export const mainSidebarItems: SidebarSection[] = [
     {
-        name: 'Platform',
+        name: 'Main',
         items: [
             {
                 title: 'Dashboard',
                 href: '/dashboard',
-                icon: icons.LayoutGrid,
+                icon: icons.LayoutDashboard,
+            },
+            {
+                title: 'Users',
+                href: '/dashboard/users',
+                icon: icons.Users,
+            },
+            {
+                title: 'Messages',
+                href: '/dashboard/messages',
+                icon: icons.MessageCircle,
+            },
+        ],
+    },
+    {
+        name: 'E-Commerce',
+        items: [
+            {
+                title: 'Categories',
+                href: '/dashboard/categories',
+                icon: icons.FolderTree,
+            },
+            {
+                title: 'Brands',
+                href: '/dashboard/brands',
+                icon: icons.Tags,
+            },
+            {
+                title: 'Products',
+                href: '/dashboard/products',
+                icon: icons.Package,
             },
         ],
     },
@@ -17,27 +47,12 @@ export const mainSidebarItems: SidebarSection[] = [
 
 export const footerSidebarItems: SidebarSection[] = [
     {
-        name: 'Roles & Permissions',
-        permission: ['assignments_access'],
+        name: 'Spotly Settings',
         items: [
             {
-                title: 'Assignments',
-                permission: ['assignments_access'],
+                title: 'Go To Your Website Settings',
+                href: '/dashboard/assignments/permissions',
                 icon: icons.Diamond,
-                children: [
-                    {
-                        title: 'Permissions',
-                        href: '/dashboard/assignments/permissions',
-                    },
-                    {
-                        title: 'Roles',
-                        href: '/dashboard/assignments/roles',
-                    },
-                    {
-                        title: 'Users assignments',
-                        href: '/dashboard/assignments/usersAssignments',
-                    },
-                ],
             },
         ],
     },
