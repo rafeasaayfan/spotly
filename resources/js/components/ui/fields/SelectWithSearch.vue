@@ -64,7 +64,7 @@ function toggleDropdown() {
             props.class
         )" @click="toggleDropdown">
             <div class="flex items-center justify-between">
-                <span>
+                <span :class="selected ? '' : 'text-body-muted'">
                     {{ selected || props.placeholder || 'Select an option' }}
                 </span>
                 <ArrowBigUpDash class="size-4 z-0 transition-all duration-300 ease-in-out" :class="isOpen? '' : 'rotate-180'" />
