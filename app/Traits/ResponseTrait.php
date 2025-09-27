@@ -15,16 +15,19 @@ trait ResponseTrait
      * @param string $component
      * @param array $props
      * @param boolean $forWebsite
+     * @param boolean $forDash
      * @return RedirectResponse
      */
-    public function inertiaRender(string $component, array $props = [], bool $forWebsite = false): \Inertia\Response
+    public function inertiaRender(string $component, array $props = [], bool $forWebsite = false, bool $forDash = false): \Inertia\Response
     {
-        if($forWebsite) {
+        if ($forWebsite) {
             $website = app('website');
             $websiteType = $website->websiteType?->type;
             $websiteTemplate = $website->activeWebsiteTemplate?->template?->name;
 
-            return Inertia::render("websites/$websiteType/templates/$websiteTemplate/$component", $props);
+            $path = $forDash ? "websites/$websiteType/dashboard/$component" : "websites/$websiteType/templates/$websiteTemplate/$component";
+
+            return Inertia::render($path, $props);
         }
 
         return Inertia::render($component, $props);
@@ -46,7 +49,7 @@ trait ResponseTrait
             $toastType = 'success';
         }
 
-        if($forWebsite) {
+        if ($forWebsite) {
             $website = app('website');
             $websiteType = $website->websiteType?->type;
 
@@ -80,7 +83,7 @@ trait ResponseTrait
             $toastType = 'error';
         }
 
-        if($forWebsite) {
+        if ($forWebsite) {
             $website = app('website');
             $websiteType = $website->websiteType?->type;
 
