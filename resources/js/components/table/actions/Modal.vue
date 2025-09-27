@@ -16,7 +16,7 @@ const record = ref<Record<string, any>>({});
 const loaded = ref(false);
 
 const defaultComponents = import.meta.glob('@/pages/dashboard/pages/**/actions/*.vue');
-const websiteComponents = import.meta.glob('@/websites/*/dashboard/pages/**/actions/*.vue');
+const websiteComponents = import.meta.glob('@/pages/websites/**/dashboard/pages/**/actions/*.vue');
 const components = props.dashboardFor === 'default'
   ? defaultComponents
   : websiteComponents;
