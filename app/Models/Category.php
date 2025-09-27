@@ -37,10 +37,30 @@ class Category extends Model
     {
         return $this->hasMany(Category::class, 'parent_id');
     }
-
+    
+    /**
+     * Get active category.
+     */
     public function scopeActive($query)
     {
         return $query->where('is_active', 1);
+    }
+
+    /**
+     * Recursively get all descendant category IDs for this category.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function allChildrenIds()
+    {
+        $ids = collect();
+
+        foreach ($this->children as $child) {
+            $ids->push($child->id);
+            $ids = $ids->merge($child->allChildrenIds());
+        }
+
+        return $ids;
     }
 
     // ============================== Ecommerce ==============================

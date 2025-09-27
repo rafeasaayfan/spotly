@@ -16,6 +16,14 @@ class Brand extends Model
         return $this->belongsTo(Website::class, 'website_id');
     }
 
+    /**
+     * Get active brand.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', 1);
+    }
+
     // ============================== Ecommerce ==============================
     /**
      * Get the ecommerce products for the brand.

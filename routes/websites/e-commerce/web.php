@@ -14,5 +14,6 @@ Route::name('e-commerce.')->group(function () {
 
     Route::middleware(['auth:website', 'verified:website.verification.notice'])->group(function () {
         require __DIR__ . '/dashboard.php';
+        require __DIR__ . '/../common/dashboard.php';
     });
 });

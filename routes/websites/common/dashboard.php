@@ -1,0 +1,27 @@
+<?php
+
+use App\Http\Controllers\Websites\Common\Dashboard\BrandsController;
+use App\Http\Controllers\Websites\Common\Dashboard\CategoriesController;
+use App\Http\Controllers\Websites\Common\Dashboard\MessagesController;
+use App\Http\Controllers\Websites\Common\Dashboard\UsersController;
+use Illuminate\Support\Facades\Route;
+
+// middleware('websiteRole:admin')->
+Route::prefix('dashboard')->name('dashboard.')->group(function () {
+    //* Users
+    dashboardPagesRoutes('users', UsersController::class);
+    Route::patch('users/{id}/is_active', [UsersController::class, 'toggleActive'])->name('brands.is_active');
+    Route::patch('users/{id}/status', [UsersController::class, 'changeStatus'])->name('users.status');
+
+    //* Categories
+    dashboardPagesRoutes('categories', CategoriesController::class);
+    Route::patch('categories/{id}/is_active', [CategoriesController::class, 'toggleActive'])->name('categories.is_active');
+
+    //* Brands
+    dashboardPagesRoutes('brands', BrandsController::class);
+    Route::patch('brands/{id}/is_active', [BrandsController::class, 'toggleActive'])->name('brands.is_active');
+
+    //* Messages
+    dashboardPagesRoutes('messages', MessagesController::class);
+    Route::patch('messages/{id}/status', [MessagesController::class, 'changeStatus'])->name('messages.status');
+});
