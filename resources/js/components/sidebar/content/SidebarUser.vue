@@ -8,7 +8,7 @@ import { ChevronsUpDown } from 'lucide-vue-next';
 import UserMenuContent from '@/components/user/UserMenuContent.vue';
 
 const page = usePage<SharedData>();
-const user = page.props.auth.user as User;
+const user = page.props.auth.user as User ?? page.props.auth.website_user as User;
 const { isMobile, state } = useSidebar();
 </script>
 
