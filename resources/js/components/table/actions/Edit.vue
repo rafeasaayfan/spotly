@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { DialogClose, DialogFooter } from '@/components/ui/dialog';
-import { File, Input, InputError, Select, SelectWithSearch, Textarea, PhoneNumberField, Color, MultiInput } from '@/components/ui/fields';
+import { Color, File, ImageFile, ImagesFile, Input, InputError, MultiInput, PhoneNumberField, Select, SelectWithSearch, Textarea } from '@/components/ui/fields';
 import { Label } from '@/components/ui/label';
 
 import { toast } from '@/lib/sweetAlert';
@@ -16,6 +16,7 @@ const props = defineProps<{
     data: Record<string, any>;
     columns: Column[];
     table: string;
+    routeDash?: string;
 }>();
 
 const hasPasswordField = props.columns.some((column) => column.key === 'password');
@@ -37,7 +38,8 @@ watch(
 );
 
 function submit() {
-    form.post(route(`dashboard.${props.table}.update`, props.data.id), {
+    const routeName = props.routeDash ? props.routeDash : `dashboard.${props.table}.update`;
+    form.post(route(routeName, props.data.id), {
         onSuccess: () => {
             const closeButton = document.querySelector('[data-slot="dialog-close"]');
             (closeButton as HTMLElement)?.click();
@@ -54,8 +56,13 @@ function submit() {
 </script>
 
 <template>
-    <form class="grid gap-4 grid-cols-1 lg:grid-cols-2 pb-5 px-4" @submit.prevent="submit" enctype="multipart/form-data">
-        <div class="flex flex-col gap-1.5" :class="['textarea'].includes(column.type ?? '') ? 'lg:col-span-2' : ''" v-for="(column, index) in props.columns" :key="index">
+    <form class="grid grid-cols-1 gap-4 px-4 pb-5 lg:grid-cols-2" @submit.prevent="submit" enctype="multipart/form-data">
+        <div
+            class="flex flex-col gap-1.5"
+            :class="['textarea'].includes(column.type ?? '') ? 'lg:col-span-2' : ''"
+            v-for="(column, index) in props.columns"
+            :key="index"
+        >
             <Label class="text-body-muted" :for="column.label">{{ column.label.charAt(0).toUpperCase() + column.label.slice(1) }}</Label>
 
             <Input
@@ -91,11 +98,24 @@ function submit() {
 
             <File
                 v-else-if="column.type === 'file'"
-                class="w-full"
                 :id="column.label"
                 v-model="form[column.key]"
                 :name="column.key"
-                :label="column.label"
+                :src="form[column.key]"
+            />
+
+            <ImageFile
+                v-else-if="column.type === 'imageFile'"
+                :id="column.label"
+                v-model="form[column.key]"
+                :name="column.key"
+                :src="form[column.key]"
+            />
+
+            <ImagesFile
+                v-else-if="column.type === 'imagesFile'"
+                v-model="form[column.key]"
+                :name="column.key"
                 :src="form[column.key]"
             />
 
@@ -123,13 +143,7 @@ function submit() {
                 :options="column.options ?? []"
             />
 
-            <Color
-                v-else-if="column.type === 'color'"
-                :id="column.label"
-                class="w-full"
-                v-model="form[column.key]"
-                :required="column.required"
-            />
+            <Color v-else-if="column.type === 'color'" :id="column.label" class="w-full" v-model="form[column.key]" :required="column.required" />
 
             <MultiInput
                 v-else-if="column.type === 'multiInput'"
