@@ -7,8 +7,8 @@ use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\Plan;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use App\Http\Requests\Dashboard\Pages\Plans\StorePlanRequest;
-use App\Http\Requests\Dashboard\Pages\Plans\UpdatePlanRequest;
+use App\Http\Requests\Dashboard\Pages\Subscriptions\Plans\StorePlanRequest;
+use App\Http\Requests\Dashboard\Pages\Subscriptions\Plans\UpdatePlanRequest;
 
 class PlansController extends Controller
 {

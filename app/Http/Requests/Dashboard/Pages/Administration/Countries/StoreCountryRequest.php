@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Dashboard\Pages\Countries;
+namespace App\Http\Requests\Dashboard\Pages\Administration\Countries;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

@@ -7,8 +7,8 @@ use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\PaymentMethod;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use App\Http\Requests\Dashboard\Pages\PaymentMethods\StorePaymentMethodRequest;
-use App\Http\Requests\Dashboard\Pages\PaymentMethods\UpdatePaymentMethodRequest;
+use App\Http\Requests\Dashboard\Pages\Subscriptions\PaymentMethods\StorePaymentMethodRequest;
+use App\Http\Requests\Dashboard\Pages\Subscriptions\PaymentMethods\UpdatePaymentMethodRequest;
 
 class PaymentMethodsController extends Controller
 {

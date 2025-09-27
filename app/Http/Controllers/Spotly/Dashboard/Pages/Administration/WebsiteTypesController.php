@@ -7,8 +7,8 @@ use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\WebsiteType;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use App\Http\Requests\Dashboard\Pages\WebsiteTypes\StoreWebsiteTypeRequest;
-use App\Http\Requests\Dashboard\Pages\WebsiteTypes\UpdateWebsiteTypeRequest;
+use App\Http\Requests\Dashboard\Pages\Administration\WebsiteTypes\StoreWebsiteTypeRequest;
+use App\Http\Requests\Dashboard\Pages\Administration\WebsiteTypes\UpdateWebsiteTypeRequest;
 use Illuminate\Support\Facades\Auth;
 
 class WebsiteTypesController extends Controller

@@ -7,8 +7,8 @@ use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\Country;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use App\Http\Requests\Dashboard\Pages\Countries\StoreCountryRequest;
-use App\Http\Requests\Dashboard\Pages\Countries\UpdateCountryRequest;
+use App\Http\Requests\Dashboard\Pages\Administration\Countries\StoreCountryRequest;
+use App\Http\Requests\Dashboard\Pages\Administration\Countries\UpdateCountryRequest;
 
 class CountriesController extends Controller
 {

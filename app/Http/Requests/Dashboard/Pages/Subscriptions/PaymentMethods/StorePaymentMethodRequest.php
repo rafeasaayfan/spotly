@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Dashboard\Pages\PaymentMethods;
+namespace App\Http\Requests\Dashboard\Pages\Subscriptions\PaymentMethods;
 
 use Illuminate\Foundation\Http\FormRequest;
 
