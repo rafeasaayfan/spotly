@@ -34,6 +34,7 @@ interface HeaderProps {
     handleAction: (action: 'delete', idOrIds: number | number[]) => Promise<void>;
     tableConditions: TableConditions;
     path: string;
+    dashboardFor?: string,
 }
 
 const props = defineProps<HeaderProps>();
@@ -134,7 +135,7 @@ function setFormData(key: string, value: any) {
                         <DialogDescription class="sr-only"> No description provided. </DialogDescription>
                     </DialogHeader>
 
-                    <Modal action="create" :path="props.path" :routeName="props.routeName" />
+                    <Modal action="create" :path="props.path" :routeName="props.routeName" :dashboardFor="props.dashboardFor" />
                 </DialogScrollContent>
             </Dialog>
 
