@@ -75,6 +75,12 @@ trait DataTableTrait
      */
     protected function applyColumnSelection($query, array $columns)
     {
+        $existingColumns = $query->getQuery()->columns;
+
+        if ($existingColumns) {
+            $columns = array_merge($columns, $existingColumns);
+        }
+    
         $query->select($columns);
     }
 
