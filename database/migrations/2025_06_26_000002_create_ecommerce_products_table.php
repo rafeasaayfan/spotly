@@ -18,22 +18,13 @@ return new class extends Migration
             $table->foreignId('brand_id')->nullable()->constrained('brands')->onDelete('set null');
 
             $table->string('name');
-            $table->text('description')->nullable();
-            $table->text('short_description')->nullable();
+            $table->string('slug');
 
             $table->decimal('price', 10, 2);
             $table->decimal('sale_price', 10, 2)->nullable();
-            $table->integer('stock_quantity')->default(0);
 
-            $table->decimal('weight', 8, 2)->nullable();
-            $table->decimal('length', 8, 2)->nullable();
-            $table->decimal('width', 8, 2)->nullable();
-            $table->decimal('height', 8, 2)->nullable();
-
-            $table->string('dimension_unit')->default('cm');
-            $table->string('weight_unit')->default('kg');
-
-            $table->json('colors')->nullable();
+            $table->text('short_description')->nullable();
+            $table->text('description')->nullable();
 
             $table->integer('views_count')->default(0);
             $table->integer('sales_count')->default(0);
@@ -45,6 +36,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
+            $table->unique(['website_id', 'slug']);
             $table->index(['website_id', 'is_active']);
             $table->index(['category_id', 'is_active']);
         });

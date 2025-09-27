@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EcommerceProduct extends Model
+class EcommerceProduct extends Model 
 {
     protected $fillable = [
         'website_id',
@@ -12,22 +12,13 @@ class EcommerceProduct extends Model
         'brand_id',
 
         'name',
-        'description',
-        'short_description',
+        'slug',
 
         'price',
         'sale_price',
-        'stock_quantity',
 
-        'weight',
-        'length',
-        'width',
-        'height',
-
-        'dimension_unit',
-        'weight_unit',
-
-        'colors',
+        'short_description',
+        'description',
 
         'views_count',
         'sales_count',
@@ -35,15 +26,6 @@ class EcommerceProduct extends Model
         'is_in_home',
         'is_special',
         'is_active',
-        'is_downloadable',
-    ];
-
-    protected $casts = [
-        'colors' => 'array',
-        'is_in_home' => 'boolean',
-        'is_special' => 'boolean',
-        'is_active' => 'boolean',
-        'is_downloadable' => 'boolean',
     ];
 
     /**
@@ -68,5 +50,21 @@ class EcommerceProduct extends Model
     public function brand()
     {
         return $this->belongsTo(Brand::class, 'brand_id');
+    }
+
+    /**
+     * Get the product variants.
+     */
+    public function variants()
+    {
+        return $this->hasMany(EcommerceProductVariant::class, 'product_id');
+    }
+
+    /**
+     * Get the product stock quantity.
+     */
+    public function scopeWithStockQuantity($query)
+    {
+        return $query->withSum('variants', 'stock_quantity');
     }
 }
