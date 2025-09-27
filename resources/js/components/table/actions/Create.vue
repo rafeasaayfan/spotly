@@ -15,6 +15,7 @@ import { type Column } from '@/composables/dataTable/useDataTable';
 const props = defineProps<{
     columns: Column[];
     table: string;
+    routeDash?: string;
 }>();
 
 const form = useForm(
@@ -30,7 +31,8 @@ const form = useForm(
 );
 
 function submit() {
-    form.post(route(`dashboard.${props.table}.store`), {
+    const routeName = props.routeDash ? props.routeDash : `dashboard.${props.table}.store`;
+    form.post(route(routeName), {
         onSuccess: () => {
             const closeButton = document.querySelector('[data-slot="dialog-close"]');
             (closeButton as HTMLElement)?.click();
@@ -85,11 +87,9 @@ function submit() {
 
             <File
                 v-else-if="column.type === 'file'"
-                class="w-full"
                 :id="column.label"
                 v-model="form[column.key]"
                 :name="column.key"
-                :label="column.label"
                 :multiple="column.multiple || false"
             />
 
