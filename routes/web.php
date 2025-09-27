@@ -43,7 +43,7 @@ Route::middleware([HandleLanguage::class])->group(function () {
         require __DIR__ . '/auth.php';
     });
 
-    // Websites Routes
+    // Websites Routes domain('{website?}.spotly.test')->
     Route::middleware([IdentifyWebsite::class])->name('website.')->group(function () {
         require __DIR__ . '/websites/main.php';
     });
