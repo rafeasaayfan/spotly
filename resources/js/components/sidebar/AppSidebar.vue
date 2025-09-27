@@ -5,6 +5,7 @@ import SidebarMain from '@/components/sidebar/content/SidebarMain.vue';
 import SidebarUser from '@/components/sidebar/content/SidebarUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from '@/components/ui/sidebar';
 import { footerSidebarItems, mainSidebarItems, sidebarCollapsible, sidebarVariant } from '@/config/navigations';
+import { footerSidebarItems as ecommerceFooter, mainSidebarItems as ecommerceMain } from '@/pages/websites/e-commerce/config/navigations/sidebar';
 import { SharedData } from '@/types';
 import { usePage } from '@inertiajs/vue3';
 
@@ -20,8 +21,8 @@ const getSidebarConfig = (dashboard: string) => {
   switch (dashboard) {
     case 'e-commerce':
       return {
-        main: [],
-        footer: [],
+        main: ecommerceMain,
+        footer: ecommerceFooter,
       };
     default:
       return {
