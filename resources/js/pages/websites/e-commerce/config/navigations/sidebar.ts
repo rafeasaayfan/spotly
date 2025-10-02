@@ -24,7 +24,7 @@ export const mainSidebarItems: SidebarSection[] = [
         ],
     },
     {
-        name: 'E-Commerce',
+        name: 'Catalog',
         items: [
             {
                 title: 'Categories',
@@ -37,9 +37,29 @@ export const mainSidebarItems: SidebarSection[] = [
                 icon: icons.Tags,
             },
             {
+                title: 'Delivery Fees',
+                href: '/dashboard/delivery-fees',
+                icon: icons.Truck,
+            },
+            {
                 title: 'Products',
                 href: '/dashboard/products',
                 icon: icons.Package,
+            },
+        ],
+    },
+    {
+        name: 'Shop',
+        items: [
+            {
+                title: 'Orders',
+                href: '/dashboard/orders',
+                icon: icons.ClipboardList,
+            },
+            {
+                title: 'Carts',
+                href: '/dashboard/carts',
+                icon: icons.ShoppingCart,
             },
         ],
     },
@@ -51,7 +71,7 @@ export const footerSidebarItems: SidebarSection[] = [
         items: [
             {
                 title: 'Go To Your Website Settings',
-                href: '/dashboard/assignments/permissions',
+                href: 'http://127.0.0.1:8000/dashboard/my-websites',
                 icon: icons.Diamond,
             },
         ],
