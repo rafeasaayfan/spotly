@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('template_template_colors', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('website_type_id')->constrained('website_types')->onDelete('cascade');
             $table->foreignId('template_id')->constrained('templates')->onDelete('cascade');
             $table->foreignId('template_color_id')->constrained('template_colors')->onDelete('cascade');
-            $table->boolean('is_default')->default(false);
-            $table->timestamps();
 
-            $table->unique(['template_id', 'template_color_id']);
+            $table->timestamps();
         });
     }
 

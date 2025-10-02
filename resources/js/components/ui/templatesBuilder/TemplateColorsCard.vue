@@ -40,11 +40,12 @@ const preview = (action: 'create' | 'view', templateName: string, colors: Record
 
 <template>
     <div v-if="props.isDefault && props.item !== undefined && props.selectedTemplateColorId !== undefined"
-        class="backdrop-blur border-muted relative flex min-h-[280px] min-w-[450px] max-h-[280px] max-w-[450px] flex-col rounded-lg border bg-black/3 transition-all duration-200 ease-in-out hover:-translate-y-1 hover:bg-black/4 dark:bg-white/3 dark:hover:bg-white/4"
-        :class="props.selectedTemplateColorId === props.item.template_color.id ? '-translate-y-1 bg-black/6 dark:bg-white/6' : ''
-            ">
-        <div v-if="props.selectedTemplateColorId === props.item.template_color.id"
-            class="absolute inset-0 top-0 left-0 bg-[var(--primary)]/10 blur-xl"></div>
+        class="backdrop-blur border-[var(--border)] relative flex min-h-[280px] min-w-[450px] max-h-[280px] 
+        max-w-[450px] flex-col rounded-lg border bg-black/3 transition-all duration-200 
+        ease-in-out hover:-translate-y-1 hover:bg-black/4 dark:bg-white/3 dark:hover:bg-white/4"
+        :class="props.selectedTemplateColorId === props.item.template_color.id ? 
+        '-translate-y-1 bg-black/6 dark:bg-white/6' : ''
+        ">
 
         <div class="z-20 flex items-center justify-between rounded-md bg-black/1 p-2">
             <span class="text-active text-lg">
@@ -52,14 +53,14 @@ const preview = (action: 'create' | 'view', templateName: string, colors: Record
             </span>
 
             <div class="flex items-center gap-1">
-                <Dialog>
+                <!-- <Dialog>
                     <DialogTrigger as-child
                         @click="preview('create', props.item.template.name, props.item.template_color)">
                         <Edit class="size-7 rounded-full" />
                     </DialogTrigger>
                     <Create v-if="modalType === 'create' && previewData" :data="previewData" @close="closeModals"
                         @update="updateField" />
-                </Dialog>
+                </Dialog> -->
 
                 <Dialog>
                     <DialogTrigger as-child
@@ -70,7 +71,7 @@ const preview = (action: 'create' | 'view', templateName: string, colors: Record
                 </Dialog>
 
                 <button type="button"
-                    class="bg-content flex cursor-pointer items-center justify-center rounded-md text-xs backdrop-blur-3xl"
+                    class="bg-[var(--primary)]/60 flex cursor-pointer items-center justify-center rounded-md text-xs backdrop-blur-3xl"
                     @click="selectingItem(item, false)">
                     <div v-if="selectedTemplateColorId === props.item.template_color.id"
                         class="h-full w-full rounded-md bg-gradient-to-r from-[var(--primary)] via-[var(--primary-hover)] to-[var(--primary-active)] px-3 py-2 font-bold text-white">
@@ -85,10 +86,9 @@ const preview = (action: 'create' | 'view', templateName: string, colors: Record
     </div>
 
     <div v-else-if="!props.isDefault && props.colors !== undefined && props.templateTemplateColors !== undefined"
-        class="backdrop-blur border-muted relative flex min-h-[280px] min-w-[450px] max-h-[280px] max-w-[450px] flex-col rounded-lg border bg-black/3 transition-all duration-200 ease-in-out hover:-translate-y-1 hover:bg-black/4 dark:bg-white/3 dark:hover:bg-white/4"
-        :class="props.custom_template_color || Object.keys(props.colors).length > 0 ? '' : 'hidden'">
-        <div v-if="props.custom_template_color"
-            class="absolute inset-0 top-0 left-0 h-full w-full bg-[var(--primary)]/10 blur-xl"></div>
+        class="backdrop-blur border-muted relative flex min-h-[280px] min-w-[450px] max-h-[280px] max-w-[450px] flex-col rounded-lg border 
+        bg-black/3 transition-all duration-200 ease-in-out hover:-translate-y-1 hover:bg-black/4 dark:bg-white/3 dark:hover:bg-white/4"
+        :class="props.custom_template_color || Object.keys(props.colors).length > 0 ? '-translate-y-1' : 'hidden'">
 
         <div class="z-20 flex items-center justify-between rounded-md p-2">
             <span class="text-active text-lg">
@@ -114,7 +114,7 @@ const preview = (action: 'create' | 'view', templateName: string, colors: Record
                 </Dialog>
 
                 <button type="button"
-                    class="bg-content flex cursor-pointer items-center justify-center rounded-md text-xs backdrop-blur-3xl"
+                    class="bg-[var(--primary)]/60 flex cursor-pointer items-center justify-center rounded-md text-xs backdrop-blur-3xl"
                     @click="selectingItem(0, true)">
                     <div v-if="props.custom_template_color"
                         class="h-full w-full rounded-md bg-gradient-to-r from-[var(--primary)] via-[var(--primary-hover)] to-[var(--primary-active)] px-3 py-2 font-bold text-white">

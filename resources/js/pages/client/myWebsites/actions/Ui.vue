@@ -19,7 +19,6 @@ import DashboardLayout from '@/layouts/DashboardLayout.vue';
 import { confirmDialog, toast } from '@/lib/sweetAlert';
 import { SharedData, type BreadcrumbItem } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
-import axios from 'axios';
 import { LoaderCircle, PlusCircle } from 'lucide-vue-next';
 import { ref, watchEffect } from 'vue';
 
@@ -39,7 +38,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 const props = defineProps<{
     websiteTemplates: Record<string, any>;
     website: Record<string, any>;
-    templates: Record<string, any>;
+    templateTemplateColors: Record<string, any>;
     flash?: {
         toastType: 'success' | 'error' | 'warning' | 'info';
         message: string;
@@ -92,26 +91,19 @@ const createForm = useForm<{
     colors: [],
 });
 
-const templateTemplateColors = ref<Record<string, any>>([]);
+const selectedtemplateTemplateColors = ref<Record<string, any>>([]);
 const animate = ref(false);
 
-const fetchTemplateTemplateColors = async (templateId: number) => {
-    try {
-        animate.value = false;
+const filterTemplateTemplateColors = async (templateId: number) => {
+    animate.value = false;
 
-        const response = await axios.post(route('websiteBuilder.getTemplateTemplateColors'), { templateId: templateId });
+    selectedtemplateTemplateColors.value = [];
+    selectedtemplateTemplateColors.value = props.templateTemplateColors.filter((item: any) => item.template_id == templateId);
+    createForm.template_id = templateId;
 
-        if (response.data?.props?.templateTemplateColors) {
-            templateTemplateColors.value = response.data.props.templateTemplateColors;
-            createForm.template_id = templateId;
-
-            setTimeout(() => {
-                animate.value = true;
-            }, 10);
-        }
-    } catch (error: any) {
-        console.error(error);
-    }
+    setTimeout(() => {
+        animate.value = true;
+    }, 10);
 };
 
 const selectingItem = (item: any, is_custom: boolean = false) => {
@@ -172,18 +164,20 @@ const submitTemplate = () => {
 
                         <!--* Templates -->
                         <div class="flex w-full flex-col px-4 py-5">
-                            <HeadingSmall :title="$t('websiteBuilder.thirdStep.website_template_title')" :description="$t('websiteBuilder.thirdStep.website_template_description')" />
+                            <HeadingSmall
+                                :title="$t('websiteBuilder.thirdStep.website_template_title')"
+                                :description="$t('websiteBuilder.thirdStep.website_template_description')"
+                            />
 
                             <div class="custom-scrollbar flex w-full items-center gap-3 overflow-x-auto p-2">
                                 <TemplateBtn
-                                    v-for="template in props.templates"
-                                    :key="template.id"
-                                    :template_id="template.id"
-                                    @click="fetchTemplateTemplateColors(template.id)"
+                                    v-for="templateTemplateColor in props.templateTemplateColors"
+                                    :key="templateTemplateColor.id"
+                                    :templateId="templateTemplateColor.template.id"
+                                    @click="filterTemplateTemplateColors(templateTemplateColor.template.id)"
                                     :animate="animate"
-                                    :templateId="template.id"
                                     :selectedTemplateId="createForm.template_id"
-                                    :templateName="template.name"
+                                    :templateName="templateTemplateColor.template.name"
                                 />
                             </div>
 
@@ -194,7 +188,7 @@ const submitTemplate = () => {
 
                         <!--* Template Colors -->
                         <div
-                            v-if="templateTemplateColors.length > 0"
+                            v-if="selectedtemplateTemplateColors.length > 0"
                             class="flex w-full flex-col px-4 pb-5 transition-all duration-300 ease-in-out"
                             :class="animate ? 'translate-y-0 scale-100 rotate-0 opacity-100' : 'translate-y-10 scale-75 rotate-10 opacity-0'"
                         >
@@ -218,7 +212,7 @@ const submitTemplate = () => {
                                 <!-- Default Colors -->
                                 <TemplateColorsCard
                                     :isDefault="true"
-                                    v-for="item in templateTemplateColors"
+                                    v-for="item in selectedtemplateTemplateColors"
                                     :key="item.id"
                                     :item="item"
                                     :selectedTemplateColorId="createForm.template_color_id"

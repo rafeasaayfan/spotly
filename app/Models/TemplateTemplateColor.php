@@ -13,30 +13,34 @@ class TemplateTemplateColor extends Model implements HasMedia
     protected $appends = ['uiImages'];
 
     protected $fillable = [
+        'website_type_id',
         'template_id',
         'template_color_id',
-        'is_default',
     ];
 
+    /**
+     * Get the website type associated with this template template color.
+     */
+    public function websiteType()
+    {
+        return $this->belongsTo(WebsiteType::class, 'website_type_id');
+    }
+
+    /**
+     * Get the template associated with this template template color.
+     */
     public function template()
     {
         return $this->belongsTo(Template::class);
     }
 
+    /**
+     * Get the template color associated with this template template color.
+     */
     public function templateColor()
     {
         return $this->belongsTo(TemplateColor::class);
     }
-
-    // /**
-    //  * Register media collections for the pivot table
-    //  */
-    // public function registerMediaCollections(): void
-    // {
-    //     $this->addMediaCollection('images')
-    //         ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
-    //         ->withResponsiveImages();
-    // }
 
     /**
      * Get the uiImages from media.

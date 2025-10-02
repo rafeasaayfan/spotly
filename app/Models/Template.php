@@ -9,7 +9,7 @@ class Template extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['created_by', 'website_type_id', 'name', 'description', 'is_active'];
+    protected $fillable = ['created_by', 'name', 'description', 'is_active'];
 
     /**
      * Get the user that created the template.
@@ -17,14 +17,6 @@ class Template extends Model
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
-    }
-
-    /**
-     * Get the website type associated with this template.
-     */
-    public function websiteType()
-    {
-        return $this->belongsTo(WebsiteType::class, 'website_type_id');
     }
 
     /**

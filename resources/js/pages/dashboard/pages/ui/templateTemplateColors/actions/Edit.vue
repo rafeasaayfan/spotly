@@ -3,9 +3,15 @@ import Edit from '@/components/table/actions/Edit.vue';
 
 const props = defineProps<{
     data: Record<string, any>;
+    websiteTypes: Record<string, any>;
     templates: Record<string, any>;
     templateColors: Record<string, any>;
 }>();
+
+const mappedWebsiteTypes = props.websiteTypes.map((item: any) => ({
+    value: item.id,
+    label: item.type,
+}));
 
 const mappedTemplates = props.templates.map((item: any) => ({
     value: item.id,
@@ -18,6 +24,14 @@ const mappedTemplateColors = props.templateColors.map((item: any) => ({
 }));
 
 const columns = [
+    {
+        key: 'website_type_id',
+        label: 'Website Type',
+        type: 'select_with_search',
+        placeholder: 'Select a type',
+        required: true,
+        relation: mappedWebsiteTypes,
+    },
     {
         key: 'template_id',
         label: 'Template Name',
@@ -33,17 +47,6 @@ const columns = [
         placeholder: 'Select a template color',
         required: true,
         relation: mappedTemplateColors,
-    },
-    {
-        key: 'is_default',
-        label: 'Default',
-        type: 'select',
-        placeholder: 'Is this template color default',
-        required: true,
-        options: [
-            { value: '0', label: 'No' },
-            { value: '1', label: 'Yes' },
-        ],
     },
     {
         key: 'uiImages',

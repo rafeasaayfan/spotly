@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Dashboard\Pages\Ui\Templates;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreTemplateRequest extends FormRequest
 {
@@ -14,8 +15,12 @@ class StoreTemplateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'website_type_id' => ['required', 'exists:website_types,id'],
-            'name' => ['required', 'string', 'max:255', 'unique:templates,name'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('templates', 'name')
+            ],
             'description' => ['nullable', 'string', 'max:150'],
             'is_active' => ['required', 'boolean'],
         ];

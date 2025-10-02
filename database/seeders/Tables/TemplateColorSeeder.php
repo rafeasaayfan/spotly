@@ -18,7 +18,7 @@ class TemplateColorSeeder extends Seeder
             'name' => 'spotly-ui-colors',
 
             'bg_body_light' => '#FFFFFF',
-            'bg_body_dark' => '#000000',
+            'bg_body_dark' => 'oklch(13% 0.028 261.692)',
             'bg_nav_light' => 'rgba(0,0,0,0.03)',
             'bg_nav_dark' => 'rgba(255, 255, 255, 0.03)',
             'bg_footer_light' => 'rgba(0,0,0,0.03)',
@@ -31,8 +31,8 @@ class TemplateColorSeeder extends Seeder
             'foreground_muted_light' => '#404040',
             'foreground_muted_dark' => '#808080',
     
-            'bg_field_light' => '#cad3e8',
-            'bg_field_dark' => '#111827',
+            'bg_field_light' => 'hsl(218, 92%, 95%)',
+            'bg_field_dark' => 'oklch(18% 0.034 264.665)',
     
             'bg_card_light' => 'rgba(0,0,0,0.05)',
             'bg_card_hover_light' => 'rgba(0,0,0,0.08)',
@@ -63,7 +63,7 @@ class TemplateColorSeeder extends Seeder
             'secondary_hover_dark' => '#404040',
     
             'border_color_light' => '#e0e0e0',
-            'border_color_dark' => '#0d0d0d',
+            'border_color_dark' => 'oklch(21% 0.034 264.665)',
     
             'description' => 'Our spotly colors',
     

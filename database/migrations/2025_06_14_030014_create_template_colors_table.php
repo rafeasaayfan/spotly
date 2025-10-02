@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('template_colors', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
-            $table->string('name')->unique();
+            $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
+            $table->string('name');
 
             $table->string('bg_body_light');
             $table->string('bg_body_dark');

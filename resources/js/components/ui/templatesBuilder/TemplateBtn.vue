@@ -2,7 +2,7 @@
 import { CheckCircle } from 'lucide-vue-next';
 
 interface Props {
-    templateId: string,
+    templateId: string | number,
     selectedTemplateId: string | number
     templateName: string
     animate: boolean
@@ -14,14 +14,12 @@ const props = defineProps<Props>();
 <template>
     <button type="button"
         class="border-[var(--border)] text-body relative flex min-h-26 min-w-40 cursor-pointer items-center justify-center 
-        rounded-lg border bg-black/3 transition-all duration-200 ease-in-out hover:-translate-y-1 hover:scale-102 
-        hover:bg-black/4 active:scale-98 dark:bg-white/3 dark:hover:bg-white/4 backdrop-blur"
+        rounded-lg border transition-all duration-200 ease-in-out hover:-translate-y-1 hover:scale-102 
+        hover:bg-black/4 active:scale-98 dark:hover:bg-white/4 backdrop-blur bg-black/3 dark:bg-white/3"
         :class="props.selectedTemplateId === props.templateId
-                ? 'text-active -translate-y-1 scale-102 bg-black/4 font-bold dark:bg-white/4 border-[var(--primary)]/30'
+                ? 'text-active -translate-y-1 scale-102 font-bold bg-black/6 dark:bg-white/6'
                 : ''
             ">
-        <div v-if="props.selectedTemplateId === props.templateId"
-            class="absolute top-0 left-0 m-5 h-1/2 w-1/2 bg-[var(--success)]/20 dark:bg-[var(--success)]/10 blur-xl"></div>
 
         <h2 class="text-lg font-bold">{{ props.templateName }}</h2>
 

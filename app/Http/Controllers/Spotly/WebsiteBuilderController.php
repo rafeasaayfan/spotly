@@ -32,8 +32,8 @@ class WebsiteBuilderController extends Controller
 
             $cities = config('cities.lebanon');
 
-            $templates = Template::active()->where('website_type_id', $typeId)
-                ->with(['templateColors'])
+            $templateTemplateColors = TemplateTemplateColor::where('website_type_id', $typeId)
+                ->with(['media', 'template', 'templateColor'])
                 ->get();
 
             return $this->inertiaRender('websiteBuilder/Wizard', [
@@ -42,34 +42,10 @@ class WebsiteBuilderController extends Controller
                 'typeId' => $typeId,
                 'countries' => $countries,
                 'cities' => $cities,
-                'templates' => $templates,
+                'templateTemplateColors' => $templateTemplateColors,
             ]);
         } catch (\Exception $e) {
             return $this->logResponse('WebsiteBuilderController@index', $e, 'An error occurred while fetching website builder data');
-        }
-    }
-
-    /**
-     * Get the template colors for a specific template.
-     */
-    public function getTemplateTemplateColors(Request $request)
-    {
-        $validate = $request->validate([
-            'templateId' => 'required|exists:templates,id'
-        ]);
-
-        try {
-            $templateTemplateColors = TemplateTemplateColor::with([
-                'media',
-                'template:id,name',
-                'templateColor'
-            ])
-                ->where('template_id', $validate['templateId'])
-                ->get();
-
-            return $this->jsonSuccess('', ['templateTemplateColors' => $templateTemplateColors]);
-        } catch (\Exception $e) {
-            return $this->logJsonResponse('WebsiteBuilderController@getTemplateTemplateColors', $e, 'An error occurred while fetching template');
         }
     }
 
@@ -170,13 +146,13 @@ class WebsiteBuilderController extends Controller
                 $websiteId,
                 $websiteTemplateData['template_color_id'],
                 $websiteTemplateData['template_id'],
-                $websiteTemplateData['template_images'],
+                $websiteTemplateData['template_images'] ?? [],
                 $websiteTemplateData['custom_template_color'],
                 $websiteTemplateData['colors'] ?? [],
             );
-            $result = $uiService->storeTemplate(1);
+            $result = $uiService->createNewWebsiteTemplate();
 
-            if($result !== true) {
+            if ($result !== true) {
                 return $this->backError($result ?? '');
             }
         } catch (\Exception $e) {

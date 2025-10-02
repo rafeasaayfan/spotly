@@ -19,7 +19,9 @@ class UpdateTemplateColorRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('template_colors', 'name')->ignore($this->route('templateColor')->id)
+                Rule::unique('template_colors', 'name')
+                    ->where('is_custom', false)
+                    ->ignore($this->route('templateColor')->id)
             ],
 
             'bg_body_light' => ['required', 'string', 'max:255'],

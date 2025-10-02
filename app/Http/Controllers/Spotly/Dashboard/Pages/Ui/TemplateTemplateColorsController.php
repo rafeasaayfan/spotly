@@ -21,9 +21,9 @@ class TemplateTemplateColorsController extends Controller
     {
         $query = TemplateTemplateColor::query();
 
-        $columnsSearching = ['template.name', 'templateColor.name'];
+        $columnsSearching = ['template.name', 'templateColor.name', 'websiteType.type'];
         $columnsSelection = [];
-        $relations = ['template_name', 'templateColor_name', 'media'];
+        $relations = ['template_name', 'templateColor_name', 'media', 'websiteType_type'];
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
@@ -38,10 +38,12 @@ class TemplateTemplateColorsController extends Controller
         try {
             $templates = $this->getRelation('template', ['name']);
             $templateColors = $this->getRelation('templateColor', ['name']);
+            $websiteTypes = $this->getRelation('websiteType', ['type']);
 
             return $this->jsonSuccess('', [
                 'templates' => $templates,
                 'templateColors' => $templateColors,
+                'websiteTypes' => $websiteTypes,
             ]);
         } catch (\Exception $e) {
             return $this->logJsonResponse('TemplateTemplateColorsController@create', $e, 'An error when fetching the create page');
@@ -83,9 +85,9 @@ class TemplateTemplateColorsController extends Controller
     public function show(string $id)
     {
         try {
-            $query = TemplateTemplateColor::with(['media', 'template', 'templateColor'])->findOrFail($id);
+            $query = TemplateTemplateColor::with(['media', 'websiteType', 'template', 'templateColor'])->findOrFail($id);
 
-            $templateTemplateColor = $this->flattenRelationData($query, ['template_name', 'templateColor_name']);
+            $templateTemplateColor = $this->flattenRelationData($query, ['websiteType_type', 'template_name', 'templateColor_name']);
 
             return $this->jsonSuccess('', [
                 'data' => $templateTemplateColor,
@@ -105,11 +107,13 @@ class TemplateTemplateColorsController extends Controller
 
             $templates = $this->getRelation('template', ['name']);
             $templateColors = $this->getRelation('templateColor', ['name']);
+            $websiteTypes = $this->getRelation('websiteType', ['type']);
 
             return $this->jsonSuccess('', [
                 'data' => $templateTemplateColor,
                 'templates' => $templates,
                 'templateColors' => $templateColors,
+                'websiteTypes' => $websiteTypes,
             ]);
         } catch (\Exception $e) {
             return $this->logJsonResponse('TemplateTemplateColorsController@edit', $e, 'An error when fetching the edit page');

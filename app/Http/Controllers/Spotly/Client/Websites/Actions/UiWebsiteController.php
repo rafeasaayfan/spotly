@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Spotly\Client\Websites\Actions;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\CreateWebsiteUiRequest;
 use App\Models\Template;
+use App\Models\TemplateTemplateColor;
 use App\Models\Website;
 use App\Models\WebsiteTemplate;
 use App\Services\UiService;
@@ -26,12 +27,14 @@ class UiWebsiteController extends Controller
 
             $website->load(['websiteType:id,type']);
 
-            $templates = Template::active()->get();
+            $templateTemplateColors = TemplateTemplateColor::where('website_type_id', $website->website_type_id)
+                ->with(['media', 'template', 'templateColor'])
+                ->get();
 
             return $this->inertiaRender('client/myWebsites/actions/Ui', [
                 'websiteTemplates' => $websiteTemplate,
                 'website' => $website,
-                'templates' => $templates,
+                'templateTemplateColors' => $templateTemplateColors,
             ]);
         } catch (\Exception $e) {
             return $this->logResponse('UiWebsiteController@index', $e, 'An error occurred while loading the website UI templates');
@@ -92,7 +95,7 @@ class UiWebsiteController extends Controller
                 $request->is_custom,
                 $request->colors
             );
-            $result = $uiService->storeTemplate(0);
+            $result = $uiService->storeTemplate();
 
             if($result === true) {
                 return $this->redirectSuccess('client.myWebsite.ui', 'Your website template created succesfully', 'success', [

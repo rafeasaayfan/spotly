@@ -26,7 +26,7 @@ const props = defineProps<{
     typeId: number;
     countries: Record<string, any>;
     cities: Array<string>;
-    templates: Record<string, any>;
+    templateTemplateColors: Record<string, any>;
     flash?: {
         toastType: 'success' | 'error' | 'warning' | 'info';
         message: string;
@@ -227,7 +227,7 @@ const fetchNewType = async () => {
                                 <ThirdStep
                                     :form="form"
                                     :type="props.type"
-                                    :templates="props.templates"
+                                    :templateTemplateColors="props.templateTemplateColors"
                                     @update="updateField"
                                 />
                             </div>

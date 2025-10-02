@@ -4,12 +4,13 @@ namespace App\Services;
 
 use App\Models\TemplateColor;
 use App\Models\WebsiteTemplate;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class UiService
 {
     protected int $websiteId;
-    protected int $template_color_id;
+    protected int | null $template_color_id;
     protected int $template_id;
     protected array $template_images;
     protected bool $is_custom;
@@ -25,7 +26,7 @@ class UiService
      * @param bool  $is_custom         Whether the template uses custom colors.
      * @param array $colors            The custom colors (if any).
      */
-    public function __construct(int $websiteId, int $template_color_id, int $template_id, array $template_images, bool $is_custom = false, array $colors = [])
+    public function __construct(int $websiteId, int | null $template_color_id, int $template_id, array $template_images = [], bool $is_custom = false, array $colors = [])
     {
         $this->websiteId = $websiteId;
         $this->template_color_id = $template_color_id;
@@ -43,12 +44,12 @@ class UiService
      *
      * @return void
      */
-    public function storeTemplate(bool $is_active = false)
+    public function storeTemplate()
     {
         try {
             $checkDuplicateTemplate = WebsiteTemplate::where('website_id', $this->websiteId)
-            ->where('template_id', $this->template_id)->where('template_color_id', $this->template_color_id)
-            ->where('is_custom', false)->first();
+                ->where('template_id', $this->template_id)->where('template_color_id', $this->template_color_id)
+                ->where('is_custom', false)->first();
             if($checkDuplicateTemplate) {
                 return 'You already have this template!';
             }
@@ -57,12 +58,32 @@ class UiService
             if ($websiteTemplateCount === 4) {
                 return 'You can\'t create more then four templates!';
             }
-    
+
+            return $this->createNewWebsiteTemplate(false);
+        } catch (\Exception $e) {
+            Log::error('Ui Service Error, Failed to create the website template', [
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Create and activate a new website template.
+     *
+     * If custom colors are provided, creates a new TemplateColor (with the current user as creator) and uses its ID.
+     * Otherwise, uses the provided template_color_id and template_images.
+     *
+     * @return bool Returns true on success, or an error message string on failure.
+     */
+    public function createNewWebsiteTemplate(bool $is_active = true)
+    {
+        try {
             $templateColorId = '';
             $template_images = [''];
     
             if (!empty($this->is_custom) && $this->is_custom && !empty($this->colors)) {
                 $templateColors = TemplateColor::create([
+                    'created_by' => Auth::id(),
                     ...$this->colors,
                     'is_custom' => $this->is_custom,
                 ]);

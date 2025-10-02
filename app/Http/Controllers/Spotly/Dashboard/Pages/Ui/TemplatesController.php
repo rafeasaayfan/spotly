@@ -22,9 +22,9 @@ class TemplatesController extends Controller
     {
         $query = Template::query();
 
-        $columnsSearching = ['createdBy.name', 'websiteType.type'];
+        $columnsSearching = ['createdBy.name'];
         $columnsSelection = [];
-        $relations = ['createdBy_name', 'websiteType_type'];
+        $relations = ['createdBy_name'];
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
@@ -36,15 +36,7 @@ class TemplatesController extends Controller
      */
     public function create()
     {
-        try {
-            $websiteTypes = $this->getRelation('websiteType', ['type']);
-
-            return $this->jsonSuccess('', [
-                'websiteTypes' => $websiteTypes,
-            ]);
-        } catch (\Exception $e) {
-            return $this->logJsonResponse('TemplatesController@create', $e, 'An error when fetching the create page');
-        }
+        //
     }
 
     /**
@@ -72,8 +64,8 @@ class TemplatesController extends Controller
     public function show(string $id)
     {
         try {
-            $query = Template::with(['createdBy', 'websiteType'])->findOrFail($id);
-            $template = $this->flattenRelationData($query, ['createdBy_name', 'websiteType_type']);
+            $query = Template::with(['createdBy'])->findOrFail($id);
+            $template = $this->flattenRelationData($query, ['createdBy_name']);
 
             return $this->jsonSuccess('', [
                 'data' => $template,
@@ -90,11 +82,9 @@ class TemplatesController extends Controller
     {
         try {
             $template = Template::findOrFail($id);
-            $websiteTypes = $this->getRelation('websiteType', ['type']);
 
             return $this->jsonSuccess('', [
                 'data' => $template,
-                'websiteTypes' => $websiteTypes,
             ]);
         } catch (\Exception $e) {
             return $this->logJsonResponse('TemplatesController@edit', $e, 'An error when fetching the edit page');

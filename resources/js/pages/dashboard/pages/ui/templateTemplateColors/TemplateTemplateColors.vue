@@ -19,9 +19,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const columns = [
     { key: 'uiImages', label: 'UI Images', type: 'images' },
+    { key: 'websiteType_type', label: 'Website Type' },
     { key: 'template_name', label: 'Template Name' },
     { key: 'templateColor_name', label: 'Template Color Name' },
-    { key: 'is_default', label: 'Default', type: 'toggle' },
     { key: 'created_at', label: 'Created At', type: 'date' },
 ];
 

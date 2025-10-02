@@ -2,7 +2,6 @@
 import HeadingSmall from '@/components/headers/HeadingSmall.vue';
 import { File, InputError } from '@/components/ui/fields';
 import { TemplateBtn, TemplateColorsCard } from '@/components/ui/templatesBuilder';
-import axios from 'axios';
 import { computed, onMounted, ref } from 'vue';
 
 const props = defineProps<{
@@ -17,14 +16,14 @@ const props = defineProps<{
         errors?: Record<string, string>;
     };
     type: string;
-    templates: Record<string, any>;
+    templateTemplateColors: Record<string, any>;
 }>();
 
 const emit = defineEmits<{
     (e: 'update', field: string, value: string | boolean | Record<string, any> | File): void;
 }>();
 
-const templateTemplateColors = ref<Record<string, any>>([]);
+const selectedtemplateTemplateColors = ref<Record<string, any>>([]);
 const animate = ref(false);
 
 const template_id = computed({
@@ -32,36 +31,29 @@ const template_id = computed({
     set: (val) => {
         emit('update', 'template_id', val);
 
-        fetchTemplateTemplateColors(val);
+        filterTemplateTemplateColors(val);
     },
 });
 
 onMounted(() => {
     if (props.form.template_id) {
-        fetchTemplateTemplateColors(props.form.template_id, true);
+        filterTemplateTemplateColors(props.form.template_id, true);
     }
 });
 
-const fetchTemplateTemplateColors = async (val: string, fromOnMounted: boolean = false) => {
-    try {
-        animate.value = false;
+const filterTemplateTemplateColors = async (templateId: string, fromOnMounted: boolean = false) => {
+    animate.value = false;
 
-        const response = await axios.post(route('websiteBuilder.getTemplateTemplateColors'), { templateId: val });
+    selectedtemplateTemplateColors.value = [];
+    selectedtemplateTemplateColors.value = props.templateTemplateColors.filter((item: any) => item.template_id == templateId);
 
-        if (response.data?.props?.templateTemplateColors) {
-            templateTemplateColors.value = response.data.props.templateTemplateColors;
-
-            if (!fromOnMounted) {
-                template_color_id.value = '';
-            }
-
-            setTimeout(() => {
-                animate.value = true;
-            }, 10);
-        }
-    } catch (error: any) {
-        console.error(error);
+    if (!fromOnMounted) {
+        template_color_id.value = '';
     }
+
+    setTimeout(() => {
+        animate.value = true;
+    }, 10);
 };
 
 const template_color_id = computed({
@@ -100,7 +92,7 @@ const selectingItem = (item: any, is_custom: boolean = false) => {
             template_images.value = item.uiImages.map((img: any) => img.original_url);
         }
     } else {
-        custom_template_color.value = true
+        custom_template_color.value = true;
     }
 };
 
@@ -172,12 +164,12 @@ const updateField = (field: string, value: any) => {
 
             <div class="custom-scrollbar flex w-full items-center gap-3 overflow-x-auto p-2">
                 <TemplateBtn
-                    v-for="template in props.templates"
-                    :key="template.id"
-                    :templateId="template.id"
+                    v-for="templateTemplateColor in props.templateTemplateColors"
+                    :key="templateTemplateColor.id"
+                    :templateId="templateTemplateColor.template.id"
                     :selectedTemplateId="template_id"
-                    @click="template_id = template.id"
-                    :templateName="template.name"
+                    @click="template_id = templateTemplateColor.template.id"
+                    :templateName="templateTemplateColor.template.name"
                     :animate="animate"
                 />
             </div>
@@ -189,7 +181,7 @@ const updateField = (field: string, value: any) => {
 
         <!--* Template Colors -->
         <div
-            v-if="templateTemplateColors.length > 0"
+            v-if="selectedtemplateTemplateColors.length > 0"
             class="flex w-full flex-col transition-all duration-300 ease-in-out"
             :class="animate ? 'translate-y-0 scale-100 rotate-0 opacity-100' : 'translate-y-10 scale-75 rotate-10 opacity-0'"
         >
@@ -204,7 +196,7 @@ const updateField = (field: string, value: any) => {
                 <TemplateColorsCard
                     :isDefault="false"
                     :colors="props.form.colors"
-                    :templateTemplateColors="templateTemplateColors"
+                    :templateTemplateColors="selectedtemplateTemplateColors"
                     :type="props.type"
                     :updateField="updateField"
                     :custom_template_color="custom_template_color"
@@ -214,7 +206,7 @@ const updateField = (field: string, value: any) => {
                 <!-- Default Colors -->
                 <TemplateColorsCard
                     :isDefault="true"
-                    v-for="item in templateTemplateColors"
+                    v-for="item in selectedtemplateTemplateColors"
                     :key="item.id"
                     :item="item"
                     :selectedTemplateColorId="template_color_id"

@@ -19,7 +19,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const columns = [
     { key: 'createdBy_name', label: 'Created By' },
-    { key: 'websiteType_type', label: 'Website Type' },
     { key: 'name', label: 'Name' },
     { key: 'description', label: 'Description' },
     { key: 'is_active', label: 'Active', type: 'toggle' },

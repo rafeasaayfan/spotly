@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\Dashboard\Pages\Ui\TemplateColors;
 
+use App\Models\TemplateColor;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreTemplateColorRequest extends FormRequest
 {
@@ -14,7 +17,13 @@ class StoreTemplateColorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:template_colors,name'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('template_colors', 'name')
+                    ->where('is_custom', false)
+            ],
 
             'bg_body_light' => ['required', 'string', 'max:255'],
             'bg_body_dark' => ['required', 'string', 'max:255'],

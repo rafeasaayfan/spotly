@@ -7,9 +7,9 @@ const props = defineProps<{
 
 const columns = [
     { key: 'images', label: 'Images', type: 'image' },
+    { key: 'websiteType_type', label: 'Website Type', },
     { key: 'template_name', label: 'Template Name', },
     { key: 'templateColor_name', label: 'Template Color Name' },
-    { key: 'is_default', label: 'Default', type: 'boolean' },
     { key: 'created_at', label: 'Created At', type: 'date' },
     { key: 'updated_at', label: 'Updated At', type: 'date' },
 ];
