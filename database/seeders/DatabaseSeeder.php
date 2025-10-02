@@ -6,6 +6,7 @@ use App\Models\User;
 use Database\Seeders\Tables\Assignments\PermissionSeeder;
 use Database\Seeders\Tables\Assignments\RolePermissionSeeder;
 use Database\Seeders\Tables\Assignments\RoleSeeder;
+use Database\Seeders\Tables\PaymentMethodSeeder;
 use Database\Seeders\Tables\PlanSeeder;
 use Database\Seeders\Tables\WebsiteTypeSeeder;
 use Database\Seeders\Tables\TemplateColorSeeder;
@@ -38,7 +39,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             WebsiteTypeSeeder::class,
             TemplateColorSeeder::class,
-            PlanSeeder::class
+            PlanSeeder::class,
+            PaymentMethodSeeder::class
         ]);
 
         User::factory(1000)->create();
