@@ -17,7 +17,9 @@ class StoreUserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'confirmed', 'min:8'],
-            'phone_number' => ['nullable', 'string', 'max:255', 'regex:/^\+[1-9]\d{1,14}$/'],
+            'phone_number' => ['nullable', 'string', 'max:255',              
+            'regex:/^(?:\+961)?(03\d{6}|70\d{6}|71\d{6}|76\d{6}|78\d{6}|79\d{6}|81\d{6})$/'
+        ],
             'status' => ['required', 'string', 'in:active,inactive,banned'],
         ];
     }

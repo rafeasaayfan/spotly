@@ -20,7 +20,13 @@ class StoreWebsiteRequest extends FormRequest
             'subdomain' => ['required', 'max:15', 'unique:websites,subdomain', 'string'],
             'light_logo' => ['nullable', 'file', 'mimes:svg', 'max:2048', 'required_with:dark_logo'],
             'dark_logo' => ['nullable', 'file', 'mimes:svg', 'max:2048', 'required_with:light_logo'],
-            'phone_number' => ['required', 'string', 'max:255', 'regex:/^\+[1-9]\d{1,14}$/', 'unique:websites,phone_number'],
+            'phone_number' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^(?:\+961)?(03\d{6}|70\d{6}|71\d{6}|76\d{6}|78\d{6}|79\d{6}|81\d{6})$/',
+                'unique:websites,phone_number'
+            ],
             'email' => ['nullable', 'email', 'string'],
             'about_us' => ['nullable', 'max:255', 'string'],
             'city' => ['nullable', 'string'],
