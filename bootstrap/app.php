@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Middleware\CheckUserStatus;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
-use App\Http\Middleware\HandleWebsiteRole;
+use App\Http\Middleware\CheckWebsiteUserRole;
+use App\Http\Middleware\CheckWebsiteUserStatus;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -24,7 +26,10 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->alias([
-            'websiteRole' => HandleWebsiteRole::class,
+            'userStatus' => CheckUserStatus::class,
+
+            'websiteUserRole' => CheckWebsiteUserRole::class,
+            'websiteUserStatus' => CheckWebsiteUserStatus::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
