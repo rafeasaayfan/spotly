@@ -1,17 +1,14 @@
 <script setup lang="ts">
-import { SharedData } from '@/types';
+import Navbar from '../components/navbar/AppNavbar.vue';
+import Footer from '../components/AppFooter.vue';
 import { usePage } from '@inertiajs/vue3';
+import { SharedData } from '@/types';
+
+const page = usePage<SharedData>();
+
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { onMounted } from 'vue';
-import Footer from '../components/AppFooter.vue';
-import Navbar from '../components/navbar/AppNavbar.vue';
-
-const props = defineProps<{
-    colors: Record<string, string>;
-}>();
-
-const page = usePage<SharedData>();
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -35,15 +32,13 @@ onMounted(() => {
 </script>
 
 <template>
-    <StyleLayout :colors="props.colors">
-        <Navbar />
+    <Navbar />
 
-        <main :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'" class="mx-auto h-full min-h-screen w-full max-w-7xl px-4 md:px-10 lg:px-4">
-            <slot />
-        </main>
+    <main :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'" class="mx-auto h-full min-h-screen w-full max-w-7xl px-4 md:px-10 lg:px-4">
+        <slot />
+    </main>
 
-        <Footer />
-    </StyleLayout>
+    <Footer />
 </template>
 
 <style>
