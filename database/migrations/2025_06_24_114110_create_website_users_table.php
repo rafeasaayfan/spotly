@@ -25,6 +25,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['website_id', 'email']);
+            $table->unique(['website_id', 'phone_number']);
         });
     }
 

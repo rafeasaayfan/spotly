@@ -44,6 +44,11 @@ return new class extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('is_active');
+            $table->index('is_verified');
+            $table->index('status');
+            $table->index('views_count');
         });
     }
 
