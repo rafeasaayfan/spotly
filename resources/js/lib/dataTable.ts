@@ -61,6 +61,9 @@ export const formatters = {
             approved: 'bg-success text-for-bg-success',
             accepted: 'bg-success text-for-bg-success',
             completed: 'bg-success text-for-bg-success',
+            comfirmed: 'bg-success text-for-bg-success',
+
+            delivered: 'bg-primary text-for-bg-primary',
 
             pending: 'bg-content text-body-active',
 
@@ -69,6 +72,8 @@ export const formatters = {
             rejected: 'bg-destructive text-for-bg-destructive',
             banned: 'bg-destructive text-for-bg-destructive',
             failed: 'bg-destructive text-for-bg-destructive',
+            refunded: 'bg-destructive text-for-bg-destructive',
+            cancelled: 'bg-destructive text-for-bg-destructive',
         };
 
         const color = colorMap[value.toLowerCase()] || 'bg-content';
