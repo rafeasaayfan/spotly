@@ -17,7 +17,7 @@ class CategoriesController extends Controller
 
     public function __construct()
     {
-        $this->website = app('website');
+        $this->website = app('website')->load('media');
     }
 
     /**
@@ -32,7 +32,21 @@ class CategoriesController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, ['parent_name']);
 
-        return $this->inertiaRender('pages/categories/Categories', ['categories' => $data], true, true);
+        $websiteNameAndLogo = [
+            'light_logo' => $this->website->light_logo,
+            'dark_logo' => $this->website->dark_logo,
+            'name' => $this->website->name,
+        ];
+
+        return $this->inertiaRender(
+            'pages/categories/Categories',
+            [
+                'categories' => $data,
+                'websiteNameAndLogo' => $websiteNameAndLogo
+            ],
+            true,
+            true
+        );
     }
 
     /**
@@ -114,12 +128,10 @@ class CategoriesController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
+        if($category->website_id !== $this->website->id) return;
+
         try {
             $validated = $request->validated();
-
-            if($category->website_id !== $this->website->id) {
-                return $this->backSuccess('Error while updating');
-            }
 
             $category->fill($validated);
             $category->save();

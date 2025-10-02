@@ -13,6 +13,7 @@ const page = usePage<SharedData>();
 
 interface Props {
   dashboardForProps?: string;
+  websiteNameAndLogo?: Record<string, string>
 }
 
 const props = withDefaults(defineProps<Props>(), {});
@@ -39,7 +40,7 @@ const sidebarConfig = getSidebarConfig(props.dashboardForProps ?? '');
   <Sidebar :collapsible="sidebarCollapsible" :variant="sidebarVariant"
     :side="page.props.lang == 'ar' ? 'right' : 'left'">
     <SidebarHeader>
-      <SidebarContentHeader></SidebarContentHeader>
+      <SidebarContentHeader :websiteNameAndLogo="props.websiteNameAndLogo"></SidebarContentHeader>
     </SidebarHeader>
 
     <SidebarContent>

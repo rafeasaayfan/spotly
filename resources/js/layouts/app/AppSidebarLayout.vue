@@ -9,6 +9,7 @@ import type { BreadcrumbItemType } from '@/types';
 interface Props {
     breadcrumbs?: BreadcrumbItemType[];
     dashboardFor?: string;
+    websiteNameAndLogo?: Record<string, string>
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -18,7 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 <template>
     <AppShell variant="sidebar">
-        <AppSidebar :dashboardForProps="props.dashboardFor" />
+        <AppSidebar :dashboardForProps="props.dashboardFor" :websiteNameAndLogo="props.websiteNameAndLogo" />
         <AppContent variant="sidebar">
             <AppSidebarHeader :breadcrumbs="breadcrumbs" />
             <slot />

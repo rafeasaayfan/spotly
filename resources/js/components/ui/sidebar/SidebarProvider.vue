@@ -53,8 +53,6 @@ useEventListener('keydown', (event: KeyboardEvent) => {
 // This makes it easier to style the sidebar with Tailwind classes.
 const state = computed(() => open.value ? 'expanded' : 'collapsed')
 
-const dashboardFor = ref('default');
-
 provideSidebarContext({
   state,
   open,
@@ -63,7 +61,6 @@ provideSidebarContext({
   openMobile,
   setOpenMobile,
   toggleSidebar,
-  dashboardFor
 })
 </script>
 

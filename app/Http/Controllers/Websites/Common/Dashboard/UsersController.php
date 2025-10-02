@@ -9,6 +9,7 @@ use App\Http\Requests\Websites\Common\Dashboard\Users\StoreUserRequest;
 use App\Http\Requests\Websites\Common\Dashboard\Users\UpdateUserRequest;
 use App\Models\Country;
 use App\Models\WebsiteUser;
+use Illuminate\Auth\Events\Registered;
 
 class UsersController extends Controller
 {
@@ -18,7 +19,7 @@ class UsersController extends Controller
 
     public function __construct()
     {
-        $this->website = app('website');
+        $this->website = app('website')->load('media');
     }
 
     /**
@@ -33,7 +34,21 @@ class UsersController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection);
 
-        return $this->inertiaRender('pages/users/Users', ['users' => $data], true, true);
+        $websiteNameAndLogo = [
+            'light_logo' => $this->website->light_logo,
+            'dark_logo' => $this->website->dark_logo,
+            'name' => $this->website->name,
+        ];
+
+        return $this->inertiaRender(
+            'pages/users/Users',
+            [
+                'users' => $data,
+                'websiteNameAndLogo' => $websiteNameAndLogo
+            ],
+            true,
+            true
+        );
     }
 
     /**
@@ -63,6 +78,8 @@ class UsersController extends Controller
             $user = new WebsiteUser($validated);
             $user->website_id = $this->website->id;
             $user->save();
+
+            event(new Registered($user));
 
             return $this->redirectSuccess('dashboard.users.index', 'User created successfully', forWebsite: true);
         } catch (\Exception $e) {
@@ -109,12 +126,15 @@ class UsersController extends Controller
      */
     public function update(UpdateUserRequest $request, WebsiteUser $user)
     {
+        if ($user->website_id !== $this->website->id) return;
+
+        if ($user->role === 'owner') {
+            return $this->backError('To update the owner profile, please use the profile settings in Spotly Settings');
+        }
+
         try {
             $validated = $request->validated();
-
-            if($user->website_id !== $this->website->id) {
-                return $this->backSuccess('Error while updating');
-            }
+            if (!isset($validated['password'])) unset($validated['password']);
 
             $user->fill($validated);
             $user->save();
@@ -135,9 +155,18 @@ class UsersController extends Controller
                 'ids' => 'required|array',
                 'ids.*' => 'integer|exists:website_users,id,website_id,' . $this->website->id,
             ]);
-    
+
+            $owner = WebsiteUser::whereIn('id', $validated['ids'])
+                ->where('website_id', $this->website->id)
+                ->where('role', 'owner')
+                ->first();
+
+            if ($owner) {
+                return $this->backError('You cannot delete the owner!');
+            }
+
             WebsiteUser::destroy($validated['ids']);
-    
+
             return $this->backSuccess('User(s) deleted successfully');
         } catch (\Exception $e) {
             return $this->logResponse('UsersController@destroy', $e, 'An error occurred while deleting the User(s)');
@@ -146,7 +175,7 @@ class UsersController extends Controller
 
     /**
      * Change the status of the specified resource.
-    */
+     */
     public function changeStatus(Request $request, $id)
     {
         try {
@@ -155,6 +184,9 @@ class UsersController extends Controller
             ]);
 
             $user = WebsiteUser::where('website_id', $this->website->id)->findOrFail($id);
+            if($user->role === 'owner') {
+                return $this->backError('You cannot change the owner status!');
+            }
             $user->update(['status' => $validated['status']]);
 
             $message = $validated['status'] === 'active'
@@ -163,6 +195,37 @@ class UsersController extends Controller
 
             if ($validated['status'] === 'inactive') $message = 'The user is now inactive.';
             if ($validated['status'] === 'banned') $message = 'The user is now banned.';
+
+            return $this->backSuccess($message);
+        } catch (\Exception $e) {
+            return $this->logResponse('UsersController@changeStatus', $e, 'An error occurred while updating the User status');
+        }
+    }
+
+    /**
+     * Change the role of the specified resource.
+     */
+    public function changeRole(Request $request, $id)
+    {
+        try {
+            $validated = $request->validate([
+                'role' => 'required|string|in:user,admin,owner',
+            ]);
+
+            $user = WebsiteUser::where('website_id', $this->website->id)->findOrFail($id);
+            if($user->role === 'owner') {
+                return $this->backError('You cannot change the owner role!');
+            }
+            if($validated['role'] === 'owner') {
+                return $this->backError('There can only be one owner per website!');
+            }
+            $user->update(['role' => $validated['role']]);
+
+            if ($validated['role'] === 'admin') {
+                $message = 'User promoted to admin successfully.';
+            } else {
+                $message = 'User role changed to user successfully.';
+            }
 
             return $this->backSuccess($message);
         } catch (\Exception $e) {

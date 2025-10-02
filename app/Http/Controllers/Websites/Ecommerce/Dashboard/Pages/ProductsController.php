@@ -22,7 +22,7 @@ class ProductsController extends Controller
 
     public function __construct()
     {
-        $this->website = app('website');
+        $this->website = app('website')->load('media');
     }
 
     /**
@@ -38,7 +38,21 @@ class ProductsController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
-        return $this->inertiaRender('pages/products/Products', ['products' => $data], true, true);
+        $websiteNameAndLogo = [
+            'light_logo' => $this->website->light_logo,
+            'dark_logo' => $this->website->dark_logo,
+            'name' => $this->website->name,
+        ];
+
+        return $this->inertiaRender(
+            'pages/products/Products',
+            [
+                'products' => $data,
+                'websiteNameAndLogo' => $websiteNameAndLogo
+            ],
+            true,
+            true
+        );
     }
 
     /**
@@ -138,6 +152,8 @@ class ProductsController extends Controller
      */
     public function update(UpdateProductRequest $request, EcommerceProduct $product)
     {
+        if($product->website_id !== $this->website->id) return;
+        
         try {
             DB::beginTransaction();
 

@@ -15,7 +15,7 @@ class MessagesController extends Controller
 
     public function __construct()
     {
-        $this->website = app('website');
+        $this->website = app('website')->load('media');
     }
 
     /**
@@ -30,7 +30,21 @@ class MessagesController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection);
 
-        return $this->inertiaRender('pages/messages/Messages', ['messages' => $data], true, true);
+        $websiteNameAndLogo = [
+            'light_logo' => $this->website->light_logo,
+            'dark_logo' => $this->website->dark_logo,
+            'name' => $this->website->name,
+        ];
+
+        return $this->inertiaRender(
+            'pages/messages/Messages',
+            [
+                'messages' => $data,
+                'websiteNameAndLogo' => $websiteNameAndLogo
+            ],
+            true,
+            true
+        );
     }
 
     /**

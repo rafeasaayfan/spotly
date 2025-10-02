@@ -17,7 +17,7 @@ class BrandsController extends Controller
 
     public function __construct()
     {
-        $this->website = app('website');
+        $this->website = app('website')->load('media');
     }
 
     /**
@@ -32,7 +32,21 @@ class BrandsController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection);
 
-        return $this->inertiaRender('pages/brands/Brands', ['brands' => $data], true, true);
+        $websiteNameAndLogo = [
+            'light_logo' => $this->website->light_logo,
+            'dark_logo' => $this->website->dark_logo,
+            'name' => $this->website->name,
+        ];
+
+        return $this->inertiaRender(
+            'pages/brands/Brands',
+            [
+                'brands' => $data,
+                'websiteNameAndLogo' => $websiteNameAndLogo
+            ],
+            true,
+            true
+        );
     }
 
     /**
@@ -68,7 +82,7 @@ class BrandsController extends Controller
     {
         try {
             $brand = Brand::where('website_id', $this->website->id)->findOrFail($id);
-            
+
             return $this->jsonSuccess('', [
                 'data' => $brand,
             ]);
@@ -98,12 +112,10 @@ class BrandsController extends Controller
      */
     public function update(UpdateBrandRequest $request, Brand $brand)
     {
+        if ($brand->website_id !== $this->website->id) return;
+
         try {
             $validated = $request->validated();
-
-            if($brand->website_id !== $this->website->id) {
-                return $this->backSuccess('Error while updating');
-            }
 
             $brand->fill($validated);
             $brand->save();
@@ -124,9 +136,9 @@ class BrandsController extends Controller
                 'ids' => 'required|array',
                 'ids.*' => 'integer|exists:brands,id,website_id,' . $this->website->id,
             ]);
-    
+
             Brand::destroy($validated['ids']);
-    
+
             return $this->backSuccess('Brand(s) deleted successfully');
         } catch (\Exception $e) {
             return $this->logResponse('BrandsController@destroy', $e, 'An error occurred while deleting the Brand(s)');
@@ -135,24 +147,24 @@ class BrandsController extends Controller
 
     /**
      * Toggle the active status of the specified resource.
-    */
+     */
     public function toggleActive(Request $request, $id)
     {
         try {
             $brand = Brand::where('website_id', $this->website->id)->findOrFail($id);
-    
+
             $validated = $request->validate([
                 'is_active' => 'required|boolean',
             ]);
-    
+
             $brand->update([
                 'is_active' => $validated['is_active'],
             ]);
-    
+
             $message = $validated['is_active']
                 ? 'Brand activated successfully.'
                 : 'Brand deactivated successfully.';
-    
+
             return $this->backSuccess($message);
         } catch (\Exception $e) {
             return $this->logResponse('BrandsController@toggleActive', $e, 'An error occurred while updating the Brand status');
