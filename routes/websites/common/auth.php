@@ -43,7 +43,7 @@ Route::middleware('guest:website')->group(function () {
     Route::get('auth/google/callback', [SocialAccountsController::class, 'callbackFromGoogle']);
 });
 
-Route::middleware('auth:website')->group(function () {
+Route::middleware(['auth:website'])->group(function () {
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');
 

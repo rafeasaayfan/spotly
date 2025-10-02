@@ -6,12 +6,14 @@ use App\Http\Controllers\Websites\Common\Dashboard\MessagesController;
 use App\Http\Controllers\Websites\Common\Dashboard\UsersController;
 use Illuminate\Support\Facades\Route;
 
-// middleware('websiteRole:admin')->
 Route::prefix('dashboard')->name('dashboard.')->group(function () {
-    //* Users
-    dashboardPagesRoutes('users', UsersController::class);
-    Route::patch('users/{id}/is_active', [UsersController::class, 'toggleActive'])->name('brands.is_active');
-    Route::patch('users/{id}/status', [UsersController::class, 'changeStatus'])->name('users.status');
+    Route::middleware('websiteUserRole:owner')->group(function () {
+        //* Users
+        dashboardPagesRoutes('users', UsersController::class);
+        Route::patch('users/{id}/is_active', [UsersController::class, 'toggleActive'])->name('brands.is_active');
+        Route::patch('users/{id}/status', [UsersController::class, 'changeStatus'])->name('users.status');
+        Route::patch('users/{id}/role', [UsersController::class, 'changeRole'])->name('users.role');
+    });
 
     //* Categories
     dashboardPagesRoutes('categories', CategoriesController::class);

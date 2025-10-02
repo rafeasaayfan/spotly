@@ -5,6 +5,8 @@ use App\Http\Controllers\Spotly\WebsiteBuilderController;
 use App\Http\Controllers\Spotly\WebsitePreviewController;
 use App\Http\Middleware\HandleLanguage;
 use App\Http\Middleware\IdentifyWebsite;
+use App\Http\Middleware\LoadWebsiteRoutes;
+use App\Models\Website;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
@@ -19,21 +21,20 @@ Route::get('/setLang/{lang}', function ($lang = null) {
 Route::middleware([HandleLanguage::class])->group(function () {
 
     // Spotly Routes
-    Route::domain('http://127.0.0.1')->group(function () {
+    Route::domain('http://127.0.0.1')->middleware('userStatus')->group(function () {
         Route::get('/', [LandingController::class, 'index'])->name('landing');
         Route::put('/subscribe', [LandingController::class, 'subscribe'])->name('subscribe');
         Route::put('/contactUs', [LandingController::class, 'contactUs'])->name('contactMessages');
-    
+
         // WebsiteBuilder
-        Route::prefix('websiteBuilder')->name('websiteBuilder.')->group(function() {
+        Route::prefix('websiteBuilder')->name('websiteBuilder.')->group(function () {
             Route::get('/', [WebsiteBuilderController::class, 'index'])->name('index');
             Route::post('/wizard/{step}', [WebsiteBuilderController::class, 'wizard'])->name('wizard');
-    
+
             // UI 
-            Route::post('/getTemplateTemplateColors', [WebsiteBuilderController::class, 'getTemplateTemplateColors'])->name('getTemplateTemplateColors');
             Route::post('/customColors', [WebsiteBuilderController::class, 'customColors'])->name('customColors');
         });
-    
+
         // Preview
         Route::post('/websites/preview', [WebsitePreviewController::class, 'preview'])->name('website.preview');
 
@@ -43,9 +44,28 @@ Route::middleware([HandleLanguage::class])->group(function () {
         require __DIR__ . '/auth.php';
     });
 
+    $subdomain = app('subdomain');
+
     // Websites Routes domain('{website?}.spotly.test')->
-    Route::middleware([IdentifyWebsite::class])->name('website.')->group(function () {
+    Route::domain("$subdomain.spotly.test")->middleware([IdentifyWebsite::class, 'websiteUserStatus'])->name('website.')->group(function () {
         require __DIR__ . '/websites/main.php';
+
+        $subdomain = app('subdomain');
+
+        $website = Website::where('subdomain', $subdomain)
+            ->active()->status('approved')
+            ->with(['websiteType:id,type'])
+            ->first();
+        $websiteType = $website->websiteType->type ?? null;
+
+        switch ($websiteType) {
+            case 'e-commerce':
+                require __DIR__ . '/websites/e-commerce/web.php';
+                break;
+            case 'restaurant':
+                require __DIR__ . '/websites/restaurant/web.php';
+                break;
+        }
     });
 });
 
