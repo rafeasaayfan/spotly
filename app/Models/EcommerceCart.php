@@ -9,21 +9,11 @@ class EcommerceCart extends Model
     protected $fillable = [
         'website_id',
         'website_user_id',
-        'product_id',
 
         'session_id',
 
-        'quantity',
-        'unit_price',
-        'total_price',
-
-        'color',
-
         'expires_at',
-    ];
-
-    protected $casts = [
-        'expires_at' => 'datetime',
+        'status'
     ];
 
     /**
@@ -43,10 +33,18 @@ class EcommerceCart extends Model
     }
 
     /**
-     * Get the product that the cart is associated with.
+     * Get the cart items that the cart is associated with.
      */
-    public function product()
+    public function items()
     {
-        return $this->belongsTo(EcommerceProduct::class, 'product_id');
+        return $this->hasMany(EcommerceCartItem::class, 'cart_id');
+    }
+
+    /**
+     * Get the count of items that the cart is associated with.
+     */
+    public function getItemsCountAttribute()
+    {
+        return $this->items()->count();
     }
 }

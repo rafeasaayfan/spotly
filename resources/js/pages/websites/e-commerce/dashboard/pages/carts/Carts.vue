@@ -12,31 +12,34 @@ import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Brands',
-        href: '/dashboard/brands',
+        title: 'Carts',
+        href: '/dashboard/carts',
     },
 ];
 
 const columns = [
-    { key: 'name', label: 'Name' },
-    { key: 'description', label: 'Description' },
-    { key: 'is_active', label: 'Is Active', type: 'toggle' },
+    { key: 'websiteUser_name', label: 'User' },
+    { key: 'items_count', label: 'Cart Items Count' },
+    { key: 'status', label: 'Status', type: 'status' },
+    { key: 'expires_at', label: 'Expires At', type: 'date' },
+    { key: 'created_at', label: 'Created At', type: 'date' },
 ];
 
 const filter = [
     {
-        key: 'is_active',
-        label: 'Is Active',
+        key: 'status',
+        label: 'Status',
         type: 'select',
         options: [
-            { value: '0', label: 'Inactive' },
-            { value: '1', label: 'Active' },
+            { value: 'pending', label: 'Pending' },
+            { value: 'checked_out', label: 'Checked Out' },
+            { value: 'abandoned', label: 'Abandoned' },
         ],
     },
 ];
 
 const props = defineProps<{
-    brands: DataTableProps;
+    carts: DataTableProps;
     websiteNameAndLogo?: Record<string, string>
     flash?: {
         toastType: 'success' | 'error' | 'warning' | 'info';
@@ -53,20 +56,22 @@ watchEffect(() => {
 
 const tableConditions = {
     ...defaultTableConditions,
+    enableEdit: false,
+    enableCreate: false,
 };
 </script>
 
 <template>
-    <Head title="Brands" />
+    <Head title="Carts" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs" dashboardFor="e-commerce" :websiteNameAndLogo="props.websiteNameAndLogo">
         <DataTable
-            :tableData="props.brands"
+            :tableData="props.carts"
             :filter="filter"
             :columns="columns"
-            routeName="website.e-commerce.dashboard.brands"
+            routeName="website.e-commerce.dashboard.carts"
             :tableConditions="tableConditions"
-            path="brands"
+            path="carts"
             dashboardFor="e-commerce"
         />
     </DashboardLayout>

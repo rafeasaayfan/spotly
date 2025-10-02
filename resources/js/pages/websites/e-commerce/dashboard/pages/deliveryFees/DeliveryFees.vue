@@ -12,31 +12,19 @@ import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Brands',
-        href: '/dashboard/brands',
+        title: 'Delivery Fees',
+        href: '/dashboard/delivery-fees',
     },
 ];
 
 const columns = [
-    { key: 'name', label: 'Name' },
-    { key: 'description', label: 'Description' },
-    { key: 'is_active', label: 'Is Active', type: 'toggle' },
-];
-
-const filter = [
-    {
-        key: 'is_active',
-        label: 'Is Active',
-        type: 'select',
-        options: [
-            { value: '0', label: 'Inactive' },
-            { value: '1', label: 'Active' },
-        ],
-    },
+    { key: 'city', label: 'City' },
+    { key: 'amount', label: 'Amount' },
+    { key: 'created_at', label: 'Created At', type: 'date' },
 ];
 
 const props = defineProps<{
-    brands: DataTableProps;
+    deliveryFees: DataTableProps;
     websiteNameAndLogo?: Record<string, string>
     flash?: {
         toastType: 'success' | 'error' | 'warning' | 'info';
@@ -53,20 +41,20 @@ watchEffect(() => {
 
 const tableConditions = {
     ...defaultTableConditions,
+    enableFilter: false,
 };
 </script>
 
 <template>
-    <Head title="Brands" />
+    <Head title="Delivery Fees" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs" dashboardFor="e-commerce" :websiteNameAndLogo="props.websiteNameAndLogo">
         <DataTable
-            :tableData="props.brands"
-            :filter="filter"
+            :tableData="props.deliveryFees"
             :columns="columns"
-            routeName="website.e-commerce.dashboard.brands"
+            routeName="website.e-commerce.dashboard.deliveryFees"
             :tableConditions="tableConditions"
-            path="brands"
+            path="deliveryFees"
             dashboardFor="e-commerce"
         />
     </DashboardLayout>

@@ -19,7 +19,7 @@ return new class extends Migration
 
             $table->string('color')->nullable();
 
-            $table->text('notes')->nullable();
+            $table->text('note')->nullable();
 
             $table->timestamps();
 

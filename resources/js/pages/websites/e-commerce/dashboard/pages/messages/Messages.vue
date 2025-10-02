@@ -61,6 +61,7 @@ const filter = [
 
 const props = defineProps<{
     messages: DataTableProps;
+    websiteNameAndLogo?: Record<string, string>
     flash?: {
         toastType: 'success' | 'error' | 'warning' | 'info';
         message: string;
@@ -84,7 +85,7 @@ const tableConditions = {
 <template>
     <Head title="Messages" />
 
-    <DashboardLayout :breadcrumbs="breadcrumbs" dashboardFor="e-commerce">
+    <DashboardLayout :breadcrumbs="breadcrumbs" dashboardFor="e-commerce" :websiteNameAndLogo="props.websiteNameAndLogo">
         <DataTable
             :tableData="props.messages"
             :filter="filter"

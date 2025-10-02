@@ -37,8 +37,16 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->unique(['website_id', 'slug']);
+            $table->index(['website_id', 'slug']);
             $table->index(['website_id', 'is_active']);
+            $table->index(['website_id', 'is_special']);
+            $table->index(['website_id', 'is_in_home']);
             $table->index(['category_id', 'is_active']);
+            $table->index(['category_id', 'is_special']);
+            $table->index(['category_id', 'is_in_home']);
+            $table->index(['brand_id', 'is_active']);
+            $table->index(['brand_id', 'is_special']);
+            $table->index(['brand_id', 'is_in_home']);
         });
     }
 

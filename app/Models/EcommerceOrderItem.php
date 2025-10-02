@@ -10,12 +10,15 @@ class EcommerceOrderItem extends Model
         'order_id',
         'product_id',
 
+        'product_image_path',
+
         'quantity',
         'unit_price',
         'total_price',
 
         'color',
-        'notes',
+
+        'note',
     ];
 
     /**

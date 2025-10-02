@@ -10,35 +10,22 @@ class EcommerceOrder extends Model
         'website_id',
         'website_user_id',
         'payment_method_id',
+        'delivery_fee_id',
 
         'order_number',
 
         'subtotal',
-        'delivery_amount',
+        'discount_amount',
         'total_amount',
 
         'delivery_address',
         'city',
 
-        'paid_at',
-        'delivered_at',
-        'confirmed_at',
-        'cancelled_at',
-        'refunded_at',
+        'note',
         'cancellation_reason',
 
-        'ip_address',
-        'user_agent',
-
+        'status_changed_at',
         'status',
-    ];
-
-    protected $casts = [
-        'paid_at' => 'datetime',
-        'delivered_at' => 'datetime',
-        'confirmed_at' => 'datetime',
-        'cancelled_at' => 'datetime',
-        'refunded_at' => 'datetime',
     ];
 
     /**
@@ -63,5 +50,21 @@ class EcommerceOrder extends Model
     public function paymentMethod()
     {
         return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
+    }
+
+    /**
+     * Get the delivery fee for order.
+    */
+    public function deliveryFee()
+    {
+        return $this->belongsTo(DeliveryFee::class, 'delivery_fee_id');
+    }
+
+    /**
+     * Get the order items.
+    */
+    public function items()
+    {
+        return $this->hasMany(EcommerceOrderItem::class, 'order_id');
     }
 }

@@ -11,22 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ecommerce_order_items', function (Blueprint $table) {
+        Schema::create('ecommerce_cart_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained('ecommerce_orders')->onDelete('cascade');
+            $table->foreignId('cart_id')->constrained('ecommerce_carts')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('ecommerce_products')->onDelete('cascade');
 
             $table->integer('quantity');
             $table->decimal('unit_price', 10, 2);
-            $table->decimal('total_price', 10, 2);
 
-            $table->string('color')->nullable();
-            $table->text('notes')->nullable();
+            $table->string('imageUrl')->nullable();
+            $table->string('color');
 
             $table->timestamps();
 
-            $table->index(['order_id']);
-            $table->index(['product_id']);
+            $table->unique(
+                ['cart_id', 'product_id', 'color'],
+                'cart_item_unique_idx'
+            );
+            $table->index(['cart_id', 'product_id']);
         });
     }
 
@@ -35,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ecommerce_order_items');
+        Schema::dropIfExists('ecommerce_cart_items');
     }
 };

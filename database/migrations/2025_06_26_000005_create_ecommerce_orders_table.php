@@ -16,26 +16,21 @@ return new class extends Migration
             $table->foreignId('website_id')->constrained('websites')->onDelete('cascade');
             $table->foreignId('website_user_id')->constrained('website_users')->onDelete('cascade');
             $table->foreignId('payment_method_id')->constrained('payment_methods')->onDelete('cascade');
+            $table->foreignId('delivery_fee_id')->nullable()->constrained('delivery_fees')->onDelete('set null');
 
             $table->string('order_number')->unique();
 
             $table->decimal('subtotal', 12, 2);
-            $table->decimal('delivery_amount', 12, 2)->default(0);
+            $table->decimal('discount_amount', 12, 2)->default(0); 
             $table->decimal('total_amount', 12, 2);
 
             $table->string('delivery_address');
             $table->string('city');
 
-            $table->timestamp('paid_at')->nullable();
-            $table->timestamp('delivered_at')->nullable();
-            $table->timestamp('confirmed_at')->nullable();
-            $table->timestamp('cancelled_at')->nullable();
-            $table->timestamp('refunded_at')->nullable();
-            $table->string('cancellation_reason')->nullable();
+            $table->text('note');
+            $table->text('cancellation_reason')->nullable();
 
-            $table->string('ip_address')->nullable();
-            $table->string('user_agent')->nullable();
-
+            $table->timestamp('status_changed_at')->nullable();
             $table->enum('status', [
                 'pending',
                 'confirmed',
@@ -47,10 +42,10 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
+            $table->unique(['website_id', 'order_number']);
             $table->index(['website_id', 'status']);
             $table->index(['website_user_id', 'status']);
             $table->index('order_number');
-            $table->index('created_at');
         });
     }
 

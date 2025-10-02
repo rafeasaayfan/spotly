@@ -48,6 +48,7 @@ const filter = [{ key: 'email_verifief', label: '', type: '' }];
 
 const props = defineProps<{
     users: DataTableProps;
+    websiteNameAndLogo?: Record<string, string>
     flash?: {
         toastType: 'success' | 'error' | 'warning' | 'info';
         message: string;
@@ -69,7 +70,7 @@ const tableConditions = {
 <template>
     <Head title="Users" />
 
-    <DashboardLayout :breadcrumbs="breadcrumbs" dashboardFor="e-commerce">
+    <DashboardLayout :breadcrumbs="breadcrumbs" dashboardFor="e-commerce" :websiteNameAndLogo="props.websiteNameAndLogo">
         <DataTable
             :tableData="props.users"
             :filter="filter"
