@@ -18,8 +18,21 @@ class IdentifyWebsite
     public function handle(Request $request, Closure $next): Response
     {
         $host = $request->getHost();
-        $subdomain = explode('.', $host)[0];
-    
+        $parts = explode('.', $host);
+        $subdomain = $parts[0];
+
+        if ($host === '127.0.0.1' || $host === 'spotly.test' || $host === 'localhost') {
+            return $next($request);
+        }
+
+        if ($subdomain === 'www') {
+            $subdomain = isset($parts[1]) ? $parts[1] : null;
+        }
+
+        if (!$subdomain) {
+            abort(404, 'Website not found');
+        }
+
         $website = Cache::remember("website_{$subdomain}", 60, function () use ($subdomain) {
             return Website::where('subdomain', $subdomain)
                 ->active()->status('approved')
@@ -32,7 +45,6 @@ class IdentifyWebsite
         }
 
         app()->instance('website', $website);
-        $request->merge(['website' => $website]);
 
         return $next($request);
     }
