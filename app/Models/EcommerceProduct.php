@@ -61,10 +61,43 @@ class EcommerceProduct extends Model
     }
 
     /**
+     * Get the product variants that are in stock.
+     */
+    public function inStockVariants()
+    {
+        return $this->hasMany(EcommerceProductVariant::class, 'product_id')
+                    ->where('stock_quantity', '>', 0);
+    }
+
+    /**
      * Get the product stock quantity.
      */
     public function scopeWithStockQuantity($query)
     {
         return $query->withSum('variants', 'stock_quantity');
+    }
+
+    /**
+     * Scope a query to only include active products.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope a query to only include products shown in home.
+     */
+    public function scopeInHome($query)
+    {
+        return $query->where('is_in_home', true);
+    }
+
+    /**
+     * Scope a query to only include special products.
+     */
+    public function scopeSpecial($query)
+    {
+        return $query->where('is_special', true);
     }
 }

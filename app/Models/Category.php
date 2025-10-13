@@ -10,7 +10,9 @@ class Category extends Model
         'website_id',
         'parent_id',
         'name',
+        'ar_name',
         'description',
+        'is_in_home',
         'is_active',
     ];
 
@@ -36,6 +38,14 @@ class Category extends Model
     public function children()
     {
         return $this->hasMany(Category::class, 'parent_id');
+    }
+
+    /**
+     * Get home category.
+     */
+    public function scopeInHome($query)
+    {
+        return $query->where('is_in_home', 1);
     }
     
     /**

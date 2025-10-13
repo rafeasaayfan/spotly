@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('imageUrl')->nullable();
             $table->string('color');
 
+            $table->timestamp('expires_at')->nullable();
+
             $table->timestamps();
 
             $table->unique(
@@ -29,6 +31,7 @@ return new class extends Migration
                 'cart_item_unique_idx'
             );
             $table->index(['cart_id', 'product_id']);
+            $table->index('expires_at');
         });
     }
 

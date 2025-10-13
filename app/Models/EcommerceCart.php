@@ -12,7 +12,6 @@ class EcommerceCart extends Model
 
         'session_id',
 
-        'expires_at',
         'status'
     ];
 

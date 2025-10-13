@@ -18,8 +18,6 @@ return new class extends Migration
 
             $table->string('session_id')->nullable();
 
-            $table->timestamp('expires_at')->nullable();
-
             $table->enum('status', ['pending', 'checked_out', 'abandoned'])->default('pending');
             $table->timestamps();
 
@@ -28,7 +26,6 @@ return new class extends Migration
 
             $table->index(['website_user_id', 'website_id']);
             $table->index(['session_id', 'website_id']);
-            $table->index('expires_at');
         });
     }
 

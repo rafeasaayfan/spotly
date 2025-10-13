@@ -1,48 +1,54 @@
 <script setup lang="ts">
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { onMounted, onUnmounted } from 'vue';
+import { onUnmounted, watchEffect } from 'vue';
 import Layout from '../../pages/Layout.vue';
 import Hero from './sections/Hero.vue';
 import Products from './sections/Products.vue';
-import SpecialOffers from './sections/SpecialOffers.vue';
 import About from './sections/About.vue';
 import Contact from './sections/Contact.vue';
+import Categories from './sections/Categories.vue';
+import { toast } from '@/lib/sweetAlert';
 
-onMounted(() => {
-    gsap.registerPlugin(ScrollTrigger);
+const props = defineProps<{
+    colors: Record<string, string>;
+    websiteNameAndLogo: Record<string, string>;
+    websiteFooterData: Record<string, string>;
+    homeSpecialProducts: Record<string, any>;
+    homeProducts: Record<string, any>;
+    categories: Record<string, any>;
+    aboutUs: string;
+    cartItemsCount: number;
+    flash?: {
+        toastType: 'success' | 'error' | 'warning' | 'info';
+        message: string;
+    };
+}>();
 
-    // --- Image Reveal Animation (Adjusted for vertical scroll context) ---
-    gsap.utils.toArray<HTMLElement>('.image-reveal-container').forEach((container) => {
-        gsap.from(container, {
-            clipPath: 'inset(100% 0% 0% 0%)',
-            ease: 'power3.out',
-            duration: 1.5,
-            scrollTrigger: {
-                trigger: container,
-                start: 'top 80%', // When the top of the container is 80% down the viewport
-                toggleActions: 'play none none none',
-            },
-        });
-    });
+watchEffect(() => {
+    const message = props.flash?.message;
+    if (message) {
+        toast.fire({ icon: props.flash?.toastType, title: message });
+    }
 });
 
 onUnmounted(() => {
-    // Clean up GSAP instances to prevent memory leaks
     gsap.globalTimeline.clear();
     ScrollTrigger.getAll().forEach((st) => st.kill());
 });
 </script>
 
 <template>
-    <Layout>
-        <Hero />
+    <Layout :colors="props.colors" :websiteNameAndLogo="props.websiteNameAndLogo" :websiteFooterData="props.websiteFooterData"
+        :cartItemsCount="props.cartItemsCount"
+    >
+        <Hero :webName="websiteNameAndLogo.name" :specialProducts="props.homeSpecialProducts" />
 
-        <Products />
+        <Categories :categories="props.categories" />
+        
+        <Products :products="props.homeProducts" />
 
-        <SpecialOffers />
-
-        <About />
+        <About :websiteNameAndLogo="props.websiteNameAndLogo" :aboutUs="props.aboutUs" />
 
         <Contact />
     </Layout>
