@@ -19,7 +19,7 @@ class StoreProductRequest extends FormRequest
         return [
             'variants' => ['required', 'array'],
             'variants.*.color' => ['required', 'string', 'max:50'],
-            'variants.*.stock_quantity' => ['required', 'integer', 'min:1'],
+            'variants.*.stock_quantity' => ['required', 'integer', 'min:0'],
             'variants.*.ecommerce_product_image' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
 
             'category_id' => [
@@ -35,8 +35,6 @@ class StoreProductRequest extends FormRequest
             'price'       => ['required', 'numeric', 'min:0'],
             'sale_price'  => ['nullable', 'numeric', 'lt:price'],
 
-            'is_in_home'  => ['required', 'boolean'],
-            'is_special'  => ['required', 'boolean'],
             'is_active'   => ['required', 'boolean'],
 
             'short_description'  => ['required', 'string', 'max:255'],
