@@ -43,12 +43,19 @@ class HandleInertiaRequests extends Middleware
 
         $roles = [];
         $permissions = [];
-    
-        if ($request->user()) {
-            if (method_exists($request->user(), 'getRoleNames')) {
-                $roles = $request->user()->getRoleNames();
-                $permissions = $request->user()->getAllPermissions()->pluck('name');
-            } 
+
+        $websiteUserRole = null;
+
+        if ($request->user('web')) {
+            if (method_exists($request->user('web'), 'getRoleNames')) {
+                $roles = $request->user('web')->getRoleNames();
+                $permissions = $request->user('web')->getAllPermissions()->pluck('name');
+            }
+        } else if ($request->user('website')) {
+            $websiteUser = \App\Models\WebsiteUser::where('id', $request->user('website')->id)
+                ->first();
+
+            if($websiteUser) $websiteUserRole = $websiteUser->role;
         }
 
         return [
@@ -60,6 +67,7 @@ class HandleInertiaRequests extends Middleware
                 'website_user' => $request->user('website'),
                 'roles' => $roles,
                 'permissions' => $permissions,
+                'websiteUserRole' => $websiteUserRole
             ],
             'ziggy' => [
                 ...(new Ziggy)->toArray(),
