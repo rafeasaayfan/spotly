@@ -16,11 +16,14 @@ return new class extends Migration
             $table->foreignId('website_id')->constrained('websites')->onDelete('cascade');
             $table->foreignId('parent_id')->nullable()->constrained('categories')->onDelete('set null');
             $table->string('name');
+            $table->string('ar_name');
             $table->text('description')->nullable();
+            $table->boolean('is_in_home')->default(false);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
             $table->unique(['website_id', 'name']);
+            $table->unique(['website_id', 'ar_name']);
             $table->index(['website_id', 'is_active']);
             $table->index(['parent_id', 'is_active']);
         });
