@@ -3,6 +3,7 @@
     "spotly": "Spotly",
     "s": "S",
     "name": "Name",
+    "full.name": "Full Name",
     "email": "Email Address",
     "phone": "Phone Number",
     "password": "Password",
@@ -36,6 +37,24 @@
     "street_address_placeholder": "123 Main Street",
     "delete": "Delete",
     "remove": "Remove",
+    "update": "Update",
+    "warning": "Warning",
+
+    "****************** Settings": "************************************",
+    "email.unverified": "Your email address is unverified",
+    "click.to.resend": "Click here to resend the verification email",
+    "new.verification.sent": "A new verification link has been sent to your email address",
+    "profile.information": "Profile information",
+    "update.email.name": "Update your name and email address",
+    "delete.account": "Delete account",
+    "delete.subtitle": "Delete your account and all of its resources",
+    "warning.subtitle": "Please proceed with caution, this cannot be undone",
+    "delete.are.sure": "Are you sure you want to delete your account?",
+    "delete.desc": "Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your password to confirm you would like to permanently delete your account",
+    "update.password": "Update password",
+    "update.password.subtitle": "Ensure your account is using a long, random password to stay secure",
+    "current.password": "Current password",
+    "new.password": "New password",
 
     "****************** Register and Login": "************************************",
     "guest.register.title": "Create an account",
@@ -330,5 +349,88 @@
     "client.payments.select_website_first": "Select a Website First",
     "client.payments.your_cart": "Your Cart",
     "client.payments.total": "Total",
-    "client.payments.cart_empty": "Your cart is empty"
+    "client.payments.cart_empty": "Your cart is empty",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    "****************** ===================== Websites": "========================= ************************************",
+    "seeAll": "See All",
+
+    "****************** Web Nav": "************************************",
+    "nav.home": "Home",
+    "nav.shop": "Shop",
+    
+    "****************** Web Footer": "************************************",
+    "web.footer.rights": "All rights reserved |",
+    "web.footer.powered": "Powered by",
+
+    "****************** Ecommerce": "************************************",
+    "***************** Footer": "************************************",
+    "web.footer.paragraph": "Your trusted destination for online shopping, offering high-quality products and an exceptional shopping experience",
+
+    "***************** eco Hero": "************************************",
+    "ecommerce.hero.subtitle": "Experience seamless shopping made simple and enjoyable. Find what you need, order with ease, and enjoy every moment. From discovery to delivery — we make every step effortless and rewarding",
+    "shop.now": "Shop Now",
+    "special.all": "All Special Products",
+    "scroll.more": "Scroll or drag to see more limited offers",
+
+    "***************** eco Home Product": "************************************",
+    "our.products": "Products",
+    "our": "Our",
+    "addToCart": "Add To Cart",
+    "off": "OFF",
+    "noImage": "No Image",
+
+    "***************** eco Home Category": "************************************",
+    "our.categories": "Categories",
+    "products": "Products",
+    "more.categories": "More Categories",
+    "explore.everything": "Explore everything",
+
+    "categories": "Categories",
+    "brands": "Brands",
+
+    "***************** eco Home About": "************************************",
+    "secure.shopping": "Secure Shopping",
+    "fast.delivery": "Fast Delivery",
+    "quality.guaranteed": "Quality Guaranteed",
+    "24/7.support": "24/7 Support",
+    "ecommerce.about.paragraph": "We are passionate about offering high-quality products that inspire and delight. With a strong commitment to quality, reliability, and customer satisfaction, every shopping experience is crafted to be seamless, enjoyable, and full of value.",
+    "store": "Store",
+    "ecommerce.about.title": "About Our",
+
+    "***************** eco Store": "************************************",
+    "our.store": "Store",
+    "filters": "Filters",
+    "category": "Category",
+    "brand": "Brand",
+    "price.range": "Price Range",
+    "quick.filters": "Quick Filters",
+    "special": "Special",
+    "on.sale": "On Sale",
+    "no.products.found": "No products found",
+
+    "***************** eco Product page": "************************************",
+    "choose.color": "Choose a color:",
+    "quantity": "Quantity",
+    "max": "Max",
+    "unit.price": "Unit Price:",
+    "total.price": "Total Price:",
+    "add.to.cart": "Add to cart",
+    "adding": "Adding...",
+    "color": "Color",
+    "out.of.stock": "Out of stock"
 }
