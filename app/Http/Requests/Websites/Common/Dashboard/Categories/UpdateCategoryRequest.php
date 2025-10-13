@@ -39,7 +39,10 @@ class UpdateCategoryRequest extends FormRequest
                 $validateParentId,
             ],
 
-            'name' => ['required', 'string', 'max:30', 'min:3', Rule::unique('categories', 'name')->where(function ($query) {
+            'name' => ['required', 'string', 'max:50', 'min:2', Rule::unique('categories', 'name')->where(function ($query) {
+                return $query->where('website_id', $this->website_id);
+            })->ignore($this->route('category')->id)],
+            'ar_name' => ['required', 'string', 'max:50', 'min:2', Rule::unique('categories', 'ar_name')->where(function ($query) {
                 return $query->where('website_id', $this->website_id);
             })->ignore($this->route('category')->id)],
 

@@ -41,11 +41,20 @@ class StoreCategoryRequest extends FormRequest
             'name' => [
                 'required',
                 'string',
-                'max:30',
-                'min:3',
+                'max:50',
+                'min:2',
                 Rule::unique('categories', 'name')
                     ->where('website_id', $website->id),
             ],
+            'ar_name' => [
+                'required',
+                'string',
+                'max:50',
+                'min:2',
+                Rule::unique('categories', 'ar_name')
+                    ->where('website_id', $website->id),
+            ],
+
             'description' => ['nullable', 'string', 'max:255', 'min:3'],
             'is_active' => ['required', 'boolean'],
         ];
