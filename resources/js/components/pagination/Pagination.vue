@@ -12,6 +12,8 @@ const props = defineProps<{
     data?: PaginationData;
     applyFilters?: (overrides: Record<string, any>) => void;
     tableConditions?: TableConditions;
+    btnClass?: string;
+    activeClass?: string;
 }>();
 
 const emit = defineEmits<{
@@ -40,7 +42,7 @@ function goToPage(url: string | null) {
 <template>
     <div v-if="paginationLinks.length > 1 && (props.tableConditions?.enablePagination ?? true)" class="flex items-center gap-1.5">
         <div v-for="link in paginationLinks" :key="link.label">
-            <PaginationBtn @click="goToPage(link.url)" :disabled="!link.url" :active="link.active">
+            <PaginationBtn @click="goToPage(link.url)" :disabled="!link.url" :active="link.active" :class="props.btnClass" :activeClass="props.activeClass">
                 <template v-if="!isNaN(Number(link.label))">
                     {{ link.label }}
                 </template>
