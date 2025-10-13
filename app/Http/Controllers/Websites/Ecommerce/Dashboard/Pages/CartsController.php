@@ -3,17 +3,15 @@
 namespace App\Http\Controllers\Websites\Ecommerce\Dashboard\Pages;
 
 use App\Http\Controllers\Controller;
-use App\Models\Cart;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
-use App\Http\Requests\Websites\Ecommerce\Dashboard\Pages\Carts\UpdateCartRequest;
 use App\Models\EcommerceCart;
 
 class CartsController extends Controller
 {
     use DataTableTrait;
 
-    public $website;
+    protected $website;
 
     public function __construct()
     {
@@ -28,7 +26,7 @@ class CartsController extends Controller
         $query = EcommerceCart::where('website_id', $this->website->id)->withCount('items');
 
         $columnsSearching = ['websiteUser.name', 'expires_at'];
-        $columnsSelection = ['id', 'website_user_id', 'expires_at', 'status', 'created_at'];
+        $columnsSelection = ['id', 'website_user_id', 'status', 'created_at'];
         $relations = ['websiteUser_name'];
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);

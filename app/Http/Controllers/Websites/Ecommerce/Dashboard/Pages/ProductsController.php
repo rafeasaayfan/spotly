@@ -18,7 +18,7 @@ class ProductsController extends Controller
 {
     use DataTableTrait;
 
-    public $website;
+    protected $website;
 
     public function __construct()
     {
@@ -152,8 +152,8 @@ class ProductsController extends Controller
      */
     public function update(UpdateProductRequest $request, EcommerceProduct $product)
     {
-        if($product->website_id !== $this->website->id) return;
-        
+        if ($product->website_id !== $this->website->id) return;
+
         try {
             DB::beginTransaction();
 
@@ -165,7 +165,12 @@ class ProductsController extends Controller
                 CreateProductSlugJob::dispatch($product);
             }
 
-            $product->update($validated);
+            $data = array_merge([
+                'is_in_home' => $product->is_active ? ($validated['is_active'] ? $product->is_in_home : false) : false,
+                'is_special' => $product->is_active ? ($validated['is_active'] ? $product->is_special : false) : false,
+            ], $validated);
+
+            $product->update($data);
 
             $this->syncProductVariants($product, $variants);
 
@@ -246,6 +251,8 @@ class ProductsController extends Controller
 
             $product->update([
                 'is_active' => $validated['is_active'],
+                'is_in_home' => $validated['is_active'] ? $product->is_in_home : false,
+                'is_special' => $validated['is_active'] ? $product->is_special : false,
             ]);
 
             $message = $validated['is_active']
@@ -266,9 +273,25 @@ class ProductsController extends Controller
         try {
             $product = EcommerceProduct::where('website_id', $this->website->id)->findOrFail($id);
 
+            if(!$product->is_active) return $this->backError('Please activate the product first');
+
             $validated = $request->validate([
                 'is_in_home' => 'required|boolean',
             ]);
+
+            if ($validated['is_in_home'] && $product->is_special) {
+                $count = EcommerceProduct::where('website_id', $this->website->id)
+                ->active()->special()->inHome()->count();
+
+                if ($count >= 6) return $this->backError('Max 6 special products allowed on home');
+            } 
+
+            if ($validated['is_in_home'] && !$product->is_special) {
+                $count = EcommerceProduct::where('website_id', $this->website->id)
+                ->active()->inHome()->where('is_special', false)->count();
+
+                if ($count >= 8) return $this->backError('Max 8 products allowed on home');
+            } 
 
             $product->update([
                 'is_in_home' => $validated['is_in_home'],
@@ -292,10 +315,30 @@ class ProductsController extends Controller
         try {
             $product = EcommerceProduct::where('website_id', $this->website->id)->findOrFail($id);
 
+            if(!$product->is_active) return $this->backError('Please activate the product first');
+
             $validated = $request->validate([
                 'is_special' => 'required|boolean',
             ]);
 
+            if ($validated['is_special'] && $product->is_in_home) {
+                $count = EcommerceProduct::where('website_id', $this->website->id)
+                ->active()->special()->inHome()->count();
+
+                if ($count >= 6) return $this->backError('Max 6 special products allowed on home');
+            } 
+            
+            if(!$validated['is_special'] && $product->is_in_home) {
+                $count = EcommerceProduct::where('website_id', $this->website->id)
+                ->active()->inHome()->where('is_special', false)->count();
+
+                if ($count >= 2) {
+                    $product->update([
+                        'is_in_home' => false,
+                    ]);
+                }
+            }
+            
             $product->update([
                 'is_special' => $validated['is_special'],
             ]);
