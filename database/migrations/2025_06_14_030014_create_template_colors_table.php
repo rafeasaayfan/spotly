@@ -61,6 +61,11 @@ return new class extends Migration
             $table->string('secondary_dark');
             $table->string('secondary_hover_dark');
 
+            $table->string('text_for_primary_light');
+            $table->string('text_for_primary_dark');
+            $table->string('text_for_danger_light');
+            $table->string('text_for_danger_dark');
+
             $table->string('border_color_light');
             $table->string('border_color_dark');
 

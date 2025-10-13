@@ -55,6 +55,11 @@ class TemplateColor extends Model
         'secondary_dark',
         'secondary_hover_dark',
 
+        'text_for_primary_light',
+        'text_for_primary_dark',
+        'text_for_danger_light',
+        'text_for_danger_dark',
+
         'border_color_light',
         'border_color_dark',
 
