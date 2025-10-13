@@ -27,8 +27,8 @@ class ProfileUpdateRequest extends FormRequest
             ],
             'phone_number' => [
                 'required',
-                'unique:users,phone_number',
-                'regex:/^(?:\+961)?(03\d{6}|70\d{6}|71\d{6}|76\d{6}|78\d{6}|79\d{6}|81\d{6})$/'
+                'regex:/^(?:\+961)?(03\d{6}|70\d{6}|71\d{6}|76\d{6}|78\d{6}|79\d{6}|81\d{6})$/',
+                Rule::unique(User::class)->ignore($this->user()->id)
             ],
         ];
     }
