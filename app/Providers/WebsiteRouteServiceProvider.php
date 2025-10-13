@@ -2,18 +2,7 @@
 
 namespace App\Providers;
 
-use App\Http\Middleware\IdentifyWebsite;
-use App\Models\Website;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Cache;
-use App\Http\Controllers\Spotly\LandingController;
-use App\Http\Controllers\Spotly\WebsiteBuilderController;
-use App\Http\Controllers\Spotly\WebsitePreviewController;
-use App\Http\Middleware\HandleLanguage;
-use App\Http\Middleware\LoadWebsiteRoutes;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Str;
 
 class WebsiteRouteServiceProvider extends ServiceProvider
 {
