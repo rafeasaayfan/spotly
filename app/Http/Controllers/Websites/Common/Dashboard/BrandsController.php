@@ -13,7 +13,7 @@ class BrandsController extends Controller
 {
     use DataTableTrait;
 
-    public $website;
+    protected $website;
 
     public function __construct()
     {

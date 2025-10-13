@@ -13,7 +13,7 @@ class CategoriesController extends Controller
 {
     use DataTableTrait;
 
-    public $website;
+    protected $website;
 
     public function __construct()
     {
@@ -28,7 +28,7 @@ class CategoriesController extends Controller
         $query = Category::where('website_id', $this->website->id);
 
         $columnsSearching = ['name'];
-        $columnsSelection = ['id', 'parent_id', 'name', 'description', 'is_active'];
+        $columnsSelection = ['id', 'parent_id', 'name', 'ar_name', 'description', 'is_in_home', 'is_active'];
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, ['parent_name']);
 
@@ -134,6 +134,7 @@ class CategoriesController extends Controller
             $validated = $request->validated();
 
             $category->fill($validated);
+            $category->is_in_home = $validated['is_active'] ? $category->is_in_home : false;
             $category->save();
 
             return $this->redirectSuccess('dashboard.categories.index', 'Category updated successfully', forWebsite: true);
@@ -175,6 +176,7 @@ class CategoriesController extends Controller
     
             $category->update([
                 'is_active' => $validated['is_active'],
+                'is_in_home' => $validated['is_active'] ? $category->is_in_home : false,
             ]);
     
             $message = $validated['is_active']
@@ -184,6 +186,39 @@ class CategoriesController extends Controller
             return $this->backSuccess($message);
         } catch (\Exception $e) {
             return $this->logResponse('CategoriesController@toggleActive', $e, 'An error occurred while updating the Category status');
+        }
+    }
+
+    /**
+     * Toggle the is in home status of the specified resource.
+    */
+    public function toggleIsInHome(Request $request, $id)
+    {
+        try {
+            $category = Category::where('website_id', $this->website->id)->findOrFail($id);
+            if(!$category->is_active) return $this->backError('Please activate the category first');
+
+            $homeCategoriesCount = Category::where('website_id', $this->website->id)
+                ->active()->inHome()
+                ->count();
+
+            if($homeCategoriesCount === 9) return $this->backError('Max 9 categories allowed on home.');
+    
+            $validated = $request->validate([
+                'is_in_home' => 'required|boolean',
+            ]);
+    
+            $category->update([
+                'is_in_home' => $validated['is_in_home'],
+            ]);
+    
+            $message = $validated['is_in_home']
+                ? 'Category added to home successfully'
+                : 'Category removed from home successfully';
+    
+            return $this->backSuccess($message);
+        } catch (\Exception $e) {
+            return $this->logResponse('CategoriesController@toggleIsInHome', $e, 'An error occurred while updating the Category status');
         }
     }
 }
