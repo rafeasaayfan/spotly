@@ -164,7 +164,7 @@ onUnmounted(() => {
 
     <!-- Dots Navigation -->
     <div v-if="showDots && totalSlides > 1"
-      class="w-full absolute bottom-0 start-0 flex items-center justify-start sm:justify-center gap-1 ps-3 pb-3 z-10">
+      class="w-full absolute bottom-0 start-0 flex items-center justify-start sm:justify-center gap-1 ps-3 pb-1 z-10">
       <Button v-for="(item, index) in items" :key="index" @click="goToSlide(index)" type="button" size="icon"
         class="size-3.5 bg-white/50 hover:bg-white/80 rounded-full active:bg-white/90 active:ring-2 active:ring-[var(--primary)]"
         :class="{ 'size-4 bg-white': index === currentIndex }" :aria-label="`Go to slide ${index + 1}`" />
@@ -178,7 +178,7 @@ onUnmounted(() => {
       }" />
     </div> -->
 
-    <div class="absolute bottom-0 left-0 right-0 text-center pb-[5%] pt-[3%] text-white 
+    <div class="absolute bottom-0 left-0 right-0 text-center h-8 text-white 
       bg-gradient-to-b from-transaprent to-black/80 backdrop-blur-[1px]">
     </div>
   </div>
