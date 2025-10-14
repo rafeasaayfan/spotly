@@ -1,20 +1,15 @@
 import { type NavItem } from '@/types';
-import { Home, MoveDown, ShoppingBag } from 'lucide-vue-next';
+import { Home, ShoppingBag } from 'lucide-vue-next';
 
 export const navbarItems: NavItem[] = [
     {
-        title: 'Home',
+        title: 'nav.home',
         href: '/',
         icon: Home,
     },
     {
-        title: 'Shop',
+        title: 'nav.shop',
         href: '/shop',
         icon: ShoppingBag,
-    },
-    {
-        title: 'Offers',
-        href: '/offers',
-        icon: MoveDown,
     },
 ];
