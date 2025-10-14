@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 const props = defineProps<{
   active?: boolean,
   class?: HTMLAttributes['class']
+  activeClass?: HTMLAttributes['class']
 }>()
 </script>
 
@@ -17,6 +18,7 @@ const props = defineProps<{
         'text-body-muted text-sm',
         'w-8 h-8 rounded-md flex items-center justify-center cursor-pointer',
         {'bg-content-active text-active font-bold -translate-y-[0.5px]': active},
+        { [props.activeClass]: active },
         props.class,
       )
     "
