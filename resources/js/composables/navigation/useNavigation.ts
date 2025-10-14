@@ -45,11 +45,11 @@ export function useNavigation(navbarItems: NavItem[]) {
         return activeSection.value === sectionId;
     });
 
-    const activeNavStyle = (href: string, baseClass: string = '') => {
+    const activeNavStyle = (href: string, activationClass: string = '') => {
         if (href.startsWith('#')) {
-            return isActiveSection.value(href) ? `${baseClass} bg-content-2-active text-active` : `${baseClass}`;
+            return isActiveSection.value(href) ? `${activationClass ?? 'bg-content-2-active text-active'}` : '';
         } else {
-            return isCurrentRoute.value(href) ? `${baseClass} bg-content-2-active text-active` : `${baseClass}`;
+            return isCurrentRoute.value(href) ? `${activationClass ?? 'bg-content-2-active text-active'}` : '';
         }
     };
 
