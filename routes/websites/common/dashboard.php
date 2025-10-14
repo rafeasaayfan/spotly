@@ -17,6 +17,7 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
 
     //* Categories
     dashboardPagesRoutes('categories', CategoriesController::class);
+    Route::patch('categories/{id}/is_in_home', [CategoriesController::class, 'toggleIsInHome'])->name('categories.is_in_home');
     Route::patch('categories/{id}/is_active', [CategoriesController::class, 'toggleActive'])->name('categories.is_active');
 
     //* Brands
