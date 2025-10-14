@@ -19,30 +19,6 @@ onMounted(() => {
         },
     });
 
-    // Website mockup elements pulsing
-    gsap.utils.toArray<SVGElement>('.website-element').forEach((elem, i) => {
-        gsap.to(elem, {
-            opacity: 0.8,
-            scale: 1.05,
-            transformOrigin: 'center center',
-            duration: 2,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut',
-            delay: 0.5 + i * 0.6,
-        });
-    });
-
-    // Floating cart swimming animation
-    gsap.to('#floating-cart', {
-        y: 3,
-        rotation: 2,
-        duration: 2,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-    });
-
     // Mouse move parallax for hero background
     const heroSection = document.getElementById('hero');
     const heroSvg = document.querySelector<SVGElement>('.hero-bg-svg');

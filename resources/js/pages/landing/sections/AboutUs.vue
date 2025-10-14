@@ -105,7 +105,7 @@ const page = usePage<SharedData>();
                 <!-- Mission Statement -->
                 <div class="relative mb-16">
                     <div
-                        class="pointer-events-none absolute inset-0 start-0 top-0 z-0 rounded-full bg-gradient-to-br from-[var(--primary)] via-transparent to-[var(--background)] opacity-25 blur-2xl dark:opacity-10"
+                        class="pointer-events-none absolute inset-0 start-0 top-0 z-0 rounded-full bg-gradient-to-br from-[var(--primary)] via-transparent to-[var(--background)] opacity-20 blur-2xl dark:opacity-5"
                     ></div>
 
                     <div class="grid lg:grid-cols-2 gap-20">
@@ -142,7 +142,7 @@ const page = usePage<SharedData>();
                         </div>
 
                         <div class="relative h-full">
-                            <div class="flex h-full w-full items-center justify-center rounded-md bg-black/3 dark:bg-white/3 py-5 lg:py-0">
+                            <div class="flex h-full w-full items-center justify-center rounded-md bg-black/3 dark:bg-white/3 py-5 lg:py-0 border-b-6 border-muted">
                                 <AppLogoIcon class="size-40 md:size-50" />
                             </div>
                             <div class="bg-destructive absolute -top-3 -end-3 flex size-8 items-center justify-center rounded-full">
