@@ -21,7 +21,6 @@ const columns = [
     { key: 'websiteUser_name', label: 'User' },
     { key: 'items_count', label: 'Cart Items Count' },
     { key: 'status', label: 'Status', type: 'status' },
-    { key: 'expires_at', label: 'Expires At', type: 'date' },
     { key: 'created_at', label: 'Created At', type: 'date' },
 ];
 

@@ -1,5 +1,3 @@
-const columns = [ { key: 'websiteUser_name', label: 'User', type: '' }, { key: 'expires_at', label: 'Expires At', type: 'date' }, { key: 'created_at',
-label: 'Created At', type: 'date' }, { key: 'updated_at', label: 'Updated At', type: 'date' }, ];
 <script setup lang="ts">
 import Image from '@/components/ui/image/Image.vue';
 import { formatters } from '@/lib/dataTable';
@@ -16,7 +14,7 @@ const props = defineProps<{
             <div class="grid grid-cols-1 gap-4">
                 <!-- General Information -->
                 <div class="border-muted flex flex-col gap-1 border-b pb-4">
-                    <p v-if="props.data.websiteUser_name" class="text-sm text-body-muted">Cart For:</p>
+                    <p v-if="props.data.websiteUser_name" class="text-body-muted text-sm">Cart For:</p>
                     <h3 class="text-active-link text-xl font-bold">{{ props.data.websiteUser_name ?? 'Session Cart' }}</h3>
                 </div>
 
@@ -41,9 +39,6 @@ const props = defineProps<{
                         <span class="text-body-muted">status:</span>
                         <span v-html="formatters.status(props.data.status)"></span>
                     </p>
-                    <p class="text-body-muted flex w-full items-center justify-between text-sm">
-                        Expires At: <span>{{ formatters.date(props.data.expires_at, 'long') }}</span>
-                    </p>
                 </div>
             </div>
 
@@ -63,7 +58,7 @@ const props = defineProps<{
                             >
                                 No Image
                             </div>
-                            <p class="font-bold text-active-link">{{ item.product.name }}</p>
+                            <p class="text-active-link font-bold">{{ item.product.name }}</p>
                         </div>
                         <div v-if="item.color" class="flex items-center justify-between gap-2">
                             <span class="text-body-muted text-sm">Color:</span>
@@ -80,6 +75,9 @@ const props = defineProps<{
                         </p>
                         <p class="text-body-muted flex items-center justify-between gap-2 text-sm">
                             Total Price: <span class="text-body text-base font-bold">{{ item.unit_price * item.quantity }}$</span>
+                        </p>
+                        <p class="text-body-muted flex w-full items-center justify-between text-sm">
+                            Expires At: <span>{{ formatters.date(item.expires_at, 'long') }}</span>
                         </p>
                     </div>
                 </div>
