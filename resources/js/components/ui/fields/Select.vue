@@ -115,7 +115,7 @@ watch(isOpen, (newVal) => {
     </button>
 
     <!-- Custom dropdown -->
-    <ul
+    <div
       v-if="isOpen"
       :class="cn('absolute border border-muted rounded-md bg-body shadow-lg z-90 min-w-40 max-h-60 overflow-auto p-3 w-full',
         dropdownYClass,
@@ -123,7 +123,7 @@ watch(isOpen, (newVal) => {
         props.dropdownClass
       )"
     >
-      <li
+      <div
         v-for="option in options"
         :key="option.value"
         @click="selectOption(option)"
@@ -131,7 +131,7 @@ watch(isOpen, (newVal) => {
         :class="{ 'font-semibold text-active-link': option.value == modelValue }"
       >
         {{ option.label }}
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 </template>
