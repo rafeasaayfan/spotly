@@ -76,7 +76,7 @@ function toggleDropdown() {
             props.classDropdown
         )">
             <div class="w-full">
-                <Input v-model="search" type="text" :placeholder="$t('search.placeholder')" class="mb-2.5" />
+                <Input :class="props.class" v-model="search" type="text" :placeholder="$t('search.placeholder')" class="mb-2.5" />
             </div>
 
 
@@ -86,7 +86,7 @@ function toggleDropdown() {
 
             <div v-for="option in filteredOptions" :key="option.value" @click="selectOption(option.value)"
                 class="flex items-center gap-2 cursor-pointer px-3 py-2 text-sm rounded-md hover:font-bold
-                transition-all duration-100 ease-in-out bg-content-2">
+                transition-all duration-100 ease-in-out bg-content-2 text-body">
                 <Image v-if="option.icon && (option.icon as string)" :src="option.icon" class="size-4 rounded-full" />
                 <span>{{ option.label }}</span>
             </div>
