@@ -71,7 +71,7 @@ watch(
 .web-bg-dropdown {
     background-color: var(--bg_dropdown_light);
 }
-.web-bg-dropdown {
+.dark .web-bg-dropdown {
     background-color: var(--bg_dropdown_dark);
 }
 
@@ -97,12 +97,17 @@ watch(
     color: var(--foreground_muted_dark);
 }
 
-.web-text-body-muted:hover, .web-text-body-muted:active
 .web-text-body:hover, .web-text-body:active {
     color: var(--foreground_active_light);
 }
-.dark .web-text-body-muted:hover, .dark .web-text-body-muted:active
 .dark .web-text-body:hover, .dark .web-text-body:active {
+    color: var(--foreground_active_dark);
+}
+
+.web-text-body-muted:hover, .web-text-body-muted:active {
+    color: var(--foreground_active_light);
+}
+.dark .web-text-body-muted:hover, .dark .web-text-body-muted:active {
     color: var(--foreground_active_dark);
 }
 
@@ -125,6 +130,20 @@ watch(
 }
 .dark .web-text-danger {
     color: var(--danger_dark);
+}
+
+.web-text-for-danger, .web-text-for-danger:hover, .web-text-for-danger:active {
+    color: var(--text_for_danger_light);
+}
+.dark .web-text-for-danger, .dark .web-text-for-danger:hover, .dark .web-text-for-danger:active {
+    color: var(--text_for_danger_dark);
+}
+
+.web-text-for-primary, .web-text-for-primary:hover, .web-text-for-primary:active {
+    color: var(--text_for_primary_light);
+}
+.dark .web-text-for-primary, .dark .web-text-for-primary:hover, .dark .web-text-for-primary:active {
+    color: var(--text_for_primary_dark);
 }
 
 /** =============== Buttons || Nice colors =============== */
@@ -216,10 +235,6 @@ watch(
 }
 .dark .web-bg-content-active {
     background-color: var(--bg_content_active_dark);
-}
-
-.text-content {
-    color: var(--primary-foreground);
 }
 
 /** =============== POPUP =============== */
