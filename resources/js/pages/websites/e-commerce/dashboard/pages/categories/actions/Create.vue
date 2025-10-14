@@ -19,8 +19,8 @@ const columns = [
         required: true,
         relation: mappedCategories,
     },
-    { key: 'name', label: 'Name', type: 'text', placeholder: 'Enter category name', required: true },
-    { key: 'description', label: 'Description', type: 'textarea', placeholder: 'Describe this category', required: true },
+    { key: 'name', label: 'Name', type: 'text', placeholder: 'Enter the category name', required: true },
+    { key: 'ar_name', label: 'Arabic Name', type: 'text', placeholder: 'Enter the category arabic name', required: true },
     {
         key: 'is_active',
         label: 'Is Active',
@@ -32,6 +32,7 @@ const columns = [
             { value: '1', label: 'Active' },
         ],
     },
+    { key: 'description', label: 'Description', type: 'textarea', placeholder: 'Describe this category', required: true },
 ];
 </script>
 

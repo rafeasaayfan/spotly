@@ -32,8 +32,6 @@ const form = useForm<{
     price: number | string;
     sale_price: number | string;
     variants: Record<string, any>[];
-    is_in_home: string;
-    is_special: string;
     is_active: string;
     short_description: string;
     description: string;
@@ -44,8 +42,6 @@ const form = useForm<{
     price: props.data.price,
     sale_price: props.data.sale_price,
     variants: props.data.variants,
-    is_in_home: props.data.is_in_home,
-    is_special: props.data.is_special,
     is_active: props.data.is_active,
     short_description: props.data.short_description,
     description: props.data.description,
@@ -153,24 +149,6 @@ const variants = props.data.variants;
         </div>
 
         <!-- Flags -->
-        <div class="flex flex-col gap-1.5">
-            <Label>Is In Home</Label>
-            <Select v-model="form.is_in_home" required>
-                <option value="1">Yes</option>
-                <option value="0">No</option>
-            </Select>
-            <InputError :message="form.errors.is_in_home" />
-        </div>
-
-        <div class="flex flex-col gap-1.5">
-            <Label>Is Special</Label>
-            <Select v-model="form.is_special" required>
-                <option value="1">Yes</option>
-                <option value="0">No</option>
-            </Select>
-            <InputError :message="form.errors.is_special" />
-        </div>
-
         <div class="flex flex-col gap-1.5">
             <Label>Is Active</Label>
             <Select v-model="form.is_active" required>

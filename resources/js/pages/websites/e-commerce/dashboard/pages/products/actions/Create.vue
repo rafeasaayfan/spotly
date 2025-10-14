@@ -36,8 +36,6 @@ const form = useForm<{
     price: number | string;
     sale_price: number | string;
     variants: Record<string, any>[];
-    is_in_home: string;
-    is_special: string;
     is_active: string;
     short_description: string;
     description: string;
@@ -48,8 +46,6 @@ const form = useForm<{
     price: '',
     sale_price: '',
     variants: reactive([{ color: '#000000', stock_quantity: 1, ecommerce_product_image: null }]),
-    is_in_home: '',
-    is_special: '',
     is_active: '',
     short_description: '',
     description: '',
@@ -153,24 +149,6 @@ function submit() {
         </div>
 
         <!-- Flags -->
-        <div class="flex flex-col gap-1.5">
-            <Label>Is In Home</Label>
-            <Select v-model="form.is_in_home" required>
-                <option value="1">Yes</option>
-                <option value="0">No</option>
-            </Select>
-            <InputError :message="form.errors.is_in_home" />
-        </div>
-
-        <div class="flex flex-col gap-1.5">
-            <Label>Is Special</Label>
-            <Select v-model="form.is_special" required>
-                <option value="1">Yes</option>
-                <option value="0">No</option>
-            </Select>
-            <InputError :message="form.errors.is_special" />
-        </div>
-
         <div class="flex flex-col gap-1.5">
             <Label>Is Active</Label>
             <Select v-model="form.is_active" required>

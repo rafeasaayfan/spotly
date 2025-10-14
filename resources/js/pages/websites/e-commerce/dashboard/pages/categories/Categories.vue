@@ -20,7 +20,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 const columns = [
     { key: 'parent_name', label: 'Parent Category' },
     { key: 'name', label: 'Name' },
+    { key: 'ar_name', label: 'Arabic Name' },
     { key: 'description', label: 'Description' },
+    { key: 'is_in_home', label: 'Is In Home', type: 'toggle' },
     { key: 'is_active', label: 'Is Active', type: 'toggle' },
 ];
 
