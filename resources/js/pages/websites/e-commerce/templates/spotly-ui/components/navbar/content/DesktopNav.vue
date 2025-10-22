@@ -32,8 +32,11 @@ setupScrollTracking();
                         :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'"
                     >
                         <NavigationMenuLink
-                            :class="[navigationMenuTriggerStyle(), activeNavStyle(item.href, 'web-bg-content-active web-text-active'), 
-                            'bg-transparent hover:bg-[var(--bg_content_light)] dark:hover:bg-[var(--bg_content_dark)] cursor-pointer flex-row items-center gap-2 px-3']"
+                            :class="[
+                                navigationMenuTriggerStyle(),
+                                'cursor-pointer flex-row items-center gap-2 bg-transparent px-3 hover:bg-[var(--bg_content_light)] dark:hover:bg-[var(--bg_content_dark)]',
+                                activeNavStyle(item.href, 'web-bg-content-active web-text-active'),
+                            ]"
                         >
                             <component v-if="item.icon" :is="item.icon" class="h-4 w-4" />
                             <span>{{ $t(item.title) }}</span>
@@ -44,8 +47,8 @@ setupScrollTracking();
                         <NavigationMenuLink
                             :class="[
                                 navigationMenuTriggerStyle(),
+                                'cursor-pointer flex-row items-center gap-2 bg-transparent px-3 hover:bg-[var(--bg_content_light)] dark:hover:bg-[var(--bg_content_dark)]',
                                 activeNavStyle(item.href ?? '', 'web-bg-content-active web-text-active'),
-                                'bg-transparent hover:bg-[var(--bg_content_light)] dark:hover:bg-[var(--bg_content_dark)] cursor-pointer flex-row items-center gap-2 px-3',
                             ]"
                         >
                             <component v-if="item.icon" :is="item.icon" class="h-4 w-4" />
@@ -53,10 +56,7 @@ setupScrollTracking();
                         </NavigationMenuLink>
                     </Link>
 
-                    <div
-                        v-if="isCurrentRoute(item.href ?? '')"
-                        class="absolute bottom-0 left-0 h-0.5 w-full web-bg-primary"
-                    ></div>
+                    <div v-if="isCurrentRoute(item.href ?? '')" class="web-bg-primary absolute bottom-0 left-0 h-0.5 w-full"></div>
                 </NavigationMenuItem>
             </NavigationMenuList>
         </NavigationMenu>
