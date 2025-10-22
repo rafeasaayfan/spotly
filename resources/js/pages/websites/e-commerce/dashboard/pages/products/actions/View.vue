@@ -106,6 +106,9 @@ const props = defineProps<{
                         <p class="text-body-muted flex items-center justify-between gap-2 text-sm">
                             Stock Quantity: <span class="text-body text-base font-bold">{{ variant.stock_quantity }}</span>
                         </p>
+                        <p class="text-body-muted flex items-center justify-between gap-2 text-sm">
+                            Reserved Quantity: <span class="text-body text-base font-bold">{{ variant.reserved_quantity }}</span>
+                        </p>
                     </div>
                 </div>
             </div>
