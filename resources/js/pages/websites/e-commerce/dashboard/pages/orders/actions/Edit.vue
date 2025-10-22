@@ -27,20 +27,6 @@ const columns = [
         required: true,
         relation: mappedCities,
     },
-    {
-        key: 'status',
-        label: 'Status',
-        type: 'select',
-        placeholder: 'Select a status',
-        required: true,
-        options: [
-            { value: 'pending', label: 'Pending' },
-            { value: 'confirmed', label: 'Confirmed' },
-            { value: 'delivered', label: 'Delivered' },
-            { value: 'cancelled', label: 'Cancelled' },
-            { value: 'refunded', label: 'Refunded' },
-        ],
-    },
     { key: 'note', label: 'Note', type: 'textarea', placeholder: 'Your note', required: true, maxlength: 255 },
     {
         key: 'cancellation_reason',
