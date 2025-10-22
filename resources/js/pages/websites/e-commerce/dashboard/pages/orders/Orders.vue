@@ -28,8 +28,7 @@ const props = defineProps<{
 }>();
 
 const columns = [
-    { key: 'websiteUser_name', label: 'User' },
-    { key: 'deliveryFee_amount', label: 'Delivery Amount' },
+    { key: 'user_name', label: 'User' },
     { key: 'order_number', label: 'Order Number' },
     { key: 'total_amount', label: 'Total Amount' },
     { key: 'delivery_address', label: 'Delivery Address' },
@@ -46,7 +45,7 @@ const columns = [
             { value: 'refunded', label: 'Refunded' },
         ],
     },
-    { key: 'status_changed_at', label: 'Status Updated' },
+    { key: 'status_changed_at', label: 'Status Updated', type: 'date' },
 ];
 
 const mappedCities = props.cities.map((item: any) => ({
