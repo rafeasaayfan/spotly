@@ -27,9 +27,9 @@ class OrdersController extends Controller
         $query = EcommerceOrder::where('website_id', $this->website->id);
         $cities = config('cities.lebanon');
 
-        $columnsSearching = ['order_number', 'websiteUser.name'];
-        $columnsSelection = ['id', 'website_user_id', 'delivery_fee_id', 'order_number', 'discount_amount', 'total_amount', 'delivery_address', 'city', 'status', 'status_changed_at'];
-        $relations = ['websiteUser_name', 'deliveryFee_amount'];
+        $columnsSearching = ['order_number', 'user.name'];
+        $columnsSelection = ['id', 'website_user_id', 'order_number', 'total_amount', 'delivery_address', 'city', 'status', 'status_changed_at'];
+        $relations = ['user_name'];
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
@@ -119,7 +119,7 @@ class OrdersController extends Controller
             $order->fill($validated);
             $order->save();
 
-            return $this->redirectSuccess('dashboard.orders.index', 'Order created successfully', forWebsite: true);
+            return $this->redirectSuccess('dashboard.orders.index', 'Order updated successfully', forWebsite: true);
         } catch (\Exception $e) {
             return $this->logResponse('OrdersController@update', $e, 'An error occurred while updating the Order');
         }

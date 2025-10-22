@@ -30,9 +30,9 @@ class ProductsController extends Controller
      */
     public function index(Request $request)
     {
-        $query = EcommerceProduct::where('website_id', $this->website->id)->withStockQuantity();
+        $query = EcommerceProduct::where('website_id', $this->website->id)->withStockQuantity()->withReservedQuantity();
 
-        $columnsSearching = ['name', 'categories.name', 'brands.name', 'price'];
+        $columnsSearching = ['name', 'category.name', 'brand.name', 'price'];
         $columnsSelection = ['id', 'category_id', 'brand_id', 'name', 'price', 'sales_count', 'is_in_home', 'is_special', 'is_active'];
         $relations = ['category_name', 'brand_name'];
 
