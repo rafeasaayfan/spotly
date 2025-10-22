@@ -12,7 +12,7 @@ const props = defineProps<{
     data-slot="td"
     :class="
       cn(
-        'py-3 border-muted border-s text-start px-3',
+        'py-2 border-muted border-s text-start px-2',
         props.class,
       )
     "

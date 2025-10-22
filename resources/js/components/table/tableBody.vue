@@ -128,7 +128,7 @@ function updateCol(key: string, value: any, id: number) {
                     props.tableConditions.enableUserAssignments
                 "
             >
-                <div class="flex items-center justify-end gap-2">
+                <div class="flex items-center justify-end gap-1.5">
                     <Dialog v-for="action in ['edit', 'view', 'assignRoles', 'assignPermissions', 'userAssignments']" :key="action">
                         <DialogTrigger as-child>
                             <ActionEditBtn v-if="props.tableConditions.enableEdit && action === 'edit'" />
