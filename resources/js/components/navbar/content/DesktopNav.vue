@@ -32,7 +32,11 @@ setupScrollTracking();
                         :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'"
                     >
                         <NavigationMenuLink
-                            :class="[navigationMenuTriggerStyle(), activeNavStyle(item.href), 'cursor-pointer flex-row items-center gap-2 px-3']"
+                            :class="[
+                                navigationMenuTriggerStyle(),
+                                'cursor-pointer flex-row items-center gap-2 bg-transparent px-3 hover:bg-[var(--landing-content-bg)]',
+                                activeNavStyle(item.href, 'bg-[var(--landing-content-bg-active)] text-active'),
+                            ]"
                         >
                             <component v-if="item.icon" :is="item.icon" class="h-4 w-4" />
                             <span>{{ $t(item.title) }}</span>
@@ -43,8 +47,8 @@ setupScrollTracking();
                         <NavigationMenuLink
                             :class="[
                                 navigationMenuTriggerStyle(),
-                                activeNavStyle(item.href ?? ''),
-                                'cursor-pointer flex-row items-center gap-2 px-3',
+                                'cursor-pointer flex-row items-center gap-2 bg-transparent px-3 hover:bg-[var(--landing-content-bg)]',
+                                activeNavStyle(item.href ?? '', 'bg-[var(--landing-content-bg-active)] text-active'),
                             ]"
                         >
                             <component v-if="item.icon" :is="item.icon" class="h-4 w-4" />
