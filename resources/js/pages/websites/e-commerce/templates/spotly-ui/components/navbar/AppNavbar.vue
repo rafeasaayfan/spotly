@@ -37,6 +37,8 @@ onMounted(() => {
 onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll);
 });
+
+const isCurrentRoute = computed(() => (url: string) => page.url === url);
 </script>
 
 <template>
@@ -70,10 +72,11 @@ onUnmounted(() => {
             <DesktopNav />
 
             <div class="flex items-center space-x-2">
-                <Link href="/cart" class="relative cursor-pointer rounded-full web-bg-content web-text-body-muted 
+                <Link href="/cart" class="relative cursor-pointer rounded-full 
                     p-2 hover:-translate-y-0.5 transition-all duration-300"
+                    :class="isCurrentRoute('/cart') ? 'web-text-active web-bg-content-active' : 'web-text-body-muted web-bg-content'"
                 >
-                    <div v-if="props.cartItemsCount > 0" class="absolute -top-1.5 -end-0.5 text-[10px] web-text-for-danger 
+                    <div v-if="props.cartItemsCount > 0" class="absolute -top-1.5 -right-0.5 text-[10px] web-text-for-danger 
                         web-bg-danger rounded-full size-4.5 flex items-center justify-center"
                     >
                         {{ props.cartItemsCount }}
