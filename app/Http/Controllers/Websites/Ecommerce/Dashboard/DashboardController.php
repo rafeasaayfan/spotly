@@ -11,7 +11,7 @@ class DashboardController extends BaseController
     public function index()
     {
         return Inertia::render('websites/e-commerce/dashboard/Dashboard', [
-            'websiteNameAndLogo' => $this->websiteNameAndLogo
+            'websiteNameAndLogo' => $this->websiteNameAndLogo()
         ]);
     }
 }
