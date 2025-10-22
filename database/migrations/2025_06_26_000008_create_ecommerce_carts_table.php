@@ -18,7 +18,7 @@ return new class extends Migration
 
             $table->string('session_id')->nullable();
 
-            $table->enum('status', ['pending', 'checked_out', 'abandoned'])->default('pending');
+            $table->enum('status', ['pending', 'checked_out'])->default('pending');
             $table->timestamps();
 
             $table->unique(['website_id', 'website_user_id'], 'cart_unique_user_idx');

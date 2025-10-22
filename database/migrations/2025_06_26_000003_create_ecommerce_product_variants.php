@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('ecommerce_products')->onDelete('cascade');
             $table->string('color');
             $table->integer('stock_quantity')->default(0);
+            $table->integer('reserved_quantity')->default(0);
             $table->timestamps();
 
             $table->unique(['product_id', 'color']);

@@ -12,14 +12,16 @@ class EcommerceOrder extends Model
         'payment_method_id',
         'delivery_fee_id',
 
+        'session_id',
+        
         'order_number',
 
         'subtotal',
-        'discount_amount',
         'total_amount',
 
-        'delivery_address',
+        'phone_number',
         'city',
+        'delivery_address',
 
         'note',
         'cancellation_reason',
@@ -39,7 +41,7 @@ class EcommerceOrder extends Model
     /**
      * Get the website user that the order is associated with.
      */
-    public function websiteUser()
+    public function user()
     {
         return $this->belongsTo(WebsiteUser::class, 'website_user_id');
     }

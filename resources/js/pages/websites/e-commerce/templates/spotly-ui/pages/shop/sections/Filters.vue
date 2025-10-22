@@ -62,7 +62,7 @@ const fetchProducts = (data: any) => {
                 replace: true,
             },
         );
-    }, 400);
+    }, 300);
 };
 
 watch(

@@ -16,7 +16,7 @@ const props = defineProps<{
     colors: Record<string, string>;
     websiteNameAndLogo: Record<string, string>;
     websiteFooterData: Record<string, string>;
-    cartItemsCount: number;
+    iniCartItemsCount: number;
     flash?: {
         toastType: 'success' | 'error' | 'warning' | 'info';
         message: string;
@@ -31,6 +31,7 @@ watchEffect(() => {
 });
 
 const product = ref<Record<string, any>>(props.iniProduct);
+const cartItemsCount = ref<number>(props.iniCartItemsCount);
 
 const page = usePage<SharedData>();
 
@@ -47,7 +48,6 @@ const addToCart = async () => {
         processing.value = true;
 
         const response = await axios.post(route('website.e-commerce.addToCart'), {
-            slug: product.value.slug,
             product_id: product.value.id,
             quantity: quantity.value,
             imageUrl: selectedVariant.value.ecommerce_product_image,
@@ -57,13 +57,14 @@ const addToCart = async () => {
 
         if (response.data.props.product) {
             product.value = response.data.props.product;
+            cartItemsCount.value = response.data.props.cartItemsCount;
             
             selectedVariant.value = response.data.props.product.in_stock_variants.find((v: any) => v.id === selectedVariant.value!.id) || null;
 
             toast.fire({ icon: 'success', title: response.data.message });
         }
     } catch (error: any) {
-        console.error(error.response?.data || error);
+        toast.fire({ icon: 'error', title: error.response?.data.message });
     } finally {
         processing.value = false;
     }
@@ -72,12 +73,12 @@ const addToCart = async () => {
 
 <template>
     <Layout :colors="props.colors" :websiteNameAndLogo="props.websiteNameAndLogo" :websiteFooterData="props.websiteFooterData" 
-        :cartItemsCount="props.cartItemsCount"
+        :cartItemsCount="cartItemsCount"
     >
         <section class="pt-22">
             <div
                 :class="[
-                    'bg-black-1 rounded p-3 backdrop-blur md:p-6 dark:bg-white/1',
+                    'border-s-4 border-e-4 border-double web-border-color p-3 md:p-6',
                     product.in_stock_variants ? '' : 'flex h-full w-full items-center justify-center',
                 ]"
             >
@@ -146,11 +147,11 @@ const addToCart = async () => {
                                 v-model="quantity"
                                 class="web-bg-field web-text-active web-border-muted w-50"
                                 min="1"
-                                :max="selectedVariant.stock_quantity"
+                                :max="selectedVariant.display_quantity"
                             />
                             <span class="flex items-center gap-1 rounded bg-yellow-600/20 px-2 py-1.5 text-sm text-yellow-600">
                                 <TriangleAlert class="size-4" />
-                                {{ $t('max') }} {{ selectedVariant.stock_quantity }}
+                                {{ $t('max') }} {{ selectedVariant.display_quantity }}
                             </span>
                         </div>
                     </div>
@@ -167,7 +168,7 @@ const addToCart = async () => {
                         </div>
 
                         <div
-                            v-if="selectedVariant && quantity && selectedVariant.stock_quantity >= quantity"
+                            v-if="selectedVariant && quantity && selectedVariant.display_quantity >= quantity"
                             class="flex w-full items-center justify-between gap-4 rounded-md bg-[var(--bg_content_hover_light)] px-2 py-2 md:px-4 dark:bg-[var(--bg_content_hover_dark)]"
                         >
                             <span class="web-text-body text-xs md:text-sm">{{ $t('total.price') }}</span>
@@ -187,7 +188,7 @@ const addToCart = async () => {
                             type="button"
                             class="web-bg-primary web-text-for-primary eco-glow-button"
                             @click="addToCart"
-                            :disabled="!selectedVariant || quantity > selectedVariant.stock_quantity || processing"
+                            :disabled="!selectedVariant || quantity > selectedVariant.display_quantity || processing"
                         >
                             <LoaderCircle v-if="processing" class="h-4 w-4 animate-spin" />
                             <span v-if="processing">{{ $t('adding') }}</span>

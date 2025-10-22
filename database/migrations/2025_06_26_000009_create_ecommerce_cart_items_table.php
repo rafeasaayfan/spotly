@@ -16,13 +16,11 @@ return new class extends Migration
             $table->foreignId('cart_id')->constrained('ecommerce_carts')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('ecommerce_products')->onDelete('cascade');
 
-            $table->integer('quantity');
-            $table->decimal('unit_price', 10, 2);
-
             $table->string('imageUrl')->nullable();
             $table->string('color');
-
-            $table->timestamp('expires_at')->nullable();
+            
+            $table->integer('quantity');
+            $table->decimal('unit_price', 10, 2);
 
             $table->timestamps();
 
@@ -31,7 +29,6 @@ return new class extends Migration
                 'cart_item_unique_idx'
             );
             $table->index(['cart_id', 'product_id']);
-            $table->index('expires_at');
         });
     }
 

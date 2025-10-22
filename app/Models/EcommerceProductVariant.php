@@ -17,6 +17,7 @@ class EcommerceProductVariant extends Model implements HasMedia
 
         'color',
         'stock_quantity',
+        'reserved_quantity',
     ];
 
     /**

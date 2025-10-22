@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EcommerceProduct extends Model 
+class EcommerceProduct extends Model
 {
     protected $fillable = [
         'website_id',
@@ -66,7 +66,7 @@ class EcommerceProduct extends Model
     public function inStockVariants()
     {
         return $this->hasMany(EcommerceProductVariant::class, 'product_id')
-                    ->where('stock_quantity', '>', 0);
+            ->whereRaw('stock_quantity - reserved_quantity > 0');
     }
 
     /**
@@ -75,6 +75,14 @@ class EcommerceProduct extends Model
     public function scopeWithStockQuantity($query)
     {
         return $query->withSum('variants', 'stock_quantity');
+    }
+
+    /**
+     * Get the product reserved quantity.
+     */
+    public function scopeWithReservedQuantity($query)
+    {
+        return $query->withSum('variants', 'reserved_quantity');
     }
 
     /**

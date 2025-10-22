@@ -24,12 +24,11 @@ class ProductRequest extends FormRequest
         $website = app('website');
 
         return [
-            'slug' => ['required', 'string'],
             'product_id' => ['required', 'exists:ecommerce_products,id,website_id,' . $website->id . ',is_active,1'],
-            'quantity' => ['required', 'integer'],
+            'quantity' => ['required', 'integer', 'gt:0'],
             'imageUrl' => ['nullable', 'string'],
             'color' => ['required', 'string', 'max:50'],
-            'unit_price' => ['required']
+            'unit_price' => ['required', 'numeric', 'gt:0']
         ];
     }
 }

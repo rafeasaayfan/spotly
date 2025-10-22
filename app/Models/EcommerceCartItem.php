@@ -15,8 +15,6 @@ class EcommerceCartItem extends Model
 
         'imageUrl',
         'color',
-
-        'expires_at'
     ];
 
     /**

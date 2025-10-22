@@ -29,7 +29,6 @@ class UpdateOrderRequest extends FormRequest
             'note' => ['nullable', 'min:3', 'max:255'],
             
             'cancellation_reason' => ['nullable', 'min:3', 'max:255'],
-            'status' => ['required', 'string', 'in:pending,confirmed,delivered,cancelled,refunded']
         ];
     }
 }

@@ -10,15 +10,11 @@ class EcommerceOrderItem extends Model
         'order_id',
         'product_id',
 
-        'product_image_path',
+        'imageUrl',
+        'color',
 
         'quantity',
         'unit_price',
-        'total_price',
-
-        'color',
-
-        'note',
     ];
 
     /**
@@ -35,5 +31,15 @@ class EcommerceOrderItem extends Model
     public function product()
     {
         return $this->belongsTo(EcommerceProduct::class, 'product_id');
+    }
+
+    /**
+     * Scope a query to only include items whose order has a given status.
+     */
+    public function scopeWithOrderStatus($query, $status)
+    {
+        return $query->whereHas('order', function ($q) use ($status) {
+            $q->where('status', $status);
+        });
     }
 }

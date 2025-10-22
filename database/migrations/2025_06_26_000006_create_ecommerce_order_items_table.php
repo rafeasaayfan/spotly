@@ -16,18 +16,18 @@ return new class extends Migration
             $table->foreignId('order_id')->constrained('ecommerce_orders')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('ecommerce_products')->onDelete('cascade');
 
-            $table->string('product_image_path')->nullable();
+            $table->string('imageUrl')->nullable();
+            $table->string('color');
 
             $table->integer('quantity');
             $table->decimal('unit_price', 10, 2);
-            $table->decimal('total_price', 10, 2);
-
-            $table->string('color')->nullable();
             
-            $table->text('note')->nullable();
-
             $table->timestamps();
 
+            $table->unique(
+                ['order_id', 'product_id', 'color'],
+                'order_item_unique_idx'
+            );
             $table->index(['order_id']);
             $table->index(['product_id']);
         });

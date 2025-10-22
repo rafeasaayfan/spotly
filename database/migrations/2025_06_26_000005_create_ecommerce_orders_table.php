@@ -14,20 +14,22 @@ return new class extends Migration
         Schema::create('ecommerce_orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('website_id')->constrained('websites')->onDelete('cascade');
-            $table->foreignId('website_user_id')->constrained('website_users')->onDelete('cascade');
+            $table->foreignId('website_user_id')->nullable()->constrained('website_users')->onDelete('set null');
             $table->foreignId('payment_method_id')->constrained('payment_methods')->onDelete('cascade');
             $table->foreignId('delivery_fee_id')->nullable()->constrained('delivery_fees')->onDelete('set null');
+
+            $table->string('session_id')->nullable();
 
             $table->string('order_number')->unique();
 
             $table->decimal('subtotal', 12, 2);
-            $table->decimal('discount_amount', 12, 2)->default(0); 
             $table->decimal('total_amount', 12, 2);
 
-            $table->string('delivery_address');
+            $table->string('phone_number');
             $table->string('city');
+            $table->string('delivery_address');
 
-            $table->text('note');
+            $table->text('note')->nullable();
             $table->text('cancellation_reason')->nullable();
 
             $table->timestamp('status_changed_at')->nullable();
