@@ -20,7 +20,7 @@ const images = props.product.in_stock_variants
 const colorsAndQuantities = props.product.in_stock_variants
     ? props.product.in_stock_variants.map((variant: any) => ({
           color: variant.color,
-          quantity: variant.stock_quantity,
+          quantity: variant.stock_quantity - variant.reserved_quantity,
       }))
     : [];
 
@@ -103,6 +103,7 @@ onMounted(() => {
                 @click.prevent.stop
                 parentClass="w-full h-full object-contain cursor-default transition-all duration-500 ease-in-out hover:scale-100 group-hover:scale-125"
                 :showArrows="false"
+                imgClass="object-auto"
             />
             <div v-else class="web-bg-content flex h-50 w-full items-center justify-center text-xs">
                 <p class="web-text-body-muted">{{ $t('noImage') }}</p>
