@@ -7,18 +7,21 @@ import { Link, usePage } from '@inertiajs/vue3';
 const page = usePage<SharedData>();
 
 const languages = [
-    { key: 'العربية', value: 'ar', src: '/images/flags/ar.avif' },
     { key: 'English', value: 'en', src: '/images/flags/en.png' },
+    { key: 'العربية', value: 'ar', src: '/images/flags/ar.avif' },
 ];
 </script>
 
 <template>
-    <div class="bg-card inline-flex gap-2 rounded-md p-1 max-w-full overflow-x-auto" :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'">
+    <div
+        class="border-muted bg-body flex max-w-full items-center justify-between gap-4 overflow-x-auto rounded border-4 border-double"
+        :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'"
+    >
         <button
             v-for="lang in languages"
             :key="lang.value"
             :class="[
-                'text-body-muted cursor-pointer rounded-md transition-colors',
+                'text-body-muted cursor-pointer transition-colors',
                 page.props.lang === lang.value ? 'bg-primary text-for-bg-primary font-semibold shadow-xs' : 'bg-content-3',
             ]"
         >
