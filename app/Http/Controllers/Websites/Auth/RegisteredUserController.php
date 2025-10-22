@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Websites\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Websites\Auth\RegisterRequest;
 use App\Models\WebsiteUser;
+use App\Services\Websites\Ecommerce\EcommerceSyncService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,6 +30,7 @@ class RegisteredUserController extends Controller
     public function store(RegisterRequest $request): RedirectResponse
     {
         $website = app('website');
+        $guestSessionId = session()->getId();
 
         $websiteUser = WebsiteUser::create([
             'website_id' => $website->id,
@@ -40,6 +42,8 @@ class RegisteredUserController extends Controller
         event(new Registered($websiteUser));
 
         Auth::guard('website')->login($websiteUser);
+
+        EcommerceSyncService::sync($guestSessionId);
 
         return $this->redirectSuccess('dashboard.index', '', forWebsite: true);
     }

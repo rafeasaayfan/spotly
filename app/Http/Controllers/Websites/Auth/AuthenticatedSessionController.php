@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Websites\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Websites\Auth\LoginRequest;
+use App\Services\Websites\Ecommerce\EcommerceSyncService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,7 +28,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        $guestSessionId = session()->getId();
+
         $request->authenticate();
+
+        EcommerceSyncService::sync($guestSessionId);
 
         $request->session()->regenerate();
 
