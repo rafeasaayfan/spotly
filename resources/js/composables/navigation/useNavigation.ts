@@ -47,9 +47,9 @@ export function useNavigation(navbarItems: NavItem[]) {
 
     const activeNavStyle = (href: string, activationClass: string = '') => {
         if (href.startsWith('#')) {
-            return isActiveSection.value(href) ? `${activationClass ?? 'bg-content-2-active text-active'}` : '';
+            return isActiveSection.value(href) ? (activationClass || 'bg-content-2-active text-active') : '';
         } else {
-            return isCurrentRoute.value(href) ? `${activationClass ?? 'bg-content-2-active text-active'}` : '';
+            return isCurrentRoute.value(href) ? `${activationClass || 'bg-content-2-active text-active'}` : '';
         }
     };
 
