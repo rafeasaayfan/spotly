@@ -25,7 +25,7 @@ class CartsController extends Controller
     {
         $query = EcommerceCart::where('website_id', $this->website->id)->withCount('items');
 
-        $columnsSearching = ['websiteUser.name', 'expires_at'];
+        $columnsSearching = ['websiteUser.name'];
         $columnsSelection = ['id', 'website_user_id', 'status', 'created_at'];
         $relations = ['websiteUser_name'];
 
