@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Websites\Ecommerce\CartController;
 use App\Http\Controllers\Websites\Ecommerce\HomeController;
+use App\Http\Controllers\Websites\Ecommerce\OrdersController;
 use App\Http\Controllers\Websites\Ecommerce\ProductController;
 use App\Http\Controllers\Websites\Ecommerce\ShopController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,11 @@ Route::name('e-commerce.')->group(function () {
 
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::delete('/cart/removeItem', [CartController::class, 'removeItem'])->name('cart.removeItem');
+    Route::patch('/cart/changeQuantity', [CartController::class, 'changeQuantity'])->name('cart.changeQuantity');
+    Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+
+    Route::get('/orders', [OrdersController::class, 'index'])->name('orders');
+    Route::patch('/orders/{order}/cancel', [OrdersController::class, 'cancelOrder'])->name('orders.cancelOrder');
 
     Route::middleware(['auth:website', 'verified:website.verification.notice', 'websiteUserRole:admin'])->group(function () {
         require __DIR__ . '/dashboard.php';
