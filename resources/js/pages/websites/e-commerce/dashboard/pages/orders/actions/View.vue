@@ -19,7 +19,7 @@ const props = defineProps<{
                         <div
                             class="text-active rounded bg-gradient-to-br from-lime-600 to-lime-500 px-3 py-1.5 text-sm dark:from-lime-700 dark:to-lime-800"
                         >
-                            {{ props.data.websiteUser_name }}
+                            {{ props.data.user_name ?? 'session order' }}
                         </div>
 
                         <div
@@ -36,12 +36,12 @@ const props = defineProps<{
                         <p class="text-body-muted flex w-full items-center justify-between text-sm">
                             Subtotal: <span class="text-body text-base font-medium">{{ props.data.subtotal }}$</span>
                         </p>
-                        <p class="text-body-muted flex w-full items-center justify-between text-sm">
+                        <!-- <p class="text-body-muted flex w-full items-center justify-between text-sm">
                             Discount Amount: <span class="text-body text-base font-medium">{{ props.data.discount_amount }}$</span>
-                        </p>
-                        <p class="text-body-muted flex w-full items-center justify-between text-sm">
+                        </p> -->
+                        <!-- <p class="text-body-muted flex w-full items-center justify-between text-sm">
                             Delivery Amount: <span class="text-body text-base font-medium">{{ props.data.deliveryFee_amount }}$</span>
-                        </p>
+                        </p> -->
                         <p class="text-body-muted flex w-full items-center justify-between text-sm">
                             Total Amount: <span class="text-active text-base font-medium">{{ props.data.total_amount }}$</span>
                         </p>
@@ -53,6 +53,9 @@ const props = defineProps<{
                         </p>
                         <p class="text-body-muted flex w-full items-center justify-between text-sm">
                             City: <span class="text-body text-base font-medium">{{ props.data.city }}</span>
+                        </p>
+                        <p class="text-body-muted flex w-full items-center justify-between text-sm">
+                            Phone Number: <a :href="`tel:${props.data.phone_number}`" class="text-body text-base font-medium">{{ props.data.phone_number }}</a>
                         </p>
                     </div>
                 </div>
@@ -88,10 +91,10 @@ const props = defineProps<{
                     <div v-for="item in props.data.items" :key="item.id" class="bg-body flex flex-col gap-3 rounded-md p-2.5 lg:p-4">
                         <div class="border-muted flex w-full items-center gap-2 border-b pb-2">
                             <Image
-                                v-if="item.product_image_path"
-                                :src="item.product_image_path"
+                                v-if="item.imageUrl"
+                                :src="item.imageUrl"
                                 alt="Item Image"
-                                class="size-18 rounded-full object-cover shadow"
+                                class="size-18 rounded-full shadow"
                             />
                             <div
                                 v-else
@@ -116,7 +119,7 @@ const props = defineProps<{
                             Unit Price: <span class="text-body text-base font-bold">{{ item.unit_price }}$</span>
                         </p>
                         <p class="text-body-muted flex items-center justify-between gap-2 text-sm">
-                            Total Price: <span class="text-active text-base font-bold">{{ item.total_price }}$</span>
+                            Total Price: <span class="text-active text-base font-bold">{{ item.unit_price * item.quantity }}$</span>
                         </p>
 
                         <div v-if="item.note" class="border-muted flex flex-col gap-1 border-t pt-2">
