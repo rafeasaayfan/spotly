@@ -25,9 +25,10 @@ const columns = [
     { key: 'price', label: 'Price' },
     { key: 'sales_count', label: 'Sales Count' },
     { key: 'variants_sum_stock_quantity', label: 'Stock Quantity' },
-    { key: 'is_in_home', label: 'Is In Home', type: 'toggle' },
-    { key: 'is_special', label: 'Is Special', type: 'toggle' },
-    { key: 'is_active', label: 'Is Active', type: 'toggle' },
+    { key: 'variants_sum_reserved_quantity', label: 'Reserved Quantity' },
+    { key: 'is_in_home', label: 'In Home', type: 'toggle' },
+    { key: 'is_special', label: 'Special', type: 'toggle' },
+    { key: 'is_active', label: 'Active', type: 'toggle' },
 ];
 
 const filter = [
