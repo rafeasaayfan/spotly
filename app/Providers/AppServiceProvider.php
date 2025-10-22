@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Website;
+use App\Observers\WebsiteObserver;
 use App\Policies\WebsitePolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -23,5 +24,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(Website::class, WebsitePolicy::class);
+        Website::observe(WebsiteObserver::class);
     }
 }
