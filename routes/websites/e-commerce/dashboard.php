@@ -17,7 +17,7 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::patch('products/{id}/is_special', [ProductsController::class, 'toggleIsSpecial'])->name('products.is_special');
 
     //* Delivery Fees
-    dashboardPagesRoutes('delivery-fees', DeliveryFeesController::class);
+    // dashboardPagesRoutes('delivery-fees', DeliveryFeesController::class);
 
     //* Orders
     dashboardPagesRoutes('orders', OrdersController::class);

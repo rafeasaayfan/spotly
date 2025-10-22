@@ -36,11 +36,11 @@ export const mainSidebarItems: SidebarSection[] = [
                 href: '/dashboard/brands',
                 icon: icons.Tags,
             },
-            {
-                title: 'Delivery Fees',
-                href: '/dashboard/delivery-fees',
-                icon: icons.Truck,
-            },
+            // {
+            //     title: 'Delivery Fees',
+            //     href: '/dashboard/delivery-fees',
+            //     icon: icons.Truck,
+            // },
             {
                 title: 'Products',
                 href: '/dashboard/products',
