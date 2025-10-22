@@ -76,9 +76,6 @@ const props = defineProps<{
                         <p class="text-body-muted flex items-center justify-between gap-2 text-sm">
                             Total Price: <span class="text-body text-base font-bold">{{ item.unit_price * item.quantity }}$</span>
                         </p>
-                        <p class="text-body-muted flex w-full items-center justify-between text-sm">
-                            Expires At: <span>{{ formatters.date(item.expires_at, 'long') }}</span>
-                        </p>
                     </div>
                 </div>
             </div>
