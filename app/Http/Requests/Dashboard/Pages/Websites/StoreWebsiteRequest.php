@@ -29,7 +29,16 @@ class StoreWebsiteRequest extends FormRequest
             ],
             'email' => ['nullable', 'email', 'string'],
             'about_us' => ['nullable', 'max:255', 'string'],
-            'city' => ['nullable', 'string'],
+            'city' => [
+                'nullable',
+                'string',
+                function ($attribute, $value, $fail) {
+                    $cities = config('cities.lebanon');
+                    if (!is_array($cities) || !in_array($value, $cities)) {
+                        $fail('The selected city is invalid.');
+                    }
+                }
+            ],
             'address' => ['required', 'string'],
             'instagram' => ['nullable', 'string'],
             'facebook' => ['nullable', 'string'],
