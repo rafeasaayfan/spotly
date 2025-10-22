@@ -13,7 +13,7 @@ const props = defineProps<{
     <div class="col-span-4 xl:col-span-3 flex flex-col gap-5">
         <div 
             v-if="!props.products.data || props.products.data.length === 0" 
-            class="w-full h-full flex items-center justify-center flex-col gap-2 text-lg"
+            class="w-full h-full flex items-center justify-center flex-col gap-2 text-lg bg-black/1 dark:bg-white/1 rounded-md shadow-md"
         > 
             <Package class="size-10 web-text-body-muted" />
             {{ $t('no.products.found') }}
