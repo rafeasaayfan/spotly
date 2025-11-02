@@ -7,6 +7,8 @@ use App\Models\EcommerceOrder;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use App\Http\Requests\Websites\Ecommerce\Dashboard\Pages\Orders\UpdateOrderRequest;
+use App\Jobs\Websites\Ecommerce\SendOrderEmailJob;
+use App\Models\WebsiteUser;
 
 class OrdersController extends Controller
 {
@@ -111,7 +113,7 @@ class OrdersController extends Controller
      */
     public function update(UpdateOrderRequest $request, EcommerceOrder $order)
     {
-        if($order->website_id !== $this->website->id) return;
+        if ($order->website_id !== $this->website->id) return;
 
         try {
             $validated = $request->validated();
@@ -136,6 +138,14 @@ class OrdersController extends Controller
                 'ids.*' => 'integer|exists:ecommerce_orders,id,website_id,' . $this->website->id,
             ]);
 
+            // $orders = EcommerceOrder::whereIn('id', $validated['ids'])->get();
+
+            // foreach ($orders as $order) {
+            //     if ($order->website_user_id !== null) {
+            //         $this->callTheOrderJob($order, 'delete');
+            //     }
+            // }
+
             EcommerceOrder::destroy($validated['ids']);
 
             return $this->backSuccess('Order(s) deleted successfully');
@@ -150,7 +160,7 @@ class OrdersController extends Controller
     public function changeStatus(Request $request, $id)
     {
         $allowedTransitions = [
-            'pending'   => ['confirmed'],
+            'pending'   => ['confirmed', 'rejected'],
             'confirmed' => ['delivered', 'cancelled'],
             'delivered' => ['refunded'],
         ];
@@ -159,7 +169,7 @@ class OrdersController extends Controller
             $validated = $request->validate([
                 'status' => 'required|string|in:pending,confirmed,delivered,cancelled,refunded',
             ]);
-            $order = EcommerceOrder::where('website_id', $this->website->id)->findOrFail($id);
+            $order = EcommerceOrder::where('website_id', $this->website->id)->with(['items.product.variants'])->findOrFail($id);
 
             $currentStatus = $order->status;
             $newStatus = $validated['status'];
@@ -168,7 +178,12 @@ class OrdersController extends Controller
                 return $this->backError("You cannot change the order status from {$currentStatus} to {$newStatus}");
             }
 
-            $order->update(['status' => $newStatus]);
+            $order->update([
+                'status' => $newStatus,
+                'status_changed_at' => now()
+            ]);
+
+            $this->updateInventoryQuantities($order, $newStatus);
 
             $message = match ($validated['status']) {
                 'confirmed' => 'Order confirmed successfully.',
@@ -178,9 +193,68 @@ class OrdersController extends Controller
                 default     => 'Order status updated successfully.',
             };
 
+            if (in_array($newStatus, ['confirmed', 'cancelled', 'rejected', 'delivered'])) {
+                if ($order->website_user_id !== null) {
+                    $this->callTheOrderJob($order, $newStatus);
+                }
+            }
+
             return $this->backSuccess($message);
         } catch (\Exception $e) {
             return $this->logResponse('OrdersController@changeStatus', $e, 'An error occurred while updating the Order status');
         }
+    }
+
+    /**
+     * Update product variant inventory quantities based on the new order status.
+     */
+    protected function updateInventoryQuantities(EcommerceOrder $order, string $newStatus)
+    {
+        foreach ($order->items as $item) {
+            $variant = $item->product->variants
+                ->firstWhere('color', $item->color);
+
+            if (!$variant) continue;
+
+            $qty = $item->quantity;
+
+            match ($newStatus) {
+                'confirmed' => $variant->increment('reserved_quantity', $qty),
+
+                'delivered' => $variant->update([
+                    'stock_quantity' => max($variant->stock_quantity - $qty, 0),
+                    'reserved_quantity' => max($variant->reserved_quantity - $qty, 0),
+                ]),
+
+                'cancelled' => $variant->update([
+                    'reserved_quantity' => max($variant->reserved_quantity - $qty, 0),
+                ]),
+
+                'refunded' => $variant->increment('stock_quantity', $qty),
+
+                default => null,
+            };
+        }
+    }
+
+    /**
+     * Update product variant inventory quantities based on the new order status.
+     */
+    protected function callTheOrderJob(EcommerceOrder $order, string $newStatus)
+    {
+        $orderOwner = WebsiteUser::where('website_id', $this->website->id)
+            ->where('id', $order->website_user_id)
+            ->first();
+        $orderOwnerEmail = $orderOwner?->email;
+
+        SendOrderEmailJob::dispatch(
+            $order->order_number,
+            $newStatus,
+            $this->website->id,
+            $this->website->name,
+            $this->website->email,
+            $this->website->subdomain,
+            $orderOwnerEmail ?? null
+        );
     }
 }
