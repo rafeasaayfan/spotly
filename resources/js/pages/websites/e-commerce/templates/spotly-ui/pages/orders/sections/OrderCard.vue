@@ -52,7 +52,7 @@ const handleStatusText = (status: string): string => {
         <div class="flex flex-col gap-2 px-4">
             <div class="flex w-full items-center justify-between">
                 <p class="web-text-body-muted text-xs">{{ $t('phone') }}</p>
-                <p class="text-sm">{{ order.phone_number }}</p>
+                <p class="text-sm [direction:ltr]">{{ order.phone_number }}</p>
             </div>
             <div class="flex w-full items-center justify-between">
                 <p class="web-text-body-muted text-xs">{{ $t('city') }}</p>
@@ -68,7 +68,7 @@ const handleStatusText = (status: string): string => {
             </div>
             <div v-if="order.status !== 'pending'" class="flex w-full items-center justify-between">
                 <p class="web-text-body-muted text-xs">{{ handleStatusText(order.status) }}</p>
-                <p class="text-xs">{{ order.status_changed_at }}</p>
+                <p class="text-xs [direction:ltr]">{{ formatters.date(order.status_changed_at, 'long') }}</p>
             </div>
             <div v-if="order.status === 'cancelled' && order.cancellation_reason" class="flex w-full flex-col gap-1">
                 <p class="web-text-body-muted text-xs">{{ $t('cancellation.reason') }}</p>
@@ -77,7 +77,7 @@ const handleStatusText = (status: string): string => {
         </div>
 
         <div class="web-border-color flex w-full items-center justify-between border-t p-2">
-            <p class="web-text-body-muted text-xs">{{ formatters.date(order.created_at, 'long') }}</p>
+            <p class="web-text-body-muted text-xs [direction:ltr]">{{ formatters.date(order.created_at, 'long') }}</p>
 
             <div class="flex items-center gap-2">
                 <Dialog>
