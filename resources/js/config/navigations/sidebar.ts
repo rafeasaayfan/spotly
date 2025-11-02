@@ -9,6 +9,7 @@ export const mainSidebarItems = (): SidebarSection[] => {
     return [
         {
             name: page.props?.lang === 'ar' ? 'المنصة' : 'Platform',
+            permission: ['dashboard_access'],
             items: [
                 {
                     permission: ['dashboard_access'],
