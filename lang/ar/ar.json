@@ -87,6 +87,7 @@
     "auth.confirmPassword": "تأكيد كلمة المرور",
 
     "****************** Email Verification": "************************************",
+    "auth.email.verification": "تأكيد البريد الإلكتروني",
     "auth.verifyEmail.title": "التحقق من البريد الإلكتروني",
     "auth.verifyEmail.subtitle": "الرجاء التحقق من عنوان بريدك الإلكتروني بالنقر على الرابط الذي أرسلناه إليك للتو.",
     "auth.verifyEmail.verificationLinkSent": "تم إرسال رابط تحقق جديد إلى عنوان البريد الإلكتروني الذي قدمته أثناء التسجيل.",

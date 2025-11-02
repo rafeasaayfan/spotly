@@ -86,6 +86,7 @@
     "auth.confirmPassword": "Confirm password",
 
     "****************** Email Verification": "************************************",
+    "auth.email.verification": "Email verification",
     "auth.verifyEmail.title": "Verify email",
     "auth.verifyEmail.subtitle": "Please verify your email address by clicking on the link we just emailed to you.",
     "auth.verifyEmail.verificationLinkSent": "A new verification link has been sent to the email address you provided during registration.",
