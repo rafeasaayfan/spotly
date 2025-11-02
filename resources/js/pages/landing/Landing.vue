@@ -103,7 +103,7 @@ watchEffect(() => {
                 <DropdownMenu v-model:open="isDropdownOpen">
                     <DropdownMenuTrigger as-child>
                         <Button
-                            class="size-14 h-0 rounded-full bg-[var(--primary)]/80 p-0 backdrop-blur-[2px] hover:rotate-10 hover:bg-[var(--primary)] sm:size-15"
+                            class="size-14 rounded-full bg-[var(--primary)]/80 p-0 backdrop-blur-[2px] hover:rotate-10 hover:bg-[var(--primary)] sm:size-15"
                             :class="isDropdownOpen ? 'bg-[var(--primary)]' : ''"
                         >
                             <MessageSquare v-if="!isDropdownOpen" class="size-5" />
@@ -111,7 +111,7 @@ watchEffect(() => {
                         </Button>
                     </DropdownMenuTrigger>
 
-                    <DropdownMenuContent align="end" class="h-140 w-70 sm:h-auto sm:w-fit">
+                    <DropdownMenuContent class="h-140 w-70 sm:h-auto sm:w-fit">
                         <DropdownMenuShortcut class="section-title text-active px-2 py-2 text-lg font-bold">
                             {{ $t('landing.contact_dropdown.title_part1') }}
                             <span class="gradient-text">{{ $t('landing.contact_dropdown.title_part2') }}</span>
