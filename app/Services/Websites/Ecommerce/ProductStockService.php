@@ -39,7 +39,7 @@ class ProductStockService
             $variant = $product->inStockVariants->firstWhere('color', $color);
 
             if (!$variant) {
-                return 'This color is not available for this product';
+                return __('messages.color_not_available');
             }
 
             $cartItem = $cartItems
@@ -61,7 +61,7 @@ class ProductStockService
                 : $quantity + ($pendingOrderItemQty ?? 0);
 
             if ($available < $requestedTotal) {
-                return "Not enough stock for this variant";
+                return __('messages.not_enough_stock_variant');
             }
 
             return 'done';
