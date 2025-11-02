@@ -5,9 +5,9 @@ import { onMounted, onUnmounted, reactive, watch } from 'vue';
 import Layout from '../../pages/Layout.vue';
 import Hero from './sections/Hero.vue';
 import Products from './sections/Products.vue';
-import SpecialOffers from './sections/SpecialOffers.vue';
 import About from './sections/About.vue';
 import Contact from './sections/Contact.vue';
+import Categories from './sections/Categories.vue';
 
 const props = defineProps<{
     colors: Record<string, string>;
@@ -56,9 +56,9 @@ onUnmounted(() => {
     <Layout :colors="reactiveColors">
         <Hero />
 
+        <Categories />
+        
         <Products />
-
-        <SpecialOffers />
 
         <About />
 
