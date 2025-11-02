@@ -27,7 +27,7 @@ const showAvatar = computed(() => props.user.avatar && props.user.avatar !== '')
         </AvatarFallback>
     </Avatar>
 
-    <div class="grid flex-1 text-left text-sm leading-tight">
+    <div class="grid flex-1 text-left text-sm leading-tight ![direction:ltr]">
         <span class="truncate font-medium text-body">{{ user.name }}</span>
         <span v-if="showEmail" class="text-body-muted truncate text-xs">{{ user.email }}</span>
     </div>
