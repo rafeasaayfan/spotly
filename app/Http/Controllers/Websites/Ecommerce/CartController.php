@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Websites\Ecommerce;
 
 use App\Http\Controllers\Websites\BaseController;
 use App\Http\Requests\Websites\Ecommerce\CheckoutRequest;
+use App\Jobs\Websites\Ecommerce\SendOrderEmailJob;
 use App\Models\Country;
 use App\Models\EcommerceCart;
 use App\Models\EcommerceCartItem;
@@ -49,7 +50,7 @@ class CartController extends BaseController
         try {
             $cartItemForDelete = $this->cartItems()->where('id', $validated['itemId'])->first();
             if (! $cartItemForDelete) {
-                return $this->jsonError('Item not found in your cart');
+                return $this->jsonError(__('messages.item_cart_not_found'));
             }
 
             $cartId = $cartItemForDelete->cart_id;
@@ -58,7 +59,7 @@ class CartController extends BaseController
 
             $items = EcommerceCartItem::where('cart_id', $cartId)->with(['cart', 'product:id,name,slug'])->get();
 
-            return $this->jsonSuccess('Item removed from your cart successfully', [
+            return $this->jsonSuccess(__('messages.item_cart_removed'), [
                 'items' => $items,
                 'cartItemsCount' => $items->count(),
             ]);
@@ -80,7 +81,7 @@ class CartController extends BaseController
         try {
             $cartItem = $this->cartItems()?->where('id', $validated['itemId'])->first();
             if (! $cartItem) {
-                return $this->jsonError('Item not found in your cart');
+                return $this->jsonError(__('messages.item_cart_not_found'));
             }
             $cartId = $cartItem->cart_id;
             $productId = $cartItem->product_id;
@@ -101,7 +102,7 @@ class CartController extends BaseController
 
             $items = EcommerceCartItem::where('cart_id', $cartId)->with(['cart', 'product:id,name,slug'])->get();
 
-            return $this->jsonSuccess('Quantity updated successfully', ['items' => $items]);
+            return $this->jsonSuccess(__('messages.qty_updated'), ['items' => $items]);
         } catch (\Exception $e) {
             return $this->logResponse('CartController@removeItem', $e, 'An error occurred while deleting the item from cart');
         }
@@ -120,7 +121,7 @@ class CartController extends BaseController
             $checkedCartItems = EcommerceCartItem::whereIn('id', $cartItemIds)->get();
 
             if ($checkedCartItems->isEmpty()) {
-                return $this->jsonError('No cart items found');
+                return $this->jsonError(__('messages.no_cart_item'));
             }
 
             // Make the order
@@ -171,7 +172,17 @@ class CartController extends BaseController
 
             DB::commit();
 
-            return $this->jsonSuccess('Checkout completed successfully', [
+            SendOrderEmailJob::dispatch(
+                $order->order_number,
+                'new_order',
+                $this->website->id,
+                $this->website->name,
+                $this->website->email,
+                $this->website->subdomain,
+                Auth::guard('website')->check() ? Auth::guard('website')->user()->email : null
+            )->afterCommit();
+
+            return $this->jsonSuccess(__('messages.order_placed'), [
                 'items' => $cartItems,
                 'cartItemsCount' => $cartItems->count(),
                 'cartCheckedOut' => $cartItems->count() > 0 ? false : true
