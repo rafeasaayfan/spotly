@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\Websites;
+namespace App\Jobs\Websites\Ecommerce;
 
 use App\Models\EcommerceProduct;
 use Illuminate\Contracts\Queue\ShouldQueue;
