@@ -24,6 +24,8 @@ class ProductController extends BaseController
 
         $iniProduct = $this->updateProductQuantity($product, $cartItems);
 
+        $product->increment('views_count');
+
         return $this->inertiaRender('pages/Product', [
             'colors' => $this->websiteTemplate()->templateColor,
             'iniProduct' => $iniProduct,
@@ -103,7 +105,7 @@ class ProductController extends BaseController
             $product = $this->updateProductQuantity($product, $cartItemsForProduct);
 
             return $this->jsonSuccess(
-                'Your product was added to cart successfully',
+                __('messages.product_added_to_cart'),
                 [
                     'product' => $product,
                     'cartItemsCount' => $cartItemsForProduct->count()
