@@ -51,12 +51,3 @@ const svgClass = computed(() =>
         </text>
     </svg>
 </template>
-
-<style>
-:root {
-  --stop-color: black;
-}
-.dark {
-  --stop-color: white;
-}
-</style>
