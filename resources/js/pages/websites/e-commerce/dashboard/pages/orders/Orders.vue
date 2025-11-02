@@ -2,13 +2,13 @@
 import DataTable from '@/components/table/DataTable.vue';
 import DashboardLayout from '@/layouts/DashboardLayout.vue';
 
-import { Head } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 import { watchEffect } from 'vue';
 
 import { type DataTableProps } from '@/composables/dataTable/useDataTable';
 import { defaultTableConditions } from '@/lib/dataTable';
 import { toast } from '@/lib/sweetAlert';
-import { type BreadcrumbItem } from '@/types';
+import { SharedData, type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -20,7 +20,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 const props = defineProps<{
     orders: DataTableProps;
     websiteNameAndLogo?: Record<string, string>
-    cities: Array<string>;
+    cities: Record<string, any>;
     flash?: {
         toastType: 'success' | 'error' | 'warning' | 'info';
         message: string;
@@ -39,18 +39,21 @@ const columns = [
         type: 'select',
         options: [
             { value: 'pending', label: 'Pending' },
-            { value: 'confirmed', label: 'Confirmed' },
+            { value: 'confirmed', label: 'Confirm' },
             { value: 'delivered', label: 'Delivered' },
-            { value: 'cancelled', label: 'Cancelled' },
-            { value: 'refunded', label: 'Refunded' },
+            { value: 'rejected', label: 'Reject' },
+            { value: 'cancelled', label: 'Cancel' },
+            { value: 'refunded', label: 'Refund' },
         ],
     },
     { key: 'status_changed_at', label: 'Status Updated', type: 'date' },
 ];
 
-const mappedCities = props.cities.map((item: any) => ({
-    value: item,
-    label: item,
+const page = usePage<SharedData>();
+
+const mappedCities = Object.entries(props.cities).map(([key, city]: [string, any]) => ({
+    value: key,
+    label: page.props.lang === 'ar' ? city.ar : city.en,
 }));
 
 const filter = [
@@ -62,6 +65,7 @@ const filter = [
             { value: 'pending', label: 'Pending' },
             { value: 'confirmed', label: 'Confirmed' },
             { value: 'delivered', label: 'Delivered' },
+            { value: 'rejected', label: 'rejected' },
             { value: 'cancelled', label: 'Cancelled' },
             { value: 'refunded', label: 'Refunded' },
         ],
