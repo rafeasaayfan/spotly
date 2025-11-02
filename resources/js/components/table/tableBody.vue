@@ -20,15 +20,17 @@ const props = defineProps<{
     path: string;
     routeName: string;
     handleAction: (action: 'delete', idOrIds: number | number[]) => Promise<void>;
-    dashboardFor?: string,
+    dashboardFor?: string;
 }>();
 
-function updateCol(key: string, value: any, id: number) {
-    const form = useForm({ [key]: value });
+function updateCol(key: string, value: any, id: number, oldVal?: string) {
+    if (oldVal !== value) {
+        const form = useForm({ [key]: value });
 
-    form.patch(route(`${props.routeName}.${key}`, id), {
-        preserveScroll: true,
-    });
+        form.patch(route(`${props.routeName}.${key}`, id), {
+            preserveScroll: true,
+        });
+    }
 }
 </script>
 
@@ -82,10 +84,16 @@ function updateCol(key: string, value: any, id: number) {
                     <Select
                         :id="column.label"
                         class="ps-1 text-xs"
-                        v-model="row[column.key]"
+                        :modelValue="row[column.key]"
                         :placeholder="column.placeholder ?? column.label"
+                        :withStatusColors="true"
                         :required="column.required"
-                        @update:modelValue="(val) => updateCol(column.key, val, row.id)"
+                        @update:modelValue="
+                            (val) => {
+                                const oldVal = row[column.key];
+                                updateCol(column.key, val, row.id, oldVal);
+                            }
+                        "
                     >
                         <option v-for="option in column.options" :key="option.label" :value="option.value">{{ option.label }}</option>
                     </Select>

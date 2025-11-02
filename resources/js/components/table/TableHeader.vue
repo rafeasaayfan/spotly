@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Dialog, DialogScrollContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogDescription, DialogHeader, DialogScrollContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -8,18 +8,17 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input, Toggle } from '@/components/ui/fields';
+import { Input, InputError, Select, SelectWithSearch, Toggle } from '@/components/ui/fields';
 import { Button } from '../ui/button';
 
-import { useForm } from '@inertiajs/vue3';
-import { Filter as FilterIcon, Search, Settings } from 'lucide-vue-next';
-import { ref, watch } from 'vue';
-
-import FilterContent from './actions/Filter.vue';
+import { Filter as FilterIcon, LoaderCircle, Search, Settings } from 'lucide-vue-next';
+import { computed, nextTick, ref, watch } from 'vue';
 
 import { type Column } from '@/composables/dataTable/useDataTable';
 import { type TableConditions } from '@/lib/dataTable';
 import { type Filter } from '@/types';
+import { useForm } from '@inertiajs/vue3';
+import { Label } from '../ui/label';
 import Modal from './actions/Modal.vue';
 
 interface HeaderProps {
@@ -34,7 +33,7 @@ interface HeaderProps {
     handleAction: (action: 'delete', idOrIds: number | number[]) => Promise<void>;
     tableConditions: TableConditions;
     path: string;
-    dashboardFor?: string,
+    dashboardFor?: string;
 }
 
 const props = defineProps<HeaderProps>();
@@ -54,16 +53,68 @@ watch(localSearch, (val) => {
     props.applyFilters({ search: val, page: 1 });
 });
 
-// Form for filter inputs
 const form = useForm(Object.fromEntries((props.filter ?? []).map((column) => [column.key, ''])));
 
-function setFormData(key: string, value: any) {
-    form[key] = value;
+function submit(key: string, val: any) {
+    form[key] = val;
+
+    props.applyFilters({ filter: form.data(), page: 1 });
 }
+
+const isResetting = ref(false);
+
+function resetForm() {
+    isResetting.value = true;
+
+    setTimeout(() => {
+        form.reset();
+        isResetting.value = false;
+    }, 500);
+
+    nextTick(() => {
+        props.applyFilters({ filter: '' });
+    });
+}
+
+// Computed property for grid columns class
+const gridColsClass = computed(() => {
+    const filterLength = props.filter?.length ?? 0;
+    if (filterLength >= 4) {
+        return 'lg:grid-cols-4';
+    }
+    switch (filterLength) {
+        case 1:
+            return 'lg:grid-cols-1';
+        case 2:
+            return 'lg:grid-cols-2';
+        case 3:
+            return 'lg:grid-cols-3';
+        default:
+            return '';
+    }
+});
+
+// Computed property for column span class
+const colSpanClass = computed(() => {
+    const filterLength = props.filter?.length ?? 0;
+    if (filterLength >= 4) {
+        return 'lg:col-span-4';
+    }
+    switch (filterLength) {
+        case 1:
+            return 'lg:col-span-1';
+        case 2:
+            return 'lg:col-span-2';
+        case 3:
+            return 'lg:col-span-3';
+        default:
+            return '';
+    }
+});
 </script>
 
 <template>
-    <div class="flex items-center justify-between gap-4 flex-wrap p-3">
+    <div class="flex flex-wrap items-center justify-between gap-4 p-3">
         <div class="flex items-center gap-2">
             <div class="relative" v-if="props.tableConditions.enableSearch">
                 <Input
@@ -77,7 +128,7 @@ function setFormData(key: string, value: any) {
                     v-model="localSearch"
                 />
 
-                <Search class="absolute top-1/2 left-2 h-5 w-5 -translate-y-1/2 transform z-0 pointer-events-none" />
+                <Search class="pointer-events-none absolute top-1/2 left-2 z-0 h-5 w-5 -translate-y-1/2 transform" />
             </div>
 
             <DropdownMenu v-if="props.tableConditions.enableColsVisible">
@@ -87,7 +138,7 @@ function setFormData(key: string, value: any) {
                     </Button>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end" class="w-48">
+                <DropdownMenuContent class="w-48">
                     <DropdownMenuShortcut>Colums Settings</DropdownMenuShortcut>
 
                     <DropdownMenuSeparator />
@@ -113,13 +164,60 @@ function setFormData(key: string, value: any) {
                     </Button>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end" class="w-60">
+                <DropdownMenuContent class="w-[250px] sm:w-[500px]" :class="props.filter && props.filter?.length > 1 ? 'lg:w-[800px]' : 'lg:w-[600px]'">
                     <DropdownMenuShortcut>Filter options</DropdownMenuShortcut>
 
                     <DropdownMenuSeparator />
 
                     <DropdownMenuGroup>
-                        <FilterContent :filter="props.filter" :applyFilters="props.applyFilters" :form="form" :setFormData="setFormData" />
+                        <form
+                            class="grid grid-cols-1 gap-5 sm:grid-cols-2"
+                            :class="gridColsClass"
+                            enctype="multipart/form-data"
+                        >
+                            <div class="grid gap-1" v-for="(column, index) in props.filter" :key="index">
+                                <Label class="text-[11px]" :for="column.label">{{ column.label.charAt(0).toUpperCase() + column.label.slice(1) }}</Label>
+
+                                <Select
+                                    v-if="column.type === 'select'"
+                                    :id="column.label"
+                                    v-model="form[column.key]"
+                                    :option="column.placeholder ?? null"
+                                    :withStatusColors="true"
+                                    :placeholder="column.placeholder ?? column.label"
+                                    @update:modelValue="(val: any) => submit(column.key, val)"
+                                    class="text-xs py-1.5 gap-5"
+                                >
+                                    <option v-for="option in column.options" :key="option.label" :value="option.value">{{ option.label }}</option>
+                                </Select>
+
+                                <SelectWithSearch
+                                    v-if="column.type === 'select_with_search'"
+                                    :id="column.label"
+                                    v-model="form[column.key]"
+                                    :placeholder="column.placeholder ?? column.label"
+                                    :options="
+                                        column.options?.map((option) => ({
+                                            label: option.label ?? option,
+                                            value: option.value ?? option,
+                                        }))
+                                    "
+                                    @change="submit"
+                                />
+
+                                <InputError class="mt-1" :message="form.errors?.[column.key]" />
+                            </div>
+
+                            <div
+                                class="border-muted col-span-1 mt-1 flex justify-end border-t pt-2 sm:col-span-2"
+                                :class="colSpanClass"
+                            >
+                                <Button variant="secondary" size="sm" type="button" :disabled="isResetting" @click="resetForm()" class="sm:text-xs h-7 px-2">
+                                    <LoaderCircle v-if="isResetting" class="h-4 w-4 animate-spin" />
+                                    <span v-else>Reset</span>
+                                </Button>
+                            </div>
+                        </form>
                     </DropdownMenuGroup>
                 </DropdownMenuContent>
             </DropdownMenu>
