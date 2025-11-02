@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class EcommerceProduct extends Model
 {
+    protected $appends = ['sales_count'];
+
     protected $fillable = [
         'website_id',
         'category_id',
@@ -21,7 +23,6 @@ class EcommerceProduct extends Model
         'description',
 
         'views_count',
-        'sales_count',
 
         'is_in_home',
         'is_special',
@@ -50,6 +51,14 @@ class EcommerceProduct extends Model
     public function brand()
     {
         return $this->belongsTo(Brand::class, 'brand_id');
+    }
+
+    /**
+     * The relationship between the product and order items.
+     */
+    public function orderItems()
+    {
+        return $this->hasMany(EcommerceOrderItem::class, 'product_id');
     }
 
     /**
@@ -107,5 +116,17 @@ class EcommerceProduct extends Model
     public function scopeSpecial($query)
     {
         return $query->where('is_special', true);
+    }
+
+    /**
+     * Get the number of sales for the product (only delivered orders).
+     */
+    public function getSalesCountAttribute()
+    {
+        return $this->orderItems()
+            ->whereHas('order', function ($query) {
+                $query->where('status', 'delivered');
+            })
+            ->sum('quantity');
     }
 }
