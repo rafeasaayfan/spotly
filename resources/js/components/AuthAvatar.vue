@@ -29,7 +29,7 @@ const auth = computed(() => page.props.auth);
             </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="end" class="w-56">
+        <DropdownMenuContent class="w-56">
             <UserMenuContent :user="auth.user" />
         </DropdownMenuContent>
     </DropdownMenu>

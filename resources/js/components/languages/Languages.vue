@@ -35,7 +35,7 @@ const changeLanguage = (lang: string) => {
             </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="end" class="w-56">
+        <DropdownMenuContent class="w-56">
             <DropdownMenuShortcut class="mb-2 px-2 py-2 text-xs tracking-wide uppercase">{{ $t('languages') }}</DropdownMenuShortcut>
 
             <DropdownMenuSeparator />
