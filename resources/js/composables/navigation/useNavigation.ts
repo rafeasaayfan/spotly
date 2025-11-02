@@ -38,7 +38,13 @@ export function useNavigation(navbarItems: NavItem[]) {
         }
     };
 
-    const isCurrentRoute = computed(() => (url: string) => page.url === url);
+    const isCurrentRoute = computed(() => (url: string) => {
+        if(url === '/') {
+            return page.url === url
+        }
+
+        return page.url === url || page.url.startsWith(url)
+    });
 
     const isActiveSection = computed(() => (href: string) => {
         const sectionId = href.startsWith('#') ? href.slice(1) : href;
