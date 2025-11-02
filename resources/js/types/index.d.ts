@@ -7,7 +7,7 @@ export interface Auth {
     website_user: User;
     roles: string[];
     permissions: string[];
-    websiteUserRole: string;
+    websiteUserRole: string[];
 }
 
 export interface BreadcrumbItem {
@@ -18,11 +18,13 @@ export interface BreadcrumbItem {
 export interface NavItem {
     title: string;
     href?: string;
+    hrefType?: 'a' | 'link';
     icon?: LucideIcon;
     isActive?: boolean;
     children?: NavItem[];
     role?: string[];
     permission?: string[];
+    websiteRole?: string[];
 }
 
 export interface SidebarSection {
@@ -30,6 +32,7 @@ export interface SidebarSection {
     items: NavItem[];
     role?: string[];
     permission?: string[];
+    websiteRole?: string[];
 }
 
 export interface SharedData extends PageProps {
@@ -38,7 +41,7 @@ export interface SharedData extends PageProps {
     auth: Auth;
     ziggy: Config & { location: string };
     sidebarOpen: boolean;
-    lang: 'en' | 'ar'
+    lang: 'en' | 'ar';
 }
 
 export interface User {
