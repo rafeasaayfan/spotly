@@ -12,7 +12,7 @@ import type { SharedData } from '@/types';
 import { usePage } from '@inertiajs/vue3';
 
 const props = withDefaults(
-  defineProps<DropdownMenuContentProps & { class?: HTMLAttributes['class'] }>(),
+  defineProps<DropdownMenuContentProps & { class?: HTMLAttributes['class'], align?: string }>(),
   {
     sideOffset: 4,
   },
@@ -31,22 +31,28 @@ const page = usePage<SharedData>();
 
 const lang = computed(() => page.props.lang)
 
-const align = computed(() => lang.value == 'ar' ? 'start' : 'end')
+const align = computed(() => {
+  if (!props.align) {
+    return lang.value == 'ar' ? 'start' : 'end'
+  }
+
+  return props.align;
+})
 </script>
 
 <template>
   <DropdownMenuPortal>
-<DropdownMenuContent
-  data-slot="dropdown-menu-content"
-  v-bind="forwarded"
-  :align="align"
-  :class="cn(
-    'bg-body data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 max-h-(--reka-dropdown-menu-content-available-height) min-w-[8rem] origin-(--reka-dropdown-menu-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-md border border-muted p-2 shadow-md',
-    props.class
-  )"
->
-  <slot />
-</DropdownMenuContent>
+    <DropdownMenuContent data-slot="dropdown-menu-content" v-bind="forwarded" :align="align" :class="cn(
+      'bg-body z-50 overflow-x-hidden overflow-y-auto rounded-md border border-muted p-2 shadow-md',
+      'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
+      'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
+      'data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+      'max-h-(--reka-dropdown-menu-content-available-height) ',
+      'origin-(--reka-dropdown-menu-content-transform-origin)',
+      props.class
+    )">
+      <slot />
+    </DropdownMenuContent>
 
   </DropdownMenuPortal>
 </template>
