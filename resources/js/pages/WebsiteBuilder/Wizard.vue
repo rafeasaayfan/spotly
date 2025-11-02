@@ -25,7 +25,7 @@ const props = defineProps<{
     type: string;
     typeId: number;
     countries: Record<string, any>;
-    cities: Array<string>;
+    cities: Record<string, any>;
     templateTemplateColors: Record<string, any>;
     flash?: {
         toastType: 'success' | 'error' | 'warning' | 'info';
