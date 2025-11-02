@@ -43,6 +43,7 @@ const filter = [
         key: 'is_active',
         label: 'Active',
         type: 'select',
+        placeholder: 'Select active status',
         options: [
             { value: '0', label: 'Inactive' },
             { value: '1', label: 'Active' },
@@ -52,6 +53,7 @@ const filter = [
         key: 'is_verified',
         label: 'Verified',
         type: 'select',
+        placeholder: 'Select verification status',
         options: [
             { value: '0', label: 'Unverified' },
             { value: '1', label: 'Verified' },
@@ -61,6 +63,7 @@ const filter = [
         key: 'status',
         label: 'Status',
         type: 'select',
+        placeholder: 'Select status',
         options: [
             { value: 'pending', label: 'Pending' },
             { value: 'denied', label: 'Denied' },
