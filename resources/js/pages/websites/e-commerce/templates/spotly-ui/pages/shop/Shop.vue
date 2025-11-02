@@ -7,6 +7,7 @@ import Products from './sections/Products.vue';
 import { DataTableProps } from '@/composables/dataTable/useDataTable';
 import { Button } from '@/components/ui/button';
 import { FilterIcon } from 'lucide-vue-next';
+import { Head } from '@inertiajs/vue3';
 
 const props = defineProps<{
     colors: Record<string, string>;
@@ -36,6 +37,8 @@ function toggleFilter() {
 </script>
 
 <template>
+    <Head :title="$t('our') + ' ' + $t('our.store')" />
+
     <Layout :colors="props.colors" :websiteNameAndLogo="props.websiteNameAndLogo" :websiteFooterData="props.websiteFooterData"
         :cartItemsCount="props.cartItemsCount"
     >

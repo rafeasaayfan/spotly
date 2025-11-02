@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { SharedData, type NavItem } from '@/types';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 import { Lock, User } from 'lucide-vue-next';
 
 const pageLang = usePage<SharedData>();
@@ -34,6 +34,8 @@ const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.locati
 </script>
 
 <template>
+    <Head :title="$t('settings')" />
+
     <div class="flex flex-col gap-3 m-4 border web-border-color rounded-md lg:h-screen">
         <div class="grid h-full grid-cols-7 gap-5 lg:grid-cols-5">
             <aside class="border-b md:border-b-0 md:border-e web-border-color 

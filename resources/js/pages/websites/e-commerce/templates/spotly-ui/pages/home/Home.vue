@@ -9,6 +9,7 @@ import About from './sections/About.vue';
 import Contact from './sections/Contact.vue';
 import Categories from './sections/Categories.vue';
 import { toast } from '@/lib/sweetAlert';
+import { Head } from '@inertiajs/vue3';
 
 const props = defineProps<{
     colors: Record<string, string>;
@@ -39,6 +40,8 @@ onUnmounted(() => {
 </script>
 
 <template>
+    <Head :title="$t('nav.home')" />
+
     <Layout :colors="props.colors" :websiteNameAndLogo="props.websiteNameAndLogo" :websiteFooterData="props.websiteFooterData"
         :cartItemsCount="props.cartItemsCount"
     >

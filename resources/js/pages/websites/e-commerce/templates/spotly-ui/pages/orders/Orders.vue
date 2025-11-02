@@ -2,7 +2,7 @@
 import Pagination from '@/components/pagination/Pagination.vue';
 import { DataTableProps } from '@/composables/dataTable/useDataTable';
 import { confirmDialog, toast } from '@/lib/sweetAlert';
-import { router } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 import { ref, watchEffect } from 'vue';
 import Layout from '../Layout.vue';
@@ -181,6 +181,8 @@ const handleDialogCancel = async (orderId: number) => {
 </script>
 
 <template>
+    <Head :title="$t('my.title') + ' ' + $t('my.orders')" />
+
     <Layout
         :colors="props.colors"
         :websiteNameAndLogo="props.websiteNameAndLogo"
