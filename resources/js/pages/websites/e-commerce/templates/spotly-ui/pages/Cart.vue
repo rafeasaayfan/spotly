@@ -14,7 +14,7 @@ import { Checkbox, Input, InputError, PhoneNumberField, SelectWithSearch, Textar
 import { Label } from '@/components/ui/label';
 import { toast } from '@/lib/sweetAlert';
 import { SharedData } from '@/types';
-import { Link, useForm, usePage } from '@inertiajs/vue3';
+import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
 import { ArrowUp, LoaderCircle, Minus, Plus, ShoppingCart, Trash2, TriangleAlert } from 'lucide-vue-next';
 import { ref, watchEffect } from 'vue';
@@ -129,9 +129,10 @@ const mappedCountries = props.countries.map((item: Record<string, any>) => ({
     label: item.phone_code,
     icon: item.flag,
 }));
-const mappedCities = props.cities.map((item: any) => ({
-    value: item,
-    label: item,
+
+const mappedCities = Object.entries(props.cities).map(([key, city]: [string, any]) => ({
+    value: key,
+    label: page.props.lang === 'ar' ? city.ar : city.en,
 }));
 
 const checkoutProcessing = ref(false);
@@ -176,6 +177,8 @@ const calculateTotalCheckoutPrice = (): number => {
 </script>
 
 <template>
+    <Head :title="$t('my.title') + ' ' + $t('my.cart')" />
+
     <Layout
         :colors="props.colors"
         :websiteNameAndLogo="props.websiteNameAndLogo"
