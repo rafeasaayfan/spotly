@@ -51,7 +51,7 @@ class WebsiteCreationMail extends Mailable
             ]
         );
     }
-
+    
     /**
      * Get the attachments for the message.
      *
