@@ -51,12 +51,12 @@ class UiService
                 ->where('template_id', $this->template_id)->where('template_color_id', $this->template_color_id)
                 ->where('is_custom', false)->first();
             if($checkDuplicateTemplate) {
-                return 'You already have this template!';
+                return __('messages.already_have_template');
             }
     
             $websiteTemplateCount = WebsiteTemplate::where('website_id', $this->websiteId)->count();
             if ($websiteTemplateCount === 4) {
-                return 'You can\'t create more then four templates!';
+                return __('messages.cant_more_four');
             }
 
             return $this->createNewWebsiteTemplate(false);
