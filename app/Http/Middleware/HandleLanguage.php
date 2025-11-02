@@ -17,9 +17,14 @@ class HandleLanguage
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $websiteLang = null;
+        if (app()->bound('website') && app('website')) {
+            $websiteLang = app('website')->language;
+        }
+
         $locale = $request->route('lang') // from URL
                     ?? $request->get('lang') // from query param
-                    ?? session('locale', config('app.locale'));
+                    ?? session('locale', $websiteLang ?? config('app.locale'));
 
         if (in_array($locale, config('app.supported_locales'))) {
             App::setLocale($locale);
