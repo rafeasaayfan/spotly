@@ -27,7 +27,6 @@ return new class extends Migration
             $table->text('description')->nullable();
 
             $table->integer('views_count')->default(0);
-            $table->integer('sales_count')->default(0);
 
             $table->boolean('is_in_home')->default(false);
             $table->boolean('is_special')->default(false);
@@ -47,6 +46,7 @@ return new class extends Migration
             $table->index(['brand_id', 'is_active']);
             $table->index(['brand_id', 'is_special']);
             $table->index(['brand_id', 'is_in_home']);
+            $table->index('views_count');
         });
     }
 
