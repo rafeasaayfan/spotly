@@ -31,12 +31,12 @@ class DeleteWebsiteController extends Controller
             if ($otpService->verify($validate['code'])) {
                 $website->delete();
 
-                return $this->redirectSuccess('client.myWebsites', 'Your Website deleted successfully');
+                return $this->redirectSuccess('client.myWebsites', __('messages.website_deleted'));
             }
 
             return redirect()->back()->withErrors([
                 'toastType' => 'error',
-                'message' => 'Invalid or expired OTP'
+                'message' => __('messages.invalid_or_expired')
             ]);
         } catch (\Exception $e) {
             return $this->logResponse('ClientWebsitesController@destroy', $e, 'An error occurred while deleting the website');
@@ -60,11 +60,11 @@ class DeleteWebsiteController extends Controller
             $result = $otpService->sendCode();
 
             if($result) {
-                return $this->jsonSuccess('OTP sent successfully');
+                return $this->jsonSuccess(__('messages.otp_sent'));
             } else if(!$result) {
-                return $this->jsonError('You have reached the maximum OTP requests for this hour');
+                return $this->jsonError(__('messages.otp_rate_limited'));
             } else {
-                return $this->jsonError('You already have a active code');
+                return $this->jsonError(__('messages.active_code_exists'));
             }
         } catch (\Exception $e) {
             return $this->logJsonResponse('ClientWebsitesController@sendOtp', $e);

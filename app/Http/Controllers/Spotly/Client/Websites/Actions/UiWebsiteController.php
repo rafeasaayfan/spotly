@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Spotly\Client\Websites\Actions;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\CreateWebsiteUiRequest;
-use App\Models\Template;
 use App\Models\TemplateTemplateColor;
 use App\Models\Website;
 use App\Models\WebsiteTemplate;
@@ -63,7 +62,7 @@ class UiWebsiteController extends Controller
                 ->firstOrFail();
 
             if (!$validate['is_active'] && $requestWebsiteTemplate->id === $activeWebsiteTemplate->id) {
-                return $this->backError('You can\'t deactivate your active template!');
+                return $this->backError(__('messages.cant_deactivate_active'));
             }
 
             if ($validate['is_active'] && $requestWebsiteTemplate->id !== $activeWebsiteTemplate->id) {
@@ -73,7 +72,7 @@ class UiWebsiteController extends Controller
                 $requestWebsiteTemplate->save();
             }
 
-            return $this->backSuccess('Your website template activated succesfully!');
+            return $this->backSuccess(__('messages.website_template_activated'));
         } catch (\Exception $e) {
             return $this->logResponse('UiWebsiteController@toggleActive', $e, 'An error occurred while change the website template status');
         }
@@ -98,7 +97,7 @@ class UiWebsiteController extends Controller
             $result = $uiService->storeTemplate();
 
             if($result === true) {
-                return $this->redirectSuccess('client.myWebsite.ui', 'Your website template created succesfully', 'success', [
+                return $this->redirectSuccess('client.myWebsite.ui', __('messages.website_template_created'), 'success', [
                     'website' => $website->id
                 ]);
             } 
@@ -123,17 +122,17 @@ class UiWebsiteController extends Controller
         try {
             $websiteTemplates = WebsiteTemplate::where('website_id', $website->id);
             if ($websiteTemplates->count() === 1) {
-                return $this->backError('You can\'t delete the last template!');
+                return $this->backError(__('messages.cant_delete_last'));
             }
 
             $websiteTemplate = $websiteTemplates->findOrFail($validate['websiteTemplateId']);
             if ($websiteTemplate->is_active) {
-                return $this->backError('You can\'t delete the active template!');
+                return $this->backError(__('messages.cant_delete_active'));
             }
 
             $websiteTemplate->delete();
 
-            return $this->redirectSuccess('client.myWebsite.ui', 'Your website template deleted succesfully', 'success', [
+            return $this->redirectSuccess('client.myWebsite.ui', __('messages.website_template_deleted'), 'success', [
                 'website' => $website->id
             ]);
         } catch (\Exception $e) {

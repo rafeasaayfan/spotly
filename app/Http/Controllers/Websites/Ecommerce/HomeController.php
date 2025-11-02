@@ -56,6 +56,6 @@ class HomeController extends BaseController
 
        WebsiteMessage::create($data);
 
-        return $this->backSuccess('Thank you for your message!');
+        return $this->backSuccess(__('messages.thank_message'));
     }
 }

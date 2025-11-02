@@ -59,7 +59,7 @@ class EditWebsiteController extends Controller
 
             $website->save();
 
-            return $this->backSuccess('Website updated successfully');
+            return $this->backSuccess(__('messages.website_updated'));
         } catch (\Exception $e) {
             return $this->logResponse('ClientWebsitesController@update', $e, 'An error occurred while updating the website');
         }
@@ -78,7 +78,7 @@ class EditWebsiteController extends Controller
             ]);
 
             if ($website->status !== 'approved') {
-                return $this->backError('You cant Activate your website because it not approved from admins');
+                return $this->backError(__('messages.website_not_approved'));
             }
 
             $website->update([
@@ -86,8 +86,8 @@ class EditWebsiteController extends Controller
             ]);
 
             $message = $validated['is_active']
-                ? 'Your Website activated successfully.'
-                : 'Your Website deactivated successfully.';
+                ? __('messages.website_activated')
+                : __('messages.website_deactivated');
 
             return $this->backSuccess($message);
         } catch (\Exception $e) {

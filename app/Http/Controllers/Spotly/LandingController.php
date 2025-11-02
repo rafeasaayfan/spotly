@@ -25,7 +25,7 @@ class LandingController extends Controller
 
         EmailSubscriber::create($validated);
 
-        return $this->backSuccess('Subscription successful!');
+        return $this->backSuccess(__('messages.subscribed_message'));
     }
 
     public function contactUs(Request $request)
@@ -42,6 +42,6 @@ class LandingController extends Controller
         $message->status = 'new';
         $message->save();
 
-        return $this->backSuccess('Thank you for your message!');
+        return $this->backSuccess(__('messages.thank_message'));
     }
 }

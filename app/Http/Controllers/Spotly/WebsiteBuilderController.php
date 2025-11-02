@@ -7,7 +7,6 @@ use App\Http\Requests\WebsiteBuilder\CustomColorsRequest;
 use App\Http\Requests\WebsiteBuilder\WebsiteBuilderRequest;
 use App\Jobs\WebsiteCreationMailJob;
 use App\Models\Country;
-use App\Models\Template;
 use App\Models\TemplateTemplateColor;
 use App\Models\Website;
 use App\Models\WebsiteType;
@@ -56,7 +55,7 @@ class WebsiteBuilderController extends Controller
     {
         return response()->json([
             'validate' => $request->validated() ? true : false,
-            'message' => 'Your custom colors selected successfully.'
+            'message' => __('messages.custom_color_selected')
         ]);
     }
 
@@ -74,12 +73,12 @@ class WebsiteBuilderController extends Controller
                 if (!Auth::check()) {
                     session(['pending_website_creation' => true]);
 
-                    return $this->redirectSuccess('register', 'Please register or login to continue', 'info');
+                    return $this->redirectSuccess('register', __('messages.auth_to_continue'), 'info');
                 }
                 return $this->store();
                 break;
             default:
-                return $this->backError('Invalid step!');
+                return $this->backError(__('messages.invalid_step'));
         }
     }
 
@@ -106,7 +105,7 @@ class WebsiteBuilderController extends Controller
 
             WebsiteCreationMailJob::dispatch($website->owner_id, $website->name);
 
-            return $this->redirectSuccess('client.myWebsites', 'Your website has been created!');
+            return $this->redirectSuccess('client.myWebsites', __('messages.website_created'));
         } catch (\Exception $e) {
             return $this->logResponse('WebsiteBuilderController@store', $e, 'An error occurred while creating the website');
         }

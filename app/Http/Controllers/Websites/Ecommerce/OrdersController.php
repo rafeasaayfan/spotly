@@ -39,7 +39,7 @@ class OrdersController extends BaseController
             'status_changed_at' => now(),
         ]);
     
-        return $this->redirectSuccess(route: 'orders', message: 'Order cancelled successfully.', forWebsite: true);
+        return $this->redirectSuccess(route: 'orders', message: __('messages.order_cancelled'), forWebsite: true);
     }
 
     /**
@@ -51,7 +51,7 @@ class OrdersController extends BaseController
     protected function getOrders(Request $request)
     {
         $validated = $request->validate([
-            'status' => 'nullable|string|in:pending,confirmed,delivered,cancelled,refunded',
+            'status' => 'nullable|string|in:pending,confirmed,delivered,rejected,cancelled,refunded',
             'search' => 'nullable|string|min:0|max:100',
             'sort_by' => 'nullable|string|in:date,amount',
             'sort_dir' => 'nullable|string|in:asc,desc',
