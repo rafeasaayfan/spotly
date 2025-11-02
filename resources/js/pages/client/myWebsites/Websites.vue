@@ -34,6 +34,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 const props = defineProps<{
     websites: DataTableProps;
     websiteTypes: Record<string, any>;
+    cities: Record<string, any>;
     flash?: {
         toastType: 'success' | 'error' | 'warning' | 'info';
         message: string;
@@ -151,6 +152,7 @@ const searching = (event: Event) => {
                                 autofocus
                                 tabindex="1"
                                 :placeholder="$t('myWebsites.search_placeholder')"
+                                v-model="filters.search"
                                 @input="searching"
                             />
 
@@ -177,7 +179,7 @@ const searching = (event: Event) => {
                                     </Button>
                                 </DropdownMenuTrigger>
 
-                                <DropdownMenuContent align="end" class="w-70">
+                                <DropdownMenuContent class="w-70">
                                     <DropdownMenuShortcut>{{ $t('myWebsites.filter_options') }}</DropdownMenuShortcut>
 
                                     <DropdownMenuSeparator />
@@ -255,7 +257,7 @@ const searching = (event: Event) => {
 
                 <!-- Websites Cards -->
                 <div v-if="hasFilteredResults" class="grid h-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    <Cards :websites="props.websites.data" />
+                    <Cards :websites="props.websites.data" :cities="props.cities" />
                 </div>
 
                 <!-- No Data Found -->
