@@ -64,7 +64,7 @@ class WebsiteBuilderRequest extends FormRequest
                         'string',
                         function ($attribute, $value, $fail) {
                             $cities = config('cities.lebanon');
-                            if (!is_array($cities) || !in_array($value, $cities)) {
+                            if (!array_key_exists($value, $cities)) {
                                 $fail('The selected city is invalid.');
                             }
                         }
