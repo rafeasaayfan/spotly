@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { SharedData } from '@/types';
 import { usePage } from '@inertiajs/vue3';
-import { CheckCircle2, Clock, PackageCheck, RotateCcw, XCircle } from 'lucide-vue-next';
+import { CheckCircle2, Clock, PackageCheck, RotateCcw, XCircle, Ban } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -31,9 +31,15 @@ const statusFilters = [
         active: 'web-text-active-link',
     },
     {
+        title: page.props.lang === 'ar' ? 'تم الرفض' : 'Rejected',
+        name: 'rejected',
+        icon: XCircle,
+        active: 'text-pink-600', 
+    },
+    {
         title: page.props.lang === 'ar' ? 'تم الإلغاء' : 'Cancelled',
         name: 'cancelled',
-        icon: XCircle,
+        icon: Ban,
         active: 'web-text-danger',
     },
     {
