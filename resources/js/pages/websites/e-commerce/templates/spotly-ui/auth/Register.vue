@@ -6,15 +6,17 @@ import { Input, InputError } from '@/components/ui/fields';
 import { Label } from '@/components/ui/label';
 import SocialAuth from './SocialAuth.vue';
 
-import AuthLayout from '@/layouts/AuthLayout.vue';
-
 import { Head, useForm } from '@inertiajs/vue3';
 
+import { toast } from '@/lib/sweetAlert';
 import { LoaderCircle } from 'lucide-vue-next';
 import { watchEffect } from 'vue';
-import { toast } from '@/lib/sweetAlert';
+import Layout from './Layout.vue';
 
 const props = defineProps<{
+    websiteNameAndLogo: Record<string, string>;
+    colors: Record<string, string>;
+
     flash?: {
         toastType: 'success' | 'error' | 'warning' | 'info';
         message: string;
@@ -43,25 +45,51 @@ const submit = () => {
 </script>
 
 <template>
-    <AuthLayout title="Create an account" description="Enter your details below to create your account">
-        <Head title="Register" />
+    <Layout
+        :colors="colors"
+        :websiteNameAndLogo="props.websiteNameAndLogo"
+        :title="$t('guest.register.title')"
+        :description="$t('guest.register.subtitle')"
+    >
+        <Head :title="$t('guest.register')" />
+
+        <SocialAuth />
 
         <form @submit.prevent="submit" class="flex flex-col gap-6">
             <div class="grid gap-6">
                 <div class="grid gap-2">
-                    <Label for="name">Name</Label>
-                    <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name" v-model="form.name" placeholder="Full name" />
+                    <Label class="web-text-body-muted" for="name">{{ $t('name') }}</Label>
+                    <Input
+                        id="name"
+                        type="text"
+                        required
+                        autofocus
+                        :tabindex="1"
+                        autocomplete="name"
+                        v-model="form.name"
+                        :placeholder="$t('guest.fullName')"
+                        class="web-bg-field web-text-active web-border-color"
+                    />
                     <InputError :message="form.errors.name" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="email">Email address</Label>
-                    <Input id="email" type="email" required :tabindex="2" autocomplete="email" v-model="form.email" placeholder="email@example.com" />
+                    <Label class="web-text-body-muted" for="email">{{ $t('email') }}</Label>
+                    <Input
+                        id="email"
+                        type="email"
+                        required
+                        :tabindex="2"
+                        autocomplete="email"
+                        v-model="form.email"
+                        placeholder="email@example.com"
+                        class="web-bg-field web-text-active web-border-color"
+                    />
                     <InputError :message="form.errors.email" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password">Password</Label>
+                    <Label class="web-text-body-muted" for="password">{{ $t('password') }}</Label>
                     <Input
                         id="password"
                         type="password"
@@ -69,13 +97,14 @@ const submit = () => {
                         :tabindex="3"
                         autocomplete="new-password"
                         v-model="form.password"
-                        placeholder="Password"
+                        :placeholder="$t('password')"
+                        class="web-bg-field web-text-active web-border-color"
                     />
                     <InputError :message="form.errors.password" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password_confirmation">Confirm password</Label>
+                    <Label class="web-text-body-muted" for="password_confirmation">{{ $t('password.confirm') }}</Label>
                     <Input
                         id="password_confirmation"
                         type="password"
@@ -83,23 +112,22 @@ const submit = () => {
                         :tabindex="4"
                         autocomplete="new-password"
                         v-model="form.password_confirmation"
-                        placeholder="Confirm password"
+                        :placeholder="$t('password.confirm')"
+                        class="web-bg-field web-text-active web-border-color"
                     />
                     <InputError :message="form.errors.password_confirmation" />
                 </div>
 
-                <Button type="submit" class="mt-2 w-full" tabindex="5" :disabled="form.processing">
+                <Button type="submit" class="web-bg-primary web-text-for-primary mt-2 w-full" tabindex="5" :disabled="form.processing">
                     <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-                    Create account
+                    {{ $t('guest.register.submit') }}
                 </Button>
             </div>
 
             <div class="flex items-center justify-center gap-2 text-center text-sm">
-                <span class="text-body-muted">Already have an account?</span>
-                <TextLink :href="route('website.login')" :tabindex="6">Log in</TextLink>
+                <span class="web-text-body-muted">{{ $t('guest.hasAccount') }}</span>
+                <TextLink class="web-text-body-muted" :href="route('website.login')" :tabindex="6">{{ $t('guest.login') }}</TextLink>
             </div>
         </form>
-
-        <SocialAuth />
-    </AuthLayout>
+    </Layout>
 </template>
