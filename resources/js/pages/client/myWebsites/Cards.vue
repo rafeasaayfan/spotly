@@ -26,6 +26,7 @@ import { ref } from 'vue';
 
 const props = defineProps<{
     websites: Record<string, any>;
+    cities: Record<string, any>;
 }>();
 
 const page = usePage<SharedData>();
@@ -104,6 +105,16 @@ const subscriptionStatus = (status: string) => {
     }
     return result;
 };
+
+const translatedCountry = (item: any): string => {
+    return page.props.lang === 'ar' ? 'لبنان' : item.country;
+}
+
+const translatedCity = (cityEn: string): string => {
+    const city = props.cities[cityEn];
+    if (!city) return cityEn;  
+    return page.props.lang === 'ar' ? city.ar : city.en;
+};
 </script>
 
 <template>
@@ -116,7 +127,7 @@ const subscriptionStatus = (status: string) => {
             <div class="flex flex-col">
                 <h1 class="text-active text-lg font-bold sm:text-xl">{{ website.name }}</h1>
                 <span class="text-body-muted text-xs">
-                    {{ website.country ?? '' }} {{ website.country && website.city ? ',' : '' }} {{ website.city ?? '' }}
+                    {{ translatedCountry(website) ?? '' }} {{ translatedCountry(website) && translatedCity(website.city) ? ',' : '' }} {{ translatedCity(website.city) ?? '' }}
                 </span>
             </div>
 
@@ -127,7 +138,7 @@ const subscriptionStatus = (status: string) => {
                     </Button>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end" class="w-fit p-0 py-1">
+                <DropdownMenuContent class="w-fit p-0 py-1">
                     <DropdownMenuGroup>
                         <div class="grid h-full w-full gap-1">
                             <div v-for="action in ['edit', 'show', 'ui']" :key="action">
@@ -245,7 +256,7 @@ const subscriptionStatus = (status: string) => {
                     </div>
                     <div class="flex flex-col">
                         <span class="text-body-muted text-xs">{{ $t('myWebsites.created_at') }}</span>
-                        <span class="text-sm font-medium">{{ formatters.date(website.created_at) }}</span>
+                        <span class="text-sm font-medium [direction:ltr]">{{ formatters.date(website.created_at) }}</span>
                     </div>
                 </div>
             </div>
@@ -258,7 +269,7 @@ const subscriptionStatus = (status: string) => {
                         <CalendarClock class="text-body-muted size-3.5" />
                         <div class="flex flex-col">
                             <span class="text-body-muted text-xs">{{ website.subscription.status === 'free_trial' ? $t('myWebsites.start_at') : $t('myWebsites.paid_at') }}</span>
-                            <span class="text-sm">{{ formatters.date(website.subscription.start_date) }}</span>
+                            <span class="text-sm [direction:ltr]">{{ formatters.date(website.subscription.start_date) }}</span>
                         </div>
                     </div>
 
@@ -266,7 +277,7 @@ const subscriptionStatus = (status: string) => {
                         <CalendarMinus class="text-body-muted size-3.5" />
                         <div class="flex flex-col">
                             <span class="text-body-muted text-xs">{{ $t('myWebsites.end_at') }}</span>
-                            <span class="text-sm">{{ formatters.date(website.subscription.end_date) }}</span>
+                            <span class="text-sm [direction:ltr]">{{ formatters.date(website.subscription.end_date) }}</span>
                         </div>
                     </div>
                 </div>
