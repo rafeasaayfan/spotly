@@ -1,12 +1,12 @@
 import '../css/app.css';
 
-import { createInertiaApp } from '@inertiajs/vue3';
+import { createInertiaApp, usePage } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import { i18nVue } from 'laravel-vue-i18n';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
-import { i18nVue } from 'laravel-vue-i18n'; 
 
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
@@ -21,20 +21,23 @@ declare module 'vite/client' {
     }
 }
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
-
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
+    title: (title) => {
+        const page = usePage<{ websiteNameAndLogo?: { name?: string } }>();
+        const appName = page?.props?.websiteNameAndLogo?.name || import.meta.env.VITE_APP_NAME || 'Spotly';
+
+        return `${title} - ${appName}`;
+    },
     resolve: (name) => resolvePageComponent(`./pages/${name}.vue`, import.meta.glob<DefineComponent>('./pages/**/*.vue')),
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
-            .use(i18nVue, { 
+            .use(i18nVue, {
                 resolve: async (lang: any) => {
                     const langs = import.meta.glob('../../lang/*/*.json');
                     return await langs[`../../lang/${lang}/${lang}.json`]();
-                }
+                },
             })
             .mount(el);
     },
