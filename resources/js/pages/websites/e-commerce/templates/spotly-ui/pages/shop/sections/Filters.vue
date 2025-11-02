@@ -129,6 +129,7 @@ function resetFilters() {
                         :options="mappedCategories"
                         :placeholder="$t('category')"
                         class="web-bg-field web-text-active w-full"
+                        searchClass="web-bg-field web-text-active w-full"
                     />
                 </div>
 
@@ -140,6 +141,7 @@ function resetFilters() {
                         :options="mappedBrands"
                         :placeholder="$t('brand')"
                         class="web-bg-field web-text-active w-full"
+                        searchClass="web-bg-field web-text-active w-full"
                     />
                 </div>
 
