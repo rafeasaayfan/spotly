@@ -87,7 +87,7 @@ const submit = () => {
 
                 <div class="flex items-center justify-between">
                     <Label for="remember" class="flex items-center cursor-pointer" :class="form.remember ? 'text-body' : ''">
-                        <Checkbox id="remember" v-model="form.remember" :tabindex="3" />
+                        <Checkbox id="remember" v-model="form.remember" :tabindex="3" class="bg-[var(--field-landing)]" />
                         <span>{{ $t('guest.remember') }}</span>
                     </Label>
                 </div>
