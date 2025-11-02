@@ -6,7 +6,7 @@ const props = defineProps<{
 }>();
 
 const columns = [
-    { key: 'images', label: 'Images', type: 'image' },
+    { key: 'uiImages', label: 'Images', type: 'image' },
     { key: 'websiteType_type', label: 'Website Type', },
     { key: 'template_name', label: 'Template Name', },
     { key: 'templateColor_name', label: 'Template Color Name' },
