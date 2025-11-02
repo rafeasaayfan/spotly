@@ -7,7 +7,7 @@ use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use App\Http\Requests\Websites\Ecommerce\Dashboard\Pages\Products\StoreProductRequest;
 use App\Http\Requests\Websites\Ecommerce\Dashboard\Pages\Products\UpdateProductRequest;
-use App\Jobs\Websites\CreateProductSlugJob;
+use App\Jobs\Websites\Ecommerce\CreateProductSlugJob;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\EcommerceProduct;
@@ -33,7 +33,7 @@ class ProductsController extends Controller
         $query = EcommerceProduct::where('website_id', $this->website->id)->withStockQuantity()->withReservedQuantity();
 
         $columnsSearching = ['name', 'category.name', 'brand.name', 'price'];
-        $columnsSelection = ['id', 'category_id', 'brand_id', 'name', 'price', 'sales_count', 'is_in_home', 'is_special', 'is_active'];
+        $columnsSelection = ['id', 'category_id', 'brand_id', 'name', 'price', 'is_in_home', 'is_special', 'is_active'];
         $relations = ['category_name', 'brand_name'];
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
