@@ -1,10 +1,15 @@
 import { type SidebarSection } from '@/types';
+import { usePage } from '@inertiajs/vue3';
 import { icons } from 'lucide-vue-next';
+
+const page = usePage<{ websiteNameAndLogo?: { name?: string } }>();
+const appName = page?.props?.websiteNameAndLogo?.name || '';
 
 //? Sidebar Content
 export const mainSidebarItems: SidebarSection[] = [
     {
         name: 'Main',
+        websiteRole: ['owner', 'admin'],
         items: [
             {
                 title: 'Dashboard',
@@ -15,6 +20,7 @@ export const mainSidebarItems: SidebarSection[] = [
                 title: 'Users',
                 href: '/dashboard/users',
                 icon: icons.Users,
+                websiteRole: ['owner']
             },
             {
                 title: 'Messages',
@@ -25,6 +31,7 @@ export const mainSidebarItems: SidebarSection[] = [
     },
     {
         name: 'Catalog',
+        websiteRole: ['owner', 'admin'],
         items: [
             {
                 title: 'Categories',
@@ -50,6 +57,7 @@ export const mainSidebarItems: SidebarSection[] = [
     },
     {
         name: 'Shop',
+        websiteRole: ['owner', 'admin'],
         items: [
             {
                 title: 'Orders',
@@ -68,11 +76,14 @@ export const mainSidebarItems: SidebarSection[] = [
 export const footerSidebarItems: SidebarSection[] = [
     {
         name: 'Spotly Settings',
+        websiteRole: ['owner'],
         items: [
             {
                 title: 'Go To Your Website Settings',
-                href: 'http://127.0.0.1:8000/dashboard/my-websites',
+                href: `http://127.0.0.1:8000/dashboard/my-websites?search=${encodeURIComponent(appName)}`,
+                hrefType: 'a',
                 icon: icons.Diamond,
+                websiteRole: ['owner'],
             },
         ],
     },
