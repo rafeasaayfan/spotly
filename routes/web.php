@@ -5,7 +5,6 @@ use App\Http\Controllers\Spotly\WebsiteBuilderController;
 use App\Http\Controllers\Spotly\WebsitePreviewController;
 use App\Http\Middleware\HandleLanguage;
 use App\Http\Middleware\IdentifyWebsite;
-use App\Http\Middleware\LoadWebsiteRoutes;
 use App\Models\Website;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
@@ -18,55 +17,53 @@ Route::get('/setLang/{lang}', function ($lang = null) {
     return redirect()->back();
 })->name('setLang');
 
-Route::middleware([HandleLanguage::class])->group(function () {
 
-    // Spotly Routes
-    Route::domain('http://127.0.0.1')->middleware('userStatus')->group(function () {
-        Route::get('/', [LandingController::class, 'index'])->name('landing');
-        Route::put('/subscribe', [LandingController::class, 'subscribe'])->name('subscribe');
-        Route::put('/contactUs', [LandingController::class, 'contactUs'])->name('contactMessages');
+//! Spotly Routes
+Route::domain('http://127.0.0.1')->middleware([HandleLanguage::class, 'userStatus'])->group(function () {
+    Route::get('/', [LandingController::class, 'index'])->name('landing');
+    Route::put('/subscribe', [LandingController::class, 'subscribe'])->name('subscribe');
+    Route::put('/contactUs', [LandingController::class, 'contactUs'])->name('contactMessages');
 
-        // WebsiteBuilder
-        Route::prefix('websiteBuilder')->name('websiteBuilder.')->group(function () {
-            Route::get('/', [WebsiteBuilderController::class, 'index'])->name('index');
-            Route::post('/wizard/{step}', [WebsiteBuilderController::class, 'wizard'])->name('wizard');
+    // WebsiteBuilder
+    Route::prefix('website-builder')->name('websiteBuilder.')->group(function () {
+        Route::get('/', [WebsiteBuilderController::class, 'index'])->name('index');
+        Route::post('/wizard/{step}', [WebsiteBuilderController::class, 'wizard'])->name('wizard');
 
-            // UI 
-            Route::post('/customColors', [WebsiteBuilderController::class, 'customColors'])->name('customColors');
-        });
-
-        // Preview
-        Route::post('/websites/preview', [WebsitePreviewController::class, 'preview'])->name('website.preview');
-
-        require __DIR__ . '/dashboard.php';
-        require __DIR__ . '/client.php';
-        require __DIR__ . '/settings.php';
-        require __DIR__ . '/auth.php';
+        // UI 
+        Route::post('/customColors', [WebsiteBuilderController::class, 'customColors'])->name('customColors');
     });
+
+    // Preview
+    Route::post('/websites/preview', [WebsitePreviewController::class, 'preview'])->name('website.preview');
+
+    require __DIR__ . '/dashboard.php';
+    require __DIR__ . '/client.php';
+    require __DIR__ . '/settings.php';
+    require __DIR__ . '/auth.php';
+});
+
+//! Websites Routes
+$subdomain = app('subdomain');
+// Websites Routes domain('{website?}.spotly.test')->
+Route::domain("$subdomain.spotly.test")->middleware([IdentifyWebsite::class, 'websiteUserStatus', HandleLanguage::class])->name('website.')->group(function () {
+    require __DIR__ . '/websites/main.php';
 
     $subdomain = app('subdomain');
 
-    // Websites Routes domain('{website?}.spotly.test')->
-    Route::domain("$subdomain.spotly.test")->middleware([IdentifyWebsite::class, 'websiteUserStatus'])->name('website.')->group(function () {
-        require __DIR__ . '/websites/main.php';
+    $website = Website::where('subdomain', $subdomain)
+        ->active()->status('approved')
+        ->with(['websiteType:id,type'])
+        ->first();
+    $websiteType = $website->websiteType->type ?? null;
 
-        $subdomain = app('subdomain');
-
-        $website = Website::where('subdomain', $subdomain)
-            ->active()->status('approved')
-            ->with(['websiteType:id,type'])
-            ->first();
-        $websiteType = $website->websiteType->type ?? null;
-
-        switch ($websiteType) {
-            case 'e-commerce':
-                require __DIR__ . '/websites/e-commerce/web.php';
-                break;
-            case 'restaurant':
-                require __DIR__ . '/websites/restaurant/web.php';
-                break;
-        }
-    });
+    switch ($websiteType) {
+        case 'e-commerce':
+            require __DIR__ . '/websites/e-commerce/web.php';
+            break;
+        case 'restaurant':
+            require __DIR__ . '/websites/restaurant/web.php';
+            break;
+    }
 });
 
 // Dashboards Routes function
