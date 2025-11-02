@@ -28,7 +28,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 const props = defineProps<{
     website: Record<string, any>;
     countries: Record<string, any>;
-    cities: Array<string>;
+    cities: Record<string, any>;
     flash?: {
         toastType: 'success' | 'error' | 'warning' | 'info';
         message: string;
@@ -54,6 +54,11 @@ const mappedCountries = props.countries.map((item: any) => ({
     icon: item.flag,
 }));
 
+const mappedCities = Object.entries(props.cities).map(([key, city]: [string, any]) => ({
+    value: key,
+    label: page.props.lang === 'ar' ? city.ar : city.en,
+}));
+
 const form = useForm<Record<string, any>>({
     ...props.website,
     light_logo: null,
@@ -76,7 +81,7 @@ const activate = (toggleVal: boolean) => {
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
         <form
-            class="border-muted relative mx-2 md:mx-4 my-4 grid grid-cols-1 rounded-md border sm:grid-cols-9 md:grid-cols-5 lg:grid-cols-6"
+            class="border-muted relative mx-2 my-4 grid grid-cols-1 rounded-md border sm:grid-cols-9 md:mx-4 md:grid-cols-5 lg:grid-cols-6"
             @submit.prevent="submit"
         >
             <div class="flex flex-col rounded-s-md sm:col-span-4 md:col-span-2 lg:col-span-2">
@@ -89,13 +94,13 @@ const activate = (toggleVal: boolean) => {
                 <!-- Logo -->
                 <div class="border-muted flex flex-col items-center gap-5 border-b p-4 md:p-6">
                     <div class="flex flex-col gap-1">
-                        <Label for="light_logo" class="mb-1 text-xs text-body-muted">{{ $t('myWebsites.light_logo') }}</Label>
+                        <Label for="light_logo" class="text-body-muted mb-1 text-xs">{{ $t('myWebsites.light_logo') }}</Label>
                         <File id="light_logo" v-model="form.light_logo" :src="props.website.light_logo" :label="$t('myWebsites.light_logo')" />
                         <InputError v-if="form.errors?.light_logo" :message="form.errors.light_logo" class="text-xs" />
                     </div>
 
                     <div class="flex flex-col gap-1">
-                        <Label for="dark_logo" class="mb-1 text-xs text-body-muted">{{ $t('myWebsites.dark_logo') }}</Label>
+                        <Label for="dark_logo" class="text-body-muted mb-1 text-xs">{{ $t('myWebsites.dark_logo') }}</Label>
                         <File id="dark_logo" v-model="form.dark_logo" :src="props.website.dark_logo" :label="$t('myWebsites.dark_logo')" />
                         <InputError v-if="form.errors?.dark_logo" :message="form.errors.dark_logo" class="text-xs" />
                     </div>
@@ -112,14 +117,18 @@ const activate = (toggleVal: boolean) => {
                     />
                     <div v-if="props.website.status !== 'approved'" class="mt-2 flex items-center gap-1 text-yellow-700/90">
                         <AlertTriangle class="size-4" />
-                        <span class="text-[11.5px] font-extrabold">{{ $t('myWebsites.your_website_is') }} {{ props.website.status }}, {{ $t('myWebsites.so_you_cant_activate_it') }}</span>
+                        <span class="text-[11.5px] font-extrabold"
+                            >{{ $t('myWebsites.your_website_is') }} {{ props.website.status }}, {{ $t('myWebsites.so_you_cant_activate_it') }}</span
+                        >
                     </div>
                 </div>
 
                 <div class="hidden flex-col gap-2 p-4 p-6 sm:flex md:p-6">
                     <Dialog>
                         <DialogTrigger as-child>
-                            <Button size="sm" class="opacity-70 hover:opacity-100" variant="destructive">{{ $t('myWebsites.delete_this_website') }}</Button>
+                            <Button size="sm" class="opacity-70 hover:opacity-100" variant="destructive">{{
+                                $t('myWebsites.delete_this_website')
+                            }}</Button>
                         </DialogTrigger>
 
                         <DialogScrollContent>
@@ -137,7 +146,7 @@ const activate = (toggleVal: boolean) => {
             <div class="border-muted flex flex-col gap-6 border-s px-4 py-6 sm:col-span-5 md:col-span-3 md:px-10 lg:col-span-4">
                 <div class="grid grid-cols-1 gap-5 rounded-md lg:grid-cols-2">
                     <div class="flex flex-col gap-1">
-                        <Label for="phone_number" class="mb-1 text-xs text-body-muted">
+                        <Label for="phone_number" class="text-body-muted mb-1 text-xs">
                             <Phone class="size-3.5" />
                             {{ $t('phone') }}
                         </Label>
@@ -146,7 +155,7 @@ const activate = (toggleVal: boolean) => {
                     </div>
 
                     <div class="flex flex-col gap-1">
-                        <Label for="email" class="mb-1 text-xs text-body-muted">
+                        <Label for="email" class="text-body-muted mb-1 text-xs">
                             <Mail class="size-3.5" />
                             {{ $t('email') }}
                         </Label>
@@ -157,7 +166,7 @@ const activate = (toggleVal: boolean) => {
 
                 <div class="border-muted grid grid-cols-1 gap-5 border-t pt-6 lg:grid-cols-2">
                     <div class="flex flex-col gap-1">
-                        <Label for="country" class="mb-1 text-xs text-body-muted">
+                        <Label for="country" class="text-body-muted mb-1 text-xs">
                             <Flag class="size-3.5" />
                             {{ $t('country') }}
                         </Label>
@@ -165,19 +174,19 @@ const activate = (toggleVal: boolean) => {
                         <InputError v-if="form.errors?.country" :message="form.errors.country" />
                     </div>
                     <div class="flex flex-col gap-1">
-                        <Label for="city" class="mb-1 text-xs text-body-muted">
+                        <Label for="city" class="text-body-muted mb-1 text-xs">
                             <Building2 class="size-3.5" />
                             {{ $t('city') }}
                         </Label>
                         <SelectWithSearch
                             v-model="form.city"
                             placeholder="Select a city..."
-                            :options="cities.map((city) => ({ value: city, label: city }))"
+                            :options="mappedCities"
                         />
                         <InputError v-if="form.errors?.city" :message="form.errors.city" />
                     </div>
                     <div class="flex flex-col gap-1">
-                        <Label for="address" class="mb-1 text-xs text-body-muted">
+                        <Label for="address" class="text-body-muted mb-1 text-xs">
                             <Locate class="size-3.5" />
                             {{ $t('address') }}
                         </Label>
@@ -185,7 +194,7 @@ const activate = (toggleVal: boolean) => {
                         <InputError v-if="form.errors?.address" :message="form.errors.address" />
                     </div>
                     <div class="flex flex-col gap-1">
-                        <Label for="language" class="mb-1 text-xs text-body-muted">
+                        <Label for="language" class="text-body-muted mb-1 text-xs">
                             <Languages class="size-3.5" />
                             {{ $t('default_language') }}
                         </Label>
@@ -207,7 +216,7 @@ const activate = (toggleVal: boolean) => {
 
                 <div class="border-muted grid grid-cols-1 gap-5 border-t pt-6 lg:grid-cols-2">
                     <div class="flex flex-col gap-1">
-                        <Label for="instagram" class="mb-1 text-xs text-body-muted">
+                        <Label for="instagram" class="text-body-muted mb-1 text-xs">
                             <Instagram class="size-3.5" />
                             {{ $t('instagram') }}
                         </Label>
@@ -215,7 +224,7 @@ const activate = (toggleVal: boolean) => {
                         <InputError v-if="form.errors?.instagram" :message="form.errors.instagram" />
                     </div>
                     <div class="flex flex-col gap-1">
-                        <Label for="tiktok" class="mb-1 text-xs text-body-muted">
+                        <Label for="tiktok" class="text-body-muted mb-1 text-xs">
                             <svg viewBox="0 0 256 256" class="size-3.5 stroke-black transition-all duration-300 dark:stroke-white">
                                 <path
                                     d="M168,106a95.9,95.9,0,0,0,56,18V84a56,56,0,0,1-56-56H128V156a28,28,0,1,1-40-25.3V89.1A68,68,0,1,0,168,156Z"
@@ -231,7 +240,7 @@ const activate = (toggleVal: boolean) => {
                         <InputError v-if="form.errors?.tiktok" :message="form.errors.tiktok" />
                     </div>
                     <div class="flex flex-col gap-1">
-                        <Label for="youtube" class="mb-1 text-xs text-body-muted">
+                        <Label for="youtube" class="text-body-muted mb-1 text-xs">
                             <Youtube class="size-3.5" />
                             {{ $t('youtube') }}
                         </Label>
@@ -259,11 +268,13 @@ const activate = (toggleVal: boolean) => {
             </div>
         </form>
 
-        <div class="flex w-full items-center justify-end gap-2 px-2 md:px-4 pb-4">
+        <div class="flex w-full items-center justify-end gap-2 px-2 pb-4 md:px-4">
             <div class="block sm:hidden">
                 <Dialog>
                     <DialogTrigger as-child>
-                        <Button size="sm" class="opacity-70 hover:opacity-100" variant="destructive">{{ $t('myWebsites.delete_this_website') }}</Button>
+                        <Button size="sm" class="opacity-70 hover:opacity-100" variant="destructive">{{
+                            $t('myWebsites.delete_this_website')
+                        }}</Button>
                     </DialogTrigger>
 
                     <DialogScrollContent>

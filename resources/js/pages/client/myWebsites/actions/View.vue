@@ -225,12 +225,12 @@ const copyUrl = async () => {
                 <div class="flex flex-wrap justify-between gap-2 p-4 md:p-6">
                     <div class="flex flex-col gap-1">
                         <span class="text-body-muted text-xs">{{ $t('myWebsites.created_at') }}</span>
-                        <span class="text-active text-sm font-medium">{{ formatters.date(props.website.created_at) }}</span>
+                        <span class="text-active text-sm font-medium [direction:ltr]">{{ formatters.date(props.website.created_at) }}</span>
                     </div>
 
                     <div class="flex flex-col gap-1">
                         <span class="text-body-muted text-xs">{{ $t('myWebsites.updated_at') }}</span>
-                        <span class="text-active text-sm font-medium">{{ formatters.date(props.website.updated_at) }}</span>
+                        <span class="text-active text-sm font-medium [direction:ltr]">{{ formatters.date(props.website.updated_at) }}</span>
                     </div>
                 </div>
             </div>
