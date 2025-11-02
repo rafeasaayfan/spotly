@@ -33,7 +33,7 @@ class IdentifyWebsite
             abort(404, 'Website not found');
         }
 
-        $website = Cache::remember("website_{$subdomain}", 60, function () use ($subdomain) {
+        $website = Cache::remember("website_{$subdomain}", 180, function () use ($subdomain) {
             return Website::where('subdomain', $subdomain)
                 ->active()->status('approved')
                 ->with(['websiteType:id,type', 'activeWebsiteTemplate.template:id,name'])
