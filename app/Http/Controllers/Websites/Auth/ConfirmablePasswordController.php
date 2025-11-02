@@ -2,20 +2,23 @@
 
 namespace App\Http\Controllers\Websites\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Websites\BaseController;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
-class ConfirmablePasswordController extends Controller
+class ConfirmablePasswordController extends BaseController
 {
     /**
      * Show the confirm password page.
      */
     public function show()
     {
-        return $this->inertiaRender('auth/ConfirmPassword', [], true);
+        return $this->inertiaRender('auth/ConfirmPassword', [
+            'websiteNameAndLogo' => $this->websiteNameAndLogo(),
+            'colors' => $this->websiteTemplate()->templateColor
+        ], true);
     }
 
     /**

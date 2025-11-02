@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Websites\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Websites\BaseController;
 use App\Models\WebsiteUser;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 
-class NewPasswordController extends Controller
+class NewPasswordController extends BaseController
 {
     /**
      * Show the password reset page.
@@ -23,6 +23,8 @@ class NewPasswordController extends Controller
         return $this->inertiaRender('auth/ResetPassword', [
             'email' => $request->email,
             'token' => $request->route('token'),
+            'websiteNameAndLogo' => $this->websiteNameAndLogo(),
+            'colors' => $this->websiteTemplate()->templateColor
         ], true);
     }
 

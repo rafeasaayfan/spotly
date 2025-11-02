@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Websites\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Websites\BaseController;
 use App\Models\WebsiteUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 
-class PasswordResetLinkController extends Controller
+class PasswordResetLinkController extends BaseController
 {
     /**
      * Show the password reset link request page.
@@ -17,6 +17,8 @@ class PasswordResetLinkController extends Controller
     {
         return $this->inertiaRender('auth/ForgotPassword', [
             'status' => $request->session()->get('status'),
+            'websiteNameAndLogo' => $this->websiteNameAndLogo(),
+            'colors' => $this->websiteTemplate()->templateColor
         ], true);
     }
 
@@ -43,6 +45,6 @@ class PasswordResetLinkController extends Controller
             ]);
         }
 
-        return back()->with('status', __('A reset link will be sent if the account exists.'));
+        return back()->with('status', __('messages.password_reset_link_sent'));
     }
 }

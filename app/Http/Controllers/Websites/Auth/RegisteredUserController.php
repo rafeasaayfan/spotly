@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Websites\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Websites\BaseController;
 use App\Http\Requests\Websites\Auth\RegisterRequest;
 use App\Models\WebsiteUser;
 use App\Services\Websites\Ecommerce\EcommerceSyncService;
@@ -12,14 +12,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class RegisteredUserController extends Controller
+class RegisteredUserController extends BaseController
 {
     /**
      * Show the registration page.
      */
     public function create()
     {
-        return $this->inertiaRender('auth/Register', [], true);
+        return $this->inertiaRender('auth/Register', [
+            'websiteNameAndLogo' => $this->websiteNameAndLogo(),
+            'colors' => $this->websiteTemplate()->templateColor
+        ], true);
     }
 
     /**
