@@ -1,17 +1,28 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { ChevronDown } from 'lucide-vue-next'
 import { onClickOutside } from '@vueuse/core'
 import type { HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { SharedData } from '@/types'
+import { usePage } from '@inertiajs/vue3'
+import { formatters } from '@/lib/dataTable'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   modelValue: string | number | null
   placeholder?: string
-  parentClass? : HTMLAttributes['class']
+  parentClass?: HTMLAttributes['class']
   class?: HTMLAttributes['class']
   dropdownClass?: HTMLAttributes['class']
-}>()
+  withStatusColors?: boolean
+}>(), {
+  withStatusColors: false,
+})
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string | number): void
@@ -30,6 +41,7 @@ onMounted(() => {
       value: opt.value,
     }))
   }
+  updateDropdownWidth()
 })
 
 const selectedLabel = computed(() => {
@@ -44,94 +56,85 @@ function selectOption(option: { label: string; value: string | number }) {
 
 const buttonRef = ref<HTMLButtonElement | null>(null)
 const dropdownRef = ref<HTMLElement | null>(null)
-const dropdownYClass = ref('mt-1')
-const dropdownXClass = ref('start-0 end-0')
+const dropdownWidth = ref<number | null>(null)
 
 onClickOutside(dropdownRef, () => {
   isOpen.value = false
 })
 
-function calculateDropdownPosition() {
-  if (!buttonRef.value || !dropdownRef.value) return
+// Calculate button width to match dropdown width
+const updateDropdownWidth = () => {
+  if (buttonRef.value) {
+    const width = buttonRef.value.offsetWidth
+    dropdownWidth.value = width
 
-  const buttonRect = buttonRef.value.getBoundingClientRect()
-  const viewportHeight = window.innerHeight || document.documentElement.clientHeight
-  const viewportWidth = window.innerWidth || document.documentElement.clientWidth
+    const trySetWidth = (attempts = 0) => {
+      if (attempts > 10) return // Max 10 attempts
 
-  // Vertical positioning
-  const spaceBelow = viewportHeight - buttonRect.bottom
-  const spaceAbove = buttonRect.top
+      const dropdownContent = document.querySelector('.select-dropdown') as HTMLElement
+      if (dropdownContent) {
+        dropdownContent.style.setProperty('min-width', `${width}px`, 'important')
+      } else if (attempts < 10) {
+        setTimeout(() => trySetWidth(attempts + 1), 50)
+      }
+    }
 
-  if (spaceBelow < 200 && spaceAbove > spaceBelow) { // Arbitrary 200px threshold for dropdown height
-    dropdownYClass.value = 'mb-1 bottom-full'
-  } else {
-    dropdownYClass.value = 'mt-1 top-full'
-  }
-
-  // Horizontal positioning
-  const spaceRight = viewportWidth - buttonRect.right
-  const spaceLeft = buttonRect.left
-
-  if (spaceRight < buttonRect.width && spaceLeft > spaceRight) {
-    dropdownXClass.value = 'end-0'
-  } else if (spaceLeft < buttonRect.width && spaceRight > spaceLeft) {
-    dropdownXClass.value = 'start-0'
-  } else {
-    dropdownXClass.value = 'start-0 end-0' // Default to full width if ample space
+    // Start trying after a short delay to let the dropdown render
+    setTimeout(() => {
+      trySetWidth()
+    }, 10)
   }
 }
 
+// Update width when dropdown opens
 watch(isOpen, (newVal) => {
   if (newVal) {
-    calculateDropdownPosition()
+    updateDropdownWidth()
   }
 })
+
+const page = usePage<SharedData>();
 </script>
 
 <template>
   <div :class="cn('relative', props.parentClass)" ref="dropdownRef">
     <!-- Hidden native select -->
-    <select
-      ref="slotEl"
-      class="absolute inset-0 opacity-0 pointer-events-none"
-      :value="modelValue"
-    >
+    <select ref="slotEl" class="absolute inset-0 opacity-0 pointer-events-none" :value="modelValue">
       <slot />
     </select>
 
-    <!-- Custom trigger -->
-    <button
-      type="button"
-      @click="isOpen = !isOpen"
-      ref="buttonRef"
-      :class="cn(
-        'flex items-center justify-between gap-1 w-full px-2 py-2 text-sm rounded-md border border-muted bg-field cursor-pointer',
-        'outline-none focus:ring active:ring-blue-500 focus:ring-blue-600/90',
-        props.class
-      )"
-    >
-      <span :class="['Select an option', props.placeholder].includes(selectedLabel) ? 'text-body-muted' : ''">{{ selectedLabel }}</span>
-      <ChevronDown class="size-3.5 transition-transform" :class="{ 'rotate-180': isOpen }" />
-    </button>
+    <DropdownMenu :open="isOpen" @update:open="isOpen = $event">
+      <DropdownMenuTrigger :as-child="true">
+        <!-- Custom trigger -->
+        <button type="button" ref="buttonRef" :class="cn(
+          'flex items-center justify-between gap-1 w-full px-2 py-2 text-sm rounded-md border border-muted bg-field cursor-pointer',
+          'outline-none focus:ring active:ring-blue-500 focus:ring-blue-600/90',
+          props.class
+        )">
+          <span v-if="['Select an option', props.placeholder].includes(selectedLabel)" class="text-body-muted">
+            {{ selectedLabel }}
+          </span>
+          <span v-else-if="props.withStatusColors" v-html="formatters.status(selectedLabel)"></span>
+          <span v-else>{{ selectedLabel }}</span>
 
-    <!-- Custom dropdown -->
-    <div
-      v-if="isOpen"
-      :class="cn('absolute border border-muted rounded-md bg-body shadow-lg z-90 min-w-40 max-h-60 overflow-auto p-3 w-full',
-        dropdownYClass,
-        dropdownXClass,
-        props.dropdownClass
-      )"
-    >
-      <div
-        v-for="option in options"
-        :key="option.value"
-        @click="selectOption(option)"
-        class="px-3 py-2 text-sm cursor-pointer bg-content-2 text-body hover:font-medium rounded-md"
-        :class="{ 'font-semibold text-active-link': option.value == modelValue }"
-      >
-        {{ option.label }}
-      </div>
-    </div>
+          <ChevronDown class="size-3.5 transition-transform" :class="{ 'rotate-180': isOpen }" />
+        </button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent :align="page.props.lang === 'ar' ? 'end' : 'start'"
+        :class="cn('select-dropdown w-full', props.dropdownClass)">
+        <!-- Custom dropdown -->
+        <div v-for="option in options" :key="option.value" @click="selectOption(option)" :class="cn(
+          'flex items-center gap-2 cursor-pointer px-3 py-2 text-sm rounded-md',
+          'transition-all duration-100 ease-in-out bg-content-2 text-body',
+          'hover:font-medium',
+          {
+            'font-semibold text-active-link': option.value === modelValue
+          }
+        )">
+          {{ option.label }}
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
   </div>
 </template>

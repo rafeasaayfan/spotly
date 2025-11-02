@@ -1,17 +1,33 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
+import { onClickOutside } from '@vueuse/core'
+import type { HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
-import { ArrowBigUpDash } from 'lucide-vue-next';
-import { Image } from '../image';
-import { Input } from '.';
+import { ArrowBigUpDash } from 'lucide-vue-next'
+import { Image } from '../image'
+import { Input } from '.'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { SharedData } from '@/types'
+import { usePage } from '@inertiajs/vue3'
+
+type Option = {
+    value: string | number
+    label: string
+    icon?: string
+}
 
 const props = defineProps<{
     modelValue: string | number | null
-    options?: Array<{ value: string | number, label: string, icon?: string }>
+    options?: Option[]
     placeholder?: string
-    parentClass?: string
-    class?: string
-    classDropdown?: string
+    parentClass?: HTMLAttributes['class']
+    class?: HTMLAttributes['class']
+    classDropdown?: HTMLAttributes['class']
+    searchClass?: HTMLAttributes['class']
     name?: string
     id?: string
 }>()
@@ -22,28 +38,44 @@ const emit = defineEmits<{
 
 const isOpen = ref(false)
 const search = ref('')
-const selected = computed(() => props.options?.find(option => option.value === props.modelValue)?.label || '')
-
 const selectRef = ref<HTMLElement | null>(null)
+const buttonRef = ref<HTMLButtonElement | null>(null)
+const searchInputRef = ref<HTMLElement | null>(null)
+
+const selected = computed(() => 
+    props.options?.find(option => option.value === props.modelValue) || null
+)
 
 const filteredOptions = computed(() =>
     props.options?.filter(option =>
         option.label.toLowerCase().includes(search.value.toLowerCase())
-    )
+    ) || []
 )
 
-function handleClickOutside(event: MouseEvent) {
-    if (selectRef.value && !selectRef.value.contains(event.target as Node)) {
-        isOpen.value = false
-    }
-}
+const filteredOptionsLength = computed(() => filteredOptions.value.length)
 
-onMounted(() => {
-    document.addEventListener('click', handleClickOutside)
+// Click outside handler
+onClickOutside(selectRef, () => {
+    isOpen.value = false
 })
 
-onBeforeUnmount(() => {
-    document.removeEventListener('click', handleClickOutside)
+// Focus search input when dropdown opens
+watch(isOpen, (newVal) => {
+    if (newVal) {
+        nextTick(() => {
+            updateDropdownWidth()
+            // Focus search input after a short delay to ensure it's rendered
+            setTimeout(() => {
+                const input = searchInputRef.value?.querySelector('input') as HTMLInputElement
+                if (input) {
+                    input.focus()
+                }
+            }, 100)
+        })
+    } else {
+        // Clear search when closing
+        search.value = ''
+    }
 })
 
 function selectOption(value: string | number) {
@@ -52,44 +84,107 @@ function selectOption(value: string | number) {
     search.value = ''
 }
 
-function toggleDropdown() {
-    isOpen.value = !isOpen.value
+const dropdownWidth = ref<number | null>(null)
+
+// Calculate button width to match dropdown width
+const updateDropdownWidth = () => {
+    if (buttonRef.value) {
+        const width = buttonRef.value.offsetWidth
+        dropdownWidth.value = width
+
+        const trySetWidth = (attempts = 0) => {
+            if (attempts > 10) return // Max 10 attempts
+
+            const dropdownContent = document.querySelector('.selectWithSearch-dropdown') as HTMLElement
+            if (dropdownContent) {
+                dropdownContent.style.setProperty('min-width', `${width}px`, 'important')
+            } else if (attempts < 10) {
+                setTimeout(() => trySetWidth(attempts + 1), 50)
+            }
+        }
+
+        // Start trying after a short delay to let the dropdown render
+        setTimeout(() => {
+            trySetWidth()
+        }, 10)
+    }
 }
+
+const page = usePage<SharedData>()
 </script>
 
 <template>
     <div ref="selectRef" :class="cn('relative w-full', props.parentClass)">
-        <button type="button" :class="cn('w-full text-start border border-muted bg-field text-sm px-2 py-1 h-9 rounded-md z-5', 
-           'cursor-pointer transition duration-150 ease-in-out focus:ring active:ring-blue-500 focus:ring-blue-600/90 text-active',
-            props.class
-        )" @click="toggleDropdown">
-            <div class="flex items-center justify-between">
-                <span :class="selected ? '' : 'text-body-muted'">
-                    {{ selected || props.placeholder || 'Select an option' }}
-                </span>
-                <ArrowBigUpDash class="size-4 z-0 transition-all duration-300 ease-in-out" :class="isOpen? '' : 'rotate-180'" />
-            </div>
-        </button>
+        <DropdownMenu :open="isOpen" @update:open="isOpen = $event">
+            <DropdownMenuTrigger :as-child="true">
+                <button 
+                    type="button" 
+                    ref="buttonRef" 
+                    :id="props.id"
+                    :name="props.name"
+                    :class="cn(
+                        'w-full text-start border border-muted bg-field text-sm px-2 py-1 h-9 rounded-md',
+                        'cursor-pointer transition duration-150 ease-in-out',
+                        'outline-none focus:ring active:ring-blue-500 focus:ring-blue-600/90',
+                        props.class
+                    )"
+                >
+                    <div class="flex items-center justify-between gap-2">
+                        <span :class="selected ? 'text-body' : 'text-body-muted'" class="truncate">
+                            {{ selected?.label || props.placeholder || 'Select an option' }}
+                        </span>
+                        <ArrowBigUpDash 
+                            class="size-4 flex-shrink-0 transition-all duration-300 ease-in-out"
+                            :class="isOpen ? '' : 'rotate-180'" 
+                        />
+                    </div>
+                </button>
+            </DropdownMenuTrigger>
 
-        <div v-if="isOpen" :class="cn('z-10 absolute mt-1 z-50 p-2 w-full bg-white dark:bg-black rounded-md shadow-lg max-h-60 overflow-auto',
-            'border border-muted shadow-md min-w-60',
-            props.classDropdown
-        )">
-            <div class="w-full">
-                <Input :class="props.class" v-model="search" type="text" :placeholder="$t('search.placeholder')" class="mb-2.5" />
-            </div>
+            <DropdownMenuContent 
+                :align="page.props.lang === 'ar' ? 'end' : 'start'"
+                :class="cn('selectWithSearch-dropdown w-full max-h-70', props.classDropdown)"
+            >
+                <!-- Search Input -->
+                <div ref="searchInputRef" class="w-full mb-2.5">
+                    <Input 
+                        :class="['px-2 py-0', props.searchClass]" 
+                        v-model="search" 
+                        type="text"
+                        :placeholder="$t('search.placeholder')" 
+                    />
+                </div>
 
+                <!-- No Results Message -->
+                <div 
+                    v-if="filteredOptionsLength === 0" 
+                    class="p-2 text-sm text-body-muted text-center"
+                >
+                    {{ $t('no.result') }}
+                </div>
 
-            <div v-if="filteredOptions?.length === 0" class="p-2 text-sm text-slate-500">
-                {{ $t('no.result') }}
-            </div>
-
-            <div v-for="option in filteredOptions" :key="option.value" @click="selectOption(option.value)"
-                class="flex items-center gap-2 cursor-pointer px-3 py-2 text-sm rounded-md hover:font-bold
-                transition-all duration-100 ease-in-out bg-content-2 text-body">
-                <Image v-if="option.icon && (option.icon as string)" :src="option.icon" class="size-4 rounded-full" />
-                <span>{{ option.label }}</span>
-            </div>
-        </div>
+                <!-- Options List -->
+                <div 
+                    v-for="option in filteredOptions" 
+                    :key="option.value" 
+                    @click="selectOption(option.value)" 
+                    :class="cn(
+                        'flex items-center gap-2 cursor-pointer px-3 py-2 text-sm rounded-md',
+                        'transition-all duration-100 ease-in-out bg-content-2 text-body',
+                        'hover:font-medium',
+                        {
+                            'font-semibold text-active-link': option.value === props.modelValue
+                        }
+                    )"
+                >
+                    <Image 
+                        v-if="option.icon" 
+                        :src="option.icon"
+                        class="size-4 rounded-full flex-shrink-0" 
+                    />
+                    <span class="truncate">{{ option.label }}</span>
+                </div>
+            </DropdownMenuContent>
+        </DropdownMenu>
     </div>
 </template>
