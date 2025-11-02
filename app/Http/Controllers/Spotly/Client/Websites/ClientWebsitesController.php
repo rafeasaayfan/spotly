@@ -16,6 +16,8 @@ class ClientWebsitesController extends Controller
     public function index(ClientWebsitesIndexRequest $request)
     {
         try {
+            $cities = config('cities.lebanon');
+
             $websiteTypes = WebsiteType::active()->select('id', 'title')->get();
             $query = Website::where('owner_id', Auth::id())->with(['websiteType:id,type', 'subscription:website_id,status,start_date,end_date']);
 
@@ -52,11 +54,12 @@ class ClientWebsitesController extends Controller
                 $query->where('is_active', (bool) $request->is_active);
             }
 
-            $websites = $query->paginate((int) $request->limit ?? 6);
+            $websites = $query->paginate($request->limit ? (int) $request->limit : 6);
 
             return $this->inertiaRender('client/myWebsites/Websites', [
                 'websites' => $websites,
-                'websiteTypes' => $websiteTypes
+                'websiteTypes' => $websiteTypes,
+                'cities' => $cities
             ]);
         } catch (\Exception $e) {
             return $this->logResponse('ClientWebsitesController@index', $e, 'An error occurred while fetching the websites');
