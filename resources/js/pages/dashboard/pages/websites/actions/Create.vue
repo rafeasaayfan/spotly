@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import Create from '@/components/table/actions/Create.vue';
+import { SharedData } from '@/types';
+import { usePage } from '@inertiajs/vue3';
 
 const props = defineProps<{
     users: Record<string, any>;
     websiteTypes: Record<string, any>;
-    cities: Array<string>;
+    cities: Record<string, any>;
     countries: Record<string, any>;
 }>();
 
@@ -22,6 +24,13 @@ const mappedCountries = props.countries.map((item: any) => ({
     value: item.phone_code,
     label: item.phone_code,
     icon: item.flag,
+}));
+
+const page = usePage<SharedData>();
+
+const mappedCities = Object.entries(props.cities).map(([key, city]: [string, any]) => ({
+    value: key,
+    label: page.props.lang === 'ar' ? city.ar : city.en,
 }));
 
 const columns = [
@@ -54,7 +63,7 @@ const columns = [
         type: 'select_with_search',
         placeholder: 'Select the city',
         required: false,
-        relation: props.cities.map((item: any) => ({ value: item, label: item })),
+        relation: mappedCities,
     },
     { key: 'address', label: 'Address', type: 'text', placeholder: 'Enter the address', required: true },
     { key: 'instagram', label: 'Instagram', type: 'text', placeholder: 'Enter the instagram url', required: false },
