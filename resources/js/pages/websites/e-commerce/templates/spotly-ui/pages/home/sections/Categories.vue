@@ -19,7 +19,7 @@ const getCategoryBgClass = (index: number) => {
         'bg-rose-600',
         'bg-emerald-600',
         'bg-cyan-600',
-        'bg-yellow-600'
+        'bg-yellow-600',
     ];
     return colors[index % colors.length];
 };
@@ -36,7 +36,7 @@ const getCategoryBgClass = (index: number) => {
                 v-for="(category, index) in props.categories"
                 :key="index"
                 :href="`/shop?category=${encodeURIComponent(category.name)}`"
-                class="category-card group web-bg-card web-border-color relative flex h-20 w-full rounded-md border transition-all duration-300 ease-in-out md:h-40 md:w-60 px-2"
+                class="category-card group web-bg-card web-border-color relative flex h-20 w-full rounded-md border px-2 transition-all duration-300 ease-in-out md:h-40 md:w-60"
             >
                 <div
                     :class="[
@@ -60,16 +60,18 @@ const getCategoryBgClass = (index: number) => {
 
             <Link
                 href="/shop"
-                class="web-border-color group relative flex h-30 w-45 items-center justify-center rounded-md border-2 border-dashed 
-                bg-transparent transition-all duration-100 ease-in-out hover:border-3 hover:border-blue-500 
-                hover:bg-[var(--bg_content_light)] md:h-40 md:w-60 dark:hover:bg-[var(--bg_content_dark)]"
+                class="web-border-color group relative flex h-20 w-full items-center justify-center rounded-md border-2 
+                border-dashed bg-transparent transition-all duration-100 ease-in-out hover:border-3 hover:border-blue-500
+                hover:bg-[var(--bg_content_light)]/70 sm:h-30 sm:w-45 md:h-40 md:w-60 dark:hover:bg-[var(--bg_content_dark)]/70"
             >
                 <div class="flex h-full flex-col items-center justify-center gap-1 text-center">
-                    <ArrowRight
-                        class="mb-1 size-5.5 transition-transform duration-300 md:mb-2 md:size-8"
-                        :class="page.props.lang === 'ar' ? 'rotate-180 group-hover:-translate-x-1' : 'group-hover:translate-x-1'"
-                    />
-                    <h3 class="web-text-active text-base font-bold md:text-xl">{{ $t('more.categories') }}</h3>
+                    <div class="flex flex-row-reverse items-center gap-1 sm:flex-col">
+                        <ArrowRight
+                            class="sm:mb-1 size-4.5 sm:size-5.5 transition-transform duration-300 md:mb-2 md:size-8"
+                            :class="page.props.lang === 'ar' ? 'rotate-180 group-hover:-translate-x-1' : 'group-hover:translate-x-1'"
+                        />
+                        <h3 class="web-text-active text-base font-bold md:text-xl">{{ $t('more.categories') }}</h3>
+                    </div>
                     <p class="web-text-body-muted text-xs md:text-sm">{{ $t('explore.everything') }}</p>
                 </div>
             </Link>
