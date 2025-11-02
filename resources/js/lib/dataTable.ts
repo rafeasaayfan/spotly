@@ -43,19 +43,19 @@ export const formatters = {
     // Boolean formatter (Yes/No)
     boolean: (value: any) =>
         value
-            ? `<span class="bg-success text-for-bg-success px-2 py-1 rounded-sm text-xs">Yes</span>`
-            : `<span class="bg-destructive text-for-bg-destructive px-2 py-1 rounded-sm text-xs">No</span>`,
+            ? `<span class="bg-success text-for-bg-success px-2 py-1 rounded text-xs">Yes</span>`
+            : `<span class="bg-destructive text-for-bg-destructive px-2 py-1 rounded text-xs">No</span>`,
 
     // Active formatter (Yes/No)
     active: (value: any) =>
         value
-            ? `<span class="bg-success text-for-bg-success px-2 py-1 rounded-sm text-xs border border-muted shadow">Active</span>`
-            : `<span class="bg-destructive text-for-bg-destructive px-2 py-1 rounded-sm text-xs border border-muted shadow">Inactive</span>`,
+            ? `<span class="bg-success text-for-bg-success px-2 py-1 rounded text-xs border border-muted shadow">Active</span>`
+            : `<span class="bg-destructive text-for-bg-destructive px-2 py-1 rounded text-xs border border-muted shadow">Inactive</span>`,
 
     // Status formatter with color
     status: (value: string) => {
         const colorMap: Record<string, string> = {
-            active: 'bg-success text-for-bg-success',
+            active: 'bg-primary text-for-bg-primary',
             inactive: 'bg-destructive text-for-bg-destructive',
 
             approved: 'bg-success text-for-bg-success',
@@ -63,9 +63,12 @@ export const formatters = {
             completed: 'bg-success text-for-bg-success',
             comfirmed: 'bg-success text-for-bg-success',
 
+            'not verified': 'bg-destructive text-for-bg-destructive',
+            verified: 'bg-success text-for-bg-success',
+
             delivered: 'bg-primary text-for-bg-primary',
 
-            pending: 'bg-content text-body-active',
+            pending: 'bg-content text-body-active border border-muted shadow',
 
             blocked: 'bg-destructive text-for-bg-destructive',
             denied: 'bg-destructive text-for-bg-destructive',
@@ -76,17 +79,17 @@ export const formatters = {
             cancelled: 'bg-destructive text-for-bg-destructive',
         };
 
-        const color = colorMap[value.toLowerCase()] || 'bg-content';
+        const color = colorMap[value.toLowerCase()] || 'bg-content border border-muted shadow';
 
-        return `<span class="${color} px-2 py-1 rounded-sm text-xs border border-muted shadow">${value}</span>`;
+        return `<span class="${color} px-2 py-1 rounded text-xs">${value}</span>`;
     },
 
     // Email verified
     emailVerified: (value: string | null) => {
         if (!value) {
-            return `<span class="bg-destructive text-for-bg-destructive rounded-sm text-xs px-2 py-1">Not Verified</span>`;
+            return `<span class="bg-destructive text-for-bg-destructive rounded text-xs px-2 py-1">Not Verified</span>`;
         } else {
-            return `<span class="bg-success text-for-bg-success rounded-sm text-xs px-2 py-1">Verified</span>`;
+            return `<span class="bg-success text-for-bg-success rounded text-xs px-2 py-1">Verified</span>`;
         }
     },
 
