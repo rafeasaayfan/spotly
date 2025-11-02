@@ -44,7 +44,7 @@ class HandleInertiaRequests extends Middleware
         $roles = [];
         $permissions = [];
 
-        $websiteUserRole = null;
+        $websiteUserRole = [];
 
         if ($request->user('web')) {
             if (method_exists($request->user('web'), 'getRoleNames')) {
@@ -55,7 +55,7 @@ class HandleInertiaRequests extends Middleware
             $websiteUser = \App\Models\WebsiteUser::where('id', $request->user('website')->id)
                 ->first();
 
-            if($websiteUser) $websiteUserRole = $websiteUser->role;
+            if($websiteUser) $websiteUserRole = [$websiteUser->role];
         }
 
         return [
