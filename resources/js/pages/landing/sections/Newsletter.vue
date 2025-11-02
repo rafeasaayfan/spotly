@@ -117,7 +117,8 @@ const cards = [
                                     type="submit"
                                     size="lg"
                                     :disabled="form.processing"
-                                    class="border-muted h-9 md:h-12 text-sm md:text-base rounded-none rounded-e-md border-s bg-transparent hover:bg-[var(--primary)] text-active"
+                                    class="border-muted h-9 md:h-12 text-sm md:text-base rounded-none rounded-e-md border-s bg-transparent hover:bg-[var(--primary)] 
+                                    text-black dark:text-white hover:text-white dark:hover:text-white"
                                 >
                                     <LoaderCircle v-if="form.processing" class="size-4 animate-spin" />
                                     <Mail v-else class="size-4" />
