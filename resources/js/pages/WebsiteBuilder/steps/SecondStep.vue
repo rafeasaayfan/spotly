@@ -19,7 +19,7 @@ const props = defineProps<{
         errors?: Record<string, string>;
     };
     countries: Record<string, any>;
-    cities: Array<string>;
+    cities: Record<string, any>;
 }>();
 
 // Define emit for updating form fields
@@ -119,12 +119,7 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
                 :description="$t('websiteBuilder.secondStep.email_address_description')"
             />
             <div class="flex flex-col gap-1 ps-2">
-                <Input
-                    v-model="email"
-                    type="email"
-                    placeholder="contact@yourbusiness.com"
-                    class="h-10"
-                />
+                <Input v-model="email" type="email" placeholder="contact@yourbusiness.com" class="h-10" />
                 <InputError v-if="props.form.errors?.email" :message="props.form.errors.email" />
             </div>
         </div>
@@ -135,12 +130,7 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
         <div class="col-span-1 flex flex-col gap-2">
             <HeadingSmall :title="$t('websiteBuilder.secondStep.street_address_title')" titleClass="text-body" />
             <div class="flex flex-col gap-1 ps-2">
-                <Input
-                    v-model="address"
-                    type="text"
-                    :placeholder="$t('street_address_placeholder')"
-                    class="h-10"
-                />
+                <Input v-model="address" type="text" :placeholder="$t('street_address_placeholder')" class="h-10" />
                 <InputError v-if="props.form.errors?.address" :message="props.form.errors.address" />
             </div>
         </div>
@@ -164,7 +154,12 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
                 <SelectWithSearch
                     v-model="city"
                     :placeholder="$t('websiteBuilder.secondStep.city_placeholder')"
-                    :options="cities.map((city) => ({ value: city, label: city }))"
+                    :options="
+                        Object.entries(props.cities).map(([key, city]: [string, any]) => ({
+                            value: key, 
+                            label: page.props.lang === 'ar' ? city.ar : city.en,
+                        }))
+                    "
                     class="h-10"
                 />
                 <InputError v-if="props.form.errors?.city" :message="props.form.errors.city" />
@@ -177,12 +172,7 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
         <div class="col-span-1 flex flex-col gap-2">
             <HeadingSmall :title="$t('websiteBuilder.secondStep.instagram_url_title')" titleClass="text-body" />
             <div class="flex flex-col gap-2 ps-2">
-                <Input
-                    v-model="instagram"
-                    type="url"
-                    placeholder="https://instagram.com/yourbusiness"
-                    class="h-10"
-                />
+                <Input v-model="instagram" type="url" placeholder="https://instagram.com/yourbusiness" class="h-10" />
                 <InputError v-if="props.form.errors?.instagram" :message="props.form.errors.instagram" />
             </div>
         </div>
@@ -190,12 +180,7 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
         <div class="col-span-1 flex flex-col gap-2">
             <HeadingSmall :title="$t('websiteBuilder.secondStep.facebook_url_title')" titleClass="text-body" />
             <div class="flex flex-col gap-1 ps-2">
-                <Input
-                    v-model="facebook"
-                    type="url"
-                    placeholder="https://facebook.com/yourbusiness"
-                    class="h-10"
-                />
+                <Input v-model="facebook" type="url" placeholder="https://facebook.com/yourbusiness" class="h-10" />
                 <InputError v-if="props.form.errors?.facebook" :message="props.form.errors.facebook" />
             </div>
         </div>
@@ -203,12 +188,7 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
         <div class="col-span-1 flex flex-col gap-2">
             <HeadingSmall :title="$t('websiteBuilder.secondStep.tiktok_url_title')" titleClass="text-body" />
             <div class="flex flex-col gap-1 ps-2">
-                <Input
-                    v-model="tiktok"
-                    type="url"
-                    placeholder="https://tiktok.com/yourbusiness"
-                    class="h-10"
-                />
+                <Input v-model="tiktok" type="url" placeholder="https://tiktok.com/yourbusiness" class="h-10" />
                 <InputError v-if="props.form.errors?.tiktok" :message="props.form.errors.tiktok" />
             </div>
         </div>
@@ -216,12 +196,7 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
         <div class="col-span-1 flex flex-col gap-2">
             <HeadingSmall :title="$t('websiteBuilder.secondStep.youtube_url_title')" titleClass="text-body" />
             <div class="flex flex-col gap-1 ps-2">
-                <Input
-                    v-model="youtube"
-                    type="url"
-                    placeholder="https://youtube.com/yourbusiness"
-                    class="h-10"
-                />
+                <Input v-model="youtube" type="url" placeholder="https://youtube.com/yourbusiness" class="h-10" />
                 <InputError v-if="props.form.errors?.youtube" :message="props.form.errors.youtube" />
             </div>
         </div>
