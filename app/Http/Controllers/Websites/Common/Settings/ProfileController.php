@@ -9,7 +9,6 @@ use App\Models\WebsiteUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends BaseController
 {
@@ -49,26 +48,5 @@ class ProfileController extends BaseController
         $request->user('website')->save();
 
         return to_route('website.profile.edit');
-    }
-
-    /**
-     * Delete the user's profile.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'password' => ['required', 'current_password'],
-        ]);
-
-        $user = $request->user('website');
-
-        Auth::guard('website')->logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/');
     }
 }
