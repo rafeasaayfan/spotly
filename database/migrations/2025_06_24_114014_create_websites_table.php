@@ -19,10 +19,11 @@ return new class extends Migration
 
             $table->string('name')->unique();
             $table->string('subdomain')->unique();
-            $table->string('phone_number')->unique();
+            $table->string('phone_number')->nullable();
             $table->string('email')->unique()->nullable();
 
             $table->text('about_us')->nullable();
+            $table->text('about_us_ar')->nullable();
 
             $table->string('country')->nullable();
             $table->string('city')->nullable();
@@ -39,7 +40,6 @@ return new class extends Migration
 
             $table->unsignedBigInteger('views_count')->default(0);
             $table->boolean('is_active')->default(false);
-            $table->boolean('is_verified')->default(false);
             $table->enum('status', ['pending', 'denied', 'approved'])->default('pending');
 
             $table->timestamps();

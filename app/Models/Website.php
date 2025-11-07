@@ -23,6 +23,7 @@ class Website extends Model implements HasMedia
         'email',
 
         'about_us',
+        'about_us_ar',
 
         'country',
         'city',
@@ -39,7 +40,6 @@ class Website extends Model implements HasMedia
 
         'views_count',
         'is_active',
-        'is_verified',
         'status',
     ];
 
@@ -148,14 +148,6 @@ class Website extends Model implements HasMedia
     public function scopeActive($query)
     {
         return $query->where('is_active', 1);
-    }
-
-    /**
-     * The website verified.
-     */
-    public function scopeVerified($query)
-    {
-        return $query->where('is_verified', 1);
     }
 
     /**
