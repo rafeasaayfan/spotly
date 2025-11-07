@@ -53,7 +53,6 @@ Route::middleware(['auth', 'verified', 'can:dashboard_access'])->prefix('dashboa
     //* Websites
     dashboardPagesRoutes('websites', WebsitesController::class);
     Route::patch('websites/{id}/is_active', [WebsitesController::class, 'toggleActive'])->name('websites.is_active');
-    Route::patch('websites/{id}/is_verified', [WebsitesController::class, 'toggleVerified'])->name('websites.is_verified');
     Route::patch('websites/{id}/status', [WebsitesController::class, 'changeStatus'])->name('websites.status');
 
     //* ui
