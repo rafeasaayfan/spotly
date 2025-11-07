@@ -171,84 +171,97 @@ const searching = (event: Event) => {
                                 :placeholder="$t('myWebsites.sort_by')"
                                 class="max-w-30 min-w-30"
                             />
-
-                            <DropdownMenu>
-                                <DropdownMenuTrigger :as-child="true">
-                                    <Button variant="ghost" size="icon" class="flex cursor-pointer items-center justify-center rounded-md">
-                                        <FilterIcon class="size-5" />
-                                    </Button>
-                                </DropdownMenuTrigger>
-
-                                <DropdownMenuContent class="w-70">
-                                    <DropdownMenuShortcut>{{ $t('myWebsites.filter_options') }}</DropdownMenuShortcut>
-
-                                    <DropdownMenuSeparator />
-
-                                    <DropdownMenuGroup>
-                                        <div class="grid gap-5">
-                                            <div class="flex flex-col gap-1">
-                                                <Label class="text-xs" for="website_type">{{ $t('myWebsites.website_type') }}</Label>
-                                                <SelectWithSearch
-                                                    id="website_type"
-                                                    v-model="filters.website_type"
-                                                    :placeholder="$t('myWebsites.choose_website_type')"
-                                                    :options="mappedTypes"
-                                                />
-                                            </div>
-
-                                            <div class="flex flex-col gap-1">
-                                                <Label class="text-xs" for="status">{{ $t('myWebsites.status') }}</Label>
-                                                <Select id="status" v-model="filters.status" :placeholder="$t('myWebsites.select_website_status')">
-                                                    <option
-                                                        v-for="(option, index) in [
-                                                            { value: 'pending', label: $t('pending') },
-                                                            { value: 'denied', label: $t('denied') },
-                                                            { value: 'approved', label: $t('approved') },
-                                                        ]"
-                                                        :key="index"
-                                                        :value="option.value"
-                                                    >
-                                                        {{ option.label }}
-                                                    </option>
-                                                </Select>
-                                            </div>
-
-                                            <div class="flex flex-col gap-1">
-                                                <Label class="text-xs" for="active">{{ $t('active') }}</Label>
-                                                <Select id="active" v-model="filters.is_active" :placeholder="$t('myWebsites.select_active_website')">
-                                                    <option
-                                                        v-for="(option, index) in [
-                                                            { value: 1, label: $t('active') },
-                                                            { value: 0, label: $t('inactive') },
-                                                        ]"
-                                                        :key="index"
-                                                        :value="option.value"
-                                                    >
-                                                        {{ option.label }}
-                                                    </option>
-                                                </Select>
-                                            </div>
-                                        </div>
-
-                                        <div class="border-muted mt-4 flex justify-end border-t pt-2">
-                                            <Button
-                                                variant="secondary"
-                                                size="sm"
-                                                type="button"
-                                                :disabled="isResetting || isApplied"
-                                                @click="resetDropDownFilter()"
-                                            >
-                                                <LoaderCircle v-if="isResetting" class="h-4 w-4 animate-spin" />
-                                                <span v-else>{{ $t('reset') }}</span>
-                                            </Button>
-                                        </div>
-                                    </DropdownMenuGroup>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
                         </div>
                     </div>
 
                     <div class="flex items-center gap-2">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger :as-child="true">
+                                <Button variant="ghost" size="icon" class="flex cursor-pointer items-center justify-center rounded-md">
+                                    <FilterIcon class="size-5" />
+                                </Button>
+                            </DropdownMenuTrigger>
+
+                            <DropdownMenuContent class="w-[250px] sm:w-[500px] lg:w-[800px]">
+                                <DropdownMenuShortcut>{{ $t('myWebsites.filter_options') }}</DropdownMenuShortcut>
+
+                                <DropdownMenuSeparator />
+
+                                <DropdownMenuGroup>
+                                    <div class="grid grid-cols-1 gap-5 lg:grid-cols-3">
+                                        <div class="flex flex-col gap-1">
+                                            <Label class="text-[11px]" for="website_type">{{ $t('myWebsites.website_type') }}</Label>
+                                            <SelectWithSearch
+                                                id="website_type"
+                                                v-model="filters.website_type"
+                                                :placeholder="$t('myWebsites.choose_website_type')"
+                                                :options="mappedTypes"
+                                                class="h-7.5 gap-5 py-1.5 text-xs"
+                                            />
+                                        </div>
+
+                                        <div class="flex flex-col gap-1">
+                                            <Label class="text-[11px]" for="status">{{ $t('myWebsites.status') }}</Label>
+                                            <Select
+                                                id="status"
+                                                v-model="filters.status"
+                                                :placeholder="$t('myWebsites.select_website_status')"
+                                                class="gap-5 py-1.5 text-xs"
+                                                :withStatusColors="true"
+                                            >
+                                                <option
+                                                    v-for="(option, index) in [
+                                                        { value: 'pending', label: $t('pending') },
+                                                        { value: 'denied', label: $t('denied') },
+                                                        { value: 'approved', label: $t('approved') },
+                                                    ]"
+                                                    :key="index"
+                                                    :value="option.value"
+                                                >
+                                                    {{ option.label }}
+                                                </option>
+                                            </Select>
+                                        </div>
+                                        <div class="flex flex-col gap-1">
+                                            <Label class="text-[11px]" for="active">{{ $t('active') }}</Label>
+                                            <Select
+                                                id="active"
+                                                v-model="filters.is_active"
+                                                :placeholder="$t('myWebsites.select_active_website')"
+                                                class="gap-5 py-1.5 text-xs"
+                                                :withStatusColors="true"
+                                            >
+                                                <option
+                                                    v-for="(option, index) in [
+                                                        { value: 1, label: $t('active') },
+                                                        { value: 0, label: $t('inactive') },
+                                                    ]"
+                                                    :key="index"
+                                                    :value="option.value"
+                                                >
+                                                    {{ option.label }}
+                                                </option>
+                                            </Select>
+                                        </div>
+                                    </div>
+
+                                    <div class="border-muted mt-4 flex justify-end border-t pt-2">
+                                        <Button
+                                            variant="secondary"
+                                            size="sm"
+                                            type="button"
+                                            :disabled="isResetting || isApplied"
+                                            @click="resetDropDownFilter()"
+                                            class="h-7 px-2 sm:text-xs"
+                                        >
+                                            <LoaderCircle v-if="isResetting" class="h-4 w-4 animate-spin" />
+                                            <span v-else>{{ $t('reset') }}</span>
+                                        </Button>
+                                    </div>
+                                </DropdownMenuGroup>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+
                         <Link :href="route('websiteBuilder.index')" target="_blank">
                             <Button>{{ $t('create') }}</Button>
                         </Link>
