@@ -29,22 +29,77 @@ class WebsiteBuilderRequest extends FormRequest
         switch ($step) {
             case '1':
                 $validation = [
-                    'website_type_id' => ['required', 'exists:website_types,id'],
-                    'language' => ['required', 'string', 'in:en,ar,fr'],
-                    'name' => ['required', 'string', 'max:15', 'min:3', 'unique:websites,name'],
-                    'subdomain' => ['required', 'string', 'max:15', 'min:3', 'unique:websites,subdomain'],
-                    'about_us' => ['required', 'string', 'max:255', 'min:30'],
+                    'website_type_id' => ['required', 'exists:website_types,id,is_active,1'],
+                    'language' => ['required', 'string', 'in:en,ar'],
+                    'name' => [
+                        'required',
+                        'string',
+                        'max:15',
+                        'min:3',
+                        'unique:websites,name',
+                        'regex:/^[A-Za-z0-9]+$/'
+                    ],
+                    'subdomain' => [
+                        'required',
+                        'string',
+                        'min:3',
+                        'max:15',
+                        'unique:websites,subdomain',
+                        'regex:/^(?!-)[a-z0-9-]+(?<!-)$/'
+                    ],
+                    'about_us' => [
+                        'required',
+                        'string',
+                        'max:255',
+                        'min:120',
+                        function ($attribute, $value, $fail) {
+                            $trimmed = trim($value);
+
+                            if (!preg_match('/^[\p{Latin}\d\s.,;:!?"\'()-]+$/u', $trimmed)) {
+                                $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be in English.');
+                            }
+
+                            if (preg_match('/\s{2,}/', $trimmed)) {
+                                $fail('The ' . str_replace('_', ' ', $attribute) . ' field contains too many spaces.');
+                            }
+                        }
+                    ],
+                    'about_us_ar' => [
+                        'required',
+                        'string',
+                        'max:255',
+                        'min:120',
+                        function ($attribute, $value, $fail) {
+                            $trimmed = trim($value);
+
+                            if (!preg_match('/^[\p{Arabic}\d\s.,؛:!؟"\'()\-]+$/u', $trimmed)) {
+                                $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be in Arabic.');
+                            }
+
+                            if (preg_match('/\s{2,}/u', $trimmed)) {
+                                $fail('The ' . str_replace('_', ' ', $attribute) . ' field contains too many spaces.');
+                            }
+                        }
+                    ],
                 ];
                 break;
 
             case '2':
                 $validation = [
                     'phone_number' => [
-                        'required',
-                        'unique:websites,phone_number',
+                        'nullable',
                         'regex:/^(?:\+961)?(03\d{6}|70\d{6}|71\d{6}|76\d{6}|78\d{6}|79\d{6}|81\d{6})$/'
                     ],
-                    'email' => ['nullable', 'email', 'min:3', 'unique:websites,email'],
+                    'email' => [
+                        Rule::requiredIf(function () {
+                            $type = \App\Models\WebsiteType::find($this->website_type_id);
+                            return $type && ($type->type === 'e-commerce' || $type->type === 'restaurant');
+                        }),
+                        'lowercase',
+                        'email:rfc,dns',
+                        'min:3',
+                        'unique:websites,email'
+                    ],
                     'address' => ['nullable', 'string', 'max:15', 'min:3'],
                     'country' => [
                         'nullable',

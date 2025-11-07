@@ -8,7 +8,7 @@ export interface WizardContent {
     about_us: string;
     language: string;
 
-    phone_number: string;
+    email: string;
 
     template_id: string,
 
@@ -39,9 +39,9 @@ export function useWizard(step: number, form: WizardContent) {
             : 'About us is required.';
 
     } else if (step === 2) {
-        if (!form.phone_number) errors.phone_number = page.props.lang === 'ar'
-            ? 'رقم الهاتف مطلوب.'
-            : 'Phone Number is required.';
+        if (!form.email) errors.email = page.props.lang === 'ar'
+            ? 'البريد الإلكتروني مطلوب.'
+            : 'Email address is required.';
 
     } else if (step === 3) {
         if (!form.template_id) errors.template_id = page.props.lang === 'ar'
