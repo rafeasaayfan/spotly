@@ -60,9 +60,9 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Get the website of the user.
      */
-    public function website()
+    public function websites()
     {
-        return $this->hasOne(Website::class, 'owner_id');
+        return $this->hasMany(Website::class, 'owner_id');
     }
 
     /**
