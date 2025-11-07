@@ -19,6 +19,7 @@ const props = defineProps<{
     homeProducts: Record<string, any>;
     categories: Record<string, any>;
     aboutUs: string;
+    aboutUsAr: string;
     cartItemsCount: number;
     flash?: {
         toastType: 'success' | 'error' | 'warning' | 'info';
@@ -51,7 +52,7 @@ onUnmounted(() => {
         
         <Products :products="props.homeProducts" />
 
-        <About :websiteNameAndLogo="props.websiteNameAndLogo" :aboutUs="props.aboutUs" />
+        <About :websiteNameAndLogo="props.websiteNameAndLogo" :aboutUs="props.aboutUs" :aboutUsAr="props.aboutUsAr" />
 
         <Contact />
     </Layout>

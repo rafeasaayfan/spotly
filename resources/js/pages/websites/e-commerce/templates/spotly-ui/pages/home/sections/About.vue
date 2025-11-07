@@ -1,10 +1,15 @@
 <script setup lang="ts">
+import { SharedData } from '@/types';
+import { usePage } from '@inertiajs/vue3';
 import { Headset, Shield, Star, Truck } from 'lucide-vue-next';
 
 const props = defineProps<{
     websiteNameAndLogo: Record<string, string>;
     aboutUs: string;
+    aboutUsAr: string;
 }>();
+
+const page = usePage<SharedData>();
 </script>
 
 <template>
@@ -21,7 +26,7 @@ const props = defineProps<{
                 <br v-if="props.aboutUs" />
                 <br v-if="props.aboutUs" />
 
-                {{ props.aboutUs }}
+                {{ page.props.lang === 'ar' ? props.aboutUs : props.aboutUsAr }}
             </p>
 
             <!-- Stats Grid -->
