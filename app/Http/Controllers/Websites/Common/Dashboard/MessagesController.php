@@ -2,21 +2,14 @@
 
 namespace App\Http\Controllers\Websites\Common\Dashboard;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Websites\BaseController;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use App\Models\WebsiteMessage;
 
-class MessagesController extends Controller
+class MessagesController extends BaseController
 {
     use DataTableTrait;
-
-    protected $website;
-
-    public function __construct()
-    {
-        $this->website = app('website')->load('media');
-    }
 
     /**
      * Display a listing of the resource.

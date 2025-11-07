@@ -3,22 +3,16 @@
 namespace App\Http\Controllers\Websites\Common\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Websites\BaseController;
 use App\Models\Brand;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use App\Http\Requests\Websites\Common\Dashboard\Brands\StoreBrandRequest;
 use App\Http\Requests\Websites\Common\Dashboard\Brands\UpdateBrandRequest;
 
-class BrandsController extends Controller
+class BrandsController extends BaseController
 {
     use DataTableTrait;
-
-    protected $website;
-
-    public function __construct()
-    {
-        $this->website = app('website')->load('media');
-    }
 
     /**
      * Display a listing of the resource.

@@ -2,25 +2,20 @@
 
 namespace App\Http\Controllers\Websites\Common\Dashboard;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Websites\BaseController;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use App\Http\Requests\Websites\Common\Dashboard\Users\StoreUserRequest;
 use App\Http\Requests\Websites\Common\Dashboard\Users\UpdateUserRequest;
+use App\Jobs\Websites\Common\UserStatusMailJob;
 use App\Models\Country;
 use App\Models\WebsiteUser;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Hash;
 
-class UsersController extends Controller
+class UsersController extends BaseController
 {
     use DataTableTrait;
-
-    protected $website;
-
-    public function __construct()
-    {
-        $this->website = app('website')->load('media');
-    }
 
     /**
      * Display a listing of the resource.
@@ -93,7 +88,37 @@ class UsersController extends Controller
     public function show(string $id)
     {
         try {
-            $user = WebsiteUser::where('website_id', $this->website->id)->findOrFail($id);
+            $query = WebsiteUser::where('website_id', $this->website->id);
+
+            $query->when($this->website->websiteType->type === 'e-commerce', function ($q) {
+                $q->withCount([
+                    'ecommerceCart as cart_count',
+
+                    'ecommerceOrders as pending_orders_count' => function ($q) {
+                        $q->where('status', 'pending');
+                    },
+                    'ecommerceOrders as confirmed_orders_count' => function ($q) {
+                        $q->where('status', 'confirmed');
+                    },
+                    'ecommerceOrders as delivered_orders_count' => function ($q) {
+                        $q->where('status', 'delivered');
+                    },
+                    'ecommerceOrders as cancelled_orders_count' => function ($q) {
+                        $q->where('status', 'cancelled');
+                    },
+                    'ecommerceOrders as refunded_orders_count' => function ($q) {
+                        $q->where('status', 'refunded');
+                    },
+                    'ecommerceOrders as rejected_orders_count' => function ($q) {
+                        $q->where('status', 'rejected');
+                    },
+                ])
+                ->withSum([
+                    'ecommerceOrders as total_spent' => fn($q) => $q->where('status', 'delivered'),
+                ], 'total_amount');
+            });
+
+            $user = $query->findOrFail($id);
 
             return $this->jsonSuccess('', [
                 'data' => $user,
@@ -102,6 +127,7 @@ class UsersController extends Controller
             return $this->logJsonResponse('UsersController@show', $e, 'An error when fetching the show page');
         }
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -133,11 +159,29 @@ class UsersController extends Controller
         }
 
         try {
-            $validated = $request->validated();
-            if (!isset($validated['password'])) unset($validated['password']);
+            $oldStatus = $user->status;
 
-            $user->fill($validated);
-            $user->save();
+            $validated = $request->validated();
+
+            if (!empty($validated['password'])) {
+                $validated['password'] = Hash::make($validated['password']);
+            } else {
+                unset($validated['password']);
+            }
+
+            $user->update($validated);
+
+            if ($oldStatus !== $validated['status']) {
+                UserStatusMailJob::dispatch(
+                    $this->website->email,
+                    $this->website->name,
+                    $this->website->subdomain,
+                    $this->website->websiteType->type,
+                    $user->email,
+                    $user->name,
+                    $validated['status']
+                );
+            }
 
             return $this->redirectSuccess('dashboard.users.index', 'User updated successfully', forWebsite: true);
         } catch (\Exception $e) {
@@ -184,17 +228,27 @@ class UsersController extends Controller
             ]);
 
             $user = WebsiteUser::where('website_id', $this->website->id)->findOrFail($id);
-            if($user->role === 'owner') {
+            if ($user->role === 'owner') {
                 return $this->backError('You cannot change the owner status!');
             }
+
             $user->update(['status' => $validated['status']]);
 
-            $message = $validated['status'] === 'active'
-                ? 'User activated successfully.'
-                : 'User deactivated successfully.';
+            $message = match ($validated['status']) {
+                'active' => 'User activated successfully.',
+                'inactive' => 'User deactivated successfully.',
+                'banned' => 'User has been banned.',
+            };
 
-            if ($validated['status'] === 'inactive') $message = 'The user is now inactive.';
-            if ($validated['status'] === 'banned') $message = 'The user is now banned.';
+            UserStatusMailJob::dispatch(
+                $this->website->email,
+                $this->website->name,
+                $this->website->subdomain,
+                $this->website->websiteType->type,
+                $user->email,
+                $user->name,
+                $validated['status']
+            );
 
             return $this->backSuccess($message);
         } catch (\Exception $e) {
@@ -213,10 +267,10 @@ class UsersController extends Controller
             ]);
 
             $user = WebsiteUser::where('website_id', $this->website->id)->findOrFail($id);
-            if($user->role === 'owner') {
+            if ($user->role === 'owner') {
                 return $this->backError('You cannot change the owner role!');
             }
-            if($validated['role'] === 'owner') {
+            if ($validated['role'] === 'owner') {
                 return $this->backError('There can only be one owner per website!');
             }
             $user->update(['role' => $validated['role']]);

@@ -2,23 +2,16 @@
 
 namespace App\Http\Controllers\Websites\Common\Dashboard;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Websites\BaseController;
 use App\Models\Category;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use App\Http\Requests\Websites\Common\Dashboard\Categories\StoreCategoryRequest;
 use App\Http\Requests\Websites\Common\Dashboard\Categories\UpdateCategoryRequest;
 
-class CategoriesController extends Controller
+class CategoriesController extends BaseController
 {
     use DataTableTrait;
-
-    protected $website;
-
-    public function __construct()
-    {
-        $this->website = app('website')->load('media');
-    }
 
     /**
      * Display a listing of the resource.
