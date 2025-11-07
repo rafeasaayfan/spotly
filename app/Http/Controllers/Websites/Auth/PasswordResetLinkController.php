@@ -30,7 +30,7 @@ class PasswordResetLinkController extends BaseController
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|lowercase|email:rfc,dns',
         ]);
     
         $website = app('website');

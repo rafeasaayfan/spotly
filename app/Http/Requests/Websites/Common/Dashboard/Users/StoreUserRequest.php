@@ -20,7 +20,8 @@ class StoreUserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
-                'email',
+                'lowercase',
+                'email:rfc,dns',
                 Rule::unique('website_users', 'email')->where('website_id', $website->id)
             ],
             'password' => ['required', 'min:8'],

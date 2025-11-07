@@ -31,7 +31,7 @@ class RegisterRequest extends FormRequest
                 'required',
                 'string',
                 'lowercase',
-                'email',
+                'email:rfc,dns',
                 'max:255',
                 Rule::unique('website_users', 'email')->where(function ($query) use ($website) {
                     return $query->where('website_id', $website->id);

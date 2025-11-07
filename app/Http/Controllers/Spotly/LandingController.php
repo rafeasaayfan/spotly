@@ -20,7 +20,7 @@ class LandingController extends Controller
     public function subscribe(Request $request)
     {
         $validated = $request->validate([
-            'email' => 'required|email|unique:email_subscribers,email',
+            'email' => 'required|lowercase|email:rfc,dns|unique:email_subscribers,email',
         ]);
 
         EmailSubscriber::create($validated);
@@ -32,7 +32,7 @@ class LandingController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:30',
-            'email' => 'required|string|email',
+            'email' => 'required|lowercase|string|email:rfc,dns',
             'subject' => 'required|string|max:40',
             'type' => 'required|string|max:30|in:support,suggestion,complaint,other',
             'message' => 'required|string|max:255',

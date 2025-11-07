@@ -43,7 +43,7 @@ class UpdateWebsiteRequest extends FormRequest
                 'regex:/^(?:\+961)?(03\d{6}|70\d{6}|71\d{6}|76\d{6}|78\d{6}|79\d{6}|81\d{6})$/',
                 Rule::unique('websites', 'phone_number')->ignore($this->route('website')->id)
             ],
-            'email' => ['nullable', 'email', Rule::unique('websites', 'email')->ignore($this->route('website')->id)],
+            'email' => ['nullable', 'lowercase', 'email:rfc,dns', Rule::unique('websites', 'email')->ignore($this->route('website')->id)],
 
             'address' => ['nullable', 'string', 'max:15', 'min:3'],
             'country' => [

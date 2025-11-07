@@ -21,7 +21,7 @@ class ProfileUpdateRequest extends FormRequest
                 'required',
                 'string',
                 'lowercase',
-                'email',
+                'email:rfc,dns',
                 'max:255',
                 Rule::unique(WebsiteUser::class)->ignore($this->user('website')->id),
             ],

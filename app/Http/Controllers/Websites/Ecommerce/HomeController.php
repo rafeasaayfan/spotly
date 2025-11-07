@@ -34,6 +34,7 @@ class HomeController extends BaseController
                 'homeProducts' => $homeProducts,
                 'categories' => $categories,
                 'aboutUs' => $this->website->about_us,
+                'aboutUsAr' => $this->website->about_us_ar,
                 'cartItemsCount' => $this->cartItems()?->count()
             ],
             true
@@ -44,7 +45,7 @@ class HomeController extends BaseController
     {
         $validated = $request->validate([
             'name' => 'required|string|max:30',
-            'email' => 'required|string|email',
+            'email' => 'required|string|lowercase|email:rfc,dns',
             'subject' => 'required|string|max:40',
             'type' => 'required|string|max:30|in:support,suggestion,complaint,other',
             'message' => 'required|string|max:255',
