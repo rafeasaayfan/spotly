@@ -30,22 +30,23 @@ class CheckUserStatus
             return redirect()->route('login')->with([
                 'success' => false,
                 'toastType' => 'error',
-                'message' => 'Your account has been banned'
+                'message' => __('messages.account_banned')
             ]);
         }
 
         if ($user->status === 'inactive') {
             if (
-                $request->is('websiteBuilder*') ||
+                $request->is('website-builder*') ||
                 (
                     !$request->is('dashboard') && $request->is('dashboard*') &&
-                    !$request->is('dashboard/make-payment*') && !$request->is('dashboard/my-payment*')
+                    !$request->is('dashboard/make-payment*') && !$request->is('dashboard/my-payment*') &&
+                    !$request->is('dashboard/my-websites*') && !$request->is('dashboard/my-website*')
                 )
             ) {
                 return redirect()->route("landing")->with([
                     'success' => false,
                     'toastType' => 'error',
-                    'message' => 'Your account is inactive'
+                    'message' => __('messages.account_inactive')
                 ]);
             }
         }

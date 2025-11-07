@@ -32,16 +32,16 @@ class CheckWebsiteUserStatus
             return redirect()->route('website.login')->with([
                 'success' => false,
                 'toastType' => 'error',
-                'message' => 'Your account has been banned'
+                'message' => __('messages.account_banned')
             ]);
         }
 
         if ($user->status === 'inactive') {
-            if ($request->is('dashboard*') || $request->is('checkout*') || $request->is('orders*')) {
+            if ($request->is('dashboard*') || $request->is('checkout*') || $request->is('cart*') || $request->is('product*')) {
                 return redirect()->route("website.$type.home")->with([
                     'success' => false,
                     'toastType' => 'error',
-                    'message' => 'Your account is inactive'
+                    'message' => __('messages.account_inactive')
                 ]);
             }
         }
