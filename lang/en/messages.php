@@ -2,6 +2,9 @@
 
 return [
 
+    'account_banned' => 'Your account has been banned',
+    'account_inactive' => 'Your account is inactive',
+
     //! Spotly
     'subscribed_message' => 'You have been subscribed successfully!',
     'thank_message' => 'Thank you for your message!',

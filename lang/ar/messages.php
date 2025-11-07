@@ -2,6 +2,9 @@
 
 return [
 
+    'account_banned' => 'تم حظر حسابك',
+    'account_inactive' => 'حسابك غير نشط',
+
     //! Spotly 
     'subscribed_message' => 'تم الاشتراك بنجاح!',
     'thank_message' => 'شكراً لرسالتك!',
