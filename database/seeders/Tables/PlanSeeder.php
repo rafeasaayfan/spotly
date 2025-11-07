@@ -17,7 +17,7 @@ class PlanSeeder extends Seeder
             'name' => 'Free Trial',
             'price' => '0',
             'currency' => 'USD',
-            'duration' => 'monthly',
+            'duration' => 'three days',
             'features' => [
                 'Enjoy a 3-day free trial with full access',
             ],

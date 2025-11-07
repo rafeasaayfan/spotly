@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->decimal('price', 10, 2);
             $table->enum('currency', ['USD', 'LBP']);
-            $table->enum('duration', ['monthly', 'yearly']);
+            $table->enum('duration', ['three days', 'monthly', 'yearly']);
             $table->json('features');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
