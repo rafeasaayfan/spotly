@@ -62,7 +62,7 @@ class WebsiteUser extends Authenticatable implements MustVerifyEmail
      */
     public function ecommerceCart()
     {
-        return $this->hasMany(EcommerceCart::class, 'website_user_id');
+        return $this->hasOne(EcommerceCart::class, 'website_user_id');
     }
 
     /**
