@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import Edit from '@/components/ui/table/actions/Edit.vue';
 import View from '@/components/ui/table/actions/View.vue';
 import { formatters } from '@/lib/dataTable';
+import { typeColor } from '@/lib/websiteTypes';
 import { SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import {
@@ -210,7 +211,7 @@ const translatedCity = (cityEn: string): string => {
                     <div class="flex flex-col">
                         <span class="text-body-muted text-xs">{{ $t('myWebsites.website_type') }}</span>
 
-                        <span class="text-sm font-medium">
+                        <span class="text-sm font-medium" :class="typeColor.text(website.website_type.type)">
                             {{ website.website_type.type }}
                         </span>
                     </div>
