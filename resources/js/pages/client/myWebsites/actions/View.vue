@@ -33,6 +33,7 @@ import {
 } from 'lucide-vue-next';
 import { ref, watchEffect } from 'vue';
 import { Image } from '@/components/ui/image';
+import { typeColor } from '@/lib/websiteTypes';
 
 const page = usePage<SharedData>();
 
@@ -204,7 +205,8 @@ const copyUrl = async () => {
                     </Label>
 
                     <span
-                        class="flex w-fit items-center gap-1.5 rounded-md px-4 py-1.5 text-sm font-medium bg-orange-700 text-white"
+                        class="flex w-fit items-center gap-1.5 rounded-md px-4 py-1.5 text-sm font-medium"
+                        :class="typeColor.bg(props.website.website_type.type)"
                     >
                         {{ props.website.website_type.type }}
                     </span>
