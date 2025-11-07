@@ -49,8 +49,8 @@ export const formatters = {
     // Active formatter (Yes/No)
     active: (value: any) =>
         value
-            ? `<span class="bg-success text-for-bg-success px-2 py-1 rounded text-xs border border-muted shadow">Active</span>`
-            : `<span class="bg-destructive text-for-bg-destructive px-2 py-1 rounded text-xs border border-muted shadow">Inactive</span>`,
+            ? `<span class="bg-success text-for-bg-success px-2 py-1 rounded text-xs">Active</span>`
+            : `<span class="bg-destructive text-for-bg-destructive px-2 py-1 rounded text-xs">Inactive</span>`,
 
     // Status formatter with color
     status: (value: string) => {
@@ -68,7 +68,7 @@ export const formatters = {
 
             delivered: 'bg-primary text-for-bg-primary',
 
-            pending: 'bg-content text-body-active border border-muted shadow',
+            pending: 'bg-content text-active border border-muted shadow',
 
             blocked: 'bg-destructive text-for-bg-destructive',
             denied: 'bg-destructive text-for-bg-destructive',
@@ -79,7 +79,7 @@ export const formatters = {
             cancelled: 'bg-destructive text-for-bg-destructive',
         };
 
-        const color = colorMap[value.toLowerCase()] || 'bg-content border border-muted shadow';
+        const color = colorMap[value.toLowerCase()] || 'bg-content text-active border border-muted shadow';
 
         return `<span class="${color} px-2 py-1 rounded text-xs">${value}</span>`;
     },
