@@ -9,7 +9,6 @@ use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use App\Http\Requests\Dashboard\Pages\Websites\StoreWebsiteRequest;
 use App\Http\Requests\Dashboard\Pages\Websites\UpdateWebsiteRequest;
-use App\Jobs\WebsiteStatusMailJob;
 use App\Models\Country;
 use App\Models\WebsiteType;
 use App\Services\WebsiteStatusService;
@@ -26,7 +25,7 @@ class WebsitesController extends Controller
         $query = Website::query();
 
         $columnsSearching = ['owner.name', 'websiteType.type', 'name', 'subdomain', 'phone_number'];
-        $columnsSelection = ['id', 'owner_id', 'website_type_id', 'approved_or_denied_by', 'subdomain', 'address', 'phone_number', 'is_active', 'is_verified', 'status'];
+        $columnsSelection = ['id', 'owner_id', 'website_type_id', 'approved_or_denied_by', 'subdomain', 'address', 'phone_number', 'is_active', 'status'];
         $relations = ['owner_name', 'websiteType_type', 'approvedOrDeniedBy_name'];
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
@@ -92,8 +91,15 @@ class WebsitesController extends Controller
     public function show(string $id)
     {
         try {
-            $website = Website::with(['media', 'owner', 'websiteType', 'approvedOrDeniedBy'])->findOrFail($id);
-            $result = $this->flattenRelationData($website, ['owner_name', 'websiteType_type', 'approvedOrDeniedBy_name']);
+            $website = Website::with(
+                [
+                    'owner:id,name,email,phone_number',
+                    'activeWebsiteTemplate.template:id,name',
+                    'activeWebsiteTemplate.templateColor:id,name',
+                    'subscription.plan:id,name,price,duration'
+                ]
+            )->findOrFail($id);
+            $result = $this->flattenRelationData($website, ['websiteType_type', 'approvedOrDeniedBy_name']);
 
             return $this->jsonSuccess('', [
                 'data' => $result,
@@ -191,51 +197,13 @@ class WebsitesController extends Controller
             $WebsiteStatusService = new WebsiteStatusService($website);
             $result = $WebsiteStatusService->toggleActivation($validated['is_active']);
 
-            if(!$result['success']) {
+            if (!$result['success']) {
                 return $this->backError($result['message']);
             }
 
             return $this->backSuccess($result['message']);
         } catch (\Exception $e) {
             return $this->logResponse('WebsitesController@toggleActive', $e, 'An error occurred while updating the website status');
-        }
-    }
-
-    /**
-     * Toggle verified status
-     */
-    public function toggleVerified(Request $request, $id)
-    {
-        try {
-            $website = Website::findOrFail($id);
-
-            if ($website->status !== 'approved') {
-                return $this->backError('This website is not approved yet');
-            }
-
-            $validated = $request->validate([
-                'is_verified' => 'required|boolean',
-            ]);
-
-            $website->update([
-                'is_verified' => $validated['is_verified'],
-            ]);
-
-            WebsiteStatusMailJob::dispatch(
-                $website->owner_id,
-                $website->name,
-                $website->subdomain,
-                'is_verified',
-                $validated['is_verified'] ? 1 : 0
-            );
-
-            $message = $validated['is_verified']
-                ? 'Website verified successfully.'
-                : 'Website unverified successfully.';
-
-            return $this->backSuccess($message);
-        } catch (\Exception $e) {
-            return $this->logResponse('WebsitesController@toggleVerified', $e, 'An error occurred while updating the website verification status');
         }
     }
 
@@ -258,7 +226,7 @@ class WebsitesController extends Controller
             $WebsiteStatusService = new WebsiteStatusService($website);
             $result = $WebsiteStatusService->setStatus($validated['status']);
 
-            if(!$result['success']) {
+            if (!$result['success']) {
                 return $this->backError($result['message']);
             }
 
