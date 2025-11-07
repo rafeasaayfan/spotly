@@ -51,7 +51,7 @@ class WebsiteStatusMailJob implements ShouldQueue
             ));
             
         } catch(\Exception $e) {
-            Log::error('Failed to send website creation emails', [
+            Log::error('Failed to send website status emails', [
                 'owner_id' => $this->ownerId,
                 'website_name' => $this->websiteName,
                 'website_subdomain' => $this->websiteSubdomain,
