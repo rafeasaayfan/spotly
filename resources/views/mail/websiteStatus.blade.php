@@ -14,12 +14,6 @@
         @else
             Website Status Update
         @endif
-    @elseif($key === 'is_verified')
-        @if($status === 1)
-            Website Verified! ✓
-        @else
-            Website Verification Update
-        @endif
     @endif
 </h2>
 
@@ -87,12 +81,6 @@
                             <td>
                                 <a href="http://127.0.0.1:8000/dashboard/make-payment" style="display: inline-block; padding: 14px 28px; background-color: #3F3F46; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px;">
                                     Make a Payment
-                                </a>
-                            </td>
-                            <td width="12"></td>
-                            <td>
-                                <a href="https://{{ $websiteSubdomain }}.spotly.com" style="display: inline-block; padding: 14px 28px; background-color: #2952CC; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px;">
-                                    Visit My Website
                                 </a>
                             </td>
                         </tr>
@@ -213,9 +201,21 @@
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
             <tr>
                 <td>
-                    <a href="https://{{ $websiteSubdomain }}.spotly.com" style="display: inline-block; padding: 14px 28px; background-color: #2952CC; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px;">
-                        Visit My Website
-                    </a>
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                        <tr>
+                            <td>
+                                <a href="http://127.0.0.1:8000/dashboard/make-payment" style="display: inline-block; padding: 14px 28px; background-color: #3F3F46; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px;">
+                                    Make a Payment
+                                </a>
+                            </td>
+                            <td width="12"></td>
+                            <td>
+                                <a href="https://{{ $websiteSubdomain }}.spotly.com" style="display: inline-block; padding: 14px 28px; background-color: #2952CC; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px;">
+                                    Visit My Website
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </table>
@@ -295,122 +295,8 @@
         </table>
     @endif
 
-<!-- For the verification status -->
-@elseif($key === 'is_verified')
-    @if($status === 1)
-        <p class="content-text">
-            Congratulations! Your website has successfully completed the verification process.
-        </p>
-
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 32px 0;">
-            <tr>
-                <td style="padding: 24px; border-radius: 12px; border: 1px solid #E0E7FF;">
-                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                        <tr>
-                            <td style="color: #666666; font-size: 14px; padding-bottom: 8px;">
-                                Your Website
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="font-size: 20px; font-weight: 700; color: #2952CC;">
-                                {{ $websiteName }}
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 32px 0;">
-            <tr>
-                <td style="padding: 20px; background-color: #ECFDF5; border-radius: 8px; border-left: 4px solid #10B981;">
-                    <p style="margin: 0 0 8px 0; font-weight: 600; color: #065F46; font-size: 15px;">
-                        ✓ Verified Successfully
-                    </p>
-                    <p style="margin: 0; color: #047857; font-size: 14px; line-height: 1.5;">
-                        Your website has been verified successfully. Welcome to the <strong>Spotly</strong> community!
-                    </p>
-                </td>
-            </tr>
-        </table>
-
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-            <tr>
-                <td>
-                    <a href="https://{{ $websiteSubdomain }}.spotly.com" style="display: inline-block; padding: 14px 28px; background-color: #2952CC; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px;">
-                        Visit My Website
-                    </a>
-                </td>
-            </tr>
-        </table>
-
-    @else
-        <p class="content-text">
-            We were unable to verify your website at this time.
-        </p>
-
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 32px 0;">
-            <tr>
-                <td style="padding: 24px; border-radius: 12px; border: 1px solid #FEE2E2;">
-                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                        <tr>
-                            <td style="color: #666666; font-size: 14px; padding-bottom: 8px;">
-                                Your Website
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="font-size: 20px; font-weight: 700; color: #292929;">
-                                {{ $websiteName }}
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 32px 0;">
-            <tr>
-                <td style="padding: 20px; background-color: #FEF2F2; border-radius: 8px; border-left: 4px solid #EF4444;">
-                    <p style="margin: 0 0 8px 0; font-weight: 600; color: #991B1B; font-size: 15px;">
-                        ✗ Verification Failed
-                    </p>
-                    <p style="margin: 0; color: #7F1D1D; font-size: 14px; line-height: 1.5;">
-                        Your website could not be verified.
-                    </p>
-                </td>
-            </tr>
-        </table>
-
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 32px 0;">
-            <tr>
-                <td style="padding: 20px; background-color: #FFF9E6; border-radius: 8px; border-left: 4px solid #F59E0B;">
-                    <p style="margin: 0 0 12px 0; font-weight: 600; color: #92400E; font-size: 15px;">
-                        Possible Reasons
-                    </p>
-                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                        <tr>
-                            <td style="padding: 8px 0; color: #78350F; font-size: 14px; line-height: 1.5;">
-                                <strong>1.</strong> Misleading or fraudulent activity detected.
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-            <tr>
-                <td>
-                    <a href="http://127.0.0.1:8000/dashboard/my-websites?search={{ $websiteName }}" style="display: inline-block; padding: 14px 28px; background-color: #3F3F46; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px;">
-                        Review My Website
-                    </a>
-                </td>
-            </tr>
-        </table>
-    @endif
-@endif
-
 <div class="divider"></div>
+@endif
 
 <p class="content-text" style="font-size: 14px; color: #666666;">
     If you have any questions, feel free to contact our support team.
