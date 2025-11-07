@@ -15,6 +15,7 @@ use App\Services\Websites\Ecommerce\ProductStockService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CartController extends BaseController
 {
@@ -133,7 +134,13 @@ class CartController extends BaseController
                 'website_user_id' => Auth::guard('website')->check() ? Auth::guard('website')->id() : null,
                 'payment_method_id' => 1,
                 'session_id' => Auth::guard('website')->check() ? null : session()->getId(),
-                'order_number' => uniqid(strtoupper($this->website->name) . '-ORD-'),
+                'order_number' => sprintf(
+                    '%s-%s-%s-%s',
+                    strtoupper($this->website->name),
+                    now()->format('ymd'), 
+                    now()->format('His'),
+                    Str::upper(Str::random(2))
+                ),
                 'subtotal' => $subtotal,
                 'total_amount' => $totalAmount,
                 'phone_number' => $request->phone_number,
