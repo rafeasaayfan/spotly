@@ -32,9 +32,13 @@ class PaymentsController extends Controller
     public function show(string $id)
     {
         try {
-            $query = Payment::findOrFail($id);
-
-            $payment = $this->flattenRelationData($query, ['user_name', 'website_name', 'plan_name', 'paymentMethod_name']);
+            $payment = Payment::with([
+                'user:id,name,email,phone_number', 
+                'website:id,name,subdomain,email,is_active,status,website_type_id',
+                'website.websiteType:id,type',
+                'plan:id,name,price,duration',
+                'paymentMethod:id,name'
+            ])->findOrFail($id);
 
             return $this->jsonSuccess('', [
                 'data' => $payment,

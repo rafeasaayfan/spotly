@@ -65,9 +65,13 @@ class SubscriptionsController extends Controller
     public function show(string $id)
     {
         try {
-            $query = Subscription::findOrFail($id);
-
-            $subscription = $this->flattenRelationData($query, ['user_name', 'website_name', 'plan_name']);
+            $subscription = Subscription::with([
+                'user:id,name,email,phone_number', 
+                'website:id,name,subdomain,email,is_active,status,website_type_id',
+                'website.websiteType:id,type',
+                'plan:id,name,price,duration',
+                'paymentMethod:id,name'
+            ])->findOrFail($id);
 
             return $this->jsonSuccess('', [
                 'data' => $subscription,

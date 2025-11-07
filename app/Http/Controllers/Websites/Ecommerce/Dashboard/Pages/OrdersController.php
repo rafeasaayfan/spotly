@@ -76,9 +76,9 @@ class OrdersController extends Controller
     {
         try {
             $query = EcommerceOrder::where('website_id', $this->website->id)
-                ->with(['items', 'items.product:id,name'])
+                ->with(['items', 'items.product:id,name', 'user:id,name,email,phone_number'])
                 ->findOrFail($id);
-            $order = $this->flattenRelationData($query, ['websiteUser_name', 'paymentMethod_name', 'deliveryFee_amount']);
+            $order = $this->flattenRelationData($query, ['paymentMethod_name', 'deliveryFee_amount']);
 
             return $this->jsonSuccess('', [
                 'data' => $order,
