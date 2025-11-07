@@ -25,7 +25,6 @@ const columns = [
     { key: 'phone_number', label: 'Phone Number', type: 'phone_number' },
     { key: 'address', label: 'Address' },
     { key: 'is_active', label: 'Active', type: 'toggle' },
-    { key: 'is_verified', label: 'Verified', type: 'toggle' },
     {
         key: 'status',
         label: 'Status',
@@ -47,16 +46,6 @@ const filter = [
         options: [
             { value: '0', label: 'Inactive' },
             { value: '1', label: 'Active' },
-        ],
-    },
-    {
-        key: 'is_verified',
-        label: 'Verified',
-        type: 'select',
-        placeholder: 'Select verification status',
-        options: [
-            { value: '0', label: 'Unverified' },
-            { value: '1', label: 'Verified' },
         ],
     },
     {
