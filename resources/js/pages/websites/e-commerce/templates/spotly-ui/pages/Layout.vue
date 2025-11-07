@@ -42,7 +42,7 @@ onMounted(() => {
     <StyleLayout :colors="props.colors"> 
         <Navbar :websiteNameAndLogo="props.websiteNameAndLogo" :cartItemsCount="props.cartItemsCount" />
 
-        <main :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'" class="mx-auto h-full min-h-screen w-full max-w-7xl px-2 md:px-10 lg:px-4">
+        <main :dir="page.props.lang == 'ar' ? 'rtl' : 'ltr'" class="mx-auto h-full min-h-screen w-full max-w-7xl px-2 md:px-4">
             <slot />
         </main>
 
