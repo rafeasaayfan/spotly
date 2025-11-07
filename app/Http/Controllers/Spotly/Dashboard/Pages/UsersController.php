@@ -9,6 +9,7 @@ use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use App\Http\Requests\Dashboard\Pages\Users\StoreUserRequest;
 use App\Http\Requests\Dashboard\Pages\Users\UpdateUserRequest;
+use App\Jobs\UserStatusMailJob;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Country;
 use Illuminate\Support\Facades\Auth;
@@ -72,7 +73,7 @@ class UsersController extends Controller
     public function show(string $id)
     {
         try {
-            $user = User::findOrFail($id);
+            $user = User::with(['roles:id,name', 'permissions:id,name', 'websites:owner_id,name,is_active'])->findOrFail($id);
 
             return $this->jsonSuccess('', [
                 'data' => $user,
@@ -108,14 +109,23 @@ class UsersController extends Controller
     {
         try {
             $data = $request->validated();
+            $oldStatus = $user->status;
 
-            if ($request->filled('password')) {
-                $data['password'] = Hash::make($request->password);
+            if (!empty($data['password'])) {
+                $data['password'] = Hash::make($data['password']);
             } else {
                 unset($data['password']);
             }
 
             $user->update($data);
+
+            if($oldStatus !== $data['status']) {
+                UserStatusMailJob::dispatch(
+                    $user->email,
+                    $user->name,
+                    $data['status']
+                );
+            }
 
             return $this->redirectSuccess('dashboard.users.index', 'User updated successfully');
         } catch (\Exception $e) {
@@ -159,13 +169,13 @@ class UsersController extends Controller
 
             $user->update(['status' => $validated['status']]);
 
-            if ($validated['status'] === 'active') {
-                $message = 'User activated successfully.';
-            } elseif ($validated['status'] === 'inactive') {
-                $message = 'User deactivated successfully.';
-            } elseif ($validated['status'] === 'banned') {
-                $message = 'User has been banned.';
-            }
+            $message = match ($validated['status']) {
+                'active' => 'User activated successfully.',
+                'inactive' => 'User deactivated successfully.',
+                'banned' => 'User has been banned.',
+            };
+
+            UserStatusMailJob::dispatch($user->email, $user->name, $validated['status']);
 
             return $this->backSuccess($message);
         } catch (\Exception $e) {
