@@ -5,7 +5,7 @@ import UserInfo from './UserInfo.vue';
 import type { User } from '@/types';
 import { Link, router } from '@inertiajs/vue3';
 
-import { LayoutGrid, LogOut, Settings } from 'lucide-vue-next';
+import { LayoutGrid, LogOut, Settings, User as UserIcon } from 'lucide-vue-next';
 
 interface Props {
     website_user: User;
@@ -36,6 +36,17 @@ defineProps<Props>();
             <Link class="flex w-full cursor-pointer items-center gap-2" :href="route('website.profile.edit')" prefetch as="button">
                 <Settings class="h-4 w-4" />
                 {{ $t('settings') }}
+            </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem
+            v-if="websiteUserRole.includes('admin') || websiteUserRole.includes('owner')"
+            :as-child="true"
+            class="web-text-body bg-transparent hover:bg-[var(--bg_content_hover_light)] dark:hover:bg-[var(--bg_content_hover_dark)]"
+        >
+            <Link class="flex w-full cursor-pointer items-center gap-2" :href="route('website.profile.index')" prefetch as="button">
+                <UserIcon class="h-4 w-4" />
+                {{ $t('my.profile') }}
             </Link>
         </DropdownMenuItem>
 
