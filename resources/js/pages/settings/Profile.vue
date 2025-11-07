@@ -8,7 +8,6 @@ import { Label } from '@/components/ui/label';
 import { type BreadcrumbItem, type SharedData, type User } from '@/types';
 
 import HeadingSmall from '@/components/headers/HeadingSmall.vue';
-import DeleteUser from '@/components/user/DeleteUser.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 
 import { LoaderCircle } from 'lucide-vue-next';
@@ -90,10 +89,10 @@ const mappedCountries = props.countries.map((item: Record<string, any>) => ({
         <Head title="Profile settings" />
 
         <SettingsLayout>
-            <div class="flex flex-col gap-6 border-b border-muted pb-4">
+            <div class="flex flex-col gap-6 pb-4">
                 <HeadingSmall title="Profile information" description="Update your name and email address" />
 
-                <form @submit.prevent="submit" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <form @submit.prevent="submit" class="grid grid-cols-1 gap-5">
                     <div class="grid gap-2">
                         <div class="flex flex-col gap-1">
                             <Label for="name">Name</Label>
@@ -117,7 +116,7 @@ const mappedCountries = props.countries.map((item: Record<string, any>) => ({
                         <InputError :message="form.errors.email" />
                     </div>
 
-                    <div class="grid gap-2 md:col-span-2">
+                    <div class="grid gap-2">
                         <div class="flex flex-col gap-1">
                             <Label for="phone_number">Phone Number</Label>
                             <PhoneNumberField
@@ -132,7 +131,7 @@ const mappedCountries = props.countries.map((item: Record<string, any>) => ({
                         <InputError :message="form.errors.phone_number" />
                     </div>
 
-                    <div class="md:col-span-2" v-if="mustVerifyEmail && !user.email_verified_at">
+                    <div v-if="mustVerifyEmail && !user.email_verified_at">
                         <p class="text-body-muted -mt-4 text-sm">
                             Your email address is unverified.
                             <Link
@@ -150,7 +149,7 @@ const mappedCountries = props.countries.map((item: Record<string, any>) => ({
                         </div>
                     </div>
 
-                    <div class="md:col-span-2 flex items-center justify-end gap-4">
+                    <div class="flex items-center justify-end gap-4">
                         <Button :disabled="form.processing">
                             <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
                             <span>Update</span>
@@ -158,8 +157,6 @@ const mappedCountries = props.countries.map((item: Record<string, any>) => ({
                     </div>
                 </form>
             </div>
-
-            <DeleteUser />
         </SettingsLayout>
     </DashboardLayout>
 </template>

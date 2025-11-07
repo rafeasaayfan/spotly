@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { Lock, User } from 'lucide-vue-next';
+import { Lock, Trash, User } from 'lucide-vue-next';
 
 const sidebarNavItems: NavItem[] = [
     {
@@ -14,6 +14,11 @@ const sidebarNavItems: NavItem[] = [
         title: 'Password',
         href: '/settings/password',
         icon: Lock,
+    },
+    {
+        title: 'Delete Account',
+        href: '/settings/delete-account',
+        icon: Trash,
     },
     // {
     //     title: 'Preferences',
@@ -32,7 +37,7 @@ const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.locati
 </script>
 
 <template>
-    <div class="flex flex-col gap-3 m-4 border border-muted rounded-md lg:h-screen">
+    <div class="flex flex-col gap-3 my-4 mx-2 md:mx-4 border border-muted rounded-md lg:h-screen">
         <div class="grid h-full grid-cols-7 gap-5 lg:grid-cols-5">
             <aside class="border-b md:border-b-0 md:border-e border-muted 
             col-span-7 h-full w-full p-4 md:col-span-2 lg:col-span-1">
@@ -48,14 +53,14 @@ const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.locati
                         as-child
                     >
                         <Link :href="item.href ?? ''" class="flex items-center gap-1.5 text-base">
-                            <component :is="item.icon" class="size-4" />
+                            <component :is="item.icon" class="size-3.5" />
                             {{ item.title }}
                         </Link>
                     </Button>
                 </nav>
             </aside>
 
-            <div class="col-span-7 flex w-full rounded-md md:col-span-5 md:justify-center p-4 lg:col-span-4">
+            <div class="col-span-7 flex w-full rounded-md md:col-span-5 md:justify-center p-4 lg:col-span-2">
                 <section class="w-full space-y-6">
                     <slot />
                 </section>

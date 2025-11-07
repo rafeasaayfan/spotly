@@ -82,8 +82,8 @@ watch(
                         :description="$t('update.password.subtitle')"
                     />
 
-                    <form @submit.prevent="updatePassword" class="grid grid-cols-1 gap-5 md:grid-cols-2">
-                        <div class="grid gap-2 md:col-span-2">
+                    <form @submit.prevent="updatePassword" class="grid grid-cols-1 gap-5">
+                        <div class="grid gap-2">
                             <div class="flex flex-col gap-1.5">
                                 <Label class="web-text-body-muted" for="current_password">{{ $t('current.password') }}</Label>
                                 <Input
@@ -133,7 +133,7 @@ watch(
                             <InputError :message="form.errors.password_confirmation" />
                         </div>
 
-                        <div class="flex items-center justify-end gap-4 md:col-span-2">
+                        <div class="flex items-center justify-end gap-4">
                             <Button type="submit" class="web-bg-primary web-text-for-primary eco-glow-button" :disabled="form.processing">
                                 <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
                                 <span>{{ $t('update.password') }}</span>

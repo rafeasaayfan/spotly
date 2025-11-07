@@ -10,7 +10,6 @@ import { LoaderCircle } from 'lucide-vue-next';
 import { computed, watch } from 'vue';
 import Layout from '../Layout.vue';
 import SettingLayout from './Layout.vue';
-import DeleteUser from '../../components/user/DeleteUser.vue';
 
 const props = defineProps<{
     mustVerifyEmail: boolean;
@@ -80,7 +79,7 @@ const mappedCountries = props.countries.map((item: Record<string, any>) => ({
     >
         <section class="pt-28 pb-22">
             <SettingLayout>
-                <div class="web-border-color flex flex-col gap-6 border-b pb-4">
+                <div class="flex flex-col gap-6 pb-4">
                     <HeadingSmall
                         class="web-border-color"
                         titleClass="web-text-active"
@@ -89,7 +88,7 @@ const mappedCountries = props.countries.map((item: Record<string, any>) => ({
                         :description="$t('update.email.name')"
                     />
 
-                    <form @submit.prevent="submit" class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                    <form @submit.prevent="submit" class="grid grid-cols-1 gap-5">
                         <div class="grid gap-2">
                             <div class="flex flex-col gap-1.5">
                                 <Label class="web-text-body-muted" for="name">{{ $t('name') }}</Label>
@@ -139,7 +138,7 @@ const mappedCountries = props.countries.map((item: Record<string, any>) => ({
                             <InputError :message="form.errors.phone_number" />
                         </div>
 
-                        <div class="md:col-span-2" v-if="mustVerifyEmail && !user.email_verified_at">
+                        <div class="" v-if="mustVerifyEmail && !user.email_verified_at">
                             <p class="web-text-body-muted -mt-4 text-sm">
                                 {{ $t('email.unverified') }}
                                 <Link
@@ -157,7 +156,7 @@ const mappedCountries = props.countries.map((item: Record<string, any>) => ({
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-end gap-4 md:col-span-2">
+                        <div class="flex items-center justify-end gap-4">
                             <Button type="submit" :disabled="form.processing" class="web-bg-primary web-text-for-primary eco-glow-button">
                                 <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
                                 <span>{{ $t('update') }}</span>
@@ -165,8 +164,6 @@ const mappedCountries = props.countries.map((item: Record<string, any>) => ({
                         </div>
                     </form>
                 </div>
-
-                <DeleteUser />
             </SettingLayout>
         </section>
     </Layout>
