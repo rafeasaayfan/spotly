@@ -10,6 +10,7 @@ class Subscription extends Model
         'user_id',
         'website_id',
         'plan_id',
+        'payment_method_id',
         'status',
         'start_date',
         'end_date',
@@ -42,6 +43,14 @@ class Subscription extends Model
     public function plan()
     {
         return $this->belongsTo(Plan::class);
+    }
+
+    /**
+     * has one payment method.
+     */
+    public function paymentMethod()
+    {
+        return $this->belongsTo(paymentMethod::class);
     }
 
     /**
