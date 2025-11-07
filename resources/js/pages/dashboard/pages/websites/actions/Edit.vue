@@ -11,7 +11,7 @@ const props = defineProps<{
     countries: Record<string, any>;
 }>();
 
-const mappedUsers = props.users.map((item : any) => ({
+const mappedUsers = props.users.map((item: any) => ({
     value: item.id,
     label: item.name,
 }));
@@ -55,7 +55,8 @@ const columns = [
         options: mappedCountries,
     },
     { key: 'email', label: 'Email', type: 'text', placeholder: 'Enter the website email', required: false },
-    { key: 'about_us', label: 'About Us', type: 'textarea', placeholder: 'Enter the website about us', required: false, maxlength: 255 },
+    { key: 'about_us', label: 'About Us (en)', type: 'textarea', placeholder: 'Enter the website about us', required: false, maxlength: 255 },
+    { key: 'about_us_ar', label: 'About Us (ar)', type: 'textarea', placeholder: 'Enter the website about us', required: false, maxlength: 255 },
     { key: 'light_logo', label: 'Website light logo', type: 'file', placeholder: 'Enter the website light logo', required: false },
     { key: 'dark_logo', label: 'Website dark logo', type: 'file', placeholder: 'Enter the website dark logo', required: false },
     {
@@ -92,29 +93,6 @@ const columns = [
         options: [
             { value: '0', label: 'Inactive' },
             { value: '1', label: 'Active' },
-        ],
-    },
-    {
-        key: 'is_verified',
-        label: 'Verified',
-        type: 'select',
-        placeholder: 'Is verified',
-        required: true,
-        options: [
-            { value: '0', label: 'Unverified' },
-            { value: '1', label: 'Verified' },
-        ],
-    },
-    {
-        key: 'status',
-        label: 'Status',
-        type: 'select',
-        placeholder: 'Select the website status',
-        required: true,
-        options: [
-            { value: 'pending', label: 'Pending' },
-            { value: 'denied', label: 'Denied' },
-            { value: 'approved', label: 'Approved' },
         ],
     },
 ];
