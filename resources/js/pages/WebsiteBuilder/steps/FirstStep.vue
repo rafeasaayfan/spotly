@@ -11,6 +11,7 @@ const props = defineProps<{
         name: string;
         subdomain: string;
         about_us: string;
+        about_us_ar: string;
         language: string;
         errors?: Record<string, string>;
     };
@@ -61,6 +62,11 @@ const subdomain = computed({
 const about_us = computed({
     get: () => props.form.about_us,
     set: (val) => emit('update', 'about_us', val),
+});
+
+const about_us_ar = computed({
+    get: () => props.form.about_us_ar,
+    set: (val) => emit('update', 'about_us_ar', val),
 });
 
 const language = computed({
@@ -158,9 +164,11 @@ const languages = () => {
     </div>
 
     <!-- About Us Section -->
-    <div class="col-span-1 flex flex-col gap-2 md:col-span-3">
+    <div class="grid grid-cols-1 gap-4 md:col-span-3 md:grid-cols-2">
+
+    <div class="col-span-1 flex flex-col gap-2">
         <HeadingSmall
-            :title="$t('websiteBuilder.firstStep.about_us_title')"
+            :title="$t('websiteBuilder.firstStep.about_us_title_en')"
             titleClass="text-body"
             :description="$t('websiteBuilder.firstStep.about_us_description')"
         />
@@ -168,5 +176,18 @@ const languages = () => {
             <Textarea v-model="about_us" :placeholder="$t('websiteBuilder.firstStep.about_us_placeholder')" :maxlength="255" />
             <InputError v-if="props.form.errors?.about_us" :message="props.form.errors.about_us" />
         </div>
+    </div>
+
+    <div class="col-span-1 flex flex-col gap-2">
+        <HeadingSmall
+            :title="$t('websiteBuilder.firstStep.about_us_title_ar')"
+            titleClass="text-body"
+            :description="$t('websiteBuilder.firstStep.about_us_description')"
+        />
+        <div class="flex flex-col ps-2">
+            <Textarea v-model="about_us_ar" :placeholder="$t('websiteBuilder.firstStep.about_us_placeholder')" :maxlength="255" />
+            <InputError v-if="props.form.errors?.about_us_ar" :message="props.form.errors.about_us_ar" />
+        </div>
+    </div>
     </div>
 </template>

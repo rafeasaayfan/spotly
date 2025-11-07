@@ -47,6 +47,7 @@ const form = useForm({
     name: '',
     subdomain: '',
     about_us: '',
+    about_us_ar: '',
     language: '',
 
     phone_number: '',
