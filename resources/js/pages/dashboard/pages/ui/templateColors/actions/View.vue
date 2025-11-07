@@ -8,7 +8,10 @@ const props = defineProps<{
 const columns = [
     { key: 'createdBy_name', label: 'Created By' },
 
-    { key: 'name', label: 'Name' },
+    { key: 'name', label: 'Name', type: 'baseName' },
+
+    { key: 'is_custom', label: 'Is Custom', type: 'boolean' },
+    { key: 'is_active', label: 'Is Active', type: 'baseActive' },
 
     { key: 'bg_body_light', label: 'Bg Body Light', type: 'color' },
     { key: 'bg_body_dark', label: 'Bg Body Dark', type: 'color' },
@@ -59,9 +62,6 @@ const columns = [
     { key: 'border_color_dark', label: 'Border Color Dark', type: 'color' },
 
     { key: 'description', label: 'Description', type: 'textarea' },
-
-    { key: 'is_custom', label: 'Is Custom', type: 'boolean' },
-    { key: 'is_active', label: 'Is Active', type: 'active' },
 
     { key: 'created_at', label: 'Created At', type: 'date' },
     { key: 'updated_at', label: 'Updated At', type: 'date' },

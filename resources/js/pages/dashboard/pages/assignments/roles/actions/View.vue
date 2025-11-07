@@ -6,7 +6,7 @@ const props = defineProps<{
 }>();
 
 const columns = [
-    { key: 'name', label: 'Name' },
+    { key: 'name', label: 'Name', type: 'baseName' },
     { key: 'guard_name', label: 'Guard Name' },
     { key: 'description', label: 'Description', type: 'textarea' },
     { key: 'created_at', label: 'Created At', type: 'date' },

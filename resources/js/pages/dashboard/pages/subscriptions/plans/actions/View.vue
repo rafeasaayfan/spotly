@@ -6,12 +6,12 @@ const props = defineProps<{
 }>();
 
 const columns = [
-    { key: 'name', label: 'Name' },
+    { key: 'name', label: 'Name', type: 'baseName' },
     { key: 'price', label: 'Price' },
     { key: 'currency', label: 'Currency' },
     { key: 'duration', label: 'Duration' },
-    { key: 'features', label: 'Features' },
-    { key: 'is_active', label: 'Status', type: 'active' },
+    { key: 'features', label: 'Features', type: 'array' },
+    { key: 'is_active', label: 'Status', type: 'baseActive' },
     { key: 'created_at', label: 'Created At', type: 'date' },
     { key: 'updated_at', label: 'Updated At', type: 'date' },
 ];

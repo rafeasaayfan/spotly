@@ -17,48 +17,64 @@ const props = defineProps<{
                     <h3 class="text-active-link text-xl font-bold">{{ props.data.order_number }}</h3>
                     <div class="flex items-center gap-2">
                         <div
-                            class="text-active rounded bg-gradient-to-br from-lime-600 to-lime-500 px-3 py-1.5 text-sm dark:from-lime-700 dark:to-lime-800"
+                            v-if="!props.data.user"
+                            class="text-white rounded bg-gradient-to-br from-lime-600 to-lime-500 px-3 py-1.5 text-sm dark:from-lime-700 dark:to-lime-800"
                         >
-                            {{ props.data.user_name ?? 'session order' }}
+                            {{ 'session order' }}
                         </div>
 
                         <div
-                            class="text-active rounded bg-gradient-to-br from-amber-600 to-amber-500 px-3 py-1.5 text-sm dark:from-amber-700 dark:to-amber-800"
+                            class="text-white rounded bg-gradient-to-br from-amber-600 to-amber-500 px-3 py-1.5 text-sm dark:from-amber-700 dark:to-amber-800"
                         >
                             {{ props.data.paymentMethod_name }}
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-y-4">
-                    <!-- Pricing & Quantity -->
-                    <div class="border-muted flex flex-col gap-3 border-b pb-4 lg:border-e border-muted lg:pe-3">
-                        <p class="text-body-muted flex w-full items-center justify-between text-sm">
-                            Subtotal: <span class="text-body text-base font-medium">{{ props.data.subtotal }}$</span>
-                        </p>
-                        <!-- <p class="text-body-muted flex w-full items-center justify-between text-sm">
+                <div v-if="props.data.user" class="border-muted border-muted flex flex-col gap-3 border-b pb-4">
+                    <p class="text-body-muted flex w-full items-center justify-between text-sm">
+                        User Name: <span class="text-body text-base font-medium">{{ props.data.user.name }}</span>
+                    </p>
+                    <p class="text-body-muted flex w-full items-center justify-between text-sm">
+                        User Email:
+                        <a :href="`mailto:${props.data.user.email}`" class="text-body text-base font-medium">
+                            {{ props.data.user.email }}
+                        </a>
+                    </p>
+                    <p class="text-body-muted flex w-full items-center justify-between text-sm">
+                        User Number:
+                        <a :href="`tel:${props.data.user.phone_number}`" class="text-body text-base font-medium">
+                            {{ props.data.user.phone_number }}
+                        </a>
+                    </p>
+                </div>
+
+                <div class="border-muted flex flex-col gap-3 border-b pb-4">
+                    <p class="text-body-muted flex w-full items-center justify-between text-sm">
+                        Delivery Address: <span class="text-body text-base font-medium">{{ props.data.delivery_address }}</span>
+                    </p>
+                    <p class="text-body-muted flex w-full items-center justify-between text-sm">
+                        City: <span class="text-body text-base font-medium">{{ props.data.city }}</span>
+                    </p>
+                    <p class="text-body-muted flex w-full items-center justify-between text-sm">
+                        Phone Number:
+                        <a :href="`tel:${props.data.phone_number}`" class="text-body text-base font-medium">{{ props.data.phone_number }}</a>
+                    </p>
+                </div>
+
+                <!-- <p class="text-body-muted flex w-full items-center justify-between text-sm">
                             Discount Amount: <span class="text-body text-base font-medium">{{ props.data.discount_amount }}$</span>
                         </p> -->
-                        <!-- <p class="text-body-muted flex w-full items-center justify-between text-sm">
+                <!-- <p class="text-body-muted flex w-full items-center justify-between text-sm">
                             Delivery Amount: <span class="text-body text-base font-medium">{{ props.data.deliveryFee_amount }}$</span>
                         </p> -->
-                        <p class="text-body-muted flex w-full items-center justify-between text-sm">
-                            Total Amount: <span class="text-active text-base font-medium">{{ props.data.total_amount }}$</span>
-                        </p>
-                    </div>
 
-                    <div class="border-muted flex flex-col gap-3 border-b pb-4 lg:ps-3">
-                        <p class="text-body-muted flex flex-col w-full text-sm">
-                            Delivery Address: <span class="text-body text-base font-medium">{{ props.data.delivery_address }}</span>
-                        </p>
-                        <p class="text-body-muted flex w-full items-center justify-between text-sm">
-                            City: <span class="text-body text-base font-medium">{{ props.data.city }}</span>
-                        </p>
-                        <p class="text-body-muted flex w-full items-center justify-between text-sm">
-                            Phone Number: <a :href="`tel:${props.data.phone_number}`" class="text-body text-base font-medium">{{ props.data.phone_number }}</a>
-                        </p>
-                    </div>
-                </div>
+                <p class="text-body-muted flex w-full items-center justify-between text-sm">
+                    Subtotal: <span class="text-body text-base font-medium">{{ props.data.subtotal }}$</span>
+                </p>
+                <p class="text-body-muted flex w-full items-center justify-between text-sm">
+                    Total Amount: <span class="text-active text-base font-medium">{{ props.data.total_amount }}$</span>
+                </p>
 
                 <!-- Status -->
                 <div class="border-muted flex flex-col gap-3 border-b pb-4">
@@ -85,17 +101,15 @@ const props = defineProps<{
             </div>
 
             <!-- Order Items Section -->
-            <div class="mb-3 flex flex-col gap-2 rounded-md bg-[var(--primary)]/10 dark:bg-[var(--primary)]/5 p-2.5 lg:p-4">
+            <div class="mb-3 flex flex-col gap-2 rounded-md bg-[var(--primary)]/10 p-2.5 lg:p-4 dark:bg-[var(--primary)]/5">
                 <h4 class="text-body font-bold">Order Items:</h4>
-                <div v-if="props.data.items && props.data.items.length" class="custom-scrollbar grid max-h-[60vh] md:grid-cols-2 gap-2.5 lg:gap-4 overflow-y-auto">
+                <div
+                    v-if="props.data.items && props.data.items.length"
+                    class="custom-scrollbar grid max-h-[60vh] gap-2.5 overflow-y-auto md:grid-cols-2 lg:gap-4"
+                >
                     <div v-for="item in props.data.items" :key="item.id" class="bg-body flex flex-col gap-3 rounded-md p-2.5 lg:p-4">
                         <div class="border-muted flex w-full items-center gap-2 border-b pb-2">
-                            <Image
-                                v-if="item.imageUrl"
-                                :src="item.imageUrl"
-                                alt="Item Image"
-                                class="size-18 rounded-full shadow"
-                            />
+                            <Image v-if="item.imageUrl" :src="item.imageUrl" alt="Item Image" class="size-18 rounded-full shadow" />
                             <div
                                 v-else
                                 class="border-muted text-body-muted flex size-18 items-center justify-center rounded-full border text-center text-xs"
@@ -131,7 +145,7 @@ const props = defineProps<{
             </div>
         </div>
 
-        <p class="text-body-muted relative z-10 flex items-center justify-between gap-1 px-4 pt-4 text-xs">
+        <p class="text-body-muted flex items-center justify-between gap-1 px-4 pt-4 text-xs">
             Created At: <span class="font-medium">{{ formatters.date(props.data.created_at, 'long') }}</span>
         </p>
     </div>

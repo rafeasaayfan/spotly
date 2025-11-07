@@ -7,9 +7,9 @@ const props = defineProps<{
 
 const columns = [
     { key: 'createdBy_name', label: 'Created BY' },
-    { key: 'name', label: 'Name' },
-    { key: 'is_active', label: 'Active', type: 'active' },
-    { key: 'description', label: 'Description', type: 'textarea', maxlength: 150 },
+    { key: 'name', label: 'Name', type: 'baseName' },
+    { key: 'is_active', label: 'Active', type: 'baseActive' },
+    { key: 'description', label: 'Description', type: 'textarea' },
     { key: 'created_at', label: 'Created At', type: 'date' },
     { key: 'updated_at', label: 'Updated At', type: 'date' },
 ];

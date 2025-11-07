@@ -7,13 +7,13 @@ const props = defineProps<{
 
 const columns = [
     { key: 'flag', label: 'Flag', type: 'image' },
-    { key: 'country', label: 'Country' },
+    { key: 'country', label: 'Country', type: 'baseName' },
     { key: 'country_ar', label: 'Country AR' },
     { key: 'country_fr', label: 'Country FR' },
     { key: 'code', label: 'Code' },
     { key: 'phone_code', label: 'Phone Code' },
     { key: 'region', label: 'Region' },
-    { key: 'is_active', label: 'Active Status', type: 'active' },
+    { key: 'is_active', label: 'Active Status', type: 'baseActive' },
     { key: 'created_at', label: 'Created At', type: 'date' },
     { key: 'updated_at', label: 'Updated At', type: 'date' },
 ];
