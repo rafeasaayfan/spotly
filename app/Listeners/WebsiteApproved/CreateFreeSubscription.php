@@ -32,7 +32,7 @@ class CreateFreeSubscription implements ShouldQueue
                     'plan_id' => 1,
                 ],
                 [
-                    'status' => 'free_trial',
+                    'status' => 'active',
                     'start_date' => now(),
                     'end_date' => now()->addDays(3),
                 ]
