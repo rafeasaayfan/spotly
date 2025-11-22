@@ -71,7 +71,18 @@ function updateCol(key: string, value: any, id: number, oldVal?: string) {
                         <span
                             v-for="(item, index) in formatters.splitAndStyle(row[column.key])"
                             :key="index"
-                            class="rounded bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+                            class="bg-blue-100 px-1 py-0.5 text-xs text-blue-800 dark:bg-blue-900/25 dark:text-blue-400"
+                        >
+                            {{ item }}
+                        </span>
+                    </div>
+                </template>
+                <template v-else-if="column.type === 'array'">
+                    <div class="flex flex-wrap gap-1">
+                        <span
+                            v-for="(item, index) in row[column.key]"
+                            :key="index"
+                            :class="item !== null && item !== undefined ? 'bg-black/8 dark:bg-white/8 rounded px-1.5 py-0.5 text-xs' : 'hidden'"
                         >
                             {{ item }}
                         </span>
@@ -88,6 +99,7 @@ function updateCol(key: string, value: any, id: number, oldVal?: string) {
                         :placeholder="column.placeholder ?? column.label"
                         :withStatusColors="true"
                         :required="column.required"
+                        :withReset="false"
                         @update:modelValue="
                             (val) => {
                                 const oldVal = row[column.key];

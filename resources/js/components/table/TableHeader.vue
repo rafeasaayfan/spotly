@@ -202,6 +202,7 @@ const colSpanClass = computed(() => {
                                             value: option.value ?? option,
                                         }))
                                     "
+                                    class="text-xs py-1.5 h-7.5"
                                     @change="submit"
                                 />
 

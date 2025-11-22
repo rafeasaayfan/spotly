@@ -48,7 +48,7 @@ const props = defineProps<TableProps>();
                         "
                         class="text-body-muted cursor-pointer text-xs select-none"
                     >
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-1">
                             <span>{{ column.label }}</span>
                             <Chevron :sortKey="column.key" :currentSort="{ key: props.filters.sort_by, direction: props.filters.sort_dir }" />
                         </div>

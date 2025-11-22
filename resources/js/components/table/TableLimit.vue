@@ -24,6 +24,7 @@ watch(limit, (newLimit) => {
 <template>
     <Select v-if="formattedLinks.length > 1 && props.tableConditions.enableLimit" v-model="limit" 
         class="h-8 w-16"
+        :withReset="false"
         :option="'Items per page'">
         <option v-for="limitOption in [5, 10, 20, 50, 100]" :key="limitOption" :value="limitOption">
             {{ limitOption }}
