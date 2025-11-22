@@ -26,7 +26,7 @@ const page = usePage<SharedData>();
                 <br v-if="props.aboutUs" />
                 <br v-if="props.aboutUs" />
 
-                {{ page.props.lang === 'ar' ? props.aboutUs : props.aboutUsAr }}
+                {{ page.props.lang === 'ar' ? props.aboutUsAr : props.aboutUs }}
             </p>
 
             <!-- Stats Grid -->
