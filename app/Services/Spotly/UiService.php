@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Spotly;
 
 use App\Models\TemplateColor;
 use App\Models\WebsiteTemplate;

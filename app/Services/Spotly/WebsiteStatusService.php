@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Spotly;
 
+use App\Enums\Spotly\WebsiteStatus;
 use App\Events\WebsiteApproved;
-use App\Jobs\WebsiteStatusMailJob;
+use App\Jobs\Spotly\WebsiteStatusMailJob;
 use App\Models\Website;
 use Illuminate\Support\Facades\Auth;
 
@@ -73,7 +74,7 @@ class WebsiteStatusService
     public function toggleActivation(bool $active): array
     {
         if ($active) {
-            if ($this->website->status !== 'approved') {
+            if ($this->website->status !== WebsiteStatus::APPROVED) {
                 return ['success' => false, 'message' => 'This website is not approved yet'];
             }
 

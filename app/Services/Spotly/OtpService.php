@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Spotly;
 
 use App\Models\Otp;
-use App\Jobs\OtpJob;
+use App\Jobs\Spotly\OtpJob;
 use App\Models\User;
 
 class OtpService

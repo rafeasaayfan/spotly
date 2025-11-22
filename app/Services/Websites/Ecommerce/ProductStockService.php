@@ -33,10 +33,10 @@ class ProductStockService
      * @param string $action (The action to calculate the total client qty, ATC: Add To Cart, CQ: Change Quantity)
      * @return \Illuminate\Http\JsonResponse|null
      */
-    public static function validateQuantity(EcommerceProduct $product, $cartItems, int $quantity, string $color, string $action): string
+    public static function validateQuantity(EcommerceProduct $product, $cartItems, int $quantity, int $color_id, string $action): string
     {
         try {
-            $variant = $product->inStockVariants->firstWhere('color', $color);
+            $variant = $product->inStockVariants->firstWhere('color_id', $color_id);
 
             if (!$variant) {
                 return __('messages.color_not_available');
@@ -44,7 +44,7 @@ class ProductStockService
 
             $cartItem = $cartItems
                 ->where('product_id', $product->id)
-                ->where('color', $color)
+                ->where('color_id', $color_id)
                 ->first();
 
             $pendingOrderItemQty = EcommerceOrderItem::withOrderStatus('pending')->where('product_id', $product->id)
@@ -54,7 +54,7 @@ class ProductStockService
                     } else {
                         $q->where('session_id', session()->getId());
                     }
-                })->where('color', $variant->color)->sum('quantity');
+                })->where('color_id', $variant->color_id)->sum('quantity');
 
             $available = $variant->stock_quantity - $variant->reserved_quantity;
             $requestedTotal = $action === 'ATC' ? $quantity + ($cartItem->quantity ?? 0) + ($pendingOrderItemQty ?? 0)
@@ -66,8 +66,9 @@ class ProductStockService
 
             return 'done';
         } catch (\Exception $e) {
-            Log::error('EcommerceSyncService Error: syncCart failed', [
+            Log::error('ProductStockService@validateQuantity Error: ' . $e->getMessage(), [
                 'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return $e->getMessage();
