@@ -16,10 +16,10 @@ class HomeController extends BaseController
     public function index()
     {
         $homeSpecialProducts = EcommerceProduct::active()->inHome()->special()->whereHas('inStockVariants')
-            ->with(['inStockVariants', 'category:id,name,ar_name', 'brand:id,name'])->get();
+            ->with(['category:id,name,ar_name', 'brand:id,name', 'variants.color'])->get();
 
         $homeProducts = EcommerceProduct::active()->inHome()->where('is_special', false)->whereHas('inStockVariants')
-            ->with(['inStockVariants', 'category:id,name,ar_name', 'brand:id,name'])->get();
+            ->with(['category:id,name,ar_name', 'brand:id,name', 'variants.color'])->get();
 
         $categories = Category::active()->inHome()->where('website_id', $this->website->id)
             ->withCount('ecommerceProducts')->get();
