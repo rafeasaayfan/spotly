@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
-import { ChevronDown } from 'lucide-vue-next'
+import { ChevronDown, XIcon } from 'lucide-vue-next'
 import { onClickOutside } from '@vueuse/core'
 import type { HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
@@ -20,8 +20,10 @@ const props = withDefaults(defineProps<{
   class?: HTMLAttributes['class']
   dropdownClass?: HTMLAttributes['class']
   withStatusColors?: boolean
+  withReset?: boolean
 }>(), {
   withStatusColors: false,
+  withReset: true,
 })
 
 const emit = defineEmits<{
@@ -117,12 +119,15 @@ const page = usePage<SharedData>();
           <span v-else-if="props.withStatusColors" v-html="formatters.status(selectedLabel)"></span>
           <span v-else>{{ selectedLabel }}</span>
 
-          <ChevronDown class="size-3.5 transition-transform" :class="{ 'rotate-180': isOpen }" />
+          <div class="flex items-center">
+            <XIcon v-if="modelValue && props.withReset" class="size-3.5 cursor-pointer text-active-link-2" @click="emit('update:modelValue', '')" />
+            <ChevronDown class="size-3.5 transition-transform" :class="{ 'rotate-180': isOpen }" />
+          </div>
         </button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent :align="page.props.lang === 'ar' ? 'end' : 'start'"
-        :class="cn('select-dropdown w-full', props.dropdownClass)">
+        :class="cn('select-dropdown w-full max-h-70', props.dropdownClass)">
         <!-- Custom dropdown -->
         <div v-for="option in options" :key="option.value" @click="selectOption(option)" :class="cn(
           'flex items-center gap-2 cursor-pointer px-3 py-2 text-sm rounded-md',
