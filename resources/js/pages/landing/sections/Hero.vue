@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { gsap } from 'gsap';
-import { ChevronDown } from 'lucide-vue-next';
+import { BadgeDollarSign, ChevronDown, Code, Zap } from 'lucide-vue-next';
 import { onMounted } from 'vue';
 
 onMounted(() => {
@@ -48,9 +48,24 @@ const scrollToSection = (id: string) => {
 <template>
     <section id="hero" class="relative flex min-h-[650px] w-full flex-col items-center justify-center overflow-hidden text-center px-2 sm:px-4 xl:pt-15 pb-22">
         <div
-            class="relative z-10 flex min-h-[650px] w-full flex-col items-center justify-center rounded-md backdrop-blur-[2px] lg:px-0 overflow-hiiden"
+            class="relative z-10 flex min-h-[650px] w-full flex-col items-center justify-center rounded-md backdrop-blur-[2px] lg:px-0 overflow-hidden"
         >
-            <h1 id="hero-title" class="text-active font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-6">
+            <div class="flex items-center flex-wrap justify-center gap-3 sm:gap-10 mb-10"> 
+                <div class="px-3.5 py-1.5 rounded-full font-medium bg-content text-body-muted text-xs flex items-center gap-1.5">
+                    <Zap class="size-3.5 text-yellow-500" />
+                    {{ $t('landing.hero.badge_fast') }}
+                </div>
+                <div class="px-3.5 py-1.5 rounded-full font-medium bg-content text-body-muted text-xs flex items-center gap-1.5">
+                    <BadgeDollarSign class="size-3.5 text-red-500" />
+                    {{ $t('landing.hero.badge_affordable') }}
+                </div>
+                <div class="px-3.5 py-1.5 rounded-full font-medium bg-content text-body-muted text-xs flex items-center gap-1.5">
+                    <Code class="size-3.5 text-blue-500" />
+                    {{ $t('landing.hero.badge_no_code') }}
+                </div>
+            </div>   
+
+            <h1 id="hero-title" class="text-active font-bold text-4xl sm:text-5xl md:text-6xl lg:text-8xl mb-6">
                 {{ $t('landing.hero.title_part1') }} <span class="relative gradient-text">{{ $t('landing.hero.title_part2') }}</span> <br class="hidden md:block" />
                 {{ $t('landing.hero.title_part3') }}
             </h1>
