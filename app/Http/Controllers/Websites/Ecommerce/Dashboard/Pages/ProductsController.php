@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Websites\Ecommerce\Dashboard\Pages;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Websites\BaseController;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use App\Http\Requests\Websites\Ecommerce\Dashboard\Pages\Products\StoreProductRequest;
@@ -10,20 +10,14 @@ use App\Http\Requests\Websites\Ecommerce\Dashboard\Pages\Products\UpdateProductR
 use App\Jobs\Websites\Ecommerce\CreateProductSlugJob;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Color;
 use App\Models\EcommerceProduct;
 use App\Models\EcommerceProductVariant;
 use Illuminate\Support\Facades\DB;
 
-class ProductsController extends Controller
+class ProductsController extends BaseController
 {
     use DataTableTrait;
-
-    protected $website;
-
-    public function __construct()
-    {
-        $this->website = app('website')->load('media');
-    }
 
     /**
      * Display a listing of the resource.
@@ -33,22 +27,16 @@ class ProductsController extends Controller
         $query = EcommerceProduct::where('website_id', $this->website->id)->withStockQuantity()->withReservedQuantity();
 
         $columnsSearching = ['name', 'category.name', 'brand.name', 'price'];
-        $columnsSelection = ['id', 'category_id', 'brand_id', 'name', 'price', 'is_in_home', 'is_special', 'is_active'];
+        $columnsSelection = ['id', 'category_id', 'brand_id', 'name', 'price', 'discount_price', 'is_discount', 'is_in_home', 'is_special', 'is_active'];
         $relations = ['category_name', 'brand_name'];
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
-
-        $websiteNameAndLogo = [
-            'light_logo' => $this->website->light_logo,
-            'dark_logo' => $this->website->dark_logo,
-            'name' => $this->website->name,
-        ];
 
         return $this->inertiaRender(
             'pages/products/Products',
             [
                 'products' => $data,
-                'websiteNameAndLogo' => $websiteNameAndLogo
+                'websiteNameAndLogo' => $this->websiteNameAndLogo()
             ],
             true,
             true
@@ -63,10 +51,12 @@ class ProductsController extends Controller
         try {
             $categories = Category::active()->where('website_id', $this->website->id)->select(['id', 'name'])->get();
             $brands = Brand::active()->where('website_id', $this->website->id)->select(['id', 'name'])->get();
+            $colors = Color::all();
 
             return $this->jsonSuccess('', [
                 'categories' => $categories,
                 'brands' => $brands,
+                'colors' => $colors,
             ]);
         } catch (\Exception $e) {
             return $this->logJsonResponse('ProductsController@create', $e, 'An error when fetching the create page');
@@ -91,7 +81,7 @@ class ProductsController extends Controller
             foreach ($variants as $variant) {
                 $product_variant = EcommerceProductVariant::create([
                     'product_id' => $product->id,
-                    'color' => $variant['color'],
+                    'color_id' => $variant['color_id'] ?? null,
                     'stock_quantity' => $variant['stock_quantity']
                 ]);
 
@@ -115,7 +105,7 @@ class ProductsController extends Controller
     public function show(string $id)
     {
         try {
-            $query = EcommerceProduct::where('website_id', $this->website->id)->with(['variants', 'variants.media'])->findOrFail($id);
+            $query = EcommerceProduct::where('website_id', $this->website->id)->with(['variants', 'variants.media', 'variants.color'])->findOrFail($id);
             $product = $this->flattenRelationData($query, ['category_name', 'brand_name']);
 
             return $this->jsonSuccess('', [
@@ -132,15 +122,17 @@ class ProductsController extends Controller
     public function edit(string $id)
     {
         try {
-            $product = EcommerceProduct::where('website_id', $this->website->id)->with(['variants', 'variants.media'])->findOrFail($id);
+            $product = EcommerceProduct::where('website_id', $this->website->id)->with(['variants', 'variants.media', 'variants.color'])->findOrFail($id);
 
             $categories = Category::active()->where('website_id', $this->website->id)->select(['id', 'name'])->get();
             $brands = Brand::active()->where('website_id', $this->website->id)->select(['id', 'name'])->get();
+            $colors = Color::all();
 
             return $this->jsonSuccess('', [
                 'data' => $product,
                 'categories' => $categories,
                 'brands' => $brands,
+                'colors' => $colors,
             ]);
         } catch (\Exception $e) {
             return $this->logJsonResponse('ProductsController@edit', $e, 'An error when fetching the edit page');
@@ -207,7 +199,7 @@ class ProductsController extends Controller
                 'product_id' => $product->id,
             ], [
                 'stock_quantity' => $variant['stock_quantity'],
-                'color' => $variant['color'],
+                'color_id' => $variant['color_id'],
             ]);
 
             if (isset($variant['ecommerce_product_image']) && $variant['ecommerce_product_image'] instanceof \Illuminate\Http\UploadedFile) {
@@ -350,6 +342,34 @@ class ProductsController extends Controller
             return $this->backSuccess($message);
         } catch (\Exception $e) {
             return $this->logResponse('ProductsController@toggleActive', $e, 'An error occurred while updating the Product status');
+        }
+    }
+
+    /**
+     * Toggle the "is_discount" status of the specified resource.
+     */
+    public function toggleIsDiscount(Request $request, $id)
+    {
+        try {
+            $product = EcommerceProduct::where('website_id', $this->website->id)->findOrFail($id);
+
+            $validated = $request->validate([
+                'is_discount' => 'required|boolean',
+            ]);
+
+            if($product->discount_price <= 0 && $validated['is_discount']) {
+                return $this->backError('Please set the discount price first', 'warning');
+            }
+
+            $product->update([
+                'is_discount' => $validated['is_discount'],
+            ]);
+
+            $message = $validated['is_discount'] ? 'Product marked as discount successfully.' : 'Product unmarked as discount successfully.';
+
+            return $this->backSuccess($message);
+        } catch (\Exception $e) {
+            return $this->logResponse('ProductsController@toggleIsDiscount', $e, 'An error occurred while updating the Product discount status');
         }
     }
 }

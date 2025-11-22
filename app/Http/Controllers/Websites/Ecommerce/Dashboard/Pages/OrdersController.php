@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Websites\Ecommerce\Dashboard\Pages;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Websites\BaseController;
 use App\Models\EcommerceOrder;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
@@ -10,16 +10,9 @@ use App\Http\Requests\Websites\Ecommerce\Dashboard\Pages\Orders\UpdateOrderReque
 use App\Jobs\Websites\Ecommerce\SendOrderEmailJob;
 use App\Models\WebsiteUser;
 
-class OrdersController extends Controller
+class OrdersController extends BaseController
 {
     use DataTableTrait;
-
-    protected $website;
-
-    public function __construct()
-    {
-        $this->website = app('website')->load('media');
-    }
 
     /**
      * Display a listing of the resource.
@@ -35,18 +28,12 @@ class OrdersController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
-        $websiteNameAndLogo = [
-            'light_logo' => $this->website->light_logo,
-            'dark_logo' => $this->website->dark_logo,
-            'name' => $this->website->name,
-        ];
-
         return $this->inertiaRender(
             'pages/orders/Orders',
             [
                 'orders' => $data,
                 'cities' => $cities,
-                'websiteNameAndLogo' => $websiteNameAndLogo
+                'websiteNameAndLogo' => $this->websiteNameAndLogo()
             ],
             true,
             true
