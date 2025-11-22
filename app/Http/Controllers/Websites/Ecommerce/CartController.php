@@ -92,7 +92,7 @@ class CartController extends BaseController
                 ->whereHas('inStockVariants')
                 ->firstOrFail();
 
-            $validateQuantity = ProductStockService::validateQuantity($product, $this->cartItems(), $validated['quantity'], $cartItem->color, 'CQ');
+            $validateQuantity = ProductStockService::validateQuantity($product, $this->cartItems(), $validated['quantity'], $cartItem->color_id, 'CQ');
             if ($validateQuantity !== 'done') {
                 return $this->jsonError($validateQuantity);
             }
