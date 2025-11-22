@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Plan;
 use App\Models\Website;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MakePaymentController extends Controller
 {
@@ -19,7 +20,7 @@ class MakePaymentController extends Controller
             'status' => ['sometimes', 'string', 'nullable', 'in:expiredSoon,notPaid'],
         ]);
 
-        $query = Website::status('approved')->with(['websiteType:id,type']);
+        $query = Website::where('owner_id', Auth::id())->status('approved')->with(['websiteType:id,type']);
 
         if (!empty($validated['search'])) {
             $query->where('name', 'like', '%' . $validated['search'] . '%');
