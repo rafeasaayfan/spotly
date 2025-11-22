@@ -134,6 +134,10 @@
     "landing.hero.title_part3": "أداة بناء المواقع",
     "landing.hero.subtitle": "أطلق عملك عبر الإنترنت في دقائق دون أي تكاليف أولية. انسَ دفع المئات للمطورين، والنطاقات، والاستضافة. مع سبوتلي، تحصل على موقع ويب احترافي كامل مقابل 10 دولارات شهريًا فقط. بسيط، سريع، وبأسعار معقولة - ابدأ رحلتك نحو النجاح اليوم!",
     "landing.hero.get_started_button": "ابدأ الآن",
+    "landing.hero.badge_fast": "5 دقائق فقط",
+    "landing.hero.badge_affordable": "$10/شهر",
+    "landing.hero.badge_no_code": "بدون برمجة",
+    "landing.hero.scroll_down": "اكتشف المزيد",
 
     "landing.why_spotly.title_part1": "لماذا تختار",
     "landing.why_spotly.title_part2": "سبوتلي",
@@ -271,9 +275,9 @@
     "websiteBuilder.firstStep.about_us_description": "قدم ملخصًا موجزًا يصف عملك.",
     "websiteBuilder.firstStep.about_us_placeholder": "مثال: مكان دافئ لمحبي القهوة... (١٢٠-٢٥٥ حرفًا)",
 
-    "websiteBuilder.secondStep.phone_number_title": "رقم الهاتف*",
+    "websiteBuilder.secondStep.phone_number_title": "رقم الهاتف",
     "websiteBuilder.secondStep.phone_number_description": "أدخل رقم هاتف عملك.",
-    "websiteBuilder.secondStep.email_address_title": "عنوان البريد الإلكتروني",
+    "websiteBuilder.secondStep.email_address_title": "عنوان البريد الإلكتروني*",
     "websiteBuilder.secondStep.email_address_description": "أدخل عنوان البريد الإلكتروني لعملك.",
     "websiteBuilder.secondStep.street_address_title": "عنوان الشارع",
     "websiteBuilder.secondStep.country_title": "البلد",
@@ -298,6 +302,18 @@
     "websiteBuilder.fourthStep.accept_terms_text": "لقد قرأت وفهمت كيفية عمل عملية إنشاء الموقع الإلكتروني وأقبل الشروط.",
 
     "****************** Client Websites Page": "************************************",
+    "dashboard.total_users": "إجمالي المستخدمين",
+    "dashboard.banned": "محظورون",
+    "dashboard.total_websites": "إجمالي المواقع",
+    "dashboard.total_revenue": "إجمالي الإيرادات",
+    "dashboard.top_websites_title": "المواقع الأعلى بعدد المستخدمين",
+    "dashboard.no_top_websites": "لم يتم العثور على مواقع مميزة",
+    "dashboard.websites_by_type": "المواقع حسب النوع",
+    "dashboard.websites_by_type_desc": "إجمالي عدد المواقع مصنفة حسب النوع",
+    "dashboard.no_website_types": "لم يتم العثور على أنواع مواقع",
+    "dashboard.website_status_chart_title": "توزيع حالة المواقع",
+    "dashboard.website_status_chart_subtitle": "حالة القبول الحالية",
+    
     "myWebsites.custom_template_colors": "ألوان القالب المخصصة",
     "myWebsites.create_template": "إنشاء قالب",
     "myWebsites.cancel": "إلغاء",
@@ -489,4 +505,5 @@
     "manage.account.settings": "إدارة إعدادات حسابك",
     "edit.profile": "تعديل الملف الشخصي",
     "joined": "تاريخ الانضمام"
+
 }
