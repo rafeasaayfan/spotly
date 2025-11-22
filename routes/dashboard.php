@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Spotly\Dashboard\DashboardController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\Administration\ColorsController;
 use App\Http\Controllers\Spotly\Dashboard\Pages\Assignments\PermissionsController;
 use App\Http\Controllers\Spotly\Dashboard\Pages\Assignments\RolesController;
 use App\Http\Controllers\Spotly\Dashboard\Pages\Assignments\UserAssignmentsController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Spotly\Dashboard\Pages\Administration\MessagesControlle
 use App\Http\Controllers\Spotly\Dashboard\Pages\UsersController;
 use App\Http\Controllers\Spotly\Dashboard\Pages\WebsitesController;
 use App\Http\Controllers\Spotly\Dashboard\Pages\Administration\WebsiteTypesController;
+use App\Http\Controllers\Spotly\Dashboard\Pages\AttributesController;
 use App\Http\Controllers\Spotly\Dashboard\Pages\Subscriptions\PaymentMethodsController;
 use App\Http\Controllers\Spotly\Dashboard\Pages\Subscriptions\PaymentsController;
 use App\Http\Controllers\Spotly\Dashboard\Pages\Subscriptions\PlansController;
@@ -37,6 +39,8 @@ Route::middleware(['auth', 'verified', 'can:dashboard_access'])->prefix('dashboa
     //* Countries
     dashboardPagesRoutes('countries', CountriesController::class);
     Route::patch('countries/{id}/is_active', [CountriesController::class, 'toggleActive'])->name('countries.is_active');
+    //* Colors
+    dashboardPagesRoutes('colors', ColorsController::class);
 
     //* Subscriptions
     dashboardPagesRoutes('subscriptions', SubscriptionsController::class);
@@ -55,6 +59,11 @@ Route::middleware(['auth', 'verified', 'can:dashboard_access'])->prefix('dashboa
     Route::patch('websites/{id}/is_active', [WebsitesController::class, 'toggleActive'])->name('websites.is_active');
     Route::patch('websites/{id}/status', [WebsitesController::class, 'changeStatus'])->name('websites.status');
 
+    //* Attributes
+    dashboardPagesRoutes('attributes', AttributesController::class);
+    Route::patch('attributes/{id}/is_active', [AttributesController::class, 'toggleActive'])->name('attributes.is_active');
+    Route::patch('attributes/{id}/is_required', [AttributesController::class, 'toggleRequired'])->name('attributes.is_required');
+
     //* ui
     Route::prefix('ui')->group(function () {
         //* Templates
@@ -67,7 +76,8 @@ Route::middleware(['auth', 'verified', 'can:dashboard_access'])->prefix('dashboa
 
         //* Template Template Colors
         dashboardPagesRoutes('template-template-colors', TemplateTemplateColorsController::class);
-        Route::patch('template-template-colors/{id}/is_default', [TemplateTemplateColorsController::class, 'toggleDefault'])->name('templateTemplateColors.is_default');
+        Route::patch('template-template-colors/{id}/is_active', [TemplateTemplateColorsController::class, 'toggleActive'])->name('templateTemplateColors.is_active');
+        // Route::patch('template-template-colors/{id}/is_default', [TemplateTemplateColorsController::class, 'toggleDefault'])->name('templateTemplateColors.is_default');
     });
 
 
