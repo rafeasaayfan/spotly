@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Spotly\UserStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,7 +19,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('phone_number')->unique()->nullable();
-            $table->enum('status', ['active', 'inactive', 'banned'])->default('active');
+            $table->string('status')->default(UserStatus::ACTIVE->value);
             $table->rememberToken();
             $table->timestamps();
         });

@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Spotly\WebsiteStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -40,13 +41,12 @@ return new class extends Migration
 
             $table->unsignedBigInteger('views_count')->default(0);
             $table->boolean('is_active')->default(false);
-            $table->enum('status', ['pending', 'denied', 'approved'])->default('pending');
+            $table->string('status')->default(WebsiteStatus::PENDING->value);
 
             $table->timestamps();
             $table->softDeletes();
 
             $table->index('is_active');
-            $table->index('is_verified');
             $table->index('status');
             $table->index('views_count');
         });
