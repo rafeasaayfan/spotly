@@ -54,9 +54,9 @@ const removeItem = async (itemId: number) => {
 
         const response = await axios.delete(route('website.e-commerce.cart.removeItem'), {
             data: { itemId },
-        });
+        });        
 
-        if (response.data.props.items && response.data.props.cartItemsCount) {
+        if ('items' in response.data.props && 'cartItemsCount' in response.data.props) {
             items.value = response.data.props.items;
             cartItemsCount.value = response.data.props.cartItemsCount;
 
@@ -127,7 +127,7 @@ const orderForm = useForm({
 const mappedCountries = props.countries.map((item: Record<string, any>) => ({
     value: item.phone_code,
     label: item.phone_code,
-    icon: item.flag,
+    src: item.flag,
 }));
 
 const mappedCities = Object.entries(props.cities).map(([key, city]: [string, any]) => ({
