@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/fields';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/lib/sweetAlert';
 import { SharedData } from '@/types';
-import { usePage } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
 import { Ban, LoaderCircle, ShoppingCart, TriangleAlert } from 'lucide-vue-next';
 import { ref, watchEffect } from 'vue';
@@ -51,19 +51,21 @@ const addToCart = async () => {
             product_id: product.value.id,
             quantity: quantity.value,
             imageUrl: selectedVariant.value.ecommerce_product_image,
-            color: selectedVariant.value.color,
-            unit_price: product.value.sale_price ?? product.value.price,
+            color_id: selectedVariant.value.color_id,
+            unit_price: product.value.is_discount ? (product.value.price - product.value.discount_price) : product.value.price,
         });
 
         if (response.data.props.product) {
             product.value = response.data.props.product;
             cartItemsCount.value = response.data.props.cartItemsCount;
-            
+
             selectedVariant.value = response.data.props.product.in_stock_variants.find((v: any) => v.id === selectedVariant.value!.id) || null;
 
             toast.fire({ icon: 'success', title: response.data.message });
         }
     } catch (error: any) {
+        console.log(error);
+        
         toast.fire({ icon: 'error', title: error.response?.data.message });
     } finally {
         processing.value = false;
@@ -72,13 +74,18 @@ const addToCart = async () => {
 </script>
 
 <template>
-    <Layout :colors="props.colors" :websiteNameAndLogo="props.websiteNameAndLogo" :websiteFooterData="props.websiteFooterData" 
+    <Head :title="product.name" />
+
+    <Layout
+        :colors="props.colors"
+        :websiteNameAndLogo="props.websiteNameAndLogo"
+        :websiteFooterData="props.websiteFooterData"
         :cartItemsCount="cartItemsCount"
     >
         <section class="pt-22">
             <div
                 :class="[
-                    'border-s-4 border-e-4 border-double web-border-color p-3 md:p-6',
+                    'web-border-color border-s-4 border-e-4 border-double p-3 md:p-6',
                     product.in_stock_variants ? '' : 'flex h-full w-full items-center justify-center',
                 ]"
             >
@@ -88,10 +95,10 @@ const addToCart = async () => {
                             <h2 class="web-text-active text-2xl font-bold md:text-3xl">{{ product.name }}</h2>
 
                             <div
-                                v-if="product.sale_price && product.price"
+                                v-if="product.is_discount && product.discount_price && product.price"
                                 class="web-bg-danger relative flex items-center gap-1 rounded px-2 py-1.5 text-xs font-medium text-white md:px-3"
                             >
-                                <span> {{ Math.round(((Number(product.price) - Number(product.sale_price)) / Number(product.price)) * 100) }}% </span>
+                                <span> {{ Math.round(((Number(product.price) - Number(product.discount_price)) / Number(product.price)) * 100) }}% </span>
                                 <span>{{ $t('off') }}</span>
                             </div>
                         </div>
@@ -101,11 +108,12 @@ const addToCart = async () => {
 
                         <div class="mt-4 flex items-center gap-3">
                             <Highlight
+                                v-if="product.category"
                                 :text="page.props.lang === 'ar' ? product.category.ar_name : product.category.name"
                                 type="category"
                                 class="web-border-color px-2 py-1.5 text-xs md:px-3 md:text-sm"
                             />
-                            <Highlight :text="product.brand.name" type="brand" class="web-border-color px-2 py-1.5 text-xs md:px-3 md:text-sm" />
+                            <Highlight v-if="product.brand" :text="product.brand.name" type="brand" class="web-border-color px-2 py-1.5 text-xs md:px-3 md:text-sm" />
                         </div>
                     </div>
 
@@ -130,8 +138,8 @@ const addToCart = async () => {
                                 <div v-else class="flex flex-col gap-2">
                                     <span>{{ $t('color') }}</span>
                                     <div class="flex items-center gap-2">
-                                        <div class="web-border-color size-8 rounded-full border" :style="{ backgroundColor: variant.color }"></div>
-                                        <span>{{ variant.color }}</span>
+                                        <div class="web-border-color size-8 rounded-full border" :style="{ backgroundColor: variant.color.code }"></div>
+                                        <span>{{ page.props.lang === 'ar' ? variant.color.ar_name : variant.color.name }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -161,9 +169,9 @@ const addToCart = async () => {
                             <span class="web-text-body-muted text-xs md:text-sm">{{ $t('unit.price') }}</span>
                             <div class="flex items-center gap-1 md:gap-2">
                                 <span class="web-text-active text-sm font-bold md:text-base">
-                                    {{ product.sale_price ? product.sale_price : product.price }}$
+                                    {{ product.is_discount ? (product.price - product.discount_price) : product.price }}$
                                 </span>
-                                <span v-if="product.sale_price" class="web-text-body-muted text-sm line-through"> {{ product.price }}$ </span>
+                                <span v-if="product.is_discount" class="web-text-body-muted text-sm line-through"> {{ product.price }}$ </span>
                             </div>
                         </div>
 
@@ -174,9 +182,9 @@ const addToCart = async () => {
                             <span class="web-text-body text-xs md:text-sm">{{ $t('total.price') }}</span>
                             <div class="flex items-center gap-1 md:gap-2">
                                 <span class="web-text-active text-base font-bold md:text-lg">
-                                    {{ product.sale_price ? product.sale_price * quantity : product.price * quantity }}$
+                                    {{ product.is_discount ? (product.price - product.discount_price) * quantity : product.price * quantity }}$
                                 </span>
-                                <span v-if="product.sale_price" class="web-text-body-muted text-sm line-through">
+                                <span v-if="product.is_discount" class="web-text-body-muted text-sm line-through">
                                     {{ product.price * quantity }}$
                                 </span>
                             </div>
@@ -199,9 +207,37 @@ const addToCart = async () => {
                     </div>
                 </div>
 
-                <div v-else class="flex flex-col items-center gap-2 py-10">
-                    <Ban class="web-text-danger size-8" />
-                    <span class="web-text-danger font-medium">{{ $t('out.of.stock') }}</span>
+                <div v-else class="flex flex-col gap-10">
+                    <div class="web-border-color flex flex-col border-b pb-4">
+                        <div class="flex w-full items-center justify-between gap-3">
+                            <h2 class="web-text-active text-2xl font-bold md:text-3xl">{{ product.name }}</h2>
+
+                            <div
+                                v-if="product.is_discount && product.discount_price && product.price"
+                                class="web-bg-danger relative flex items-center gap-1 rounded px-2 py-1.5 text-xs font-medium text-white md:px-3"
+                            >
+                                <span> {{ Math.round(((Number(product.price) - Number(product.discount_price)) / Number(product.price)) * 100) }}% </span>
+                                <span>{{ $t('off') }}</span>
+                            </div>
+                        </div>
+
+                        <p class="web-text-body-muted text-sm">{{ product.short_description }}</p>
+                        <p v-if="product.description" class="web-text-body-muted mt-1.5 text-sm">{{ product.description }}</p>
+
+                        <div class="mt-4 flex items-center gap-3">
+                            <Highlight
+                                v-if="product.category"
+                                :text="page.props.lang === 'ar' ? product.category.ar_name : product.category.name"
+                                type="category"
+                                class="web-border-color px-2 py-1.5 text-xs md:px-3 md:text-sm"
+                            />
+                            <Highlight v-if="product.brand" :text="product.brand.name" type="brand" class="web-border-color px-2 py-1.5 text-xs md:px-3 md:text-sm" />
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 py-25 bg-[var(--bg_content_light)] dark:bg-[var(--bg_content_dark)] rounded">
+                        <Ban class="web-text-danger size-8" />
+                        <span class="web-text-danger font-medium">{{ $t('out.of.stock') }}</span>
+                    </div>
                 </div>
             </div>
         </section>
