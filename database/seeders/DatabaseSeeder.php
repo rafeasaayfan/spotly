@@ -6,10 +6,12 @@ use App\Models\User;
 use Database\Seeders\Tables\Assignments\PermissionSeeder;
 use Database\Seeders\Tables\Assignments\RolePermissionSeeder;
 use Database\Seeders\Tables\Assignments\RoleSeeder;
+use Database\Seeders\Tables\ColorSeeder;
 use Database\Seeders\Tables\PaymentMethodSeeder;
 use Database\Seeders\Tables\PlanSeeder;
 use Database\Seeders\Tables\WebsiteTypeSeeder;
 use Database\Seeders\Tables\TemplateColorSeeder;
+use Database\Seeders\Tables\TemplateSeeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -39,8 +41,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             WebsiteTypeSeeder::class,
             TemplateColorSeeder::class,
+            TemplateSeeder::class,
             PlanSeeder::class,
-            PaymentMethodSeeder::class
+            PaymentMethodSeeder::class,
+            ColorSeeder::class,
         ]);
 
         User::factory(1000)->create();

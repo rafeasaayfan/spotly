@@ -2,6 +2,8 @@
 
 namespace Database\Seeders\Tables;
 
+use App\Enums\Spotly\PlanCurrency;
+use App\Enums\Spotly\PlanDuration;
 use App\Models\Plan;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -16,8 +18,8 @@ class PlanSeeder extends Seeder
         Plan::create([
             'name' => 'Free Trial',
             'price' => '0',
-            'currency' => 'USD',
-            'duration' => 'three days',
+            'currency' => PlanCurrency::USD->value,
+            'duration' => PlanDuration::FREE_THREE_DAYS->value,
             'features' => [
                 'Enjoy a 3-day free trial with full access',
             ],
@@ -28,8 +30,8 @@ class PlanSeeder extends Seeder
             'website_type_id' => 1,
             'name' => 'Monthly',
             'price' => '15',
-            'currency' => 'USD',
-            'duration' => 'monthly',
+            'currency' => PlanCurrency::USD->value,
+            'duration' => PlanDuration::MONTHLY->value,
             'features' => [
                 'Enjoy a 3-day free trial with full access',
                 'Dedicated Spotly customer support',
@@ -43,8 +45,8 @@ class PlanSeeder extends Seeder
             'website_type_id' => 1,
             'name' => 'Yearly',
             'price' => '170',
-            'currency' => 'USD',
-            'duration' => 'yearly',
+            'currency' => PlanCurrency::USD->value,
+            'duration' => PlanDuration::YEARLY->value,
             'features' => [
                 'Enjoy a 3-day free trial with full access',
                 'Dedicated Spotly customer support',
