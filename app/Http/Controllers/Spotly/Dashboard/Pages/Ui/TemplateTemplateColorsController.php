@@ -173,34 +173,58 @@ class TemplateTemplateColorsController extends Controller
     /**
      * Toggle the active status of the specified resource.
      */
-    public function toggleDefault(Request $request, $id)
+    public function toggleActive(Request $request, $id)
     {
         try {
             $templateTemplateColor = TemplateTemplateColor::findOrFail($id);
 
             $validated = $request->validate([
-                'is_default' => 'required|boolean',
+                'is_active' => 'required|boolean',
             ]);
-
-            // change the old default because just one can be a default
-            if ($validated['is_default']) {
-                TemplateTemplateColor::where('template_id', $templateTemplateColor->template_id)
-                    ->where('is_default', true)
-                    ->update(['is_default' => false]);
-            }
 
             $templateTemplateColor->update([
-                'is_default' => $validated['is_default'],
+                'is_active' => $validated['is_active'],
             ]);
 
-            $message = $validated['is_default']
-                ? 'Template color set as default successfully.'
-                : 'Template color removed from default successfully.';
+            $message = $validated['is_active']
+                ? 'Template color activated successfully.'
+                : 'Template color deactivated successfully.';
 
             return $this->backSuccess($message);
         } catch (\Exception $e) {
-            return $this->logResponse('TemplateTemplateColorsController@toggleDefault', $e, 'An error occurred while updating the default status');
+            return $this->logResponse('TemplateTemplateColorsController@toggleActive', $e, 'An error occurred while updating the active status');
         }
     }
+
+
+    // public function toggleDefault(Request $request, $id)
+    // {
+    //     try {
+    //         $templateTemplateColor = TemplateTemplateColor::findOrFail($id);
+
+    //         $validated = $request->validate([
+    //             'is_default' => 'required|boolean',
+    //         ]);
+
+    //         // change the old default because just one can be a default
+    //         if ($validated['is_default']) {
+    //             TemplateTemplateColor::where('template_id', $templateTemplateColor->template_id)
+    //                 ->where('is_default', true)
+    //                 ->update(['is_default' => false]);
+    //         }
+
+    //         $templateTemplateColor->update([
+    //             'is_default' => $validated['is_default'],
+    //         ]);
+
+    //         $message = $validated['is_default']
+    //             ? 'Template color set as default successfully.'
+    //             : 'Template color removed from default successfully.';
+
+    //         return $this->backSuccess($message);
+    //     } catch (\Exception $e) {
+    //         return $this->logResponse('TemplateTemplateColorsController@toggleDefault', $e, 'An error occurred while updating the default status');
+    //     }
+    // }
 }
  
