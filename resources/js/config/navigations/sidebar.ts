@@ -17,6 +17,16 @@ export const mainSidebarItems = (): SidebarSection[] => {
                     href: '/dashboard',
                     icon: icons.LayoutDashboard,
                 },
+            ],
+        },
+        {
+            name: page.props?.lang === 'ar' ? 'لوحة التحكم' : 'Control Panel',
+            items: [
+                {
+                    title: page.props?.lang === 'ar' ? 'لوحة الإحصاءات' : 'Statistics',
+                    href: '/dashboard/stats',
+                    icon: icons.ChartPie,
+                },
                 {
                     title: page.props?.lang === 'ar' ? 'مواقعي' : 'My Websites',
                     href: '/dashboard/my-websites',
@@ -72,6 +82,11 @@ export const mainSidebarItems = (): SidebarSection[] => {
                             title: 'Email Subscribers',
                             href: '/dashboard/email-subscribers',
                             icon: icons.Mail,
+                        },
+                        {
+                            title: 'Colors',
+                            href: '/dashboard/colors',
+                            icon: icons.Palette,
                         },
                     ],
                 },
@@ -129,6 +144,11 @@ export const mainSidebarItems = (): SidebarSection[] => {
                     title: 'All Websites',
                     href: '/dashboard/websites',
                     icon: icons.Monitor,
+                },
+                {
+                    title: 'Attributes',
+                    href: '/dashboard/attributes',
+                    icon: icons.SlidersHorizontal,
                 },
             ],
         },
