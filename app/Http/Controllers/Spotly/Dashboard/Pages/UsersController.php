@@ -9,7 +9,7 @@ use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use App\Http\Requests\Dashboard\Pages\Users\StoreUserRequest;
 use App\Http\Requests\Dashboard\Pages\Users\UpdateUserRequest;
-use App\Jobs\UserStatusMailJob;
+use App\Jobs\Spotly\UserStatusMailJob;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Country;
 use Illuminate\Support\Facades\Auth;

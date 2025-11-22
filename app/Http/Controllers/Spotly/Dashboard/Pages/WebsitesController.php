@@ -11,7 +11,7 @@ use App\Http\Requests\Dashboard\Pages\Websites\StoreWebsiteRequest;
 use App\Http\Requests\Dashboard\Pages\Websites\UpdateWebsiteRequest;
 use App\Models\Country;
 use App\Models\WebsiteType;
-use App\Services\WebsiteStatusService;
+use App\Services\Spotly\WebsiteStatusService;
 
 class WebsitesController extends Controller
 {
