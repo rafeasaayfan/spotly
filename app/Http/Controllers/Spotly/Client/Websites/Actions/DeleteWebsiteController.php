@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Spotly\Client\Websites\Actions;
 use App\Http\Controllers\Controller;
 use App\Models\Website;
 use Illuminate\Support\Facades\Auth;
-use App\Services\OtpService;
+use App\Services\Spotly\OtpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 

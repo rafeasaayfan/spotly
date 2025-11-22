@@ -7,7 +7,7 @@ use App\Http\Requests\Client\CreateWebsiteUiRequest;
 use App\Models\TemplateTemplateColor;
 use App\Models\Website;
 use App\Models\WebsiteTemplate;
-use App\Services\UiService;
+use App\Services\Spotly\UiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
