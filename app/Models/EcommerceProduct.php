@@ -17,13 +17,14 @@ class EcommerceProduct extends Model
         'slug',
 
         'price',
-        'sale_price',
+        'discount_price',
 
         'short_description',
         'description',
 
         'views_count',
 
+        'is_discount',
         'is_in_home',
         'is_special',
         'is_active',
