@@ -11,7 +11,8 @@ const products = [
         short_description: 'Immerse yourself in gaming with high-fidelity audio and comfort.',
         long_description: 'Experience unparalleled gaming audio with this wireless headset. Featuring 7.1 surround sound, a retractable noise-canceling microphone, and plush earcups for hours of comfortable gaming.',
         price: 150.00,
-        sale_price: 129.99,
+        discount_price: 129.99,
+        is_discount: true,
         category: {
             name: 'Gaming Accessories',
             ar_name: 'ملحقات الألعاب'
@@ -39,7 +40,8 @@ const products = [
         short_description: 'Enjoy your music on the go with powerful sound and long battery life.',
         long_description: 'Take your music anywhere with this compact and powerful Bluetooth speaker. It delivers crisp highs and deep bass, with up to 15 hours of playtime on a single charge. Waterproof design for outdoor adventures.',
         price: 70.00,
-        sale_price: null,
+        discount_price: null,
+        is_discount: false,
         category: {
             name: 'Audio',
             ar_name: 'صوتيات'
@@ -67,7 +69,8 @@ const products = [
         short_description: 'Work in comfort and style with this adjustable office chair.',
         long_description: 'Upgrade your workspace with an ergonomic office chair designed for ultimate comfort and support. Features adjustable lumbar support, armrests, and seat height to fit your needs.',
         price: 250.00,
-        sale_price: 220.00,
+        discount_price: 220.00,
+        is_discount: true,
         category: {
             name: 'Office Furniture',
             ar_name: 'أثاث مكتبي'
@@ -95,7 +98,8 @@ const products = [
         short_description: 'Immerse yourself in gaming with high-fidelity audio and comfort.',
         long_description: 'Experience unparalleled gaming audio with this wireless headset. Featuring 7.1 surround sound, a retractable noise-canceling microphone, and plush earcups for hours of comfortable gaming.',
         price: 150.00,
-        sale_price: 129.99,
+        discount_price: 129.99,
+        is_discount: true,
         category: {
             name: 'Gaming Accessories',
             ar_name: 'ملحقات الألعاب'
@@ -123,7 +127,8 @@ const products = [
         short_description: 'Enjoy your music on the go with powerful sound and long battery life.',
         long_description: 'Take your music anywhere with this compact and powerful Bluetooth speaker. It delivers crisp highs and deep bass, with up to 15 hours of playtime on a single charge. Waterproof design for outdoor adventures.',
         price: 70.00,
-        sale_price: null,
+        discount_price: null,
+        is_discount: false,
         category: {
             name: 'Audio',
             ar_name: 'صوتيات'
@@ -151,7 +156,8 @@ const products = [
         short_description: 'Work in comfort and style with this adjustable office chair.',
         long_description: 'Upgrade your workspace with an ergonomic office chair designed for ultimate comfort and support. Features adjustable lumbar support, armrests, and seat height to fit your needs.',
         price: 250.00,
-        sale_price: 220.00,
+        discount_price: 220.00,
+        is_discount: true,
         category: {
             name: 'Office Furniture',
             ar_name: 'أثاث مكتبي'

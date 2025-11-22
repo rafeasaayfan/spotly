@@ -28,8 +28,7 @@ const websiteArrayName = () => {
                     <div class="social-section">
                         <h4 class="web-text-active mb-3 text-sm font-semibold">{{ $t('footer.followUs') }}</h4>
                         <div class="flex gap-3">
-                            <a
-                                href="#"
+                            <div
                                 class="social-icon group flex h-10 w-10 items-center justify-center rounded-full bg-[var(--bg_content_light)] stroke-[var(--foreground_muted_light)] transition-all duration-300 hover:bg-gradient-to-br hover:from-[#FE2C55] hover:to-[#25F4EE] hover:stroke-[var(--foreground_active_light)] dark:bg-[var(--bg_content_dark)] dark:stroke-[var(--foreground_muted_dark)] dark:hover:stroke-[var(--foreground_active_dark)]"
                                 title="TikTok"
                             >
@@ -42,28 +41,25 @@ const websiteArrayName = () => {
                                         stroke-width="22"
                                     />
                                 </svg>
-                            </a>
+                            </div>
                             <a
-                                href="#"
                                 class="social-icon group web-text-body-muted flex h-10 w-10 items-center justify-center rounded-full bg-[var(--bg_content_light)] transition-all duration-300 hover:bg-gradient-to-tr hover:from-[#f9ce34] hover:via-[#ee2a7b] hover:to-[#6228d7] dark:bg-[var(--bg_content_dark)]"
                                 title="Instagram"
                             >
                                 <Instagram class="size-5 transition-all duration-300" />
                             </a>
-                            <a
-                                href="#"
+                            <div
                                 class="social-icon group web-text-body-muted flex h-10 w-10 items-center justify-center rounded-full bg-[var(--bg_content_light)] transition-all duration-300 hover:bg-[#FF0000] dark:bg-[var(--bg_content_dark)] dark:hover:bg-[#FF0000]"
                                 title="YouTube"
                             >
                                 <Youtube class="size-5 transition-all duration-300" />
-                            </a>
-                            <a
-                                href="#"
+                            </div>
+                            <div
                                 class="social-icon group web-text-body-muted flex h-10 w-10 items-center justify-center rounded-full bg-[var(--bg_content_light)] transition-all duration-300 hover:bg-[#1877F3] dark:bg-[var(--bg_content_dark)] dark:hover:bg-[#1877F3]"
                                 title="Facebook"
                             >
                                 <Facebook class="size-5 transition-all duration-300" />
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -105,7 +101,7 @@ const websiteArrayName = () => {
                                 <Mail class="web-text-body-muted mt-0.5 size-4" />
                                 <div>
                                     <p class="web-text-body-muted text-sm font-medium">{{ $t('email') }}</p>
-                                    <a href="#" class="web-text-body-muted text-sm underline underline-offset-2"> Email </a>
+                                    <div class="web-text-body-muted text-sm underline underline-offset-2"> Email </div>
                                 </div>
                             </div>
 
@@ -113,11 +109,11 @@ const websiteArrayName = () => {
                                 <Phone class="web-text-body-muted mt-0.5 size-4" />
                                 <div>
                                     <p class="web-text-body-muted text-sm font-medium">{{ $t('phone') }}</p>
-                                    <a href="#" class="web-text-body-muted text-sm underline underline-offset-2">
+                                    <div class="web-text-body-muted text-sm underline underline-offset-2">
                                         <p class="[direction:ltr]">7477473884</p>
-                                    </a>
+                                    </div>
                                 </div>
-                            </div>
+                            </div>  
 
                             <div class="flex items-start gap-2">
                                 <MapPin class="web-text-body-muted mt-0.5 size-4" />
@@ -161,7 +157,7 @@ const websiteArrayName = () => {
                             &copy;
                             {{ $t('web.footer.rights') }}
                             {{ $t('web.footer.powered') }}
-                            <a href="https://spotly.com" class="text-active-link text-xs">Spotly</a>
+                            <div class="text-active-link text-xs">Spotly</div>
                         </p>
                     </div>
 

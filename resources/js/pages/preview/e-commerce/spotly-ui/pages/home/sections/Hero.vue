@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Link, usePage } from '@inertiajs/vue3';
+import { usePage } from '@inertiajs/vue3';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin'; 
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -17,7 +17,8 @@ const specialProducts = [
         short_description: 'Lightweight and comfortable shoes for your daily run.',
         long_description: 'Experience ultimate comfort and style with these running shoes. Featuring a breathable mesh upper and a responsive cushioning system, they are perfect for both casual wear and intense workouts.',
         price: 120.00,
-        sale_price: 99.99,
+        discount_price: 99.99,
+        is_discount: true,
         category: {
             name: 'Footwear',
             ar_name: 'أحذية'
@@ -45,7 +46,8 @@ const specialProducts = [
         short_description: 'Monitor your health and fitness with this advanced tracker.',
         long_description: 'Stay on top of your health goals with this sleek and smart fitness tracker. It monitors heart rate, steps, sleep, and much more, all while looking great on your wrist.',
         price: 75.00,
-        sale_price: 60.00,
+        discount_price: 60.00,
+        is_discount: true,
         category: {
             name: 'Wearable Tech',
             ar_name: 'تقنية قابلة للارتداء'
@@ -73,7 +75,8 @@ const specialProducts = [
         short_description: 'Immersive sound experience with noise-cancellation.',
         long_description: 'Enjoy your music like never before with these premium wireless headphones. Featuring active noise cancellation and crystal-clear audio, they are perfect for travel or daily commutes.',
         price: 200.00,
-        sale_price: 180.00,
+        discount_price: 180.00,
+        is_discount: true,
         category: {
             name: 'Audio',
             ar_name: 'صوتيات'
@@ -192,13 +195,13 @@ const handleInteraction = () => {
                 <div class="flex flex-col items-center gap-1">
                     <p class="web-text-body-muted text-center text-xs">{{ $t('scroll.more') }}</p>
 
-                    <Link href="/shop?special=true" class="group web-text-body flex cursor-pointer items-center gap-0.5 text-xs font-medium underline underline-offset-2">
+                    <div class="group web-text-body flex cursor-pointer items-center gap-0.5 text-xs font-medium underline underline-offset-2">
                         <span>{{ $t('special.all') }}</span>
                         <ChevronRight 
                             class="size-3.5 transition-all duration-300 ease-in-out"
                             :class="page.props.lang === 'ar' ? 'rotate-180 group-hover:-translate-x-1' : 'group-hover:translate-x-1'" 
                         />
-                    </Link>
+                    </div>
                 </div>
             </div>
         </div>

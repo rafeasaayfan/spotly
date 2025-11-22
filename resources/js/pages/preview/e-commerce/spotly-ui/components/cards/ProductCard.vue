@@ -81,7 +81,7 @@ onMounted(() => {
     <div
         class="product-card-item group web-bg-card relative flex max-h-[30rem] cursor-pointer flex-col gap-3 rounded-md p-2 backdrop-blur-md transition duration-300"
     >
-        <div v-if="props.product.sale_price && props.product.price" class="absolute start-2 -top-1 z-10" ref="badgeRef">
+        <div v-if="props.product.is_discount && props.product.discount_price && props.product.price" class="absolute start-2 -top-1 z-10" ref="badgeRef">
             <div
                 class="web-bg-danger relative flex flex-col rounded-t rounded-b px-1 pt-4 pb-2 text-[11px] text-white sm:px-1.5 sm:pt-6 sm:pb-3 sm:text-xs"
             >
@@ -90,7 +90,7 @@ onMounted(() => {
                 </div>
 
                 <span>
-                    {{ Math.round(((Number(props.product.price) - Number(props.product.sale_price)) / Number(props.product.price)) * 100) }}%
+                    {{ Math.round(((Number(props.product.price) - Number(props.product.discount_price)) / Number(props.product.price)) * 100) }}%
                 </span>
                 <span>{{ $t('off') }}</span>
             </div>
@@ -151,9 +151,9 @@ onMounted(() => {
         >
             <div class="flex items-center gap-1 sm:gap-1.5">
                 <span class="web-text-active text-base font-bold sm:text-lg">
-                    {{ props.product.sale_price ? props.product.sale_price : props.product.price }}$
+                    {{ props.product.is_discount ? (props.product.price - props.product.discount_price) : props.product.price }}$
                 </span>
-                <span v-if="props.product.sale_price" class="web-text-body-muted text-xs line-through sm:text-sm"> {{ props.product.price }}$ </span>
+                <span v-if="props.product.is_discount" class="web-text-body-muted text-xs line-through sm:text-sm"> {{ props.product.price }}$ </span>
             </div>
 
             <button

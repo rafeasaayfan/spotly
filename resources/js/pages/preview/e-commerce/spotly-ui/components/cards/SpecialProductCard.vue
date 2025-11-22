@@ -82,14 +82,14 @@ onMounted(() => {
         class="web-bg-card carousel-item group web-border-color relative grid h-full scale-90 cursor-pointer gap-3 rounded-md border p-2 transition-all duration-300 ease-out hover:scale-105 hover:skew-0 hover:opacity-100 lg:opacity-70 dark:opacity-70 dark:hover:opacity-100"
         :class="page.props.lang === 'ar' ? 'lg:-skew-8' : 'lg:skew-8'"
     >
-        <div v-if="props.product.sale_price && props.product.price" class="absolute start-2 -top-1 z-20" ref="badgeRef">
+        <div v-if="props.product.discount_price && props.product.is_discount && props.product.price" class="absolute start-2 -top-1 z-20" ref="badgeRef">
             <div class="web-bg-danger relative flex flex-col rounded-t rounded-b px-1.5 pt-6 pb-3 text-xs text-white">
                 <div class="absolute start-0 -top-1 flex w-full items-center justify-center">
                     <Pin class="size-4 fill-black text-black shadow-xl dark:fill-white dark:text-white" />
                 </div>
 
                 <span>
-                    {{ Math.round(((Number(props.product.price) - Number(props.product.sale_price)) / Number(props.product.price)) * 100) }}%
+                    {{ Math.round(((Number(props.product.price) - Number(props.product.discount_price)) / Number(props.product.price)) * 100) }}%
                 </span>
                 <span>{{ $t('off') }}</span>
             </div>
@@ -140,9 +140,9 @@ onMounted(() => {
             >
                 <div class="flex items-center gap-2">
                     <span class="web-text-active text-lg font-bold">
-                        {{ props.product.sale_price ? props.product.sale_price : props.product.price }}$
+                        {{ props.product.is_discount ? (props.product.price - props.product.discount_price) : props.product.price }}$
                     </span>
-                    <span v-if="props.product.sale_price" class="web-text-body-muted text-sm line-through"> {{ props.product.price }}$ </span>
+                    <span v-if="props.product.is_discount" class="web-text-body-muted text-sm line-through"> {{ props.product.price }}$ </span>
                 </div>
 
                 <button

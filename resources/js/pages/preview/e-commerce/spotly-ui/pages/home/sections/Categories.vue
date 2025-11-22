@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { SharedData } from '@/types';
-import { Link, usePage } from '@inertiajs/vue3';
+import { usePage } from '@inertiajs/vue3';
 import { ArrowRight } from 'lucide-vue-next';
 
 const categories = [
@@ -76,10 +76,9 @@ const getCategoryBgClass = (index: number) => {
         </h2>
 
         <div class="flex flex-col flex-wrap items-center gap-3 sm:flex-row">
-            <Link
+            <div
                 v-for="(category, index) in categories"
                 :key="index"
-                :href="`/shop?category=${encodeURIComponent(category.name)}`"
                 class="category-card group web-bg-card web-border-color relative flex h-20 w-full rounded-md border px-2 transition-all duration-300 ease-in-out md:h-40 md:w-60"
             >
                 <div
@@ -100,10 +99,9 @@ const getCategoryBgClass = (index: number) => {
                     </h3>
                     <p class="web-text-body-muted text-xs md:text-sm">{{ category.ecommerce_products_count }} {{ $t('products') }}</p>
                 </div>
-            </Link>
+            </div>
 
-            <Link
-                href="/shop"
+            <div
                 class="web-border-color group relative flex h-20 w-full items-center justify-center rounded-md border-2 
                 border-dashed bg-transparent transition-all duration-100 ease-in-out hover:border-3 hover:border-blue-500
                 hover:bg-[var(--bg_content_light)]/70 sm:h-30 sm:w-45 md:h-40 md:w-60 dark:hover:bg-[var(--bg_content_dark)]/70"
@@ -118,7 +116,7 @@ const getCategoryBgClass = (index: number) => {
                     </div>
                     <p class="web-text-body-muted text-xs md:text-sm">{{ $t('explore.everything') }}</p>
                 </div>
-            </Link>
+            </div>
         </div>
     </section>
 </template>
