@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import DataTable from '@/components/table/DataTable.vue';
 import DashboardLayout from '@/layouts/DashboardLayout.vue';
@@ -22,18 +21,18 @@ const columns = [
     { key: 'name', label: 'Name' },
     { key: 'category_name', label: 'Category' },
     { key: 'brand_name', label: 'Brand' },
-    { key: 'price', label: 'Price' },
+    { key: 'variants_sum_stock_quantity', label: 'Quantity' },
+    { key: 'variants_sum_reserved_quantity', label: 'Reserved' },
     { key: 'sales_count', label: 'Sales Count' },
-    { key: 'variants_sum_stock_quantity', label: 'Stock Quantity' },
-    { key: 'variants_sum_reserved_quantity', label: 'Reserved Quantity' },
+    { key: 'price', label: 'Price' },
+    { key: 'discount_price', label: 'Discount Price' },
+    { key: 'is_discount', label: 'Is Discount', type: 'toggle' },
     { key: 'is_in_home', label: 'In Home', type: 'toggle' },
     { key: 'is_special', label: 'Special', type: 'toggle' },
     { key: 'is_active', label: 'Active', type: 'toggle' },
 ];
 
 const filter = [
-    { key: 'category_id', label: 'Category', type: 'select_with_search' },
-    { key: 'brand_id', label: 'Brand', type: 'select_with_search' },
     {
         key: 'is_in_home',
         label: 'Is In Home',
@@ -52,12 +51,20 @@ const filter = [
             { value: '0', label: 'No' },
         ],
     },
-    { key: 'is_active', label: 'Is Active', type: 'select', options: [{ value: '1', label: 'yes' }] },
+    {
+        key: 'is_active',
+        label: 'Select status',
+        type: 'select',
+        options: [
+            { value: '1', label: 'Active' },
+            { value: '0', label: 'Inactive' },
+        ],
+    },
 ];
 
 const props = defineProps<{
     products: DataTableProps;
-    websiteNameAndLogo?: Record<string, string>
+    websiteNameAndLogo?: Record<string, string>;
     flash?: {
         toastType: 'success' | 'error' | 'warning' | 'info';
         message: string;

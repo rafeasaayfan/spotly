@@ -1,17 +1,21 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { DialogClose, DialogFooter } from '@/components/ui/dialog';
-import { Color, File, Input, InputError, Select, SelectWithSearch, Textarea } from '@/components/ui/fields';
+import { File, Input, InputError, Select, SelectWithSearch, Textarea } from '@/components/ui/fields';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/lib/sweetAlert';
-import { useForm } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 import { reactive } from 'vue';
+import { SharedData } from '@/types';
 
 const props = defineProps<{
     categories: Record<string, any>;
     brands: Record<string, any>;
+    colors: Record<string, any>;
 }>();
+
+const page = usePage<SharedData>();
 
 const mappedCategories = props.categories.map((item: any) => ({
     value: item.id,
@@ -23,8 +27,14 @@ const mappedBrands = props.brands.map((item: any) => ({
     label: item.name,
 }));
 
+const mappedColors = props.colors.map((item: any) => ({
+    value: item.id,
+    label: page.props.lang === 'ar' ? item.ar_name : item.name,
+    color: item.code
+}));
+
 // interface ProductVariant {
-//     color: string;
+//     color_id: string;
 //     stock_quantity: number;
 //     image: File | null;
 // }
@@ -34,7 +44,7 @@ const form = useForm<{
     brand_id: string;
     name: string;
     price: number | string;
-    sale_price: number | string;
+    discount_price: number | string;
     variants: Record<string, any>[];
     is_active: string;
     short_description: string;
@@ -44,8 +54,8 @@ const form = useForm<{
     brand_id: '',
     name: '',
     price: '',
-    sale_price: '',
-    variants: reactive([{ color: '#000000', stock_quantity: 1, ecommerce_product_image: null }]),
+    discount_price: '',
+    variants: reactive([{ color_id: null, stock_quantity: 1, ecommerce_product_image: null }]),
     is_active: '',
     short_description: '',
     description: '',
@@ -77,7 +87,7 @@ function submit() {
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div class="flex flex-col gap-1">
                         <Label>Color {{ index + 1 }}</Label>
-                        <Color v-model="variant.color" />
+                        <SelectWithSearch v-model="variant.color_id" :options="mappedColors" placeholder="e.g. Red" required />
                     </div>
                     <div class="flex flex-col gap-1">
                         <Label>Stock Quantity</Label>
@@ -105,7 +115,7 @@ function submit() {
                     type="button"
                     size="sm"
                     class="rounded-none opacity-50 hover:opacity-100"
-                    @click="form.variants.push({ color: '#000000', stock_quantity: 1, image: null })"
+                    @click="form.variants.push({ color_id: null, stock_quantity: 1, ecommerce_product_image: null })"
                 >
                     Add Variant
                 </Button>
@@ -141,11 +151,11 @@ function submit() {
             <InputError :message="form.errors.price" />
         </div>
 
-        <!-- Sale Price -->
+        <!-- Discount Price -->
         <div class="flex flex-col gap-1.5">
-            <Label>Sale Price</Label>
-            <Input v-model="form.sale_price" type="number" placeholder="e.g. 100" />
-            <InputError :message="form.errors.sale_price" />
+            <Label>Discount Price</Label>
+            <Input v-model="form.discount_price" type="number" placeholder="e.g. 100" />
+            <InputError :message="form.errors.discount_price" />
         </div>
 
         <!-- Flags -->

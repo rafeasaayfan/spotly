@@ -17,13 +17,15 @@ const props = defineProps<{
                     <h3 class="text-active-link text-xl font-bold">{{ props.data.name }}</h3>
                     <div class="flex items-center gap-2">
                         <div
-                            class="text-active rounded bg-gradient-to-br from-lime-600 to-lime-500 px-3 py-1.5 text-sm dark:from-lime-700 dark:to-lime-800"
+                            v-if="props.data.category_name"
+                            class="text-white rounded bg-gradient-to-br from-lime-600 to-lime-500 px-3 py-1.5 text-sm dark:from-lime-700 dark:to-lime-800"
                         >
                             {{ props.data.category_name }}
                         </div>
 
                         <div
-                            class="text-active rounded bg-gradient-to-br from-amber-600 to-amber-500 px-3 py-1.5 text-sm dark:from-amber-700 dark:to-amber-800"
+                            v-if="props.data.brand_name"
+                            class="text-white rounded bg-gradient-to-br from-amber-600 to-amber-500 px-3 py-1.5 text-sm dark:from-amber-700 dark:to-amber-800"
                         >
                             {{ props.data.brand_name }}
                         </div>
@@ -32,23 +34,26 @@ const props = defineProps<{
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-y-4">
                     <!-- Pricing & Stock -->
-                    <div class="border-muted flex flex-col gap-3 border-b pb-4 lg:border-e border-muted lg:pe-3">
+                    <div class="border-muted flex flex-col gap-4 border-b pb-4 lg:border-e border-muted lg:pe-3">
                         <p class="text-body-muted flex w-full items-center justify-between text-sm">
                             Price: <span class="text-active text-base font-medium">{{ props.data.price }}$</span>
                         </p>
-                        <p v-if="props.data.sale_price" class="text-body-muted flex w-full items-center justify-between text-sm">
-                            Sale Price: <span class="text-active text-base font-medium">{{ props.data.sale_price }}$</span>
+                        <p v-if="props.data.discount_price" class="text-body-muted flex w-full items-center justify-between text-sm">
+                            Discount Price: <span class="text-active text-base font-medium">{{ props.data.discount_price }}$</span>
                         </p>
                         <p class="text-body-muted flex w-full items-center justify-between text-sm">
-                            Views: <span class="text-active text-base font-medium">{{ props.data.views_count }}</span>
+                            Views Count: <span class="text-active text-base font-medium">{{ props.data.views_count }}</span>
                         </p>
                         <p class="text-body-muted flex w-full items-center justify-between text-sm">
-                            Sales: <span class="text-active text-base font-medium">{{ props.data.sales_count }}</span>
+                            Sales Count: <span class="text-active text-base font-medium">{{ props.data.sales_count }}</span>
                         </p>
                     </div>
 
                     <!-- Status -->
                     <div class="border-muted flex flex-col gap-5 border-b pb-4 lg:ps-3">
+                        <p class="text-body-muted flex w-full items-center justify-between text-sm">
+                            Is Discount: <span v-html="formatters.boolean(props.data.is_discount)"></span>
+                        </p>
                         <p class="text-body-muted flex w-full items-center justify-between text-sm">
                             Is In Home: <span v-html="formatters.boolean(props.data.is_in_home)"></span>
                         </p>
@@ -96,11 +101,11 @@ const props = defineProps<{
                                 No Image
                             </div>
                         </div>
-                        <div v-if="variant.color" class="flex items-center justify-between gap-2">
+                        <div v-if="variant.color_id" class="flex items-center justify-between gap-2">
                             <span class="text-body-muted text-sm">Color:</span>
                             <div class="flex items-center gap-1">
-                                <span :style="{ backgroundColor: variant.color }" class="border-muted size-5.5 rounded-full border shadow-sm"></span>
-                                <span class="text-body-muted text-xs font-medium">{{ variant.color }}</span>
+                                <span :style="{ backgroundColor: variant.color.code }" class="border-muted size-5 rounded-full border shadow-sm"></span>
+                                <span class="text-body-muted text-xs font-medium">{{ variant.color.name }}</span>
                             </div>
                         </div>
                         <p class="text-body-muted flex items-center justify-between gap-2 text-sm">
