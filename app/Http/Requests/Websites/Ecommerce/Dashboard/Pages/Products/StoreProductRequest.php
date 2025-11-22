@@ -18,23 +18,23 @@ class StoreProductRequest extends FormRequest
 
         return [
             'variants' => ['required', 'array'],
-            'variants.*.color' => ['required', 'string', 'max:50'],
+            'variants.*.color_id' => ['nullable', 'exists:colors,id'],
             'variants.*.stock_quantity' => ['required', 'integer', 'min:0'],
-            'variants.*.ecommerce_product_image' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
+            'variants.*.ecommerce_product_image' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
 
             'category_id' => [
-                'required',
+                'nullable',
                 'exists:categories,id,website_id,' . $website->id . ',is_active,1'
             ],
             'brand_id' => [
-                'required',
+                'nullable',
                 'exists:brands,id,website_id,' . $website->id . ',is_active,1'
             ],
 
             'name'        => ['required', 'string', 'max:255'],
             'price'       => ['required', 'numeric', 'min:0'],
-            'sale_price'  => ['nullable', 'numeric', 'lt:price'],
-
+            'discount_price'  => ['nullable', 'numeric', 'lt:price', 'gt:0'],
+            
             'is_active'   => ['required', 'boolean'],
 
             'short_description'  => ['required', 'string', 'max:255'],
@@ -48,16 +48,16 @@ class StoreProductRequest extends FormRequest
             $colors = [];
 
             foreach ($this->input('variants', []) as $index => $variant) {
-                $color = $variant['color'] ?? null;
+                $colorId = $variant['color_id'] ?? null;
 
-                if (!$color) continue;
+                if (!$colorId) continue;
 
                 // duplicate
-                if (in_array($color, $colors)) {
-                    $validator->errors()->add("variants.$index.color", "Duplicate color in request.");
+                if (in_array($colorId, $colors)) {
+                    $validator->errors()->add("variants.$index.color_id", "Duplicate color in request.");
                 }
 
-                $colors[] = $color;
+                $colors[] = $colorId;
             }
         });
     }

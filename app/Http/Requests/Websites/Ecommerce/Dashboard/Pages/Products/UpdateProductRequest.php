@@ -20,25 +20,25 @@ class UpdateProductRequest extends FormRequest
         return [
             'variants' => ['required', 'array'],
             'variants.*.id' => ['nullable'],
-            'variants.*.color' => ['required', 'string', 'max:50'],
+            'variants.*.color_id' => ['nullable', 'exists:colors,id'],
             'variants.*.stock_quantity' => ['required', 'integer', 'min:0'],
             'variants.*.ecommerce_product_image' => [
-                'nullable',
+                'required',
                 when('string', '', ['file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'])
             ],
 
             'category_id' => [
-                'required',
+                'nullable',
                 'exists:categories,id,website_id,' . $website->id . ',is_active,1'
             ],
             'brand_id' => [
-                'required',
+                'nullable',
                 'exists:brands,id,website_id,' . $website->id . ',is_active,1'
             ],
 
             'name'        => ['required', 'string', 'max:255'],
             'price'       => ['required', 'numeric', 'min:0'],
-            'sale_price'  => ['nullable', 'numeric', 'lt:price'],
+            'discount_price'  => ['nullable', 'numeric', 'lt:price', 'gt:0'],
 
             'is_active'   => ['required', 'boolean'],
 
@@ -55,29 +55,29 @@ class UpdateProductRequest extends FormRequest
             $requestVariantIds = collect($variants)->pluck('id')->filter()->all();
 
             foreach ($variants as $index => $variant) {
-                $color = $variant['color'] ?? null;
+                $colorId = $variant['color_id'] ?? null;
                 $id    = $variant['id'] ?? null;
 
-                if (!$color) continue;
+                if (!$colorId) continue;
 
                 // duplicate
-                if (in_array($color, $colors)) {
-                    $validator->errors()->add("variants.$index.color", "Duplicate color!");
+                if (in_array($colorId, $colors)) {
+                    $validator->errors()->add("variants.$index.color_id", "Duplicate color!");
                 }
 
                 $query = EcommerceProductVariant::where('product_id', $this->route('product')->id)
                     ->whereIn('id', $requestVariantIds)
-                    ->where('color', $color);
+                    ->where('color_id', $colorId);
 
                 if ($id) {
                     $query->where('id', '!=', $id); // ignore 
                 }
 
                 if ($query->exists()) {
-                    $validator->errors()->add("variants.$index.color", "color $index already exists for this product.");
+                    $validator->errors()->add("variants.$index.color_id", "color $index already exists for this product.");
                 }
 
-                $colors[] = $color;
+                $colors[] = $colorId;
             }
         });
     }
