@@ -27,12 +27,12 @@ class CheckWebsiteUserRole
         if (! $user) {
             return  redirect()->route('website.login');
         }
-    
-        if ($role === 'admin' && ($user->role !== 'admin' && $user->role !== 'owner')) {
+
+        if ($role === 'admin' && ($user->role->value !== 'admin' && $user->role->value !== 'owner')) {
             return redirect()->route("website.$type.home");
         }
     
-        if ($role === 'owner' && ($user->id !== $website->owner_id || $user->role !== 'owner')) {
+        if ($role === 'owner' && ($user->id !== $website->owner_id || $user->role->value !== 'owner')) {
             return redirect()->back()->with([
                 'success' => false,
                 'toastType' => 'error',
