@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Websites\Ecommerce\CartStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class EcommerceCart extends Model
@@ -13,6 +14,10 @@ class EcommerceCart extends Model
         'session_id',
 
         'status'
+    ];
+
+    protected $casts = [
+        'status' => CartStatus::class,
     ];
 
     /**
