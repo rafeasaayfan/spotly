@@ -21,7 +21,7 @@ const columns = [
     { key: 'user_name', label: 'User Name' },
     { key: 'website_name', label: 'Website Name' },
     { key: 'plan_name', label: 'Plan Name' },
-    { key: 'status', label: 'Status' },
+    { key: 'status', label: 'Status', type: 'status' },
     { key: 'start_date', label: 'Start At', type: 'date' },
     { key: 'end_date', label: 'End At', type: 'date' },
     { key: 'created_at', label: 'Created At', type: 'date' },
