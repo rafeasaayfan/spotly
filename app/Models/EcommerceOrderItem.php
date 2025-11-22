@@ -9,12 +9,20 @@ class EcommerceOrderItem extends Model
     protected $fillable = [
         'order_id',
         'product_id',
+        'product_variant_id',
 
-        'imageUrl',
-        'color',
+        'color_id',
+        'image_urls',
 
         'quantity',
         'unit_price',
+        
+        'attributes',
+    ];
+
+    protected $casts = [
+        'image_urls' => 'array',
+        'attributes' => 'array',
     ];
 
     /**

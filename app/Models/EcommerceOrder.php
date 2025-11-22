@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Websites\Ecommerce\OrderStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class EcommerceOrder extends Model
@@ -28,6 +29,10 @@ class EcommerceOrder extends Model
 
         'status_changed_at',
         'status',
+    ];
+
+    protected $casts = [
+        'status' => OrderStatus::class,
     ];
 
     /**
