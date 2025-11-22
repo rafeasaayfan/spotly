@@ -80,7 +80,7 @@ watch(
 const mappedCountries = props.countries.map((item: Record<string, any>) => ({
     value: item.phone_code,
     label: item.phone_code,
-    icon: item.flag,
+    src: item.flag,
 }));
 </script>
 

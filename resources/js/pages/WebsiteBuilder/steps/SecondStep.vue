@@ -79,14 +79,14 @@ const page = usePage<SharedData>();
 const mappedCountries = props.countries.map((item: any) => ({
     value: item.country,
     label: page.props.lang === 'ar' ? item.country_ar : page.props.lang === 'en' ? item.country : item.country_fr,
-    icon: item.flag,
+    src: item.flag,
 }));
 
 // Map country phone codes for phone number field
 const mappedCountryPhones = props.countries.map((item: any) => ({
     value: item.phone_code,
     label: item.phone_code,
-    icon: item.flag,
+    src: item.flag,
 }));
 </script>
 
@@ -104,8 +104,8 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
                     v-model="phone_number"
                     :options="mappedCountryPhones"
                     selectedCode="+961"
-                    selectParentClass="sm:col-span-1 md:col-span-2"
-                    inputClass="sm:col-span-6 md:col-span-5 h-10"
+                    selectParentClass="col-span-3 sm:col-span-2"
+                    inputClass="col-span-4 sm:col-span-5 h-10"
                     selectClass="h-10"
                 />
                 <InputError v-if="props.form.errors?.phone_number" :message="props.form.errors.phone_number" />
