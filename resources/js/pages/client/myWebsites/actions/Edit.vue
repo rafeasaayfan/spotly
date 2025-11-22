@@ -45,13 +45,13 @@ watchEffect(() => {
 const mappedCountryPhones = props.countries.map((item: any) => ({
     value: item.phone_code,
     label: item.phone_code,
-    icon: item.flag,
+    src: item.flag,
 }));
 
 const mappedCountries = props.countries.map((item: any) => ({
     value: item.country,
     label: page.props.lang === 'ar' ? item.country_ar : page.props.lang === 'en' ? item.country : item.country_fr,
-    icon: item.flag,
+    src: item.flag,
 }));
 
 const mappedCities = Object.entries(props.cities).map(([key, city]: [string, any]) => ({
