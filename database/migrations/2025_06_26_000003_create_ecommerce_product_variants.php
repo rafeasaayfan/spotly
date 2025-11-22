@@ -14,12 +14,10 @@ return new class extends Migration
         Schema::create('ecommerce_product_variants', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained('ecommerce_products')->onDelete('cascade');
-            $table->string('color');
             $table->integer('stock_quantity')->default(0);
             $table->integer('reserved_quantity')->default(0);
+            $table->decimal('price', 10, 2);
             $table->timestamps();
-
-            $table->unique(['product_id', 'color']);
         });
     }
 
