@@ -5,7 +5,7 @@ import UserInfo from './UserInfo.vue';
 import type { User } from '@/types';
 import { Link, router } from '@inertiajs/vue3';
 
-import { LayoutGrid, LogOut, Settings, User as UserIcon } from 'lucide-vue-next';
+import { LayoutDashboard, LogOut, Settings, User as UserIcon } from 'lucide-vue-next';
 
 interface Props {
     website_user: User;
@@ -40,7 +40,6 @@ defineProps<Props>();
         </DropdownMenuItem>
 
         <DropdownMenuItem
-            v-if="websiteUserRole.includes('admin') || websiteUserRole.includes('owner')"
             :as-child="true"
             class="web-text-body bg-transparent hover:bg-[var(--bg_content_hover_light)] dark:hover:bg-[var(--bg_content_hover_dark)]"
         >
@@ -56,7 +55,7 @@ defineProps<Props>();
             class="web-text-body bg-transparent hover:bg-[var(--bg_content_hover_light)] dark:hover:bg-[var(--bg_content_hover_dark)]"
         >
             <Link class="flex w-full cursor-pointer items-center gap-2" :href="route('website.e-commerce.dashboard.index')" prefetch as="button">
-                <LayoutGrid class="h-4 w-4" />
+                <LayoutDashboard class="h-4 w-4" />
                 {{ $t('dashboard') }}
             </Link>
         </DropdownMenuItem>
