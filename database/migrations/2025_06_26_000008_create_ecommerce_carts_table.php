@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Websites\Ecommerce\CartStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,7 +19,7 @@ return new class extends Migration
 
             $table->string('session_id')->nullable();
 
-            $table->enum('status', ['pending', 'checked_out'])->default('pending');
+            $table->string('status')->default(CartStatus::PENDING->value);
             $table->timestamps();
 
             $table->unique(['website_id', 'website_user_id'], 'cart_unique_user_idx');

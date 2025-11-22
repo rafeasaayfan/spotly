@@ -15,20 +15,23 @@ return new class extends Migration
             $table->id();
             $table->foreignId('cart_id')->constrained('ecommerce_carts')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('ecommerce_products')->onDelete('cascade');
+            $table->foreignId('product_variant_id')->constrained('ecommerce_product_variants')->onDelete('cascade');
 
-            $table->string('imageUrl')->nullable();
-            $table->string('color');
-            
+            $table->foreignId('color_id')->nullable()->constrained('colors')->onDelete('set null');
+            $table->json('image_urls')->nullable();
+
             $table->integer('quantity');
             $table->decimal('unit_price', 10, 2);
+
+            $table->json('attributes')->nullable();
 
             $table->timestamps();
 
             $table->unique(
-                ['cart_id', 'product_id', 'color'],
+                ['cart_id', 'product_id', 'product_variant_id'],
                 'cart_item_unique_idx'
             );
-            $table->index(['cart_id', 'product_id']);
+            $table->index(['cart_id', 'product_variant_id']);
         });
     }
 
