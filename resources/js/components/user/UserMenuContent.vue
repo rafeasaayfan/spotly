@@ -3,11 +3,10 @@ import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSep
 import UserInfo from '@/components/user/UserInfo.vue';
 
 import type { User } from '@/types';
-import useAuth from '@/composables/useAuth';
 
 import { Link, router } from '@inertiajs/vue3';
 
-import { LogOut, Settings, LayoutGrid } from 'lucide-vue-next';
+import { LogOut, Settings, LayoutDashboard } from 'lucide-vue-next';
 
 interface Props {
     user: User;
@@ -18,8 +17,6 @@ const handleLogout = () => {
 };
 
 defineProps<Props>();
-
-const { can } = useAuth();
 </script>
 
 <template>
@@ -40,9 +37,9 @@ const { can } = useAuth();
         </DropdownMenuItem>
 
 
-        <DropdownMenuItem :as-child="true" v-if="can('dashboard_access')">
+        <DropdownMenuItem :as-child="true">
             <Link class="flex w-full items-center gap-2 cursor-pointer" :href="route('dashboard.index')" prefetch as="button">
-                <LayoutGrid class="h-4 w-4" />
+                <LayoutDashboard class="h-4 w-4" />
                 {{ $t('dashboard') }}
             </Link>
         </DropdownMenuItem>
