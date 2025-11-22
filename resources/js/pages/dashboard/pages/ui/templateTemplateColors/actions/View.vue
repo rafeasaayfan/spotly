@@ -10,6 +10,7 @@ const columns = [
     { key: 'websiteType_type', label: 'Website Type', },
     { key: 'template_name', label: 'Template Name', },
     { key: 'templateColor_name', label: 'Template Color Name' },
+    { key: 'is_active', label: 'Active', type: 'active' },
     { key: 'created_at', label: 'Created At', type: 'date' },
     { key: 'updated_at', label: 'Updated At', type: 'date' },
 ];

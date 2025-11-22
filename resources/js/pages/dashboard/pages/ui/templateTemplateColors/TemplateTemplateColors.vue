@@ -22,17 +22,18 @@ const columns = [
     { key: 'websiteType_type', label: 'Website Type' },
     { key: 'template_name', label: 'Template Name' },
     { key: 'templateColor_name', label: 'Template Color Name' },
+    { key: 'is_active', label: 'Active', type: 'toggle' },
     { key: 'created_at', label: 'Created At', type: 'date' },
 ];
 
 const filter = [
     {
-        key: 'is_default',
-        label: 'Default',
+        key: 'is_active',
+        label: 'Active',
         type: 'select',
         options: [
-            { value: '0', label: 'No' },
-            { value: '1', label: 'Yes' },
+            { value: '1', label: 'Active' },
+            { value: '0', label: 'Inactive' },
         ],
     },
 ];
