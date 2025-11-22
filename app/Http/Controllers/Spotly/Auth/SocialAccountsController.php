@@ -56,6 +56,6 @@ class SocialAccountsController extends Controller
             return app(\App\Http\Controllers\Spotly\WebsiteBuilderController::class)->store();
         }
 
-        return redirect()->intended(route('dashboard.index', absolute: false));
+        return redirect(redirectAfterLogin($user));
     }
 }

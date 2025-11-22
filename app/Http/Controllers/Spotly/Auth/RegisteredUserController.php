@@ -51,6 +51,6 @@ class RegisteredUserController extends Controller
             return app(\App\Http\Controllers\Spotly\WebsiteBuilderController::class)->store();
         }
 
-        return redirect(route('dashboard.index', absolute: false));
+        return redirect(redirectAfterLogin($user));
     }
 }
