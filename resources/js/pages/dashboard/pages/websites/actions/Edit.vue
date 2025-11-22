@@ -24,7 +24,7 @@ const mappedTypes = props.websiteTypes.map((item: any) => ({
 const mappedCountries = props.countries.map((item: any) => ({
     value: item.phone_code,
     label: item.phone_code,
-    icon: item.flag,
+    src: item.flag,
 }));
 
 const page = usePage<SharedData>();
