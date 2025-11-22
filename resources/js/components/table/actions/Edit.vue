@@ -56,10 +56,10 @@ function submit() {
 </script>
 
 <template>
-    <form class="grid grid-cols-1 gap-4 px-4 pb-5 lg:grid-cols-2" @submit.prevent="submit" enctype="multipart/form-data">
+    <form class="grid grid-cols-1 gap-5 px-4 pb-5 lg:grid-cols-2" @submit.prevent="submit" enctype="multipart/form-data">
         <div
             class="flex flex-col gap-1.5"
-            :class="['textarea'].includes(column.type ?? '') ? 'lg:col-span-2' : ''"
+            :class="['textarea', 'multiInput'].includes(column.type ?? '') ? 'lg:col-span-2' : ''"
             v-for="(column, index) in props.columns"
             :key="index"
         >

@@ -24,7 +24,7 @@ const otherFields = computed(() => {
 </script>
 
 <template>
-    <div class="grid grid-cols-1 gap-4 rounded-md px-4 pb-3">
+    <div class="grid grid-cols-1 gap-5 rounded-md px-4 pb-3">
         <!-- Base Fields Section -->
         <div v-if="baseFields.length > 0" class="border-muted flex flex-col border-b pb-4 gap-1">
             <template v-for="column in baseFields" :key="column.key">
