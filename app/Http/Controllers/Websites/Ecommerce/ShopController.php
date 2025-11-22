@@ -44,7 +44,7 @@ class ShopController extends BaseController
     protected function getProducts(Request $request)
     {
         $query = EcommerceProduct::where('website_id', $this->website->id)->active()->whereHas('inStockVariants')
-            ->with(['inStockVariants', 'category:id,name,ar_name', 'brand:id,name']);
+            ->with(['category:id,name,ar_name', 'brand:id,name', 'variants.color']);
 
         $validated = $request->validate([
             'limit'     => 'nullable|integer|min:1|max:100',
@@ -94,7 +94,7 @@ class ShopController extends BaseController
         }
 
         if ($onSale) {
-            $query->whereNotNull('sale_price');
+            $query->where('is_discount', true);
         }
 
         if ($minPrice !== null && $maxPrice !== null) {
