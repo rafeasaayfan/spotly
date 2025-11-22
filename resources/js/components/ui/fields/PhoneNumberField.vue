@@ -61,6 +61,7 @@ watch([phone, code], () => {
             :parentClass="cn('col-span-2', props.selectParentClass)"
             :class="cn('rounded-none rounded-s-md', props.selectClass)"
             :classDropdown="cn(props.selectDropdownClass)"
+            :withReset="false"
         />
 
         <Input
