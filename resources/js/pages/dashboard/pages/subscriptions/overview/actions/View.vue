@@ -59,7 +59,7 @@ const props = defineProps<{
                     </p>
                     <p v-if="props.data.website.email" class="text-body-muted flex w-full items-center justify-between text-sm">
                         Website Email:
-                        <a :href="`mailto:${props.data.email}`" class="text-body text-base font-medium">{{ props.data.email }}</a>
+                        <a :href="`mailto:${props.data.website.email}`" class="text-body text-base font-medium">{{ props.data.website.email }}</a>
                     </p>
                     <p v-if="props.data.website.phone_number" class="text-body-muted flex w-full items-center justify-between text-sm">
                         Website Number:
@@ -67,7 +67,7 @@ const props = defineProps<{
                     </p>
                     <p class="text-body-muted flex w-full items-center justify-between text-sm">
                         Website Activation:
-                        <span v-html="formatters.active(props.data.website.active)"></span>
+                        <span v-html="formatters.active(props.data.website.is_active)"></span>
                     </p>
                     <p class="text-body-muted flex w-full items-center justify-between text-sm">
                         Website Status:
