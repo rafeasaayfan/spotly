@@ -25,5 +25,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(Website::class, WebsitePolicy::class);
         Website::observe(WebsiteObserver::class);
+
+        require_once app_path('Helpers/helpers.php');
     }
 }
