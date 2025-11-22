@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\Websites\Ecommerce\Dashboard\DashboardController;
+use App\Http\Controllers\Websites\Ecommerce\Dashboard\Pages\AttributesController;
 use App\Http\Controllers\Websites\Ecommerce\Dashboard\Pages\CartsController;
-use App\Http\Controllers\Websites\Ecommerce\Dashboard\Pages\DeliveryFeesController;
+// use App\Http\Controllers\Websites\Ecommerce\Dashboard\Pages\DeliveryFeesController;
 use App\Http\Controllers\Websites\Ecommerce\Dashboard\Pages\OrdersController;
 use App\Http\Controllers\Websites\Ecommerce\Dashboard\Pages\ProductsController;
 use Illuminate\Support\Facades\Route;
@@ -10,11 +11,17 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
+    //* Attributes
+    dashboardPagesRoutes('attributes', AttributesController::class);
+    Route::patch('attributes/{id}/is_active', [AttributesController::class, 'toggleActive'])->name('attributes.is_active');
+    Route::patch('attributes/{id}/is_required', [AttributesController::class, 'toggleRequired'])->name('attributes.is_required');
+
     //* Products
     dashboardPagesRoutes('products', ProductsController::class);
     Route::patch('products/{id}/is_active', [ProductsController::class, 'toggleActive'])->name('products.is_active');
     Route::patch('products/{id}/is_in_home', [ProductsController::class, 'toggleIsInHome'])->name('products.is_in_home');
     Route::patch('products/{id}/is_special', [ProductsController::class, 'toggleIsSpecial'])->name('products.is_special');
+    Route::patch('products/{id}/is_discount', [ProductsController::class, 'toggleIsDiscount'])->name('products.is_discount');
 
     //* Delivery Fees
     // dashboardPagesRoutes('delivery-fees', DeliveryFeesController::class);

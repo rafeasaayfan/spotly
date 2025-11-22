@@ -1,0 +1,85 @@
+<script setup lang="ts">
+import DataTable from '@/components/table/DataTable.vue';
+import DashboardLayout from '@/layouts/DashboardLayout.vue';
+
+import { Head } from '@inertiajs/vue3';
+import { watchEffect } from 'vue';
+
+import { type DataTableProps } from '@/composables/dataTable/useDataTable';
+import { defaultTableConditions } from '@/lib/dataTable';
+import { toast } from '@/lib/sweetAlert';
+import { type BreadcrumbItem } from '@/types';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Attributes',
+        href: '/dashboard/attributes',
+    },
+];
+
+const columns = [
+    { key: 'name', label: 'Name' },
+    { key: 'type', label: 'Type' },
+    { key: 'values', label: 'Values', type: 'array' },
+    { key: 'is_required', label: 'Is Required', type: 'toggle' },
+    { key: 'is_active', label: 'Is Active', type: 'toggle' },
+    { key: 'created_at', label: 'Created At', type: 'date' },
+];
+
+const filter = [
+    {
+        key: 'is_required',
+        label: 'Is required',
+        type: 'select',
+        options: [
+            { value: '0', label: 'No' },
+            { value: '1', label: 'Yes' },
+        ],
+    },
+    {
+        key: 'is_active',
+        label: 'Is Active',
+        type: 'select',
+        options: [
+            { value: '0', label: 'Inactive' },
+            { value: '1', label: 'Active' },
+        ],
+    },
+];
+
+const props = defineProps<{
+    attributes: DataTableProps;
+    websiteNameAndLogo?: Record<string, string>
+    flash?: {
+        toastType: 'success' | 'error' | 'warning' | 'info';
+        message: string;
+    };
+}>();
+
+watchEffect(() => {
+    const message = props.flash?.message;
+    if (message) {
+        toast.fire({ icon: props.flash?.toastType, title: message });
+    }
+});
+
+const tableConditions = {
+    ...defaultTableConditions,
+};
+</script>
+
+<template>
+    <Head title="Attributes" />
+
+    <DashboardLayout :breadcrumbs="breadcrumbs" dashboardFor="e-commerce" :websiteNameAndLogo="props.websiteNameAndLogo">
+        <DataTable
+            :tableData="props.attributes"
+            :filter="filter"
+            :columns="columns"
+            routeName="website.e-commerce.dashboard.attributes"
+            :tableConditions="tableConditions"
+            path="attributes"
+            dashboardFor="e-commerce"
+        />
+    </DashboardLayout>
+</template>

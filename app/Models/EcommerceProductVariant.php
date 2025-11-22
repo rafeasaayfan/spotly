@@ -15,9 +15,9 @@ class EcommerceProductVariant extends Model implements HasMedia
     protected $fillable = [
         'product_id',
 
-        'color',
         'stock_quantity',
         'reserved_quantity',
+        'price',
     ];
 
     /**
@@ -26,6 +26,14 @@ class EcommerceProductVariant extends Model implements HasMedia
     public function product()
     {
         return $this->belongsTo(EcommerceProduct::class, 'product_id');
+    }
+
+    /**
+     * Get the attributes that the variant is associated with.
+     */
+    public function attributes()
+    {
+        return $this->hasMany(EcommerceProductVariantAttribute::class, 'product_variant_id');
     }
 
     /**
