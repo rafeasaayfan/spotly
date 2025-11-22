@@ -21,8 +21,8 @@ const columns = [
     { key: 'id', label: 'ID' },
     { key: 'name', label: 'Name' },
     { key: 'email', label: 'Email' },
-    { key: 'roles_name', label: 'Role' },
-    { key: 'permissions_name', label: 'Permission' },
+    { key: 'roles_name', label: 'Role', type: 'highlight' },
+    { key: 'permissions_name', label: 'Permission', type: 'highlight' },
 ];
 
 const props = defineProps<{
