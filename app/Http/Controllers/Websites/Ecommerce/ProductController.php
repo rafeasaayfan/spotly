@@ -9,6 +9,7 @@ use App\Models\EcommerceOrderItem;
 use App\Models\EcommerceProduct;
 use App\Services\Websites\Ecommerce\ProductStockService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends BaseController
 {
@@ -48,7 +49,7 @@ class ProductController extends BaseController
                 ->with(['inStockVariants', 'category:id,name,ar_name', 'brand:id,name'])
                 ->firstOrFail();
 
-            $validateQuantity = ProductStockService::validateQuantity($product, $this->cartItems(), $request->quantity, $request->color, 'ATC');
+            $validateQuantity = ProductStockService::validateQuantity($product, $this->cartItems(), $request->quantity, $request->color_id, 'ATC');
             if($validateQuantity !== 'done') {
                 return $this->jsonError($validateQuantity);
             }
@@ -61,7 +62,7 @@ class ProductController extends BaseController
                     $q->where('session_id', session()->getId());
                 })
                 ->first();
-
+            
             // Create a cart if not exists
             if (!$cart) {
                 $cart = EcommerceCart::create([
@@ -74,7 +75,7 @@ class ProductController extends BaseController
             // Find cart item with this product/color
             $item = $cart->items()
                 ->where('product_id', $product->id)
-                ->where('color', $request->color)
+                ->where('color_id', $request->color_id)
                 ->first();
 
             // Increment quantity or create new cart item as needed
@@ -87,7 +88,7 @@ class ProductController extends BaseController
                     'product_id' => $product->id,
                     'quantity' => $request->quantity,
                     'imageUrl' => $request->imageUrl ?? null,
-                    'color' => $request->color,
+                    'color_id' => $request->color_id,
                     'unit_price' => $request->unit_price,
                 ]);
             }
@@ -112,7 +113,10 @@ class ProductController extends BaseController
                 ]
             );
         } catch (\Exception $e) {
-            return $this->logResponse('ProductController@addToCart', $e, 'An error occurred while add the Product to cart');
+            Log::error('ProductController@addToCart Error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return $this->logResponse('ProductController@addToCart', $e, $e->getTraceAsString());
         }
     }
 
@@ -135,8 +139,8 @@ class ProductController extends BaseController
             })->get();
 
         $updatedVariants = $product->inStockVariants->map(function ($variant) use ($cartItems, $pendingOrderItems) {
-            $cartItemQty = optional($cartItems->firstWhere('color', $variant->color))->quantity ?? 0;
-            $pendingOrderItemQty = optional($pendingOrderItems->where('color', $variant->color))->sum('quantity') ?? 0;
+            $cartItemQty = optional($cartItems->firstWhere('color_id', $variant->color_id))->quantity ?? 0;
+            $pendingOrderItemQty = optional($pendingOrderItems->where('color_id', $variant->color_id))->sum('quantity') ?? 0;
 
             $availableQty = ($variant->stock_quantity - $variant->reserved_quantity) - ($cartItemQty + $pendingOrderItemQty);
 
