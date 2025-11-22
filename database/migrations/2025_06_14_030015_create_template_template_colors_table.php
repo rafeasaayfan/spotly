@@ -17,7 +17,12 @@ return new class extends Migration
             $table->foreignId('template_id')->constrained('templates')->onDelete('cascade');
             $table->foreignId('template_color_id')->constrained('template_colors')->onDelete('cascade');
 
+            $table->boolean('is_active')->default(true);
+
             $table->timestamps();
+
+            $table->unique(['website_type_id', 'template_id', 'template_color_id'], 'ttc_unique_idx');
+            $table->index(['website_type_id', 'template_id', 'template_color_id'], 'ttc_idx');
         });
     }
 
