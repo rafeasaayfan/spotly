@@ -21,13 +21,14 @@ return new class extends Migration
             $table->string('slug');
 
             $table->decimal('price', 10, 2);
-            $table->decimal('sale_price', 10, 2)->nullable();
+            $table->decimal('discount_price', 10, 2)->nullable();
 
             $table->text('short_description')->nullable();
             $table->text('description')->nullable();
 
             $table->integer('views_count')->default(0);
 
+            $table->boolean('is_discount')->default(false);
             $table->boolean('is_in_home')->default(false);
             $table->boolean('is_special')->default(false);
             $table->boolean('is_active')->default(true);
