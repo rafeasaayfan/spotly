@@ -7,9 +7,12 @@ use App\Http\Controllers\Spotly\Client\Websites\Actions\DeleteWebsiteController;
 use App\Http\Controllers\Spotly\Client\Websites\Actions\EditWebsiteController;
 use App\Http\Controllers\Spotly\Client\Websites\Actions\UiWebsiteController;
 use App\Http\Controllers\Spotly\Client\Websites\Actions\ViewWebsiteController;
+use App\Http\Controllers\Spotly\Client\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->prefix('dashboard/')->name('client.')->group(function () {
+    Route::get('/stats', [DashboardController::class, 'index'])->name('dashboard');
+    
     Route::get('/my-websites', [ClientWebsitesController::class, 'index'])->name('myWebsites');
 
     // Edit
