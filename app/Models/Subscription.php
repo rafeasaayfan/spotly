@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Spotly\SubscriptionStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class Subscription extends Model
@@ -19,6 +20,7 @@ class Subscription extends Model
     protected $casts = [
         'end_date' => 'datetime',
         'start_date' => 'datetime',
+        'status' => SubscriptionStatus::class,
     ];
 
     /**
@@ -66,7 +68,10 @@ class Subscription extends Model
      */
     public function scopeExpiringSoon($query, $days = 3)
     {
-        return $query->whereDate('end_date', '<=', now()->addDays($days));
+        return $query->whereBetween('end_date', [
+            now(),
+            now()->addDays($days)
+        ]);
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\Spotly\PaymentCurrency;
+use App\Enums\Spotly\PaymentStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
@@ -17,6 +19,11 @@ class Payment extends Model
         'transaction_id',
         'details',
         'paid_at',
+    ];
+
+    protected $casts = [
+        'status' => PaymentStatus::class,
+        'currency' => PaymentCurrency::class,
     ];
 
     /**

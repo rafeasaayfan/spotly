@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Spotly\WebsiteStatus;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -43,6 +44,10 @@ class Website extends Model implements HasMedia
         'status',
     ];
 
+    protected $casts = [
+        'status' => WebsiteStatus::class,
+    ];
+
     /**
      * The website has owner.
      */
@@ -64,7 +69,7 @@ class Website extends Model implements HasMedia
      */
     public function subscription()
     {
-        return $this->hasOne(Subscription::class);
+        return $this->hasOne(Subscription::class, 'website_id');
     }
     /**
      * Scope a query to only include websites with expired subscriptions.
@@ -172,5 +177,15 @@ class Website extends Model implements HasMedia
     public function getDarkLogoAttribute()
     {
         return $this->getFirstMediaUrl('dark_logo');
+    }
+
+
+    // =================  Ecommerce    ===================================
+    /**
+     * Get the orders for the website.
+     */
+    public function ecommerceOrders()
+    {
+        return $this->hasMany(EcommerceOrder::class, 'website_id');
     }
 }
