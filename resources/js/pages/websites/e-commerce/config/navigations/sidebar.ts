@@ -49,6 +49,11 @@ export const mainSidebarItems: SidebarSection[] = [
             //     icon: icons.Truck,
             // },
             {
+                title: 'Attributes',
+                href: '/dashboard/attributes',
+                icon: icons.SlidersHorizontal,
+            },
+            {
                 title: 'Products',
                 href: '/dashboard/products',
                 icon: icons.Package,
