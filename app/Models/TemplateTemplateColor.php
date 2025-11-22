@@ -16,6 +16,7 @@ class TemplateTemplateColor extends Model implements HasMedia
         'website_type_id',
         'template_id',
         'template_color_id',
+        'is_active',
     ];
 
     /**
