@@ -44,6 +44,7 @@ function removeField(index: number) {
       <Input
         v-model="modelValue[index]"
         :placeholder="props.placeholder"
+        v-if="modelValue.length >= 1"
       />
 
       <div>
@@ -54,7 +55,6 @@ function removeField(index: number) {
           class="rounded-full size-7 bg-[var(--destructive)]/50 dark:bg-[var(--destructive)]/30 
           hover:bg-[var(--destructive)] dark:hover:bg-[var(--destructive)] hover:scale-100 hover:translate-0"
           @click="removeField(index)"
-          v-if="modelValue.length > 1"
         >
           <X class="size-3" />
         </Button>
