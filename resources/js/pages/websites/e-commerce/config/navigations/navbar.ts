@@ -1,5 +1,5 @@
 import { type NavItem } from '@/types';
-import { Home, ListOrdered, ShoppingBag } from 'lucide-vue-next';
+import { Home, ListOrdered, ShoppingBag, Truck } from 'lucide-vue-next';
 
 export const navbarItems: NavItem[] = [
     {
@@ -16,5 +16,10 @@ export const navbarItems: NavItem[] = [
         title: 'nav.my.orders',
         href: '/orders',
         icon: ListOrdered,
+    },
+    {
+        title: 'nav.trackOrder',
+        href: '/track-order',
+        icon: Truck,
     },
 ];
