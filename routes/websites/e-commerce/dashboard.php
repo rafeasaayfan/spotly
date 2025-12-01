@@ -14,7 +14,6 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     //* Attributes
     dashboardPagesRoutes('attributes', AttributesController::class);
     Route::patch('attributes/{id}/is_active', [AttributesController::class, 'toggleActive'])->name('attributes.is_active');
-    Route::patch('attributes/{id}/is_required', [AttributesController::class, 'toggleRequired'])->name('attributes.is_required');
 
     //* Products
     dashboardPagesRoutes('products', ProductsController::class);
