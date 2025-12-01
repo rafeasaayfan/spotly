@@ -22,7 +22,7 @@ const columns = [
     { key: 'price', label: 'Price' },
     { key: 'currency', label: 'Currency' },
     { key: 'duration', label: 'Duration' },
-    { key: 'features', label: 'Features' },
+    { key: 'features', label: 'Features', type: 'array' },
     { key: 'is_active', label: 'Is Active', type: 'toggle' },
     { key: 'created_at', label: 'Created At', type: "date" },
 ];

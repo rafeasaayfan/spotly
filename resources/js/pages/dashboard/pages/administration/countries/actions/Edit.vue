@@ -6,7 +6,7 @@ const props = defineProps<{
 }>();
 
 const columns = [
-    { key: 'flag', label: 'Flag', type: 'imageFile', placeholder: 'Enter the country flag', required: true },
+    { key: 'flag', label: 'Flag', type: 'file', placeholder: 'Enter the country flag', required: true },
     { key: 'country', label: 'Country', type: 'text', placeholder: 'Enter the country name in english', required: true },
     { key: 'country_ar', label: 'Country AR', type: 'text', placeholder: 'Enter the country name in arabic', required: true },
     { key: 'country_fr', label: 'Country FR', type: 'text', placeholder: 'Enter the country name in frensh', required: true },

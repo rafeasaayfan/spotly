@@ -48,12 +48,6 @@ const columns = [
         relation: mappedTemplateColors,
     },
     {
-        key: 'uiImages',
-        label: 'Template Images',
-        type: 'file',
-        multiple: true,
-    },
-    {
         key: 'is_active',
         label: 'Active',
         type: 'select',
@@ -63,6 +57,12 @@ const columns = [
             { value: '0', label: 'Inactive' },
             { value: '1', label: 'Active' },
         ],
+    },
+    {
+        key: 'uiImages',
+        label: 'Template Images',
+        type: 'file',
+        multiple: true,
     },
 ];
 </script>
