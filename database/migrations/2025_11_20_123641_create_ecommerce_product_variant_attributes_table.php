@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('ecommerce_product_variant_attributes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_variant_id')->constrained('ecommerce_product_variants')->onDelete('cascade');
-            $table->foreignId('attribute_value_id')->constrained('ecommerce_product_attribute_values')->onDelete('cascade');
+            $table->foreignId('attribute_id')->constrained('ecommerce_product_attributes')->onDelete('cascade');
+            $table->foreignId('attribute_value_id')->nullable()->constrained('ecommerce_product_attribute_values')->onDelete('cascade');
+            $table->foreignId('color_id')->nullable()->constrained('colors')->onDelete('cascade');
             $table->timestamps();
 
-            $table->unique(['product_variant_id', 'attribute_value_id'], 'epva_unique_idx');
-            $table->index(['product_variant_id', 'attribute_value_id'], 'epva_idx');
+            $table->unique(['product_variant_id', 'attribute_id'], 'epa_unique_idx');
+            $table->index(['product_variant_id', 'attribute_id'], 'epa_idx');
         });
     }
 

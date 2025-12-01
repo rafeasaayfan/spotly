@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('ecommerce_products')->onDelete('cascade');
             $table->foreignId('product_variant_id')->constrained('ecommerce_product_variants')->onDelete('cascade');
 
-            $table->foreignId('color_id')->nullable()->constrained('colors')->onDelete('set null');
             $table->json('image_urls')->nullable();
 
             $table->integer('quantity');

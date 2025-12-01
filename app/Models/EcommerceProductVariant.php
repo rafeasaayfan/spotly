@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use App\Traits\HasMediaUploads;
 
 class EcommerceProductVariant extends Model implements HasMedia
 {
-    use InteractsWithMedia;
+    use InteractsWithMedia, HasMediaUploads;
 
-    public $appends = ['ecommerce_product_image'];
+    protected $appends = ['ecommerce_product_images'];
 
     protected $fillable = [
         'product_id',
@@ -37,10 +38,10 @@ class EcommerceProductVariant extends Model implements HasMedia
     }
 
     /**
-     * Get the ecommerce_product_image from media.
+     * Get the ecommerce_product_images from media.
      */
-    public function getEcommerceProductImageAttribute()
+    public function getEcommerceProductImagesAttribute()
     {
-        return $this->getFirstMediaUrl('ecommerce_product_image');
+        return $this->getMedia('ecommerce_product_images');
     }
 }

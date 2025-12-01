@@ -9,15 +9,11 @@ class EcommerceProductAttribute extends Model
     protected $fillable = [
         'website_id',
         'name',
+        'name_ar',
+        
         'type',
-        'values',
         'description',
-        'is_required',
         'is_active',
-    ];
-
-    protected $casts = [
-        'values' => 'array',
     ];
 
     /**
@@ -26,6 +22,22 @@ class EcommerceProductAttribute extends Model
     public function website()
     {
         return $this->belongsTo(Website::class, 'website_id');
+    }
+
+    /**
+     * Get the values for the attribute.
+     */
+    public function values()
+    {
+        return $this->hasMany(EcommerceProductAttributeValue::class, 'attribute_id')->orderBy('id', 'asc');
+    }
+
+    /**
+     * Get active attributes.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', 1);
     }
 }
     

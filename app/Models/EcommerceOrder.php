@@ -74,4 +74,12 @@ class EcommerceOrder extends Model
     {
         return $this->hasMany(EcommerceOrderItem::class, 'order_id');
     }
+
+    /**
+     * Get the track orders for the order.
+     */
+    public function trackOrder()
+    {
+        return $this->hasMany(EcommerceTrackOrder::class, 'order_id');
+    }
 }

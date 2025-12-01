@@ -11,13 +11,13 @@ class EcommerceCartItem extends Model
         'product_id',
         'product_variant_id',
 
-        'color_id',
         'image_urls',
 
         'quantity',
         'unit_price',
 
         'attributes',
+        'attributes_hash',
     ];
 
     protected $casts = [
@@ -49,11 +49,4 @@ class EcommerceCartItem extends Model
         return $this->belongsTo(EcommerceProductVariant::class, 'product_variant_id');
     }
 
-    /**
-     * Get the color that the cart item is associated with.
-     */
-    public function color()
-    {
-        return $this->belongsTo(Color::class, 'color_id');
-    }
 }

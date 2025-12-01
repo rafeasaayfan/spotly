@@ -8,8 +8,9 @@ class EcommerceProductAttributeValue extends Model
 {
     protected $fillable = [
         'attribute_id',
-        'color_id',
         'value',
+        'value_ar',
+        'is_active',
     ];
     
     /**
@@ -18,13 +19,5 @@ class EcommerceProductAttributeValue extends Model
     public function attribute()
     {
         return $this->belongsTo(EcommerceProductAttribute::class, 'attribute_id');
-    }
-
-    /**
-     * Get the color that the value is associated with.
-     */
-    public function color()
-    {
-        return $this->belongsTo(Color::class, 'color_id');
     }
 }

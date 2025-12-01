@@ -17,21 +17,21 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('ecommerce_products')->onDelete('cascade');
             $table->foreignId('product_variant_id')->constrained('ecommerce_product_variants')->onDelete('cascade');
 
-            $table->foreignId('color_id')->nullable()->constrained('colors')->onDelete('set null');
             $table->json('image_urls')->nullable();
 
             $table->integer('quantity');
             $table->decimal('unit_price', 10, 2);
 
             $table->json('attributes')->nullable();
-
+            $table->string('attributes_hash')->nullable();
+            
             $table->timestamps();
 
             $table->unique(
-                ['cart_id', 'product_id', 'product_variant_id'],
-                'cart_item_unique_idx'
+                ['cart_id', 'product_id', 'product_variant_id', 'attributes_hash'],
+                'ci_unique_attributes_hash_idx'
             );
-            $table->index(['cart_id', 'product_variant_id']);
+            $table->index(['cart_id', 'product_variant_id', 'attributes_hash'], 'ci_attributes_hash_idx');
         });
     }
 
