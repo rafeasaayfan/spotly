@@ -34,10 +34,10 @@ class TemplateColorSeeder extends Seeder
             'bg_field_light' => 'hsl(218, 92%, 95%)',
             'bg_field_dark' => 'oklch(18% 0.034 264.665)',
     
-            'bg_card_light' => 'rgba(0, 0, 0, 0.05)',
-            'bg_card_hover_light' => 'rgba(0, 0, 0, 0.1)',
-            'bg_card_dark' => 'rgba(255, 255, 255, 0.05)',
-            'bg_card_hover_dark' => 'rgba(255, 255, 255, 0.08)',
+            'bg_card_light' => 'rgba(0, 0, 0, 0.01)',
+            'bg_card_hover_light' => 'rgba(0, 0, 0, 0.03)',
+            'bg_card_dark' => 'rgba(255, 255, 255, 0.01)',
+            'bg_card_hover_dark' => 'rgba(255, 255, 255, 0.03)',
     
             'bg_content_light' => 'rgba(37, 99, 235, 0.1)',
             'bg_content_hover_light' => 'rgba(37, 99, 235, 0.2)',
