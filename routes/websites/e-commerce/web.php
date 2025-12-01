@@ -24,6 +24,8 @@ Route::name('e-commerce.')->group(function () {
     Route::get('/orders', [OrdersController::class, 'index'])->name('orders');
     Route::patch('/orders/{order}/cancel', [OrdersController::class, 'cancelOrder'])->name('orders.cancelOrder');
 
+    Route::get('/track-order', [OrdersController::class, 'trackOrder'])->name('trackOrder');
+
     Route::middleware(['auth:website', 'verified:website.verification.notice', 'websiteUserRole:admin'])->group(function () {
         require __DIR__ . '/dashboard.php';
         require __DIR__ . '/../common/dashboard.php';
