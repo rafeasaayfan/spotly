@@ -42,10 +42,10 @@ const handleStatusText = (status: string): string => {
         class="web-border-color col-span-1 flex h-fit flex-col justify-between gap-4 rounded-md border bg-[var(--bg_card_light)] transition-all duration-300 dark:bg-[var(--bg_card_dark)]"
     >
         <div class="web-border-color flex w-full items-center justify-between border-b p-2">
-            <p class="web-text-body-muted flex items-center gap-1 text-xs">
+            <Link :href="route('website.e-commerce.trackOrder', { order_number: order.order_number })" class="web-text-body-muted flex items-center gap-1 text-xs">
                 #
                 <span class="web-text-active-link text-[11px] font-medium">{{ order.order_number }}</span>
-            </p>
+            </Link>
             <p class="web-text-body text-xs font-medium uppercase">{{ order.payment_method.name }}</p>
         </div>
 
@@ -99,29 +99,25 @@ const handleStatusText = (status: string): string => {
                                 <p class="text-xs font-medium">{{ order.note }}</p>
                             </div>
 
-                            <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                                <div v-for="item in order.items" :key="item.id" class="group web-border-color flex rounded-md border">
-                                    <div
-                                        class="relative w-25 min-w-30 overflow-hidden bg-[var(--bg_content_light)] sm:rounded-s-md dark:bg-[var(--bg_content_dark)]"
-                                    >
-                                        <img
-                                            v-if="item.imageUrl"
-                                            :src="item.imageUrl"
-                                            class="h-full transition-all duration-300 group-hover:scale-130 sm:w-full sm:rounded-s-md"
-                                        />
-                                        <div v-else class="flex h-full w-full flex-col items-center justify-center text-sm">
-                                            <p class="web-text-body-muted">{{ $t('color') }}</p>
-                                            <div class="flex items-center gap-1">
-                                                <div
-                                                    class="web-border-color size-4.5 rounded-full border"
-                                                    :style="{ backgroundColor: item.color }"
-                                                ></div>
-                                                <span class="text-xs">{{ item.color }}</span>
-                                            </div>
+                            <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
+                                <div
+                                    v-for="item in order.items"
+                                    :key="item.id"
+                                    class="group web-border-color flex flex-col rounded-md border sm:flex-row web-bg-card"
+                                >
+                                    <div class="flex w-full items-center justify-center p-2 sm:w-auto">
+                                        <div
+                                            class="relative max-h-35 w-35 overflow-hidden rounded-md bg-[var(--bg_content_light)] dark:bg-[var(--bg_content_dark)]"
+                                        >
+                                            <img
+                                                v-if="item.image_urls && item.image_urls.length > 0"
+                                                :src="item.image_urls[0]"
+                                                class="h-full w-full rounded-md transition-all duration-300 group-hover:scale-130"
+                                            />
                                         </div>
                                     </div>
 
-                                    <div class="flex w-full flex-col gap-1 px-3 py-1">
+                                    <div class="flex w-full flex-col gap-1 overflow-hidden px-2 py-1">
                                         <Link
                                             :href="`/product/${encodeURIComponent(item.product.slug)}`"
                                             class="group/link web-text-active mb-1 flex w-fit items-center gap-1 text-xl font-bold"
@@ -131,6 +127,27 @@ const handleStatusText = (status: string): string => {
                                                 class="size-3.5 rotate-45 transition-transform duration-300 group-hover/link:translate-x-[2px] group-hover/link:-translate-y-[2px]"
                                             />
                                         </Link>
+
+                                        <div
+                                            v-if="item.attributes && item.attributes.length > 0"
+                                            class="custom-scrollbar flex max-w-full items-center gap-1 overflow-x-auto"
+                                        >
+                                            <div
+                                                v-for="attribute in item.attributes"
+                                                :key="attribute.id"
+                                                class="web-border-color flex flex-shrink-0 items-center gap-1 rounded-md border px-1 py-0.5 whitespace-nowrap"
+                                            >
+                                                <span v-if="attribute.color_code" class="web-text-body text-[11px] font-medium">
+                                                    {{ page.props.lang === 'ar' ? attribute.color_name_ar : attribute.color_name }}
+                                                </span>
+                                                <span v-else class="web-text-body text-[11px] font-medium">
+                                                    {{
+                                                        page.props.lang === 'ar' ? attribute.attribute_value_name_ar : attribute.attribute_value_name
+                                                    }}
+                                                </span>
+                                            </div>
+                                        </div>
+
                                         <div class="web-text-body-muted flex w-full items-center justify-between gap-2 text-xs">
                                             <span>{{ $t('quantity') }}</span>
 
