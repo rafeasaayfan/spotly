@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { DialogClose, DialogFooter } from '@/components/ui/dialog';
-import { Color, File, ImageFile, ImagesFile, Input, InputError, MultiInput, PhoneNumberField, Select, SelectWithSearch, Textarea } from '@/components/ui/fields';
+import { Color, FileUploader, Input, InputError, MultiInput, PhoneNumberField, Select, SelectWithSearch, Textarea } from '@/components/ui/fields';
 import { Label } from '@/components/ui/label';
 
 import { toast } from '@/lib/sweetAlert';
@@ -59,7 +59,7 @@ function submit() {
     <form class="grid grid-cols-1 gap-5 px-4 pb-5 lg:grid-cols-2" @submit.prevent="submit" enctype="multipart/form-data">
         <div
             class="flex flex-col gap-1.5"
-            :class="['textarea', 'multiInput'].includes(column.type ?? '') ? 'lg:col-span-2' : ''"
+            :class="['textarea', 'multiInput', 'file'].includes(column.type ?? '') ? 'lg:col-span-2' : ''"
             v-for="(column, index) in props.columns"
             :key="index"
         >
@@ -96,15 +96,15 @@ function submit() {
                 :maxlength="column.maxlength"
             />
 
-            <File
+            <FileUploader
                 v-else-if="column.type === 'file'"
                 :id="column.label"
                 v-model="form[column.key]"
                 :name="column.key"
-                :src="form[column.key]"
+                :multiple="column.multiple || false"
             />
 
-            <ImageFile
+            <!-- <ImageFile
                 v-else-if="column.type === 'imageFile'"
                 :id="column.label"
                 v-model="form[column.key]"
@@ -117,7 +117,7 @@ function submit() {
                 v-model="form[column.key]"
                 :name="column.key"
                 :src="form[column.key]"
-            />
+            /> -->
 
             <SelectWithSearch
                 v-else-if="column.type === 'select_with_search'"
