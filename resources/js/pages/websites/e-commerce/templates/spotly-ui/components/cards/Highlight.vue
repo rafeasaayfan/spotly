@@ -13,7 +13,7 @@ const props = defineProps<{
     <div
         :class="
             cn(
-                'border-black/10 dark:border-white/10 w-fit rounded border bg-gradient-to-br px-2 py-1.5 text-xs font-bold',
+                'border-black/10 dark:border-white/10 w-fit rounded bg-gradient-to-br px-2 py-1.5 text-xs font-bold',
                 [
                     type === 'category'
                         ? 'from-black/8 via-transparent to-black/8 text-purple-800 dark:from-white/8 dark:to-white/8 dark:text-purple-400'
