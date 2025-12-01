@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\HasMediaUploads;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class TemplateTemplateColor extends Model implements HasMedia
 {
-    use InteractsWithMedia;
+    use InteractsWithMedia, HasMediaUploads;
 
     protected $appends = ['uiImages'];
 
