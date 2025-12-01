@@ -47,6 +47,7 @@ watch(
                 class="web-bg-field web-text-active web-border-color h-8 gap-2 text-xs"
                 :placeholder="$t('sort_by')"
                 dropdownClass="web-border-color web-bg-dropdown"
+                :withReset="false"
             >
                 <option value="date">{{ $t('date') }}</option>
                 <option value="amount">{{ $t('amount') }}</option>
@@ -56,6 +57,7 @@ watch(
                 class="web-bg-field web-text-active web-border-color h-8 gap-2 text-xs"
                 :placeholder="$t('sort_dir')"
                 dropdownClass="web-border-color web-bg-dropdown"
+                :withReset="false"
             >
                 <option value="asc">{{ $t('asc') }}</option>
                 <option value="desc">{{ $t('desc') }}</option>
