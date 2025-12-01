@@ -61,7 +61,7 @@ export const formatters = {
             approved: 'bg-success text-for-bg-success',
             accepted: 'bg-success text-for-bg-success',
             completed: 'bg-success text-for-bg-success',
-            comfirmed: 'bg-success text-for-bg-success',
+            confirmed: 'bg-success text-for-bg-success',
 
             'not verified': 'bg-destructive text-for-bg-destructive',
             verified: 'bg-success text-for-bg-success',
@@ -81,7 +81,7 @@ export const formatters = {
 
         const color = colorMap[value.toLowerCase()] || 'bg-content text-active border border-muted shadow';
 
-        return `<span class="${color} px-2 py-1 rounded text-xs">${value}</span>`;
+        return `<span class="${color} px-2 py-1 rounded text-xs capitalize">${value}</span>`;
     },
 
     // Email verified
