@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Websites\Ecommerce;
 
 use App\Http\Controllers\Websites\BaseController;
+use App\Http\Requests\Websites\Ecommerce\OrderRequest;
 use App\Models\EcommerceOrder;
+use App\Models\EcommerceTrackOrder;
+use App\Services\Websites\Ecommerce\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,9 +15,10 @@ class OrdersController extends BaseController
     /**
      * Display the orders detail page.
      */
-    public function index(Request $request)
+    public function index(OrderRequest $request)
     {
-        $orders = $this->getOrders($request);
+        $productService = new ProductService($this->website->id);
+        $orders = $productService->getOrderProducts($request->validated());
 
         return $this->inertiaRender('pages/orders/Orders', [
             'orders' => $orders,
@@ -33,60 +37,40 @@ class OrdersController extends BaseController
         if ($order->website_id !== $this->website->id) {
             return $this->backError('Unauthorized access');
         }
-    
+
         $order->update([
             'status' => 'cancelled',
             'status_changed_at' => now(),
         ]);
-    
+
         return $this->redirectSuccess(route: 'orders', message: __('messages.order_cancelled'), forWebsite: true);
     }
 
     /**
-     * Get paginated orders for the orders page based on filters (status, search, sort, etc).
-     *
-     * @param Request $request
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * Display the track order page.
      */
-    protected function getOrders(Request $request)
+    public function trackOrder(Request $request)
     {
         $validated = $request->validate([
-            'status' => 'nullable|string|in:pending,confirmed,delivered,rejected,cancelled,refunded',
-            'search' => 'nullable|string|min:0|max:100',
-            'sort_by' => 'nullable|string|in:date,amount',
-            'sort_dir' => 'nullable|string|in:asc,desc',
+            'order_number' => 'nullable|string',
         ]);
 
-        $status = $validated['status'] ?? 'pending';
-        $search = isset($validated['search']) ? trim($validated['search']) : null;
-        $sort_by = $validated['sort_by'] ?? 'date';
-        $sort_dir = $validated['sort_dir'] ?? 'desc';
-
-        $query = EcommerceOrder::where('website_id', $this->website->id)
-            ->when(Auth::guard('website')->check(), function ($q) {
-                $q->where('website_user_id', Auth::guard('website')->id());
-            }, function ($q) {
-                $q->where('session_id', session()->getId());
-            });
-
-        if (!empty($status)) {
-            $query->where('status', $status);
+        $order = null;
+        if (isset($validated['order_number'])) {
+            $order = EcommerceOrder::where('website_id', $this->website->id)
+                ->where('order_number', $validated['order_number'])
+                ->with(['user:id,name', 'items.product:id,name', 'trackOrder' => function ($query) {
+                    $query->orderBy('created_at', 'desc');
+                }])
+                ->first();
         }
 
-        if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->where('order_number', 'LIKE', "%{$search}%");
-            });
-        }
-
-        if ($sort_by === 'amount') {
-            $query->orderBy('total_amount', $sort_dir);
-        } else {
-            $query->orderBy('created_at', $sort_dir);
-        }
-
-        $orders = $query->with(['paymentMethod:id,name', 'items.product:id,name,slug'])->paginate(6);
-
-        return $orders;
+        return $this->inertiaRender('pages/TrackOrder', [
+            'order' => $order,
+            'colors' => $this->websiteTemplate()->templateColor,
+            'websiteNameAndLogo' => $this->websiteNameAndLogo(),
+            'websiteFooterData' => $this->websiteFooterData(),
+            'cartItemsCount' => $this->cartItems()->count(),
+        ], true);
     }
 }
