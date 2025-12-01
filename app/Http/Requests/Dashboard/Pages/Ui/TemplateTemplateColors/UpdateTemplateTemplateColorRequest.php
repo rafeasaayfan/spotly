@@ -32,8 +32,24 @@ class UpdateTemplateTemplateColorRequest extends FormRequest
                     ->where('template_id', $this->input('template_id'))
                     ->ignore($this->route('templateTemplateColor')->id)
             ],
-            'uiImages.*' => ['nullable', when('string', '', ['file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:5120'])],
             'is_active' => ['required', 'boolean'],
+
+            'uiImages' => [
+                'required',
+                'array',
+                'max:4'
+            ],
+            'uiImages.*.id' => [
+                'nullable',
+                'integer',
+            ],
+            'uiImages.*.file' => [
+                'sometimes',
+                'required',
+                'file',
+                'mimes:jpeg,png,jpg,gif,svg,webp',
+                'max:600'
+            ],
         ];
     }
 }

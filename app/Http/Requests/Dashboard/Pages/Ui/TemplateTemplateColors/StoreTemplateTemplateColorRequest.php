@@ -30,8 +30,19 @@ class StoreTemplateTemplateColorRequest extends FormRequest
                     ->where('website_type_id', $this->input('website_type_id'))
                     ->where('template_id', $this->input('template_id'))
             ],
-            'uiImages.*' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,webp,svg', 'max:5120'], // 5MB max
             'is_active' => ['required', 'boolean'],
+
+            'uiImages' => [
+                'required',
+                'array',
+                'max:4'
+            ],
+            'uiImages.*.file' => [
+                'required',
+                'file',
+                'mimes:jpeg,png,jpg,gif,svg,webp',
+                'max:600'
+            ],
         ];
     }
 }
