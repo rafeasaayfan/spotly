@@ -47,10 +47,10 @@ const items = ref<Record<string, any>>(props.iniItems);
 const cartItemsCount = ref<number>(props.iniCartItemsCount);
 
 // For Delete
-const deleteProcessing = ref(false);
+const deleteProcessing = ref<number | null>(null);
 const removeItem = async (itemId: number) => {
     try {
-        deleteProcessing.value = true;
+        deleteProcessing.value = itemId;
 
         const response = await axios.delete(route('website.e-commerce.cart.removeItem'), {
             data: { itemId },
@@ -65,12 +65,12 @@ const removeItem = async (itemId: number) => {
     } catch (error: any) {
         toast.fire({ icon: 'error', title: error.response?.data.message });
     } finally {
-        deleteProcessing.value = false;
+        deleteProcessing.value = null;
     }
 };
 
 // For Quantity
-const changeQuantityProcessing = ref(false);
+const changeQuantityProcessing = ref<number | null>(null);
 const changeQuantity = async (item: any, action: string) => {
     if (item.quantity <= 0) return;
     if (action !== 'minus' && action !== 'plus') return;
@@ -80,7 +80,7 @@ const changeQuantity = async (item: any, action: string) => {
     if (newQuantity <= 0) return;
 
     try {
-        changeQuantityProcessing.value = true;
+        changeQuantityProcessing.value = item.id;
 
         const response = await axios.patch(route('website.e-commerce.cart.changeQuantity'), {
             itemId: item.id,
@@ -95,7 +95,7 @@ const changeQuantity = async (item: any, action: string) => {
     } catch (error: any) {
         toast.fire({ icon: 'error', title: error.response?.data.message });
     } finally {
-        changeQuantityProcessing.value = false;
+        changeQuantityProcessing.value = null;
     }
 };
 
@@ -186,7 +186,7 @@ const calculateTotalCheckoutPrice = (): number => {
         :cartItemsCount="cartItemsCount"
     >
         <section class="pt-28 pb-22" v-if="items && items.length > 0">
-            <div class="mb-20 w-full text-center">
+            <div class="mb-10 w-full text-center">
                 <h2 class="web-text-active eco-section-title-underline w-fit text-3xl font-bold sm:text-4xl lg:text-5xl">
                     {{ $t('my.title') }} <span class="eco-gradient-text">{{ $t('my.cart') }}</span>
                 </h2>
@@ -201,28 +201,22 @@ const calculateTotalCheckoutPrice = (): number => {
                 <div
                     v-for="item in items"
                     :key="item.id"
-                    class="group web-border-color relative flex flex-col rounded-md border sm:flex-row"
+                    class="group web-border-color relative flex flex-col rounded-md border sm:flex-row col-span-1 lg:col-span-1"
                     :class="deleteProcessing || changeQuantityProcessing ? 'pointer-events-none opacity-50' : ''"
                 >
                     <div
-                        class="web-border-color flex h-50 w-full min-w-full items-center justify-center overflow-hidden rounded-s-md border-e bg-[var(--bg_content_light)] p-3 sm:h-full sm:w-53 sm:min-w-53 sm:p-0 lg:w-53 lg:min-w-53 dark:bg-[var(--bg_content_dark)]"
+                        class="web-border-color flex h-50 w-full min-w-full items-center justify-center overflow-hidden rounded-s-md border-e bg-[var(--bg_content_light)]
+                        p-3 sm:max-h-40 sm:h-full sm:w-53 sm:min-w-53 sm:p-0 lg:w-53 lg:min-w-53 dark:bg-[var(--bg_content_dark)]"
                     >
                         <img
-                            v-if="item.imageUrl"
-                            :src="item.imageUrl"
+                            v-if="item.image_urls"
+                            :src="item.image_urls[0]"
                             class="h-full transition-all duration-300 group-hover:scale-130 sm:w-full sm:rounded-s-md"
                         />
-                        <div v-else class="flex h-full w-full flex-col items-center justify-center text-sm">
-                            <p class="web-text-body-muted">{{ $t('color') }}</p>
-                            <div class="flex items-center gap-1">
-                                <div class="web-border-color size-5 rounded-full border" :style="{ backgroundColor: item.color }"></div>
-                                <span class="text-sm">{{ item.color }}</span>
-                            </div>
-                        </div>
                     </div>
 
                     <div
-                        class="flex w-full flex-col gap-3 rounded-e-md bg-[var(--bg_card_light)] p-2 sm:h-full sm:justify-between dark:bg-[var(--bg_card_dark)]"
+                        class="flex w-full flex-col gap-1 rounded-e-md bg-[var(--bg_card_light)] p-2 sm:h-full sm:justify-between dark:bg-[var(--bg_card_dark)] overflow-x-hidden"
                     >
                         <div class="flex w-full items-center justify-between gap-3">
                             <div class="flex items-center gap-2">
@@ -247,7 +241,18 @@ const calculateTotalCheckoutPrice = (): number => {
                             </div>
                         </div>
 
-                        <div class="web-text-body-muted flex w-full items-center justify-between gap-2 text-xs">
+                        <div class="flex items-center gap-1 w-full max-w-full overflow-x-auto custom-scrollbar">
+                            <div v-for="value in item.attributes" :key="value" class="flex items-center gap-1 px-2 py-1 rounded-md border web-border-color flex-shrink-0 whitespace-nowrap">
+                                <span v-if="value.color_code" class="web-text-body text-xs font-medium">
+                                    {{ page.props.lang === 'ar' ? value.color_name_ar : value.color_name }}
+                                </span>
+                                <span v-else class="web-text-body text-xs font-medium">
+                                    {{ page.props.lang === 'ar' ? value.attribute_value_name_ar : value.attribute_value_name }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="web-text-body-muted flex w-full items-center justify-between gap-2 text-xs pt-1">
                             <span>{{ $t('quantity') }}</span>
                             <div class="flex items-center gap-2">
                                 <button
@@ -256,7 +261,7 @@ const calculateTotalCheckoutPrice = (): number => {
                                     class="web-bg-danger web-text-for-danger flex size-5 cursor-pointer items-center justify-center rounded-full opacity-50 transition-all duration-300 hover:opacity-100"
                                     :class="deleteProcessing ? 'cursor-default' : ''"
                                 >
-                                    <Trash2 v-if="!deleteProcessing" class="size-3" />
+                                    <Trash2 v-if="deleteProcessing !== item.id" class="size-3" />
                                     <LoaderCircle v-else class="size-3 animate-spin" />
                                 </button>
                                 <div class="flex items-center gap-2">
@@ -268,7 +273,7 @@ const calculateTotalCheckoutPrice = (): number => {
                                         <Minus class="size-3.5" />
                                     </button>
                                     <p class="web-text-active text-base font-medium">
-                                        <span v-if="!changeQuantityProcessing">{{ item.quantity }}</span>
+                                        <span v-if="changeQuantityProcessing !== item.id">{{ item.quantity }}</span>
                                         <LoaderCircle v-else class="size-4 animate-spin" />
                                     </p>
                                     <button
