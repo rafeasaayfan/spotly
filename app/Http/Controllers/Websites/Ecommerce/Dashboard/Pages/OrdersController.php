@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Websites\Ecommerce\Dashboard\Pages\Orders\UpdateOrderRequest;
 use App\Jobs\Websites\Ecommerce\SendOrderEmailJob;
 use App\Models\WebsiteUser;
+use App\Services\Websites\Ecommerce\Dashboard\OrdersService;
 
 class OrdersController extends BaseController
 {
@@ -146,102 +147,27 @@ class OrdersController extends BaseController
      */
     public function changeStatus(Request $request, $id)
     {
-        $allowedTransitions = [
-            'pending'   => ['confirmed', 'rejected'],
-            'confirmed' => ['delivered', 'cancelled'],
-            'delivered' => ['refunded'],
-        ];
+        $validated = $request->validate([
+            'status' => 'required|string|in:pending,confirmed,delivered,cancelled,refunded',
+        ]);
 
         try {
-            $validated = $request->validate([
-                'status' => 'required|string|in:pending,confirmed,delivered,cancelled,refunded',
-            ]);
-            $order = EcommerceOrder::where('website_id', $this->website->id)->with(['items.product.variants'])->findOrFail($id);
+            $result = OrdersService::changeStatus(
+                $this->website->id,
+                $this->website->name,
+                $this->website->email, 
+                $this->website->subdomain, 
+                $id, 
+                $validated['status']
+            );
 
-            $currentStatus = $order->status;
-            $newStatus = $validated['status'];
-
-            if (! in_array($newStatus, $allowedTransitions[$currentStatus] ?? [])) {
-                return $this->backError("You cannot change the order status from {$currentStatus} to {$newStatus}");
+            if (!$result['success']) {
+                return $this->backError($result['message']);
             }
 
-            $order->update([
-                'status' => $newStatus,
-                'status_changed_at' => now()
-            ]);
-
-            $this->updateInventoryQuantities($order, $newStatus);
-
-            $message = match ($validated['status']) {
-                'confirmed' => 'Order confirmed successfully.',
-                'delivered' => 'Order marked as delivered.',
-                'cancelled' => 'Order cancelled successfully.',
-                'refunded'  => 'Order refunded successfully.',
-                default     => 'Order status updated successfully.',
-            };
-
-            if (in_array($newStatus, ['confirmed', 'cancelled', 'rejected', 'delivered'])) {
-                if ($order->website_user_id !== null) {
-                    $this->callTheOrderJob($order, $newStatus);
-                }
-            }
-
-            return $this->backSuccess($message);
+            return $this->backSuccess($result['message']);
         } catch (\Exception $e) {
             return $this->logResponse('OrdersController@changeStatus', $e, 'An error occurred while updating the Order status');
         }
-    }
-
-    /**
-     * Update product variant inventory quantities based on the new order status.
-     */
-    protected function updateInventoryQuantities(EcommerceOrder $order, string $newStatus)
-    {
-        foreach ($order->items as $item) {
-            $variant = $item->product->variants
-                ->firstWhere('color', $item->color);
-
-            if (!$variant) continue;
-
-            $qty = $item->quantity;
-
-            match ($newStatus) {
-                'confirmed' => $variant->increment('reserved_quantity', $qty),
-
-                'delivered' => $variant->update([
-                    'stock_quantity' => max($variant->stock_quantity - $qty, 0),
-                    'reserved_quantity' => max($variant->reserved_quantity - $qty, 0),
-                ]),
-
-                'cancelled' => $variant->update([
-                    'reserved_quantity' => max($variant->reserved_quantity - $qty, 0),
-                ]),
-
-                'refunded' => $variant->increment('stock_quantity', $qty),
-
-                default => null,
-            };
-        }
-    }
-
-    /**
-     * Update product variant inventory quantities based on the new order status.
-     */
-    protected function callTheOrderJob(EcommerceOrder $order, string $newStatus)
-    {
-        $orderOwner = WebsiteUser::where('website_id', $this->website->id)
-            ->where('id', $order->website_user_id)
-            ->first();
-        $orderOwnerEmail = $orderOwner?->email;
-
-        SendOrderEmailJob::dispatch(
-            $order->order_number,
-            $newStatus,
-            $this->website->id,
-            $this->website->name,
-            $this->website->email,
-            $this->website->subdomain,
-            $orderOwnerEmail ?? null
-        );
     }
 }
