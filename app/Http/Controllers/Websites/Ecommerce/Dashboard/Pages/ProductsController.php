@@ -12,7 +12,9 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\EcommerceProduct;
+use App\Models\EcommerceProductAttribute;
 use App\Models\EcommerceProductVariant;
+use App\Models\EcommerceProductVariantAttribute;
 use Illuminate\Support\Facades\DB;
 
 class ProductsController extends BaseController
@@ -51,12 +53,17 @@ class ProductsController extends BaseController
         try {
             $categories = Category::active()->where('website_id', $this->website->id)->select(['id', 'name'])->get();
             $brands = Brand::active()->where('website_id', $this->website->id)->select(['id', 'name'])->get();
+
+            $attributes = EcommerceProductAttribute::active()->where('website_id', $this->website->id)
+                ->with(['values:id,attribute_id,value'])
+                ->select(['id', 'name', 'type'])->get();
             $colors = Color::all();
 
             return $this->jsonSuccess('', [
                 'categories' => $categories,
                 'brands' => $brands,
                 'colors' => $colors,
+                'attributes' => $attributes,
             ]);
         } catch (\Exception $e) {
             return $this->logJsonResponse('ProductsController@create', $e, 'An error when fetching the create page');
@@ -69,6 +76,8 @@ class ProductsController extends BaseController
     public function store(StoreProductRequest $request)
     {
         try {
+            DB::beginTransaction();
+
             $validated = $request->validated();
             $variants = $validated['variants'];
             unset($validated['variants']);
@@ -78,20 +87,11 @@ class ProductsController extends BaseController
             $product->slug = uniqid('slug-', true);
             $product->save();
 
-            foreach ($variants as $variant) {
-                $product_variant = EcommerceProductVariant::create([
-                    'product_id' => $product->id,
-                    'color_id' => $variant['color_id'] ?? null,
-                    'stock_quantity' => $variant['stock_quantity']
-                ]);
+            $this->storeProductVariants($product, $variants);
 
-                if (isset($variant['ecommerce_product_image'])) {
-                    $product_variant->addMedia($variant['ecommerce_product_image'])
-                        ->toMediaCollection('ecommerce_product_image');
-                }
-            }
+            DB::commit();
 
-            CreateProductSlugJob::dispatch($product);
+            CreateProductSlugJob::dispatch($product)->afterCommit();
 
             return $this->redirectSuccess('dashboard.products.index', 'Product created successfully', forWebsite: true);
         } catch (\Exception $e) {
@@ -105,7 +105,8 @@ class ProductsController extends BaseController
     public function show(string $id)
     {
         try {
-            $query = EcommerceProduct::where('website_id', $this->website->id)->with(['variants', 'variants.media', 'variants.color'])->findOrFail($id);
+            $query = EcommerceProduct::where('website_id', $this->website->id)
+                ->with(['variants.attributes'])->findOrFail($id);
             $product = $this->flattenRelationData($query, ['category_name', 'brand_name']);
 
             return $this->jsonSuccess('', [
@@ -122,10 +123,16 @@ class ProductsController extends BaseController
     public function edit(string $id)
     {
         try {
-            $product = EcommerceProduct::where('website_id', $this->website->id)->with(['variants', 'variants.media', 'variants.color'])->findOrFail($id);
+            $product = EcommerceProduct::where('website_id', $this->website->id)
+                ->with(['variants', 'variants.attributes'])
+                ->findOrFail($id);
 
             $categories = Category::active()->where('website_id', $this->website->id)->select(['id', 'name'])->get();
             $brands = Brand::active()->where('website_id', $this->website->id)->select(['id', 'name'])->get();
+
+            $attributes = EcommerceProductAttribute::active()->where('website_id', $this->website->id)
+                ->with(['values:id,attribute_id,value'])
+                ->select(['id', 'name', 'type'])->get();
             $colors = Color::all();
 
             return $this->jsonSuccess('', [
@@ -133,6 +140,7 @@ class ProductsController extends BaseController
                 'categories' => $categories,
                 'brands' => $brands,
                 'colors' => $colors,
+                'attributes' => $attributes,
             ]);
         } catch (\Exception $e) {
             return $this->logJsonResponse('ProductsController@edit', $e, 'An error when fetching the edit page');
@@ -153,10 +161,6 @@ class ProductsController extends BaseController
             $variants = $validated['variants'] ?? [];
             unset($validated['variants']);
 
-            if ($validated['name'] !== $product->name) {
-                CreateProductSlugJob::dispatch($product);
-            }
-
             $data = array_merge([
                 'is_in_home' => $product->is_active ? ($validated['is_active'] ? $product->is_in_home : false) : false,
                 'is_special' => $product->is_active ? ($validated['is_active'] ? $product->is_special : false) : false,
@@ -167,6 +171,10 @@ class ProductsController extends BaseController
             $this->syncProductVariants($product, $variants);
 
             DB::commit();
+
+            if ($validated['name'] !== $product->name) {
+                CreateProductSlugJob::dispatch($product)->afterCommit();
+            }
 
             return $this->redirectSuccess('dashboard.products.index', 'Product updated successfully', forWebsite: true);
         } catch (\Exception $e) {
@@ -183,30 +191,109 @@ class ProductsController extends BaseController
      * @param array $variants
      * @return void
      */
-    protected function syncProductVariants(EcommerceProduct $product, array $variants): void
+    protected function syncProductVariants(EcommerceProduct $product, array $variants)
     {
-        // Delete 
-        $requestVariantIds = collect($variants)->pluck('id')->filter()->all();
-        EcommerceProductVariant::where('product_id', $product->id)->whereNotIn('id', $requestVariantIds)
-            ->chunk(10, function ($variants) {
-                $variants->each->delete();
-            });
+        try {
+            // Delete variants that are not in the request
+            $requestVariantIds = collect($variants)->pluck('id')->filter()->all();
+            EcommerceProductVariant::where('product_id', $product->id)->whereNotIn('id', $requestVariantIds)
+                ->chunk(10, function ($variants) {
+                    $variants->each->delete();
+                });
 
-        // Create or Update
-        foreach ($variants as $variant) {
-            $product_variant = EcommerceProductVariant::updateOrCreate([
-                'id' => $variant['id'] ?? null,
-                'product_id' => $product->id,
-            ], [
-                'stock_quantity' => $variant['stock_quantity'],
-                'color_id' => $variant['color_id'],
-            ]);
+            // Create or Update variants
+            foreach ($variants as $variant) {
+                $productVariant = EcommerceProductVariant::updateOrCreate([
+                    'id' => $variant['id'] ?? null,
+                    'product_id' => $product->id,
+                ], [
+                    'stock_quantity' => $variant['stock_quantity'] ?? null,
+                    'price' => $variant['price'] ?? null,
+                ]);
 
-            if (isset($variant['ecommerce_product_image']) && $variant['ecommerce_product_image'] instanceof \Illuminate\Http\UploadedFile) {
-                $product_variant->clearMediaCollection('ecommerce_product_image');
-                $product_variant->addMedia($variant['ecommerce_product_image'])
-                    ->toMediaCollection('ecommerce_product_image');
+                // Handle Images
+                $productVariant->updateMediaImages($variant['ecommerce_product_images'], 'ecommerce_product_images', false);
+
+                // Handle Attributes
+                if (!empty($variant['attributes'])) {
+                    $this->storeProductVariantAttributes($productVariant->id, $variant['attributes']);
+                }
             }
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return $this->logResponse('ProductsController@syncProductVariants', $e, 'An error occurred while syncing the product variants');
+        }
+    }
+
+    /**
+     * Store the product variants.
+     *
+     * @param EcommerceProduct $product
+     * @param array $variants
+     * @return void
+     */
+    protected function storeProductVariants(EcommerceProduct $product, array $variants)
+    {
+        try {
+            foreach ($variants as $variant) {
+                $productVariant = EcommerceProductVariant::create([
+                    'product_id'      => $product->id,
+                    'stock_quantity'  => $variant['stock_quantity'] ?? null,
+                    'price'           => $variant['price'] ?? null,
+                ]);
+
+                // Images
+                $productVariant->storeMediaImages($variant['ecommerce_product_images'], 'ecommerce_product_images');
+
+                // Attributes
+                if (!empty($variant['attributes'])) {
+                    $this->storeProductVariantAttributes($productVariant->id, $variant['attributes']);
+                }
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return $this->logResponse('ProductsController@storeProductVariants', $e, 'An error occurred while storing the product variants');
+        }
+    }
+
+    /**
+     * Store the product variant attributes.
+     *
+     * @param int $productVariantId
+     * @param array $attributes
+     * @return void
+     */
+    protected function storeProductVariantAttributes(int $productVariantId, array $attributes)
+    {
+        try {
+            $payload = [];
+
+            foreach ($attributes as $attribute) {
+                if (empty($attribute['value'])) {
+                    continue; // Skip attributes without values
+                }
+
+                $payload[] = [
+                    'product_variant_id' => $productVariantId,
+                    'attribute_id'       => $attribute['id'],
+                    'color_id'           => $attribute['name'] === 'color' ? $attribute['value'] : null,
+                    'attribute_value_id' => $attribute['name'] !== 'color' ? $attribute['value'] : null,
+                    'created_at'         => now(),
+                    'updated_at'         => now(),
+                ];
+            }
+
+            if (!empty($payload)) {
+                EcommerceProductVariantAttribute::upsert(
+                    $payload,
+                    ['product_variant_id', 'attribute_id'],
+                    ['color_id', 'attribute_value_id', 'updated_at']
+                );
+            }
+        } catch (\Exception $e) {
+            return $this->logResponse('ProductsController@storeProductVariantAttributes', $e, 'An error occurred while storing the product variant attributes');
         }
     }
 
@@ -265,7 +352,7 @@ class ProductsController extends BaseController
         try {
             $product = EcommerceProduct::where('website_id', $this->website->id)->findOrFail($id);
 
-            if(!$product->is_active) return $this->backError('Please activate the product first');
+            if (!$product->is_active) return $this->backError('Please activate the product first');
 
             $validated = $request->validate([
                 'is_in_home' => 'required|boolean',
@@ -273,17 +360,17 @@ class ProductsController extends BaseController
 
             if ($validated['is_in_home'] && $product->is_special) {
                 $count = EcommerceProduct::where('website_id', $this->website->id)
-                ->active()->special()->inHome()->count();
+                    ->active()->special()->inHome()->count();
 
                 if ($count >= 6) return $this->backError('Max 6 special products allowed on home');
-            } 
+            }
 
             if ($validated['is_in_home'] && !$product->is_special) {
                 $count = EcommerceProduct::where('website_id', $this->website->id)
-                ->active()->inHome()->where('is_special', false)->count();
+                    ->active()->inHome()->where('is_special', false)->count();
 
                 if ($count >= 8) return $this->backError('Max 8 products allowed on home');
-            } 
+            }
 
             $product->update([
                 'is_in_home' => $validated['is_in_home'],
@@ -307,7 +394,7 @@ class ProductsController extends BaseController
         try {
             $product = EcommerceProduct::where('website_id', $this->website->id)->findOrFail($id);
 
-            if(!$product->is_active) return $this->backError('Please activate the product first');
+            if (!$product->is_active) return $this->backError('Please activate the product first');
 
             $validated = $request->validate([
                 'is_special' => 'required|boolean',
@@ -315,14 +402,14 @@ class ProductsController extends BaseController
 
             if ($validated['is_special'] && $product->is_in_home) {
                 $count = EcommerceProduct::where('website_id', $this->website->id)
-                ->active()->special()->inHome()->count();
+                    ->active()->special()->inHome()->count();
 
                 if ($count >= 6) return $this->backError('Max 6 special products allowed on home');
-            } 
-            
-            if(!$validated['is_special'] && $product->is_in_home) {
+            }
+
+            if (!$validated['is_special'] && $product->is_in_home) {
                 $count = EcommerceProduct::where('website_id', $this->website->id)
-                ->active()->inHome()->where('is_special', false)->count();
+                    ->active()->inHome()->where('is_special', false)->count();
 
                 if ($count >= 2) {
                     $product->update([
@@ -330,7 +417,7 @@ class ProductsController extends BaseController
                     ]);
                 }
             }
-            
+
             $product->update([
                 'is_special' => $validated['is_special'],
             ]);
@@ -357,7 +444,7 @@ class ProductsController extends BaseController
                 'is_discount' => 'required|boolean',
             ]);
 
-            if($product->discount_price <= 0 && $validated['is_discount']) {
+            if ($product->discount_price <= 0 && $validated['is_discount']) {
                 return $this->backError('Please set the discount price first', 'warning');
             }
 

@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\Websites\Ecommerce;
 
-use App\Models\EcommerceProductVariant;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class ProductRequest extends FormRequest
 {
@@ -27,23 +25,10 @@ class ProductRequest extends FormRequest
 
         return [
             'product_id' => ['required', 'exists:ecommerce_products,id,website_id,' . $website->id . ',is_active,1'],
+
             'quantity' => ['required', 'integer', 'gt:0'],
-            'imageUrl' => ['nullable', 'string'],
-            'color_id' => [
-                'required',
-                function ($attribute, $value, $fail) use ($website) {
-                    $productId = $this->input('product_id');
 
-                    $exists = EcommerceProductVariant::where('color_id', $value)
-                        ->where('product_id', $productId)
-                        ->exists();
-
-                    if (!$exists) {
-                        $fail('The selected color variant is invalid or does not belong to this product.');
-                    }
-                }
-            ],
-            'unit_price' => ['required', 'numeric', 'gt:0']
+            'variantId' => ['required', 'exists:ecommerce_product_variants,id'],
         ];
     }
 }
