@@ -3,8 +3,8 @@ import { Carousel } from '@/components/ui/carousel';
 import { SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import { gsap } from 'gsap';
-import { Pin } from 'lucide-vue-next';
-import { computed, onMounted, ref } from 'vue';
+import { Ban, Pin } from 'lucide-vue-next';
+import { onMounted, ref } from 'vue';
 import Highlight from './Highlight.vue';
 
 const props = defineProps<{
@@ -13,26 +13,11 @@ const props = defineProps<{
 
 const page = usePage<SharedData>();
 
-const images = props.product.variants
-    ? props.product.variants.map((variant: any) => variant.ecommerce_product_image).filter((img: any) => !!img)
-    : [];
+const images = props.product.all_images;
 
-const colorsAndQuantities = props.product.variants
-    ? props.product.variants.map((variant: any) => ({
-          color: variant.color?.code ?? null,
-          quantity: variant.stock_quantity - variant.reserved_quantity,
-      }))
-    : [];
+const colors = props.product.all_colors;
 
-// Filter out items with null colors
-const validColors = computed(() => {
-    return colorsAndQuantities.filter((item: any) => item.color !== null);
-});
-
-// Check if there are any valid (non-null) colors
-const hasColors = computed(() => {
-    return validColors.value.length > 0;
-});
+const variants = props.product.all_variants;
 
 const badgeRef = ref<HTMLElement | null>(null);
 onMounted(() => {
@@ -62,9 +47,10 @@ onMounted(() => {
 <template>
     <Link
         :href="`/product/${encodeURIComponent(props.product.slug)}`"
-        class="product-card-item group web-bg-card relative pb-15 md:pb-18 lg:pb-15 flex max-h-[30rem] cursor-pointer flex-col gap-3 rounded-md p-2 backdrop-blur-md transition duration-300"
+        class="product-card-item group web-bg-card relative pb-15 md:pb-18 lg:pb-15 flex max-h-[30rem] cursor-pointer flex-col gap-3 
+        rounded-md p-2 backdrop-blur-md transition duration-300 border web-border-color"
     >
-        <div v-if="props.product.is_discount && props.product.discount_price && props.product.price" class="absolute start-2 -top-1 z-10" ref="badgeRef">
+        <div v-if="props.product.is_discount && props.product.discount_price && props.product.price" class="absolute start-3 -top-1 z-10" ref="badgeRef">
             <div
                 class="web-bg-danger relative flex flex-col rounded-t rounded-b px-1 pt-4 pb-2 text-[11px] text-white sm:px-1.5 sm:pt-6 sm:pb-3 sm:text-xs"
             >
@@ -97,22 +83,8 @@ onMounted(() => {
             </div>
 
             <!-- Product Info -->
-            <div class="flex flex-col gap-2 w-full">
-                <div class="flex w-full gap-1 sm:items-center justify-between">
-                    <h3 class="web-text-active text-sm font-semibold sm:text-lg">{{ props.product.name }}</h3>
-                    <div class="flex flex-col sm:flex-row items-center gap-1" v-if="hasColors">
-                        <div
-                            v-for="(item) in validColors.slice(0, 3)"
-                            :key="item"
-                            class="flex items-center justify-center rounded-full text-xs font-bold size-3 sm:size-4 shadow-md dark:shadow-white/3"
-                            :style="{ backgroundColor: item.color ?? 'transparent' }"
-                        >
-                        </div>
-                        <span v-if="validColors.length > 3" class="text-xs font-bold text-body-muted">+{{ validColors.length - 3 }}</span>
-                    </div>
-                </div>
-
-                <div class="flex items-center flex-wrap gap-1 sm:gap-2">
+            <div class="flex flex-col w-full">
+                <div class="flex items-center flex-wrap gap-1 sm:gap-2 mb-2" v-if="props.product.category || props.product.brand">
                     <Highlight
                         v-if="props.product.category"
                         :text="page.props.lang === 'ar' ? props.product.category.ar_name : props.product.category.name"
@@ -122,7 +94,30 @@ onMounted(() => {
                     <Highlight v-if="props.product.brand" :text="props.product.brand.name" type="brand" class="px-1 py-1 text-[11px] sm:px-2 sm:py-1.5 sm:text-xs" />
                 </div>
 
+                <div class="flex w-full gap-1 sm:items-center justify-between">
+                    <h3 class="web-text-active text-sm font-semibold sm:text-xl">{{ props.product.name }}</h3>
+                    <div class="flex flex-col sm:flex-row items-center gap-1" v-if="colors.length > 0">
+                        <div
+                            v-for="(item) in colors.slice(0, 3)"
+                            :key="item"
+                            class="flex items-center justify-center rounded-full text-xs font-bold size-3 sm:size-4 shadow-md dark:shadow-white/3"
+                            :style="{ backgroundColor: item.code ?? 'transparent' }"
+                        >
+                        </div>
+                        <span v-if="colors.length > 3" class="text-xs font-bold text-body-muted">+{{ colors.length - 3 }}</span>
+                    </div>
+                </div>
+
                 <p class="web-text-body-muted line-clamp-2 hidden text-start text-xs sm:block sm:text-sm">{{ props.product.short_description }}</p>
+
+                <div class="flex flex-wrap items-center gap-1 pt-2" v-if="variants.length > 0 && !props.product.short_description">
+                    <span v-for="(variant) in variants.slice(0, 3)" :key="variant.id" 
+                        class="text-xs font-medium web-text-active px-2 py-1 rounded-full bg-[var(--primary_light)]/10 dark:bg-[var(--primary_dark)]/10"
+                    >
+                        {{ page.props.lang === 'ar' ? variant.name_ar : variant.name }}
+                    </span>
+                    <span v-if="variants.length > 3" class="text-xs font-bold web-text-body-muted">+{{ variants.length - 3 }}</span>
+                </div>
             </div>
         </div>
 
@@ -140,11 +135,17 @@ onMounted(() => {
             </div>
 
             <button
+                v-if="!props.product.is_out_of_stock"
                 type="button"
                 class="eco-glow-button web-text-for-primary web-bg-primary flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 font-medium"
             >
                 <span class="text-xs">{{ $t('addToCart') }}</span>
             </button>
+
+            <div v-else class="flex items-center gap-1 bg-red-500/25 dark:bg-red-500/20 rounded-md p-2 text-xs">
+                <Ban class="web-text-danger size-3.5" />
+                <span class="web-text-danger font-medium">{{ $t('out.of.stock') }}</span>
+            </div>
         </div>
     </Link>
 </template>

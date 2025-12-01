@@ -3,8 +3,8 @@ import { Carousel } from '@/components/ui/carousel';
 import { SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import { gsap } from 'gsap';
-import { Pin } from 'lucide-vue-next';
-import { computed, onMounted, ref } from 'vue';
+import { Ban, Pin } from 'lucide-vue-next';
+import { onMounted, ref } from 'vue';
 import Highlight from './Highlight.vue';
 
 const props = defineProps<{
@@ -13,26 +13,11 @@ const props = defineProps<{
 
 const page = usePage<SharedData>();
 
-const images = props.product.variants
-    ? props.product.variants.map((variant: any) => variant.ecommerce_product_image).filter((img: any) => !!img)
-    : [];
+const images = props.product.all_images;
 
-const colorsAndQuantities = props.product.variants
-    ? props.product.variants.map((variant: any) => ({
-          color: variant.color?.code ?? null,
-          quantity: variant.stock_quantity - variant.reserved_quantity,
-      }))
-    : [];
+const colors = props.product.all_colors;
 
-// Filter out items with null colors
-const validColors = computed(() => {
-    return colorsAndQuantities.filter((item: any) => item.color !== null);
-});
-
-// Check if there are any valid (non-null) colors
-const hasColors = computed(() => {
-    return validColors.value.length > 0;
-});
+const variants = props.product.all_variants;
 
 // const isColorLight = (color: string): boolean => {
 //     // Accepts hex color codes: #RRGGBB or #RGB
@@ -93,7 +78,11 @@ onMounted(() => {
         class="web-bg-card carousel-item group web-border-color relative grid h-full scale-90 cursor-pointer gap-3 rounded-md border p-2 transition-all duration-300 ease-out hover:scale-105 hover:skew-0 hover:opacity-100 lg:opacity-70 dark:opacity-70 dark:hover:opacity-100"
         :class="page.props.lang === 'ar' ? 'lg:-skew-8' : 'lg:skew-8'"
     >
-        <div v-if="props.product.discount_price && props.product.is_discount && props.product.price" class="absolute start-2 -top-1 z-20" ref="badgeRef">
+        <div
+            v-if="props.product.discount_price && props.product.is_discount && props.product.price"
+            class="absolute start-3 -top-1 z-20"
+            ref="badgeRef"
+        >
             <div class="web-bg-danger relative flex flex-col rounded-t rounded-b px-1.5 pt-6 pb-3 text-xs text-white">
                 <div class="absolute start-0 -top-1 flex w-full items-center justify-center">
                     <Pin class="size-4 fill-black text-black shadow-xl dark:fill-white dark:text-white" />
@@ -106,7 +95,7 @@ onMounted(() => {
             </div>
         </div>
 
-        <div class="web-border-color z-10 md:h-50 w-full overflow-hidden rounded-md border-2 border-dotted">
+        <div class="web-border-color z-10 w-full overflow-hidden rounded-md border-2 border-dotted md:h-50">
             <Carousel
                 v-if="images.length > 0"
                 :items="images"
@@ -115,33 +104,47 @@ onMounted(() => {
                 :showArrows="false"
                 imgClass="object-auto min-h-full"
             />
-            <div v-else class="web-bg-content flex h-40 md:h-full w-full items-center justify-center text-xs">
+            <div v-else class="web-bg-content flex h-40 w-full items-center justify-center text-xs md:h-full">
                 <p class="web-text-body-muted">{{ $t('noImage') }}</p>
             </div>
         </div>
 
         <div class="z-10 flex flex-col justify-between gap-3">
-            <div class="flex flex-col gap-2">
-                <div class="flex w-full items-center justify-between gap-1">
-                    <h3 class="web-text-active text-lg font-semibold">{{ props.product.name }}</h3>
-                    <div class="flex items-center gap-1" v-if="hasColors">
-                        <div
-                            v-for="(item) in validColors.slice(0, 3)"
-                            :key="item"
-                            class="flex size-4 items-center justify-center rounded-full text-xs font-bold shadow-md dark:shadow-white/3"
-                            :style="{ backgroundColor: item.color ?? 'transparent' }"
-                        >
-                        </div>
-                        <span v-if="validColors.length > 3" class="text-xs font-bold text-body-muted">+{{ validColors.length - 3 }}</span>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <Highlight v-if="props.product.category" :text="page.props.lang === 'ar' ? props.product.category.ar_name : props.product.category.name" type="category" />
+            <div class="flex flex-col">
+                <div class="mb-2 flex items-center gap-2" v-if="props.product.category || props.product.brand">
+                    <Highlight
+                        v-if="props.product.category"
+                        :text="page.props.lang === 'ar' ? props.product.category.ar_name : props.product.category.name"
+                        type="category"
+                    />
                     <Highlight v-if="props.product.brand" :text="props.product.brand.name" type="brand" />
                 </div>
 
+                <div class="flex w-full items-center justify-between gap-1">
+                    <h3 class="web-text-active text-xl font-semibold">{{ props.product.name }}</h3>
+                    <div class="flex items-center gap-1" v-if="colors.length > 0">
+                        <div
+                            v-for="item in colors.slice(0, 3)"
+                            :key="item"
+                            class="flex size-4 items-center justify-center rounded-full text-xs font-bold shadow-md dark:shadow-white/3"
+                            :style="{ backgroundColor: item.code ?? 'transparent' }"
+                        ></div>
+                        <span v-if="colors.length > 3" class="text-body-muted text-xs font-bold">+{{ colors.length - 3 }}</span>
+                    </div>
+                </div>
+
                 <p class="web-text-body-muted line-clamp-2 text-start text-sm">{{ props.product.short_description }}</p>
+
+                <div class="flex flex-wrap items-center gap-1 pt-2" v-if="variants.length > 0 && !props.product.short_description">
+                    <span
+                        v-for="variant in variants.slice(0, 4)"
+                        :key="variant.id"
+                        class="web-text-active rounded-full bg-[var(--primary_light)]/10 px-2 py-1 text-xs font-medium dark:bg-[var(--primary_dark)]/10"
+                    >
+                        {{ page.props.lang === 'ar' ? variant.name_ar : variant.name }}
+                    </span>
+                    <span v-if="variants.length > 4" class="web-text-body-muted text-xs font-bold">+{{ variants.length - 4 }}</span>
+                </div>
             </div>
 
             <!-- Price and Actions -->
@@ -150,17 +153,23 @@ onMounted(() => {
             >
                 <div class="flex items-center gap-2">
                     <span class="web-text-active text-lg font-bold">
-                        {{ props.product.is_discount ? (props.product.price - props.product.discount_price) : props.product.price }}$
+                        {{ props.product.is_discount ? props.product.price - props.product.discount_price : props.product.price }}$
                     </span>
                     <span v-if="props.product.discount_price" class="web-text-body-muted text-sm line-through"> {{ props.product.price }}$ </span>
                 </div>
 
                 <button
+                    v-if="!props.product.is_out_of_stock"
                     type="button"
                     class="eco-glow-button web-text-for-primary web-bg-primary flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 font-medium"
                 >
                     <span class="text-xs">{{ $t('addToCart') }}</span>
                 </button>
+
+                <div v-else class="flex items-center gap-1 rounded-md bg-red-500/25 p-2 text-xs dark:bg-red-500/20">
+                    <Ban class="web-text-danger size-3.5" />
+                    <span class="web-text-danger font-medium">{{ $t('out.of.stock') }}</span>
+                </div>
             </div>
         </div>
     </Link>
