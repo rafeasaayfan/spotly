@@ -36,12 +36,13 @@ return [
     // Ecommerce
     'item_cart_not_found' => 'Item not found in your cart',
     'item_cart_removed' => 'Item removed from your cart successfully',
-    'color_not_available' => 'This color is not available for this product',
+    'variant_not_available' => 'This variant is not available for this product',
     'not_enough_stock_variant' => 'Not enough stock for this variant',
     'qty_updated' => 'Quantity updated successfully',
     'no_cart_item' => 'No cart items found',
     'order_placed' => 'Your order has been placed successfully!',
     'order_cancelled' => 'Order cancelled successfully',
-    'product_added_to_cart' => 'Your product was added to cart successfully'
+    'product_added_to_cart' => 'Your product was added to cart successfully',
+    'product_with_variant_not_found' => 'Product with this variant not found',
 
 ];

@@ -393,6 +393,7 @@
     "nav.home": "Home",
     "nav.shop": "Shop",
     "nav.my.orders": "My Orders",
+    "nav.trackOrder": "Track Your Order",
     
     "****************** Web Footer": "************************************",
     "web.footer.rights": "All rights reserved |",
@@ -445,7 +446,7 @@
     "no.products.found": "No products found",
 
     "***************** eco Product page": "************************************",
-    "choose.color": "Choose a color:",
+    "choose.order": "Choose your order",
     "quantity": "Quantity",
     "max": "Max",
     "unit.price": "Unit Price:",
@@ -491,6 +492,7 @@
     "order.items": "Order Items",
     "order.note": "Order Note:",
     "cancel.order": "Cancel Order",
+    "total.amount": "Total Amount",
     "no.order": "No Orders Found",
     "dont.have.any": "You don't have any orders",
     "yet": "yet",
@@ -514,5 +516,21 @@
     "total": "Total",
     "manage.account.settings": "Manage your account settings",
     "edit.profile": "Edit Profile",
-    "joined": "Joined"
+    "joined": "Joined",
+
+    "***************** Track Order Page": "************************************",
+    "trackOrder.trackYour": "Track Your",
+    "trackOrder.order": "Order",
+    "trackOrder.searchForOrder": "Search for your order",
+    "trackOrder.orderTracking": "Order Tracking",
+    "trackOrder.noOrderTrackingFound": "No order tracking found",
+    "trackOrder.orderDetails": "Order Details",
+    "trackOrder.orderFor": "Order For:",
+    "trackOrder.sessionOrder": "Session Order",
+    "trackOrder.currentStatus": "Current Status:",
+    "trackOrder.totalAmount": "Total Amount:",
+    "trackOrder.phoneNumber": "Phone Number:",
+    "trackOrder.city": "City:",
+    "trackOrder.deliveryAddress": "Delivery Address:",
+    "trackOrder.note": "Note:"
 }

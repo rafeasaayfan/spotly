@@ -382,7 +382,8 @@
     "nav.home": "الرئيسية",
     "nav.shop": "المتجر",
     "nav.my.orders": "طلباتي",
-
+    "nav.trackOrder": "تتبع طلبك",
+    
     "****************** Web Footer": "************************************",
     "web.footer.rights": "جميع الحقوق محفوظة |",
     "web.footer.powered": "مدعوم من",
@@ -434,7 +435,7 @@
     "no.products.found": "لم يتم العثور على منتجات",
 
     "***************** eco Product page": "************************************",
-    "choose.color": "اختر لونا:",
+    "choose.order": "اختر طلبك",
     "quantity": "الكمية",
     "max": "الحد الأقصى",
     "unit.price": "سعر الوحدة:",
@@ -504,6 +505,22 @@
     "total": "الإجمالي",
     "manage.account.settings": "إدارة إعدادات حسابك",
     "edit.profile": "تعديل الملف الشخصي",
-    "joined": "تاريخ الانضمام"
+    "joined": "تاريخ الانضمام",
+
+    "***************** Track Order Page": "************************************",
+    "trackOrder.trackYour": "تتبع طلبك",
+    "trackOrder.order": "الطلب",
+    "trackOrder.searchForOrder": "ابحث عن طلبك",
+    "trackOrder.orderTracking": "تتبع الطلب",
+    "trackOrder.noOrderTrackingFound": "لم يتم العثور على تتبع الطلب",
+    "trackOrder.orderDetails": "تفاصيل الطلب",
+    "trackOrder.orderFor": "الطلب لـ:",
+    "trackOrder.sessionOrder": "طلب الجلسة",
+    "trackOrder.currentStatus": "الحالة الحالية:",
+    "trackOrder.totalAmount": "المبلغ الإجمالي:",
+    "trackOrder.phoneNumber": "رقم الهاتف:",
+    "trackOrder.city": "المدينة:",
+    "trackOrder.deliveryAddress": "عنوان التوصيل:",
+    "trackOrder.note": "ملاحظة:"
 
 }

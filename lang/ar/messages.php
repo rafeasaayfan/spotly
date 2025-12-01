@@ -36,12 +36,13 @@ return [
     // Ecommerce
     'item_cart_not_found' => 'العنصر غير موجود في سلة التسوق الخاصة بك',
     'item_cart_removed' => 'تمت إزالة العنصر من سلة التسوق الخاصة بك بنجاح',
-    'color_not_available' => 'هذا اللون غير متوفر لهذا المنتج',
+    'variant_not_available' => 'هذا الخيار غير متوفر لهذا المنتج',
     'not_enough_stock_variant' => 'المخزون غير كافٍ لهذا الخيار',
     'qty_updated' => 'تم تحديث الكمية بنجاح',
     'no_cart_item' => 'لم يتم العثور على عناصر في سلة التسوق',
     'order_placed' => 'تم تقديم طلبك بنجاح!',
     'order_cancelled' => 'تم إلغاء الطلب بنجاح',
     'product_added_to_cart' => 'تمت إضافة المنتج إلى سلة التسوق بنجاح',
-
+    'product_with_variant_not_found' => 'المنتج بهذا الخيار غير موجود',
+    
 ];
