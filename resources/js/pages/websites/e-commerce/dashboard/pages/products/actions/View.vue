@@ -15,28 +15,28 @@ const props = defineProps<{
                 <!-- General Information -->
                 <div class="border-muted flex flex-col gap-3 border-b pb-4">
                     <h3 class="text-active-link text-xl font-bold">{{ props.data.name }}</h3>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2" v-if="props.data.category_name || props.data.brand_name">
                         <div
                             v-if="props.data.category_name"
-                            class="text-white rounded bg-gradient-to-br from-lime-600 to-lime-500 px-3 py-1.5 text-sm dark:from-lime-700 dark:to-lime-800"
+                            class="rounded bg-gradient-to-br from-lime-600 to-lime-500 px-3 py-1.5 text-sm text-white dark:from-lime-700 dark:to-lime-800"
                         >
                             {{ props.data.category_name }}
                         </div>
 
                         <div
                             v-if="props.data.brand_name"
-                            class="text-white rounded bg-gradient-to-br from-amber-600 to-amber-500 px-3 py-1.5 text-sm dark:from-amber-700 dark:to-amber-800"
+                            class="rounded bg-gradient-to-br from-amber-600 to-amber-500 px-3 py-1.5 text-sm text-white dark:from-amber-700 dark:to-amber-800"
                         >
                             {{ props.data.brand_name }}
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-y-4">
+                <div class="grid grid-cols-1 gap-y-4 lg:grid-cols-2">
                     <!-- Pricing & Stock -->
-                    <div class="border-muted flex flex-col gap-4 border-b pb-4 lg:border-e border-muted lg:pe-3">
+                    <div class="border-muted border-muted flex flex-col gap-4 border-b pb-4 lg:border-e lg:pe-3">
                         <p class="text-body-muted flex w-full items-center justify-between text-sm">
-                            Price: <span class="text-active text-base font-medium">{{ props.data.price }}$</span>
+                            Base Price: <span class="text-active text-base font-medium">{{ props.data.price }}$</span>
                         </p>
                         <p v-if="props.data.discount_price" class="text-body-muted flex w-full items-center justify-between text-sm">
                             Discount Price: <span class="text-active text-base font-medium">{{ props.data.discount_price }}$</span>
@@ -80,47 +80,70 @@ const props = defineProps<{
             </div>
 
             <!-- Variants Section -->
-            <div class="mb-3 flex flex-col gap-2 rounded-md bg-[var(--primary)]/10 dark:bg-[var(--primary)]/5 p-2.5 lg:p-4">
+            <div class="mb-3 flex flex-col gap-2 rounded-md bg-[var(--primary)]/10 p-2.5 lg:p-4 dark:bg-[var(--primary)]/5">
                 <h4 class="text-body font-bold">Product Variants:</h4>
                 <div
-                    v-if="props.data.variants && props.data.variants.length"
-                    class="custom-scrollbar grid max-h-[60vh] md:grid-cols-2 gap-2.5 lg:gap-4 overflow-y-auto"
+                    v-if="props.data.variants && props.data.variants.length > 0"
+                    class="custom-scrollbar grid max-h-[60vh] max-w-full gap-2.5 overflow-y-auto md:grid-cols-2 lg:gap-4"
                 >
-                    <div v-for="variant in props.data.variants" :key="variant.id" class="bg-body flex flex-col gap-3 rounded-md p-2.5 lg:p-4">
-                        <div class="border-muted flex w-full items-center gap-2 border-b pb-2">
+                    <div
+                        v-for="variant in props.data.variants"
+                        :key="variant.id"
+                        class="bg-body flex flex-col gap-3 rounded-md px-2.5 pb-2.5 lg:px-4 lg:pb-4"
+                    >
+                        <div
+                            class="border-muted custom-scrollbar flex w-full max-w-full items-center gap-2 
+                            overflow-x-auto border-b pt-2 pb-2 lg:pt-4"
+                        >
                             <Image
-                                v-if="variant.ecommerce_product_image"
-                                :src="variant.ecommerce_product_image"
+                                v-for="image in variant.ecommerce_product_images"
+                                :key="image.uid"
+                                :src="image.original_url"
                                 alt="Item Image"
-                                class="size-18 rounded-full object-cover shadow"
+                                class="max-h-17 min-h-17 max-w-17 min-w-17 flex-shrink-0 rounded-full object-cover shadow"
                             />
-                            <div
+                            <!-- <div
                                 v-else
                                 class="border-muted text-body-muted flex size-18 items-center justify-center rounded-full border text-center text-xs"
                             >
                                 No Image
-                            </div>
+                            </div> -->
                         </div>
-                        <div v-if="variant.color_id" class="flex items-center justify-between gap-2">
-                            <span class="text-body-muted text-sm">Color:</span>
-                            <div class="flex items-center gap-1">
-                                <span :style="{ backgroundColor: variant.color.code }" class="border-muted size-5 rounded-full border shadow-sm"></span>
-                                <span class="text-body-muted text-xs font-medium">{{ variant.color.name }}</span>
-                            </div>
+                        <div class="flex flex-col gap-1">
+                            <p class="text-body-muted flex items-center justify-between gap-2 text-xs">
+                                Stock Quantity: <span class="text-body text-sm font-bold">{{ variant.stock_quantity }}</span>
+                            </p>
+                            <p class="text-body-muted flex items-center justify-between gap-2 text-xs">
+                                Reserved Quantity: <span class="text-body text-sm font-bold">{{ variant.reserved_quantity }}</span>
+                            </p>
+                            <p class="text-body-muted flex items-center justify-between gap-2 text-xs">
+                                Price: <span class="text-body text-sm font-bold">{{ variant.price }}$</span>
+                            </p>
+                            <p v-for="attribute in variant.attributes" :key="attribute.id" class="text-body-muted flex items-center justify-between gap-2 text-xs">
+                                <span class="capitalize">{{ attribute.attribute_name }}: </span>
+
+                                <span v-if="attribute.color_id" class="text-body text-sm font-bold flex items-center gap-1">
+                                    <span :style="{ backgroundColor: attribute.color.code }" 
+                                        class="border-muted size-4 rounded-full border shadow-sm">
+                                    </span>
+                                    {{ attribute.color.name }}
+                                </span>
+
+                                <span v-else class="text-body text-sm font-bold">
+                                    {{ attribute.attribute_value.value }}
+                                </span>
+                            </p>
                         </div>
-                        <p class="text-body-muted flex items-center justify-between gap-2 text-sm">
-                            Stock Quantity: <span class="text-body text-base font-bold">{{ variant.stock_quantity }}</span>
-                        </p>
-                        <p class="text-body-muted flex items-center justify-between gap-2 text-sm">
-                            Reserved Quantity: <span class="text-body text-base font-bold">{{ variant.reserved_quantity }}</span>
-                        </p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <p class="text-body-muted relative z-10 flex items-center justify-between gap-1 px-4 pt-4 text-xs">
+        <p class="text-body-muted relative flex items-center justify-between gap-1 px-4 pt-4 text-xs">
             Created At: <span class="font-medium">{{ formatters.date(props.data.created_at, 'long') }}</span>
+        </p>
+        <p class="text-body-muted relative flex items-center justify-between gap-1 px-4 pt-3 text-xs">  
+            Updated At: <span class="font-medium">{{ formatters.date(props.data.updated_at, 'long') }}</span>
         </p>
     </div>
 </template>
