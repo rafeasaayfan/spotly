@@ -15,7 +15,7 @@ class StoreCountryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'flag' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
+            'flag' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:600'],
             'country' => ['required', 'string', 'max:255', 'unique:countries,country'],
             'country_ar' => ['required', 'string', 'max:255', 'unique:countries,country_ar'],
             'country_fr' => ['required', 'string', 'max:255', 'unique:countries,country_fr'],
