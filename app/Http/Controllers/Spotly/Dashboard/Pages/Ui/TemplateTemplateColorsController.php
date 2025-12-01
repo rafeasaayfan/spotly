@@ -58,20 +58,14 @@ class TemplateTemplateColorsController extends Controller
 
         try {
             $validated = $request->validated();
+            $imagesData = $validated['uiImages'];
             unset($validated['uiImages']);
 
             $templateTemplateColor = new TemplateTemplateColor($validated);
             $templateTemplateColor->save();
 
             // Handle multiple images
-            if ($request->hasFile('uiImages')) {
-                foreach ($request->file('uiImages') as $image) {
-                    if ($image->isValid()) {
-                        $templateTemplateColor->addMedia($image)
-                            ->toMediaCollection('uiImages');
-                    }
-                }
-            }
+            $templateTemplateColor->storeMediaImages($imagesData, 'uiImages');
 
             return $this->redirectSuccess('dashboard.templateTemplateColors.index', 'TemplateTemplateColor created successfully');
         } catch (\Exception $e) {
@@ -125,25 +119,16 @@ class TemplateTemplateColorsController extends Controller
      */
     public function update(UpdateTemplateTemplateColorRequest $request, TemplateTemplateColor $templateTemplateColor)
     {
-        
         try {
             $validated = $request->validated();
+            $imagesData = $validated['uiImages'];
             unset($validated['uiImages']);
 
             $templateTemplateColor->fill($validated);
+
+            $templateTemplateColor->updateMediaImages($imagesData, 'uiImages', false);
+
             $templateTemplateColor->save();
-
-            if ($request->hasFile('uiImages')) {
-                // Clear existing images if new ones are uploaded
-                $templateTemplateColor->clearMediaCollection('uiImages');
-
-                foreach ($request->file('uiImages') as $image) {
-                    if ($image->isValid()) {
-                        $templateTemplateColor->addMedia($image)
-                            ->toMediaCollection('uiImages');
-                    }
-                }
-            }
 
             return $this->redirectSuccess('dashboard.templateTemplateColors.index', 'TemplateTemplateColor updated successfully');
         } catch (\Exception $e) {
