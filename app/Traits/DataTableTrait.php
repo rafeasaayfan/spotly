@@ -53,7 +53,6 @@ trait DataTableTrait
             }
 
             return $result;
-
         } catch (\Throwable $e) {
             Log::error('Error on DataTable: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
@@ -80,7 +79,7 @@ trait DataTableTrait
         if ($existingColumns) {
             $columns = array_merge($columns, $existingColumns);
         }
-    
+
         $query->select($columns);
     }
 
@@ -95,10 +94,18 @@ trait DataTableTrait
     {
         foreach ($relationColumns as $relation) {
             if (str_contains($relation, '_')) {
-                [$relationName, $field] = explode('_', $relation, 2);
-                $query->with([$relationName => function ($q) use ($field) {
-                    $q->select('id', $field);
-                }]);
+                if (str_contains($relation, ':')) {
+                    [$relationWithCol, $foreignKey] = explode(':', $relation, 2);
+                    [$relationName, $field] = explode('_', $relationWithCol, 2);
+                    $query->with([$relationName => function ($q) use ($foreignKey, $field) {
+                        $q->select('id', $foreignKey, $field);
+                    }]);
+                } else {
+                    [$relationName, $field] = explode('_', $relation, 2);
+                    $query->with([$relationName => function ($q) use ($field) {
+                        $q->select('id', $field);
+                    }]);
+                }
             } else {
                 $query->with($relation);
             }
@@ -186,7 +193,15 @@ trait DataTableTrait
     {
         foreach ($relationColumns as $relationColumn) {
             if (str_contains($relationColumn, '_')) {
-                [$relation, $field] = explode('_', $relationColumn, 2);
+                $relation = null;
+                $field = null;
+
+                if (str_contains($relationColumn, ':')) {
+                    [$relationWithCol, $foreignKey] = explode(':', $relationColumn, 2);
+                    [$relation, $field] = explode('_', $relationWithCol, 2);
+                } else {
+                    [$relation, $field] = explode('_', $relationColumn, 2);
+                }
 
                 if (!isset($item->$relation)) {
                     continue;
