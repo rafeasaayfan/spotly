@@ -181,4 +181,17 @@ onMounted(() => {
     border-radius: 2px;
     transition: width 0.5s ease-out;
 }
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 1px;
+    height: 1px;
+    scrollbar-width: thin;
+    background: transparent !important;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: transparent !important;
+}
 </style>
