@@ -22,10 +22,8 @@ class CountriesController extends Controller
         $query = Country::query();
 
         $columnsSearching = ['country', 'country_ar', 'country_fr', 'code', 'phone_code'];
-        $columnsSelection = [];
-        $relations = ['media'];
 
-        $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
+        $data = $this->dataTable($query, $request, $columnsSearching);
 
         return $this->inertiaRender('dashboard/pages/administration/countries/Countries', ['countries' => $data]);
     }
@@ -45,14 +43,12 @@ class CountriesController extends Controller
     {
         try {
             $validated = $request->validated();
+            $imagesData = $validated['flag'];
             unset($validated['flag']);
 
             $country = new Country($validated);
 
-            if ($request->hasFile('flag') && $request->file('flag')->isValid()) {
-                $country->addMediaFromRequest('flag')
-                    ->toMediaCollection('flag');
-            }
+            $country->storeMediaImages($imagesData, 'flag');
 
             $country->save();
 
@@ -101,15 +97,12 @@ class CountriesController extends Controller
     {
         try {
             $validated = $request->validated();
+            $imagesData = $validated['flag'];
             unset($validated['flag']);
 
             $country->fill($validated);
 
-            if ($request->hasFile('flag') && $request->file('flag')->isValid()) {
-                $country->clearMediaCollection('flag');
-                $country->addMediaFromRequest('flag')
-                    ->toMediaCollection('flag');
-            }
+            $country->updateMediaImages($imagesData, 'flag');
 
             $country->save();
 
