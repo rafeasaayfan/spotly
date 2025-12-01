@@ -133,8 +133,8 @@ class WebsiteBuilderRequest extends FormRequest
 
             case 3:
                 $validation = [
-                    'light_logo' => ['nullable', 'file', 'mimes:svg', 'max:2048', 'required_with:dark_logo'],
-                    'dark_logo' => ['nullable', 'file', 'mimes:svg', 'max:2048', 'required_with:light_logo'],
+                    'light_logo' => ['nullable', 'file', 'mimes:svg', 'max:600', 'required_with:dark_logo'],
+                    'dark_logo' => ['nullable', 'file', 'mimes:svg', 'max:600', 'required_with:light_logo'],
 
                     'template_images' => [
                         Rule::when(
