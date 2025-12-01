@@ -27,14 +27,14 @@ class UpdateWebsiteRequest extends FormRequest
                 'nullable',
                 'file',
                 'mimes:svg',
-                'max:2048',
+                'max:600',
                 when(!$this->route('website')->hasMedia('dark_logo'), 'required_with:dark_logo')
             ],
             'dark_logo' => [
                 'nullable',
                 'file',
                 'mimes:svg',
-                'max:2048',
+                'max:600',
                 when(!$this->route('website')->hasMedia('dark_logo'), 'required_with:light_logo')
             ],
 
