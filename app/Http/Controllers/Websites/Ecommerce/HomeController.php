@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Websites\Ecommerce;
 
 use App\Http\Controllers\Websites\BaseController;
 use App\Models\Category;
-use App\Models\EcommerceProduct;
 use App\Models\WebsiteMessage;
+use App\Services\Websites\Ecommerce\ProductService;
 use Illuminate\Http\Request;
 
 class HomeController extends BaseController
@@ -15,11 +15,10 @@ class HomeController extends BaseController
      */
     public function index()
     {
-        $homeSpecialProducts = EcommerceProduct::active()->inHome()->special()->whereHas('inStockVariants')
-            ->with(['category:id,name,ar_name', 'brand:id,name', 'variants.color'])->get();
-
-        $homeProducts = EcommerceProduct::active()->inHome()->where('is_special', false)->whereHas('inStockVariants')
-            ->with(['category:id,name,ar_name', 'brand:id,name', 'variants.color'])->get();
+        $productService = new ProductService($this->website->id);
+        
+        $homeSpecialProducts = $productService->getHomeSpecialProducts();
+        $homeProducts = $productService->getHomeProducts();
 
         $categories = Category::active()->inHome()->where('website_id', $this->website->id)
             ->withCount('ecommerceProducts')->get();
