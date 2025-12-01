@@ -62,7 +62,6 @@ Route::middleware(['auth', 'verified', 'can:dashboard_access'])->prefix('dashboa
     //* Attributes
     dashboardPagesRoutes('attributes', AttributesController::class);
     Route::patch('attributes/{id}/is_active', [AttributesController::class, 'toggleActive'])->name('attributes.is_active');
-    Route::patch('attributes/{id}/is_required', [AttributesController::class, 'toggleRequired'])->name('attributes.is_required');
 
     //* ui
     Route::prefix('ui')->group(function () {
