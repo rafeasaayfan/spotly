@@ -21,17 +21,70 @@ class UpdateAttributeRequest extends FormRequest
                 'string',
                 'min:3',
                 'max:50',
-                Rule::unique('ecommerce_product_attributes', 'name')->where('website_id', $this->website_id)
+                Rule::unique('ecommerce_product_attributes', 'name')->where('website_id', $this->route('website')->id)
                 ->ignore($this->route('attribute')->id),
                 Rule::in(array_column(config('ecommerce_attributes.attributes'), 'value'))
             ],
+            'name_ar' => [
+                'required',
+                'string',
+                'min:3',
+                'max:50',
+                Rule::unique('ecommerce_product_attributes', 'name_ar')->where('website_id', $this->route('website')->id)
+                ->ignore($this->route('attribute')->id),
+                Rule::in(array_column(config('ecommerce_attributes.attributes'), 'value_ar'))
+            ],
 
             'values' => ['nullable', 'array'],
-            'values.*' => ['required', 'string'],
+            'values.*.value' => [
+                'required', 
+                'string', 
+                'max:50',
+            ],
+            'values.*.value_ar' => [
+                'required', 
+                'string', 
+                'max:50',
+            ],
 
             'description' => ['nullable', 'string', 'max:200'],
-            'is_required' => ['required', 'boolean'],
             'is_active' => ['required', 'boolean'],
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $values = $this->input('values', []);
+            
+            // Check for duplicate values within the same request
+            $valueCounts = [];
+            $valueArCounts = [];
+            
+            foreach ($values as $index => $value) {
+                $val = $value['value'] ?? null;
+                $valAr = $value['value_ar'] ?? null;
+                
+                if ($val) {
+                    if (isset($valueCounts[$val])) {
+                        $validator->errors()->add(
+                            "values.$index.value",
+                            "The value '{$val}' is duplicated. Each value must be unique."
+                        );
+                    }
+                    $valueCounts[$val] = true;
+                }
+                
+                if ($valAr) {
+                    if (isset($valueArCounts[$valAr])) {
+                        $validator->errors()->add(
+                            "values.$index.value_ar",
+                            "The Arabic value '{$valAr}' is duplicated. Each value must be unique."
+                        );
+                    }
+                    $valueArCounts[$valAr] = true;
+                }
+            }
+        });
     }
 }

@@ -19,23 +19,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const columns = [
     { key: 'name', label: 'Name' },
-    { key: 'type', label: 'Type' },
-    { key: 'values', label: 'Values', type: 'array' },
-    { key: 'is_required', label: 'Is Required', type: 'toggle' },
+    { key: 'name_ar', label: 'Arabic Name' },
+    { key: 'values_value', label: 'Possible Values', type: 'highlight' },
     { key: 'is_active', label: 'Is Active', type: 'toggle' },
     { key: 'created_at', label: 'Created At', type: 'date' },
 ];
 
 const filter = [
-    {
-        key: 'is_required',
-        label: 'Is required',
-        type: 'select',
-        options: [
-            { value: '0', label: 'No' },
-            { value: '1', label: 'Yes' },
-        ],
-    },
     {
         key: 'is_active',
         label: 'Is Active',

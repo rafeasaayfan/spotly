@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Websites\Ecommerce\Dashboard\Pages\Attributes\StoreAttributeRequest;
 use App\Http\Requests\Websites\Ecommerce\Dashboard\Pages\Attributes\UpdateAttributeRequest;
 use App\Models\EcommerceProductAttribute;
+use App\Models\EcommerceProductAttributeValue;
 
 class AttributesController extends BaseController
 {
@@ -21,8 +22,9 @@ class AttributesController extends BaseController
         $query = EcommerceProductAttribute::where('website_id', $this->website->id);
 
         $columnsSearching = ['name'];
+        $relations = ['values_value:attribute_id'];
 
-        $data = $this->dataTable($query, $request, $columnsSearching);
+        $data = $this->dataTable($query, $request, $columnsSearching, [], $relations);
 
         return $this->inertiaRender(
             'pages/attributes/Attributes',
@@ -56,11 +58,24 @@ class AttributesController extends BaseController
     {
         try {
             $validated = $request->validated();
+            $values = $validated['values'] ?? [];
+            unset($validated['values']);
 
             $attribute = new EcommerceProductAttribute($validated);
             $attribute->website_id = $this->website->id;
-            $attribute->type = $validated['values'] ? 'select' : 'text';
+            $attribute->type = $values || $validated['name'] === 'color' ? 'select' : 'text';
             $attribute->save();
+
+            // Save attribute values if provided
+            if (!empty($values)) {
+                foreach ($values as $valueData) {
+                    EcommerceProductAttributeValue::create([
+                        'attribute_id' => $attribute->id,
+                        'value' => $valueData['value'],
+                        'value_ar' => $valueData['value_ar'],
+                    ]);
+                }
+            }
 
             return $this->redirectSuccess('dashboard.attributes.index', 'Attribute created successfully', forWebsite: true);
         } catch (\Exception $e) {
@@ -74,7 +89,9 @@ class AttributesController extends BaseController
     public function show(string $id)
     {
         try {
-            $attribute = EcommerceProductAttribute::where('website_id', $this->website->id)->findOrFail($id);
+            $query = EcommerceProductAttribute::where('website_id', $this->website->id)->with(['values'])
+            ->findOrFail($id);
+            $attribute = $this->flattenRelationData($query, ['values_value']);
 
             return $this->jsonSuccess('', [
                 'data' => $attribute,
@@ -90,7 +107,9 @@ class AttributesController extends BaseController
     public function edit(string $id)
     {
         try {
-            $attribute = EcommerceProductAttribute::where('website_id', $this->website->id)->findOrFail($id);
+            $attribute = EcommerceProductAttribute::where('website_id', $this->website->id)
+            ->with(['values'])
+            ->findOrFail($id);
             $attributes = config('ecommerce_attributes.attributes');
 
             return $this->jsonSuccess('', [
@@ -109,12 +128,26 @@ class AttributesController extends BaseController
     {
         try {
             $validated = $request->validated();
+            $values = $validated['values'] ?? [];
+            unset($validated['values']);
 
             if ($attribute->website_id !== $this->website->id) return $this->backError('You are not authorized to update this attribute');
 
             $attribute->fill($validated);
-            $attribute->type = $validated['values'] ? 'select' : 'text';
+            $attribute->type = $values || $validated['name'] === 'color' ? 'select' : 'text';
             $attribute->save();
+
+            // Delete existing values and create new ones
+            $attribute->values()->delete();
+            if (!empty($values)) {
+                foreach ($values as $valueData) {
+                    EcommerceProductAttributeValue::create([
+                        'attribute_id' => $attribute->id,
+                        'value' => $valueData['value'],
+                        'value_ar' => $valueData['value_ar'],
+                    ]);
+                }
+            }
 
             return $this->redirectSuccess('dashboard.attributes.index', 'Attribute updated successfully', forWebsite: true);
         } catch (\Exception $e) {

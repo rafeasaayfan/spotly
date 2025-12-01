@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Spotly\Dashboard\Pages;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Traits\DataTableTrait;
+use Illuminate\Http\Request;
 use App\Http\Requests\Dashboard\Pages\Attributes\StoreAttributeRequest;
 use App\Http\Requests\Dashboard\Pages\Attributes\UpdateAttributeRequest;
 use App\Models\EcommerceProductAttribute;
+use App\Models\EcommerceProductAttributeValue;
 use App\Models\Website;
 
 class AttributesController extends Controller
@@ -22,7 +23,7 @@ class AttributesController extends Controller
         $query = EcommerceProductAttribute::query();
 
         $columnsSearching = ['website.name', 'name'];
-        $relations = ['website_name'];
+        $relations = ['website_name', 'values_value:attribute_id'];
 
         $data = $this->dataTable($query, $request, $columnsSearching, [], $relations);
 
@@ -30,7 +31,7 @@ class AttributesController extends Controller
             'dashboard/pages/attributes/Attributes',
             [
                 'attributes' => $data,
-            ],
+            ]
         );
     }
 
@@ -39,13 +40,13 @@ class AttributesController extends Controller
      */
     public function create()
     {
-        $websites = Website::select(['id', 'name'])->get();
         $attributes = config('ecommerce_attributes.attributes');
+        $websites = Website::select(['id', 'name'])->get();
 
         return $this->jsonSuccess('',
             [
-                'websites' => $websites,
                 'attributes' => $attributes,
+                'websites' => $websites,
             ],
         );
     }
@@ -57,12 +58,25 @@ class AttributesController extends Controller
     {
         try {
             $validated = $request->validated();
+            $values = $validated['values'] ?? [];
+            unset($validated['values']);
 
             $attribute = new EcommerceProductAttribute($validated);
-            $attribute->type = $validated['values'] ? 'select' : 'text';
+            $attribute->type = $values || $validated['name'] === 'color' ? 'select' : 'text';
             $attribute->save();
 
-            return $this->redirectSuccess('dashboard.attributes.index', 'Attribute created successfully');
+            // Save attribute values if provided
+            if (!empty($values)) {
+                foreach ($values as $valueData) {
+                    EcommerceProductAttributeValue::create([
+                        'attribute_id' => $attribute->id,
+                        'value' => $valueData['value'],
+                        'value_ar' => $valueData['value_ar'],
+                    ]);
+                }
+            }
+
+            return $this->redirectSuccess('dashboard.attributes.index', 'Attribute created successfully', forWebsite: true);
         } catch (\Exception $e) {
             return $this->logResponse('AttributesController@store', $e, 'An error occurred while creating the Attribute');
         }
@@ -74,11 +88,12 @@ class AttributesController extends Controller
     public function show(string $id)
     {
         try {
-            $attribute = EcommerceProductAttribute::findOrFail($id);
-            $result = $this->flattenRelationData($attribute, ['website_name']);
+            $query = EcommerceProductAttribute::with(['values', 'website:id,name'])
+            ->findOrFail($id);
+            $attribute = $this->flattenRelationData($query, ['values_value', 'website_name']);
 
             return $this->jsonSuccess('', [
-                'data' => $result,
+                'data' => $attribute,
             ]);
         } catch (\Exception $e) {
             return $this->logJsonResponse('AttributesController@show', $e, 'An error when fetching the show page');
@@ -91,15 +106,15 @@ class AttributesController extends Controller
     public function edit(string $id)
     {
         try {
-            $attribute = EcommerceProductAttribute::findOrFail($id);
-            $websites = $this->getRelation('website', ['name']);
-
+            $attribute = EcommerceProductAttribute::with(['values'])
+            ->findOrFail($id);
             $attributes = config('ecommerce_attributes.attributes');
+            $websites = Website::select(['id', 'name'])->get();
 
             return $this->jsonSuccess('', [
                 'data' => $attribute,
-                'websites' => $websites,
                 'attributes' => $attributes,
+                'websites' => $websites,
             ]);
         } catch (\Exception $e) {
             return $this->logJsonResponse('AttributesController@edit', $e, 'An error when fetching the edit page');
@@ -113,12 +128,26 @@ class AttributesController extends Controller
     {
         try {
             $validated = $request->validated();
+            $values = $validated['values'] ?? [];
+            unset($validated['values']);
 
             $attribute->fill($validated);
-            $attribute->type = $validated['values'] ? 'select' : 'text';
+            $attribute->type = $values || $validated['name'] === 'color' ? 'select' : 'text';
             $attribute->save();
 
-            return $this->redirectSuccess('dashboard.attributes.index', 'Attribute updated successfully');
+            // Delete existing values and create new ones
+            $attribute->values()->delete();
+            if (!empty($values)) {
+                foreach ($values as $valueData) {
+                    EcommerceProductAttributeValue::create([
+                        'attribute_id' => $attribute->id,
+                        'value' => $valueData['value'],
+                        'value_ar' => $valueData['value_ar'],
+                    ]);
+                }
+            }
+
+            return $this->redirectSuccess('dashboard.attributes.index', 'Attribute updated successfully', forWebsite: true);
         } catch (\Exception $e) {
             return $this->logResponse('AttributesController@update', $e, 'An error occurred while updating the Attribute');
         }
