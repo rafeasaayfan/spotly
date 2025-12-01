@@ -14,7 +14,7 @@ const props = defineProps<{
             <div class="border-muted grid gap-4">
                 <!-- General Information -->
                 <div class="border-muted flex flex-col gap-3 border-b pb-4">
-                    <h3 class="text-active-link text-xl font-bold">{{ props.data.order_number }}</h3>
+                    <h3 class="text-active-link text-xl font-bold">#{{ props.data.order_number }}</h3>
                     <div class="flex items-center gap-2">
                         <div
                             v-if="!props.data.user"
@@ -105,27 +105,29 @@ const props = defineProps<{
                 <h4 class="text-body font-bold">Order Items:</h4>
                 <div
                     v-if="props.data.items && props.data.items.length"
-                    class="custom-scrollbar grid max-h-[60vh] gap-2.5 overflow-y-auto md:grid-cols-2 lg:gap-4"
+                    class="custom-scrollbar grid max-h-[60vh] gap-2 overflow-y-auto md:grid-cols-2 lg:gap-4"
                 >
-                    <div v-for="item in props.data.items" :key="item.id" class="bg-body flex flex-col gap-3 rounded-md p-2.5 lg:p-4">
+                    <div v-for="item in props.data.items" :key="item.id" class="bg-body flex flex-col gap-1.5 rounded-md p-2.5 lg:p-4">
                         <div class="border-muted flex w-full items-center gap-2 border-b pb-2">
-                            <Image v-if="item.imageUrl" :src="item.imageUrl" alt="Item Image" class="size-18 rounded-full shadow" />
-                            <div
-                                v-else
-                                class="border-muted text-body-muted flex size-18 items-center justify-center rounded-full border text-center text-xs"
-                            >
-                                No Image
+                            <Image v-if="item.image_urls && item.image_urls.length > 0" :src="item.image_urls[0]" alt="Item Image" class="min-w-16 min-h-16 size-0 rounded-full shadow" />
+                            <div class="flex flex-col gap-1">
+                                <p class="text-active-link font-bold">{{ item.product.name }}</p>
+
+                                <div class="custom-scrollbar flex items-center gap-1 max-w-[240px] overflow-x-auto">
+                                    <span v-for="attribute in item.attributes" :key="attribute.id" 
+                                        class="text-body-muted text-xs font-medium rounded-md border px-2 py-1 border-muted bg-content text-nowrap"
+                                    >
+                                        <span v-if="attribute.color_code">
+                                            {{ attribute.color_name }}
+                                        </span>
+                                        <span v-else>
+                                            {{ attribute.attribute_value_name }}
+                                        </span>
+                                    </span>
+                                </div>
                             </div>
-                            <p class="text-active-link font-bold">{{ item.product.name }}</p>
                         </div>
 
-                        <div v-if="item.color" class="flex items-center justify-between gap-2">
-                            <span class="text-body-muted text-sm">Color:</span>
-                            <div class="flex items-center gap-1">
-                                <span :style="{ backgroundColor: item.color }" class="border-muted size-5.5 rounded-full border shadow-sm"></span>
-                                <span class="text-body-muted text-xs font-medium">{{ item.color }}</span>
-                            </div>
-                        </div>
                         <p class="text-body-muted flex items-center justify-between gap-2 text-sm">
                             Quantity: <span class="text-body text-base font-bold">{{ item.quantity }}</span>
                         </p>
@@ -135,11 +137,6 @@ const props = defineProps<{
                         <p class="text-body-muted flex items-center justify-between gap-2 text-sm">
                             Total Price: <span class="text-active text-base font-bold">{{ item.unit_price * item.quantity }}$</span>
                         </p>
-
-                        <div v-if="item.note" class="border-muted flex flex-col gap-1 border-t pt-2">
-                            <p class="text-body-muted text-sm">Note:</p>
-                            <p class="text-body text-sm font-medium whitespace-pre-line">{{ item.note }}</p>
-                        </div>
                     </div>
                 </div>
             </div>
