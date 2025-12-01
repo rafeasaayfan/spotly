@@ -135,7 +135,7 @@ const page = usePage<SharedData>()
                         </span>
 
                         <div class="flex items-center">
-                            <XIcon v-if="modelValue && props.withReset" class="size-3.5 cursor-pointer text-active-link-2"
+                            <XIcon v-if="modelValue && props.withReset" class="size-3.5 cursor-pointer text-body-muted"
                                 @click="emit('update:modelValue', '')" />
                             <ArrowBigUpDash class="size-4 flex-shrink-0 transition-all duration-300 ease-in-out"
                                 :class="isOpen ? '' : 'rotate-180'" />

@@ -120,7 +120,7 @@ const page = usePage<SharedData>();
           <span v-else>{{ selectedLabel }}</span>
 
           <div class="flex items-center">
-            <XIcon v-if="modelValue && props.withReset" class="size-3.5 cursor-pointer text-active-link-2" @click="emit('update:modelValue', '')" />
+            <XIcon v-if="modelValue && props.withReset" class="size-3.5 cursor-pointer text-body-muted" @click="emit('update:modelValue', '')" />
             <ChevronDown class="size-3.5 transition-transform" :class="{ 'rotate-180': isOpen }" />
           </div>
         </button>
