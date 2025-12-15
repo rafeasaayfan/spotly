@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('delivery_address');
 
             $table->text('note')->nullable();
-            $table->text('cancellation_reason')->nullable();
+            $table->text('status_reason')->nullable();
 
             $table->timestamp('status_changed_at')->nullable();
             $table->string('status')->default(OrderStatus::PENDING->value);
