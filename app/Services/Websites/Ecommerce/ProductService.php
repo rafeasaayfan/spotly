@@ -7,7 +7,6 @@ use App\Models\Category;
 use App\Models\EcommerceOrder;
 use App\Models\EcommerceProduct;
 use Illuminate\Support\Facades\Auth;
-use Pest\Support\Arr;
 
 class ProductService
 {
@@ -23,7 +22,7 @@ class ProductService
      */
     public function getHomeSpecialProducts()
     {
-        return $this->getProducts(true);
+        return $this->getProducts('special');
     }
 
     /**
@@ -31,7 +30,7 @@ class ProductService
      */
     public function getHomeProducts()
     {
-        return $this->getProducts(false);
+        return $this->getProducts('home');
     }
 
     /**
@@ -78,10 +77,10 @@ class ProductService
      */
     protected function getProducts(string $type, array $filters = [])
     {
-        $query = $this->loadProducts()->inHome();
+        $query = $this->loadProducts();
 
         if ($type === 'special') {
-            $query->special();
+            $query->special()->inHome();
 
         } else if ($type === 'home') {
             $query->inHome();
@@ -92,7 +91,6 @@ class ProductService
            $products->each(fn($product) => $product->is_out_of_stock = $this->checkIFOutOfStock($product));
 
            return $products;
-
         }
 
         $products = $query->get()->map(fn($product) => $this->enrichProduct($product));
@@ -158,13 +156,13 @@ class ProductService
     {
         return $product->variants
             ->flatMap(fn($variant) => $variant->attributes)
-            ->filter(fn($attr) => $attr->attribute_value_id)
+            ->filter(fn($attr) => $attr->attribute_name !== 'color')
             ->map(fn($attr) => [
                 'id' => $attr->attribute_value_id,
                 'name' => $attr->attribute_value_value,
                 'name_ar' => $attr->attribute_value_value_ar,
             ])
-            ->unique('id')
+            ->unique('name')
             ->values();
     }
 
