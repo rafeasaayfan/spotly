@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Websites\Ecommerce\Dashboard\Pages;
 
+use App\Enums\Websites\Ecommerce\OrderStatus;
 use App\Http\Controllers\Websites\BaseController;
 use App\Models\EcommerceOrder;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use App\Http\Requests\Websites\Ecommerce\Dashboard\Pages\Orders\UpdateOrderRequest;
-use App\Jobs\Websites\Ecommerce\SendOrderEmailJob;
-use App\Models\WebsiteUser;
+use App\Models\Country;
+use App\Models\EcommerceTrackOrder;
 use App\Services\Websites\Ecommerce\Dashboard\OrdersService;
+use Illuminate\Validation\Rule;
 
 class OrdersController extends BaseController
 {
@@ -24,7 +26,7 @@ class OrdersController extends BaseController
         $cities = config('cities.lebanon');
 
         $columnsSearching = ['order_number', 'user.name'];
-        $columnsSelection = ['id', 'website_user_id', 'order_number', 'total_amount', 'delivery_address', 'city', 'status', 'status_changed_at'];
+        $columnsSelection = ['id', 'website_user_id', 'order_number', 'total_amount', 'delivery_address', 'city', 'phone_number', 'status', 'status_changed_at'];
         $relations = ['user_name'];
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
@@ -83,13 +85,16 @@ class OrdersController extends BaseController
     {
         try {
             $order = EcommerceOrder::where('website_id', $this->website->id)
-                ->select(['id', 'delivery_address', 'city', 'note', 'cancellation_reason', 'status'])
+                ->select(['id', 'delivery_address', 'city', 'phone_number', 'status_reason', 'note', 'status'])
                 ->findOrFail($id);
+
             $cities = config('cities.lebanon');
+            $countries = Country::active()->get();
 
             return $this->jsonSuccess('', [
                 'data' => $order,
-                'cities' => $cities
+                'cities' => $cities,
+                'countries' => $countries
             ]);
         } catch (\Exception $e) {
             return $this->logJsonResponse('OrdersController@edit', $e, 'An error when fetching the edit page');
@@ -107,6 +112,16 @@ class OrdersController extends BaseController
             $validated = $request->validated();
 
             $order->fill($validated);
+            if ($validated['status_reason']) {
+                $track = EcommerceTrackOrder::where('order_id', $order->id)
+                    ->where('status', $order->status)
+                    ->orderByDesc('id')
+                    ->firstOrFail();
+
+                $track->update([
+                    'status_reason' => $validated['status_reason'],
+                ]);
+            }
             $order->save();
 
             return $this->redirectSuccess('dashboard.orders.index', 'Order updated successfully', forWebsite: true);
@@ -148,16 +163,16 @@ class OrdersController extends BaseController
     public function changeStatus(Request $request, $id)
     {
         $validated = $request->validate([
-            'status' => 'required|string|in:pending,confirmed,delivered,cancelled,refunded',
+            'status' => ['required', 'string', Rule::enum(OrderStatus::class)],
         ]);
 
         try {
             $result = OrdersService::changeStatus(
                 $this->website->id,
                 $this->website->name,
-                $this->website->email, 
-                $this->website->subdomain, 
-                $id, 
+                $this->website->email,
+                $this->website->subdomain,
+                $id,
                 $validated['status']
             );
 
