@@ -5,10 +5,8 @@ namespace App\Http\Controllers\Websites\Ecommerce;
 use App\Http\Controllers\Websites\BaseController;
 use App\Http\Requests\Websites\Ecommerce\OrderRequest;
 use App\Models\EcommerceOrder;
-use App\Models\EcommerceTrackOrder;
 use App\Services\Websites\Ecommerce\ProductService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class OrdersController extends BaseController
 {
@@ -59,8 +57,8 @@ class OrdersController extends BaseController
         if (isset($validated['order_number'])) {
             $order = EcommerceOrder::where('website_id', $this->website->id)
                 ->where('order_number', $validated['order_number'])
-                ->with(['user:id,name', 'items.product:id,name', 'trackOrder' => function ($query) {
-                    $query->orderBy('created_at', 'desc');
+                ->with(['user:id,name', 'items.product:id,slug,name', 'trackOrder' => function ($query) {
+                    $query->orderBy('created_at', 'asc');
                 }])
                 ->first();
         }
