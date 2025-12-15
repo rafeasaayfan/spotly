@@ -26,9 +26,16 @@ class UpdateOrderRequest extends FormRequest
                 }
             ],
 
+            'phone_number' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^(?:\+961)?(03\d{6}|70\d{6}|71\d{6}|76\d{6}|78\d{6}|79\d{6}|81\d{6})$/',
+            ],
+
             'note' => ['nullable', 'min:3', 'max:255'],
             
-            'cancellation_reason' => ['nullable', 'min:3', 'max:255'],
+            'status_reason' => ['nullable', 'min:3', 'max:255'],
         ];
     }
 }
