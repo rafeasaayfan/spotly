@@ -25,7 +25,7 @@ class EcommerceOrder extends Model
         'delivery_address',
 
         'note',
-        'cancellation_reason',
+        'status_reason',
 
         'status_changed_at',
         'status',
