@@ -9,7 +9,7 @@ class EcommerceTrackOrder extends Model
 {
     protected $fillable = [
         'order_id',
-        'cancellation_reason',
+        'status_reason',
         'status',
     ];
 
