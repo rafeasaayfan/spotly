@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('ecommerce_track_orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained('ecommerce_orders')->onDelete('cascade');
-            $table->text('cancellation_reason')->nullable();
+            $table->text('status_reason')->nullable();
             $table->string('status')->default(OrderStatus::PENDING->value);
             $table->timestamps();
 
