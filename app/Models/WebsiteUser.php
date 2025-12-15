@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Enums\Websites\UserRole;
 use App\Enums\Websites\UserStatus;
-use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
