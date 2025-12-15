@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Websites\Common\Dashboard;
 
+use App\Enums\Websites\UserRole;
+use App\Enums\Websites\UserStatus;
 use App\Http\Controllers\Websites\BaseController;
 use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
@@ -12,6 +14,7 @@ use App\Models\Country;
 use App\Models\WebsiteUser;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class UsersController extends BaseController
 {
@@ -224,11 +227,11 @@ class UsersController extends BaseController
     {
         try {
             $validated = $request->validate([
-                'status' => 'required|string|in:active,inactive,banned',
+                'status' => ['required', 'string', Rule::enum(UserStatus::class)],
             ]);
 
             $user = WebsiteUser::where('website_id', $this->website->id)->findOrFail($id);
-            if ($user->role === 'owner') {
+            if ($user->role === UserRole::OWNER) {
                 return $this->backError('You cannot change the owner status!');
             }
 
@@ -263,19 +266,19 @@ class UsersController extends BaseController
     {
         try {
             $validated = $request->validate([
-                'role' => 'required|string|in:user,admin,owner',
+                'role' => ['required', 'string', Rule::enum(UserRole::class)],
             ]);
 
             $user = WebsiteUser::where('website_id', $this->website->id)->findOrFail($id);
-            if ($user->role === 'owner') {
+            if ($user->role === UserRole::OWNER) {
                 return $this->backError('You cannot change the owner role!');
             }
-            if ($validated['role'] === 'owner') {
+            if ($validated['role'] === UserRole::OWNER) {
                 return $this->backError('There can only be one owner per website!');
             }
             $user->update(['role' => $validated['role']]);
 
-            if ($validated['role'] === 'admin') {
+            if ($validated['role'] === UserRole::ADMIN) {
                 $message = 'User promoted to admin successfully.';
             } else {
                 $message = 'User role changed to user successfully.';

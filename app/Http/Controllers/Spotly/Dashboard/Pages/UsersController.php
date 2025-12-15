@@ -13,6 +13,8 @@ use App\Jobs\Spotly\UserStatusMailJob;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Country;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
+use App\Enums\Spotly\UserStatus;
 
 class UsersController extends Controller
 {
@@ -159,7 +161,7 @@ class UsersController extends Controller
     {
         try {
             $validated = $request->validate([
-                'status' => 'required|string|in:active,inactive,banned',
+                'status' => ['required', 'string', Rule::enum(UserStatus::class)],
             ]);
 
             $user = User::findOrFail($id);
@@ -170,9 +172,9 @@ class UsersController extends Controller
             $user->update(['status' => $validated['status']]);
 
             $message = match ($validated['status']) {
-                'active' => 'User activated successfully.',
-                'inactive' => 'User deactivated successfully.',
-                'banned' => 'User has been banned.',
+                UserStatus::ACTIVE->value => 'User activated successfully.',
+                UserStatus::INACTIVE->value => 'User deactivated successfully.',
+                UserStatus::BANNED->value => 'User has been banned.',
             };
 
             UserStatusMailJob::dispatch($user->email, $user->name, $validated['status']);

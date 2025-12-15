@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Spotly\Dashboard\Pages;
 
+use App\Enums\Spotly\WebsiteStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\FilterRequest;
 use App\Models\Website;
@@ -12,6 +13,7 @@ use App\Http\Requests\Dashboard\Pages\Websites\UpdateWebsiteRequest;
 use App\Models\Country;
 use App\Models\WebsiteType;
 use App\Services\Spotly\WebsiteStatusService;
+use Illuminate\Validation\Rule;
 
 class WebsitesController extends Controller
 {
@@ -213,13 +215,13 @@ class WebsitesController extends Controller
     public function changeStatus(Request $request, $id)
     {
         $validated = $request->validate([
-            'status' => 'required|in:pending,denied,approved',
+            'status' => ['required', 'string', Rule::enum(WebsiteStatus::class)],
         ]);
 
         try {
             $website = Website::findOrFail($id);
 
-            if ($validated['status'] === 'pending') {
+            if ($validated['status'] === WebsiteStatus::PENDING) {
                 return $this->backError('Cant make the website pending', 'warning');
             }
 
