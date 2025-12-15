@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Websites\Ecommerce;
 
+use App\Enums\Websites\Ecommerce\OrderStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class OrderRequest extends FormRequest
 {
@@ -22,7 +24,7 @@ class OrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['nullable', 'string', 'in:pending,confirmed,delivered,rejected,cancelled,refunded'],
+            'status' => ['nullable', 'string', Rule::enum(OrderStatus::class)],
             'search' => ['nullable', 'string', 'min:0', 'max:100'],
             'sort_by' => ['nullable', 'string', 'in:date,amount'],
             'sort_dir' => ['nullable', 'string', 'in:asc,desc'],

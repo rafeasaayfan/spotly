@@ -4,6 +4,8 @@ namespace App\Http\Requests\Websites\Common\Dashboard\Users;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Enums\Websites\UserStatus;
+use App\Enums\Websites\UserRole;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -32,8 +34,8 @@ class UpdateUserRequest extends FormRequest
                 'regex:/^(?:\+961)?(03\d{6}|70\d{6}|71\d{6}|76\d{6}|78\d{6}|79\d{6}|81\d{6})$/',
                 Rule::unique('website_users', 'phone_number')->where('website_id', $website->id)->ignore($this->route('user')->id)
             ],
-            'status' => ['required', 'string', 'in:active,inactive,banned'],
-            'role' => ['required', 'string', 'in:user,admin'],
+            'status' => ['required', 'string', Rule::enum(UserStatus::class)],
+            'role' => ['required', 'string', Rule::enum(UserRole::class)],
         ];
     }
 }
