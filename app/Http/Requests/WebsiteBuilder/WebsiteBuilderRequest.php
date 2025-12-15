@@ -37,7 +37,7 @@ class WebsiteBuilderRequest extends FormRequest
                         'max:15',
                         'min:3',
                         'unique:websites,name',
-                        'regex:/^[A-Za-z0-9]+$/'
+                        'regex:/^(?=(?:.*[A-Za-z]){2,})[A-Za-z0-9 ]+$/',
                     ],
                     'subdomain' => [
                         'required',
@@ -48,36 +48,28 @@ class WebsiteBuilderRequest extends FormRequest
                         'regex:/^(?!-)[a-z0-9-]+(?<!-)$/'
                     ],
                     'about_us' => [
-                        'required',
+                        'nullable',
+                        'required_with:about_us_ar',
                         'string',
                         'max:255',
-                        'min:120',
                         function ($attribute, $value, $fail) {
                             $trimmed = trim($value);
 
                             if (!preg_match('/^[\p{Latin}\d\s.,;:!?"\'()-]+$/u', $trimmed)) {
                                 $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be in English.');
                             }
-
-                            if (preg_match('/\s{2,}/', $trimmed)) {
-                                $fail('The ' . str_replace('_', ' ', $attribute) . ' field contains too many spaces.');
-                            }
                         }
                     ],
                     'about_us_ar' => [
-                        'required',
+                        'nullable',
+                        'required_with:about_us',
                         'string',
                         'max:255',
-                        'min:120',
                         function ($attribute, $value, $fail) {
                             $trimmed = trim($value);
 
                             if (!preg_match('/^[\p{Arabic}\d\s.,؛:!؟"\'()\-]+$/u', $trimmed)) {
                                 $fail('The ' . str_replace('_', ' ', $attribute) . ' field must be in Arabic.');
-                            }
-
-                            if (preg_match('/\s{2,}/u', $trimmed)) {
-                                $fail('The ' . str_replace('_', ' ', $attribute) . ' field contains too many spaces.');
                             }
                         }
                     ],
@@ -133,8 +125,8 @@ class WebsiteBuilderRequest extends FormRequest
 
             case 3:
                 $validation = [
-                    'light_logo' => ['nullable', 'file', 'mimes:svg', 'max:600', 'required_with:dark_logo'],
-                    'dark_logo' => ['nullable', 'file', 'mimes:svg', 'max:600', 'required_with:light_logo'],
+                    'light_logo' => ['nullable', 'file', 'mimes:svg,png,jpg,jpeg,webp', 'max:600', 'required_with:dark_logo'],
+                    'dark_logo' => ['nullable', 'file', 'mimes:svg,png,jpg,jpeg,webp', 'max:600', 'required_with:light_logo'],
 
                     'template_images' => [
                         Rule::when(
@@ -195,5 +187,13 @@ class WebsiteBuilderRequest extends FormRequest
         session(["wizard_step_{$step}" => $data]);
 
         // Validator::make($allData, [ ... ])->validate();
+    }
+
+    public function messages()
+    {
+        return [
+            'name.regex' => __('messages.websiteBuilder.firstStep.business_name_validation'),
+            'subdomain.regex' => __('messages.websiteBuilder.firstStep.subdomain_validation'),
+        ];
     }
 }
