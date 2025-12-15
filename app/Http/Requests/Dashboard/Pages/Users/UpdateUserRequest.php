@@ -4,6 +4,7 @@ namespace App\Http\Requests\Dashboard\Pages\Users;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Enums\Spotly\UserStatus;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -21,7 +22,7 @@ class UpdateUserRequest extends FormRequest
             'phone_number' => ['nullable', 'string', 'max:255',              
                 'regex:/^(?:\+961)?(3\d{6}|70\d{6}|71\d{6}|76\d{6}|78\d{6}|79\d{6}|81\d{6})$/'
             ],
-            'status' => ['required', 'string', 'in:active,inactive,banned'],
+            'status' => ['required', 'string', Rule::enum(UserStatus::class)],
         ];
     }
 }
