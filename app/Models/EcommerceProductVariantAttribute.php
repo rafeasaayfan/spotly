@@ -22,6 +22,7 @@ class EcommerceProductVariantAttribute extends Model
         'product_variant_id',
         'attribute_id',
         'attribute_value_id',
+        'attribute_value',
         'color_id',
     ];
 
@@ -78,7 +79,7 @@ class EcommerceProductVariantAttribute extends Model
      */
     public function getAttributeValueValueAttribute()
     {
-        return $this->attributeValue?->value;
+        return $this->attribute_value ?? $this->attributeValue?->value;
     }
 
     /**
@@ -86,7 +87,7 @@ class EcommerceProductVariantAttribute extends Model
      */
     public function getAttributeValueValueArAttribute()
     {
-        return $this->attributeValue?->value_ar;
+        return $this->attribute_value ?? $this->attributeValue?->value_ar;
     }
 
     /**
