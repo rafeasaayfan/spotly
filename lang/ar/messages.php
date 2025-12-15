@@ -31,6 +31,9 @@ return [
     'active_code_exists' => 'لديك رمز نشط بالفعل',
     'password_reset_link_sent' => 'سيتم إرسال رابط إعادة تعيين كلمة المرور إذا كان الحساب موجودًا',
 
+    'websiteBuilder.firstStep.business_name_validation' => 'يجب أن يحتوي اسم الشركة على على الأقل حرفين ويمكن أن يحتوي على أرقام ومسافات.',
+    'websiteBuilder.firstStep.subdomain_validation' => 'يمكن أن يحتوي الاسم المنطقي على أحرف صغيرة وأرقام وشرطات، ولا يمكن أن يبدأ أو ينتهي بشرطة.',
+
     //! Websites 
 
     // Ecommerce

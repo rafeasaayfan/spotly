@@ -31,6 +31,9 @@ return [
     'active_code_exists' => 'You already have an active code',
     'password_reset_link_sent' => 'A reset link will be sent if the account exists',
 
+    'websiteBuilder.firstStep.business_name_validation' => 'The business name should contain at least two letters and can contain numbers, and spaces.',
+    'websiteBuilder.firstStep.subdomain_validation' => 'The name may can contain lowercase letters, numbers, and dashes, but cannot start or end with a dash.',
+
     //! Websites 
 
     // Ecommerce
