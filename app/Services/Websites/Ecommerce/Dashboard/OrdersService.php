@@ -18,53 +18,65 @@ class OrdersService
     ): array
     {
         $allowedTransitions = [
-            'pending'   => ['confirmed', 'rejected'],
-            'confirmed' => ['delivered', 'rejected', 'refunded'],
+            'pending'   => ['confirmed', 'rejected', 'cancelled'],
+            'confirmed' => ['delivered', 'rejected', 'refunded', 'cancelled'],
+            'delivered' => ['refunded'],
+            'refunded'  => [],
+            'cancelled' => [],
+            'rejected'  => [],
         ];
 
-        DB::beginTransaction();
+        try {
 
-        $order = EcommerceOrder::where('website_id', $websiteId)->with(['items.product.variants'])->findOrFail($orderId);
+            DB::beginTransaction();
 
-        $currentStatus = $order->status->value;
-        $newStatus = $status;
+            $order = EcommerceOrder::where('website_id', $websiteId)->with(['items.product.variants'])->findOrFail($orderId);
 
-        if (! in_array($newStatus, $allowedTransitions[$currentStatus] ?? [])) {
-            return [
-                'success' => false,
-                'message' => "You cannot change the order status from {$currentStatus} to {$newStatus}"
-            ];
-        }
+            $currentStatus = $order->status->value;
+            $newStatus = $status;
 
-        $order->update([
-            'status' => $newStatus,
-            'status_changed_at' => now()
-        ]);
-
-        self::createNewOrderTrack($order->id, $newStatus);
-
-        self::updateInventoryQuantities($order, $newStatus);
-
-        DB::commit();
-
-        $message = match ($status) {
-            'confirmed' => 'Order confirmed successfully.',
-            'delivered' => 'Order marked as delivered.',
-            'cancelled' => 'Order cancelled successfully.',
-            'refunded'  => 'Order refunded successfully.',
-            default     => 'Order status updated successfully.',
-        };
-
-        if (in_array($newStatus, ['confirmed', 'cancelled', 'rejected', 'delivered'])) {
-            if ($order->website_user_id !== null) {
-                self::callTheOrderJob($websiteId, $websiteName, $websiteEmail, $websiteDomain, $order, $newStatus);
+            if (! in_array($newStatus, $allowedTransitions[$currentStatus] ?? [])) {
+                DB::rollBack();
+                return [
+                    'success' => false,
+                    'message' => "You cannot change the order status from {$currentStatus} to {$newStatus}"
+                ];
             }
-        }
 
-        return [
-            'success' => true,
-            'message' => $message
-        ];
+            $order->update([
+                'status' => $newStatus,
+                'status_changed_at' => now(),
+                'status_reason' => null
+            ]);
+
+            self::createNewOrderTrack($order->id, $newStatus);
+
+            self::updateInventoryQuantities($order, $newStatus);
+
+            DB::commit();
+
+            $message = match ($status) {
+                'confirmed' => 'Order confirmed successfully.',
+                'delivered' => 'Order marked as delivered.',
+                'cancelled' => 'Order cancelled successfully.',
+                'refunded'  => 'Order refunded successfully.',
+                default     => 'Order status updated successfully.',
+            };
+
+            if (in_array($newStatus, ['confirmed', 'cancelled', 'rejected', 'delivered'])) {
+                if ($order->website_user_id !== null) {
+                    self::callTheOrderJob($websiteId, $websiteName, $websiteEmail, $websiteDomain, $order, $newStatus);
+                }
+            }
+
+            return [
+                'success' => true,
+                'message' => $message
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     /**
