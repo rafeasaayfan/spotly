@@ -85,9 +85,9 @@ class StoreProductRequest extends FormRequest
                 'max:255',
                 Rule::exists('ecommerce_product_attributes', 'name')->where('website_id', $website->id)
             ],
+            'variants.*.attributes.*.type' => ['nullable', 'in:text,select'],
             'variants.*.attributes.*.value' => [
                 'nullable',
-                'integer',
                 'max:255',
                 function ($attribute, $value, $fail) {
                     $attributeData = data_get($this->all(), str_replace('.value', '', $attribute));
@@ -99,7 +99,7 @@ class StoreProductRequest extends FormRequest
                         if (!Color::where('id', $value)->exists()) {
                             return $fail("Invalid color value.");
                         }
-                    } else {
+                    } elseif (is_int($value)) {
                         // check in ecommerce_product_attribute_values
                         if (!EcommerceProductAttributeValue::where('id', $value)
                             ->where('attribute_id', $attributeData['id'] ?? null)
