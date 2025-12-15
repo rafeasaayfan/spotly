@@ -13,8 +13,7 @@ use App\Models\Category;
 use App\Models\Color;
 use App\Models\EcommerceProduct;
 use App\Models\EcommerceProductAttribute;
-use App\Models\EcommerceProductVariant;
-use App\Models\EcommerceProductVariantAttribute;
+use App\Services\Websites\Ecommerce\Dashboard\ProductsService;
 use Illuminate\Support\Facades\DB;
 
 class ProductsController extends BaseController
@@ -87,7 +86,7 @@ class ProductsController extends BaseController
             $product->slug = uniqid('slug-', true);
             $product->save();
 
-            $this->storeProductVariants($product, $variants);
+            ProductsService::storeProductVariants($product, $variants);
 
             DB::commit();
 
@@ -168,7 +167,7 @@ class ProductsController extends BaseController
 
             $product->update($data);
 
-            $this->syncProductVariants($product, $variants);
+            ProductsService::syncProductVariants($product, $variants);
 
             DB::commit();
 
@@ -181,119 +180,6 @@ class ProductsController extends BaseController
             DB::rollBack();
 
             return $this->logResponse('ProductsController@update', $e, 'An error occurred while updating the Product');
-        }
-    }
-
-    /**
-     * Handle the create, update, and deletion of product variants.
-     *
-     * @param EcommerceProduct $product
-     * @param array $variants
-     * @return void
-     */
-    protected function syncProductVariants(EcommerceProduct $product, array $variants)
-    {
-        try {
-            // Delete variants that are not in the request
-            $requestVariantIds = collect($variants)->pluck('id')->filter()->all();
-            EcommerceProductVariant::where('product_id', $product->id)->whereNotIn('id', $requestVariantIds)
-                ->chunk(10, function ($variants) {
-                    $variants->each->delete();
-                });
-
-            // Create or Update variants
-            foreach ($variants as $variant) {
-                $productVariant = EcommerceProductVariant::updateOrCreate([
-                    'id' => $variant['id'] ?? null,
-                    'product_id' => $product->id,
-                ], [
-                    'stock_quantity' => $variant['stock_quantity'] ?? null,
-                    'price' => $variant['price'] ?? null,
-                ]);
-
-                // Handle Images
-                $productVariant->updateMediaImages($variant['ecommerce_product_images'], 'ecommerce_product_images', false);
-
-                // Handle Attributes
-                if (!empty($variant['attributes'])) {
-                    $this->storeProductVariantAttributes($productVariant->id, $variant['attributes']);
-                }
-            }
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return $this->logResponse('ProductsController@syncProductVariants', $e, 'An error occurred while syncing the product variants');
-        }
-    }
-
-    /**
-     * Store the product variants.
-     *
-     * @param EcommerceProduct $product
-     * @param array $variants
-     * @return void
-     */
-    protected function storeProductVariants(EcommerceProduct $product, array $variants)
-    {
-        try {
-            foreach ($variants as $variant) {
-                $productVariant = EcommerceProductVariant::create([
-                    'product_id'      => $product->id,
-                    'stock_quantity'  => $variant['stock_quantity'] ?? null,
-                    'price'           => $variant['price'] ?? null,
-                ]);
-
-                // Images
-                $productVariant->storeMediaImages($variant['ecommerce_product_images'], 'ecommerce_product_images');
-
-                // Attributes
-                if (!empty($variant['attributes'])) {
-                    $this->storeProductVariantAttributes($productVariant->id, $variant['attributes']);
-                }
-            }
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return $this->logResponse('ProductsController@storeProductVariants', $e, 'An error occurred while storing the product variants');
-        }
-    }
-
-    /**
-     * Store the product variant attributes.
-     *
-     * @param int $productVariantId
-     * @param array $attributes
-     * @return void
-     */
-    protected function storeProductVariantAttributes(int $productVariantId, array $attributes)
-    {
-        try {
-            $payload = [];
-
-            foreach ($attributes as $attribute) {
-                if (empty($attribute['value'])) {
-                    continue; // Skip attributes without values
-                }
-
-                $payload[] = [
-                    'product_variant_id' => $productVariantId,
-                    'attribute_id'       => $attribute['id'],
-                    'color_id'           => $attribute['name'] === 'color' ? $attribute['value'] : null,
-                    'attribute_value_id' => $attribute['name'] !== 'color' ? $attribute['value'] : null,
-                    'created_at'         => now(),
-                    'updated_at'         => now(),
-                ];
-            }
-
-            if (!empty($payload)) {
-                EcommerceProductVariantAttribute::upsert(
-                    $payload,
-                    ['product_variant_id', 'attribute_id'],
-                    ['color_id', 'attribute_value_id', 'updated_at']
-                );
-            }
-        } catch (\Exception $e) {
-            return $this->logResponse('ProductsController@storeProductVariantAttributes', $e, 'An error occurred while storing the product variant attributes');
         }
     }
 
