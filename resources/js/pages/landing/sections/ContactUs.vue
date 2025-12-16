@@ -68,7 +68,7 @@ const page = usePage<SharedData>();
         <div class="flex flex-col items-start gap-1.5">
             <Label for="type" class="text-xs">{{ $t('landing.contact_us.type_label') }}</Label>
             <Select v-model="form.type" :class="form.errors.type ? 'border-[var(--destructive)]' : ''" :placeholder="$t('landing.contact_us.select_type_placeholder')" 
-            class="text-xs" parentClass="w-full">
+            class="text-xs" parentClass="w-full" :withReset="false">
                 <option value="support">{{ $t('landing.contact_us.type_support') }}</option>
                 <option value="suggestion">{{ $t('landing.contact_us.type_suggestion') }}</option>
                 <option value="complaint">{{ $t('landing.contact_us.type_complaint') }}</option>
