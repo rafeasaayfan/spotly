@@ -17,7 +17,6 @@ const props = withDefaults(defineProps<{
   id: 'fileUpload',
 });
 
-
 const emit = defineEmits<{
   (e: 'update:modelValue', value: File[] | File | string[] | string | Record<string, any> | null): void;
 }>();
@@ -27,41 +26,47 @@ const page = usePage<SharedData>();
 // PREVIEW LIST
 const previews = ref<{ url: string; file?: File; id?: number }[]>([]);
 
-// WATCH modelValue (initial load)
+// MODEL VALUE (initial load)
 onMounted(() => {
   if (!props.modelValue) return;
 
-    // ⭐ CASE 1: a single string (existing image URL)
-    if (typeof props.modelValue === "string") {
-      previews.value.push({ url: props.modelValue });
-      return;
-    }
+  // ⭐ CASE 1: a single string (existing image URL)
+  if (typeof props.modelValue === "string") {
+    previews.value.push({ url: props.modelValue });
+    return;
+  }
 
-    // ⭐ CASE 2: array of strings
-    if (Array.isArray(props.modelValue) && typeof props.modelValue[0] === "string") {
-      previews.value = (props.modelValue as string[]).map(v => ({ url: v }));
-      return;
-    }
+  // ⭐ CASE 2: array of strings
+  if (Array.isArray(props.modelValue) && typeof props.modelValue[0] === "string") {
+    previews.value = (props.modelValue as string[]).map(v => ({ url: v }));
+    return;
+  }
 
-    // ⭐ CASE 3: Record<string, any>
-    if (typeof props.modelValue === "object" && props.modelValue !== null) {
-      previews.value = Object.values(props.modelValue).map(v => ({ url: v.original_url, id: v.id }));
-      return;
-    }
+  // ⭐ CASE 3: Record<string, any>
+    if (
+    typeof props.modelValue === "object" &&
+    props.modelValue !== null &&
+    ('original_url' in props.modelValue || Object.values(props.modelValue).some(v => v.original_url))
+  ) {
+    previews.value = Object.values(props.modelValue).map(v => ({
+      url: v.original_url,
+      id: v.id,
+    }));
+    return;
+  }
 
-    // ⭐ CASE 4: File or File[]
-    const files: File[] = Array.isArray(props.modelValue)
-      ? (props.modelValue as File[])
-      : [props.modelValue as File];
+  // ⭐ CASE 4: File or File[]
+  const files: File[] = Array.isArray(props.modelValue)
+    ? (props.modelValue as File[])
+    : [props.modelValue as File];
 
-    previews.value = files
-      .filter(file => file instanceof File)
-      .map(file => ({
-        file,
-        url: URL.createObjectURL(file),
-      }));
-  },
-);
+  previews.value = files
+    .filter(file => file instanceof File)
+    .map(file => ({
+      file,
+      url: URL.createObjectURL(file),
+    }));
+});
 
 function onSelect(e: Event) {
   const input = e.target as HTMLInputElement;
@@ -69,7 +74,7 @@ function onSelect(e: Event) {
 
   const selected = Array.from(input.files);
 
-  if(!props.multiple) {
+  if (!props.multiple) {
     previews.value = [];
   }
 
@@ -87,8 +92,7 @@ function onSelect(e: Event) {
 function removeFile(index: number) {
   previews.value.splice(index, 1);
 
-  emit("update:modelValue", props.multiple ? previews.value : previews.value[0]['file'] ?? null);
-
+  emit("update:modelValue", previews.value.length > 0 ? previews.value : null);
 }
 </script>
 
@@ -108,11 +112,14 @@ function removeFile(index: number) {
     </label>
 
     <!-- PREVIEW -->
-    <div class="flex items-center gap-4 flex-wrap">
-      <div v-for="(item, index) in previews" :key="index" class="relative w-full sm:w-50 sm:h-50 rounded-md p-3 border-2 border-muted">
+    <div class="flex items-center gap-4 flex-wrap" v-if="previews.length > 0">
+      <div v-for="(item, index) in previews" :key="index"
+        class="relative w-full sm:w-50 sm:h-50 rounded-md p-3 border-2 border-muted">
         <img :src="item.url" class="w-full h-full object-cover rounded-md" />
 
-        <button type="button" class="absolute -top-2.5 -end-2.5 bg-destructive rounded-full p-1 text-white cursor-pointer" @click="removeFile(index)">
+        <button type="button"
+          class="absolute -top-2.5 -end-2.5 bg-destructive rounded-full p-1 text-white cursor-pointer"
+          @click="removeFile(index)">
           <XIcon class="size-3.5" />
         </button>
       </div>
