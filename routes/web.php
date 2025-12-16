@@ -19,7 +19,7 @@ Route::get('/setLang/{lang}', function ($lang = null) {
 
 
 //! Spotly Routes
-Route::domain('http://127.0.0.1')->middleware([HandleLanguage::class, 'userStatus'])->group(function () {
+Route::domain('spotly.test')->middleware([HandleLanguage::class, 'userStatus'])->group(function () {
     Route::get('/', [LandingController::class, 'index'])->name('landing');
     Route::put('/subscribe', [LandingController::class, 'subscribe'])->name('subscribe');
     Route::put('/contactUs', [LandingController::class, 'contactUs'])->name('contactMessages');
