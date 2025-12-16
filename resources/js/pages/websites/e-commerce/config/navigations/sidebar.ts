@@ -74,6 +74,11 @@ export const mainSidebarItems: SidebarSection[] = [
                 href: '/dashboard/carts',
                 icon: icons.ShoppingCart,
             },
+            {
+                title: 'Track Orders',
+                href: '/dashboard/track-orders',
+                icon: icons.Route,
+            }
         ],
     },
 ];
