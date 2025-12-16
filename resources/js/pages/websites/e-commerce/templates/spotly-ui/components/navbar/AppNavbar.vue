@@ -43,7 +43,7 @@ const isCurrentRoute = computed(() => (url: string) => page.url === url);
 
 <template>
     <div
-        :class="scrolled ? 'web-bg-nav mt-0 pt-0 backdrop-blur-lg' : 'mt-2'"
+        :class="scrolled ? 'web-bg-nav mt-0 md:mt-0 pt-0 backdrop-blur-lg' : 'mt-0 md:mt-2'"
         class="fixed z-20 w-full transition-all duration-300"
         :dir="page.props.lang === 'ar' ? 'rtl' : 'ltr'"
     >
