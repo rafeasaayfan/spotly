@@ -56,8 +56,8 @@ watch(selectedVariant, (newVariant) => {
 });
 
 const addToCartCondition = () => {
-    if(selectedVariant.value && quantity.value && quantity.value > 0) {
-        if(selectedVariant.value.display_quantity) {
+    if (selectedVariant.value && quantity.value && quantity.value > 0) {
+        if (selectedVariant.value.display_quantity) {
             return selectedVariant.value.display_quantity >= quantity.value;
         }
 
@@ -85,10 +85,6 @@ const addToCart = async () => {
         });
 
         if (response.data.props.product) {
-
-            console.log(response.data.props);
-            
-            
             product.value = response.data.props.product;
             cartItemsCount.value = response.data.props.cartItemsCount;
 
@@ -122,16 +118,14 @@ const addToCart = async () => {
                     product.variants ? '' : 'flex h-full w-full items-center justify-center',
                 ]"
             >
-                <div v-if="product.variants && product.variants.length > 0" class="grid grid-cols-1 sm:grid-cols-5 gap-6">
+                <div v-if="product.variants && product.variants.length > 0" class="grid grid-cols-1 gap-6 sm:grid-cols-5">
                     <!-- Images -->
-                    <div class="col-span-1 sm:col-span-2 flex w-full flex-col gap-1">
+                    <div class="col-span-1 flex w-full flex-col gap-1 sm:col-span-2">
                         <div class="flex flex-col items-center gap-3">
-                            <img 
-                                v-if="bigImage" 
-                                :src="bigImage" 
-                                class="
-                                w-80 sm:w-full min-h-55 max-h-55 sm:min-h-50 sm:max-h-50 md:min-h-65 md:max-h-65 lg:min-h-80 lg:max-h-80 xl:min-h-100 xl:max-h-100 
-                                object-cover rounded-md transition-all duration-300" 
+                            <img
+                                v-if="bigImage"
+                                :src="bigImage"
+                                class="max-h-55 min-h-55 w-80 rounded-md object-cover transition-all duration-300 sm:max-h-50 sm:min-h-50 sm:w-full md:max-h-65 md:min-h-65 lg:max-h-80 lg:min-h-80 xl:max-h-100 xl:min-h-100"
                             />
 
                             <div class="custom-scrollbar flex max-w-full flex-nowrap gap-1 overflow-x-auto">
@@ -140,7 +134,7 @@ const addToCart = async () => {
                                         <div
                                             v-for="image in variant.ecommerce_product_images"
                                             :key="image.id"
-                                            class="group h-20 lg:h-24 min-h-20 lg:min-h-24 w-30 lg:w-35 min-w-30 lg:min-w-35 cursor-pointer items-center justify-center overflow-hidden rounded border-4 border-double border-[var(--border_color_light)] hover:border-[var(--primary_light)] dark:border-[var(--border_color_dark)] dark:hover:border-[var(--primary_dark)]"
+                                            class="group h-20 min-h-20 w-30 min-w-30 cursor-pointer items-center justify-center overflow-hidden rounded border-4 border-double border-[var(--border_color_light)] hover:border-[var(--primary_light)] lg:h-24 lg:min-h-24 lg:w-35 lg:min-w-35 dark:border-[var(--border_color_dark)] dark:hover:border-[var(--primary_dark)]"
                                             :class="selectedVariant ? (selectedVariant.id === variant.id ? 'flex' : 'hidden') : 'flex'"
                                             @click="bigImage = image.original_url"
                                         >
@@ -153,7 +147,7 @@ const addToCart = async () => {
                     </div>
 
                     <!-- Product Details -->
-                    <div class="col-span-1 sm:col-span-3 flex flex-col gap-4">
+                    <div class="col-span-1 flex flex-col gap-4 sm:col-span-3">
                         <!-- Product Name and Discount -->
                         <div class="web-border-color flex flex-col border-b pb-4">
                             <div class="flex w-full items-center justify-between gap-3">
@@ -214,20 +208,26 @@ const addToCart = async () => {
                                     class="web-text-body flex min-w-45 cursor-pointer flex-col gap-2 rounded-md border-2 border-[var(--border_color_light)] bg-black/2 px-2 py-2 transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--primary_light)] dark:border-[var(--border_color_dark)] dark:bg-white/2 dark:hover:border-[var(--primary_dark)]"
                                     :class="[
                                         selectedVariant?.id === variant.id
-                                            ? '-translate-y-1 hover:-translate-y-1 border-[var(--primary_light)] dark:border-[var(--primary_dark)]'
-                                            : ''
-                                        ,
-                                        variant.display_quantity === 0 ? 'relative pointer-events-none' : ''
+                                            ? '-translate-y-1 border-[var(--primary_light)] hover:-translate-y-1 dark:border-[var(--primary_dark)]'
+                                            : '',
+                                        variant.display_quantity === 0 ? 'pointer-events-none relative' : '',
                                     ]"
                                 >
-                                    <div v-if="variant.display_quantity === 0" class="absolute inset-0 w-full h-full flex items-center justify-center">
-                                        <div class="flex items-center gap-1 p-2 rounded-md bg-red-500/25 dark:bg-red-500/20 -rotate-18 text-sm">
+                                    <div
+                                        v-if="variant.display_quantity === 0"
+                                        class="absolute inset-0 z-10 flex h-full w-full items-center justify-center"
+                                    >
+                                        <div
+                                            class="flex -rotate-18 items-center gap-1 rounded-md bg-red-500/10 p-2 text-sm backdrop-blur-lg dark:bg-red-500/10"
+                                        >
                                             <Ban class="web-text-danger size-3.5" />
-                                            <span class="web-text-danger font-medium">{{ $t('out.of.stock') }}</span>
+                                            <span class="web-text-danger font-bold">{{ $t('out.of.stock') }}</span>
                                         </div>
                                     </div>
 
-                                    <div class="web-border-color flex flex-col gap-2 border-b pb-1" v-if="variant.display_quantity !== null || variant.price !== null"
+                                    <div
+                                        class="web-border-color flex flex-col gap-2 border-b pb-1"
+                                        v-if="variant.display_quantity !== null || variant.price !== null"
                                         :class="variant.display_quantity === 0 ? 'pointer-events-none opacity-50 blur-[1px]' : ''"
                                     >
                                         <div class="flex w-full items-center justify-between" v-if="variant.display_quantity !== null">
@@ -244,7 +244,10 @@ const addToCart = async () => {
                                         </div>
                                     </div>
 
-                                    <div v-for="attribute in variant.attributes" :key="attribute.id" class="flex items-center justify-between"
+                                    <div
+                                        v-for="attribute in variant.attributes"
+                                        :key="attribute.id"
+                                        class="flex items-center justify-between"
                                         :class="variant.display_quantity === 0 ? 'pointer-events-none opacity-50 blur-[1px]' : ''"
                                     >
                                         <span class="web-text-body-muted text-[10px] uppercase"
@@ -261,6 +264,9 @@ const addToCart = async () => {
                                                 ></div>
                                                 {{ page.props.lang === 'ar' ? attribute.color_name_ar : attribute.color_name }}
                                             </span>
+                                            <span v-else>{{
+                                                page.props.lang === 'ar' ? attribute.attribute_value_value_ar : attribute.attribute_value_value
+                                            }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -313,7 +319,11 @@ const addToCart = async () => {
                                 <span class="web-text-body text-xs md:text-sm">{{ $t('total.price') }}</span>
                                 <div class="flex items-center gap-1 md:gap-2">
                                     <span v-if="selectedVariant?.price" class="web-text-active text-base font-bold md:text-lg">
-                                        {{ product.is_discount ? (selectedVariant.price - product.discount_price) * quantity : selectedVariant.price * quantity }}$
+                                        {{
+                                            product.is_discount
+                                                ? (selectedVariant.price - product.discount_price) * quantity
+                                                : selectedVariant.price * quantity
+                                        }}$
                                     </span>
                                     <span v-else class="web-text-active text-base font-bold md:text-lg">
                                         {{ product.is_discount ? (product.price - product.discount_price) * quantity : product.price * quantity }}$
