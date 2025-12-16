@@ -30,6 +30,7 @@ const props = defineProps<{
 const columns = [
     { key: 'user_name', label: 'User' },
     { key: 'order_number', label: 'Order Number' },
+    { key: 'phone_number', label: 'Phone Number' },
     { key: 'total_amount', label: 'Total Amount' },
     { key: 'delivery_address', label: 'Delivery Address' },
     { key: 'city', label: 'City' },
@@ -76,7 +77,7 @@ const filter = [
 watchEffect(() => {
     const message = props.flash?.message;
     if (message) {
-        toast.fire({ icon: props.flash?.toastType, title: message });
+        toast.fire({ icon: props.flash?.toastType, text: message });
     }
 });
 
