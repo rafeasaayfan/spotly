@@ -75,11 +75,11 @@ const page = usePage<SharedData>();
 <template>
     <section id="about-us" class="relative overflow-hidden px-4 py-22">
         <!-- Background decorative elements -->
-        <div class="pointer-events-none absolute inset-0">
+        <!-- <div class="pointer-events-none absolute inset-0">
             <div class="floating-element bg-primary absolute top-20 left-10 h-4 w-4 rounded-full"></div>
             <div class="floating-element bg-destructive absolute top-40 right-20 h-6 w-6 rounded-full"></div>
             <div class="floating-element bg-primary absolute bottom-20 left-1/4 h-3 w-3 rounded-full"></div>
-        </div>
+        </div> -->
 
         <div class="mx-auto max-w-7xl">
             <!-- Header Section -->
@@ -104,9 +104,9 @@ const page = usePage<SharedData>();
             <div class="about-content">
                 <!-- Mission Statement -->
                 <div class="relative mb-16">
-                    <div
+                    <!-- <div
                         class="pointer-events-none absolute inset-0 start-0 top-0 z-0 rounded-full bg-gradient-to-br from-[var(--primary)] via-transparent to-[var(--background)] opacity-20 blur-2xl dark:opacity-5"
-                    ></div>
+                    ></div> -->
 
                     <div class="grid lg:grid-cols-2 gap-20">
                         <div class="flex flex-col gap-10">
@@ -145,7 +145,7 @@ const page = usePage<SharedData>();
                             <div class="flex h-full w-full items-center justify-center rounded-md bg-black/3 dark:bg-white/3 py-5 lg:py-0 border-b-6 border-muted">
                                 <AppLogoIcon class="size-40 md:size-50" />
                             </div>
-                            <div class="bg-destructive absolute -top-3 -end-3 flex size-8 items-center justify-center rounded-full">
+                            <div class="bg-primary absolute -top-3 -end-3 flex size-8 items-center justify-center rounded-full">
                                 <svg class="size-4.5 text-white" fill="currentColor" viewBox="0 0 20 20">
                                     <path
                                         fill-rule="evenodd"
@@ -161,9 +161,9 @@ const page = usePage<SharedData>();
                 <!-- Call to Action -->
                 <div class="mt-8 text-center">
                     <Link
-                        href="/websiteBuilder"
+                        href="/website-builder"
                         class="group bg-primary inline-flex cursor-pointer items-center gap-3 rounded-full glow-button 
-                        px-5 py-3 font-semibold text-white transition-all duration-300 hover:px-6 hover:shadow-lg active:scale-98"
+                        px-5 py-3 font-medium text-white transition-all duration-300 hover:px-6 hover:shadow-lg active:scale-98"
                     >
                         <span>{{ $t('landing.about_us.start_building_button') }}</span>
                         <svg
