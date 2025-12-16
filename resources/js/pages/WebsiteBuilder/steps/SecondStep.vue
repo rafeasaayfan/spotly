@@ -143,6 +143,7 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
                     :placeholder="$t('websiteBuilder.secondStep.country_placeholder')"
                     :options="mappedCountries"
                     class="h-10"
+                    :withReset="false"
                 />
                 <InputError v-if="props.form.errors?.country" :message="props.form.errors.country" />
             </div>

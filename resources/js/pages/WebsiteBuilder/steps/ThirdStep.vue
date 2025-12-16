@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import HeadingSmall from '@/components/headers/HeadingSmall.vue';
-import { File, InputError } from '@/components/ui/fields';
+import { File, FileUploader, InputError } from '@/components/ui/fields';
 import { TemplateBtn, TemplateColorsCard } from '@/components/ui/templatesBuilder';
 import { computed, onMounted, ref } from 'vue';
 
@@ -125,11 +125,9 @@ const updateField = (field: string, value: any) => {
                 :description="$t('websiteBuilder.thirdStep.light_logo_description')"
             />
             <div class="flex flex-col gap-1 ps-2">
-                <File
+                <FileUploader
                     v-model="light_logo"
-                    fileClass="h-10"
-                    fileInputClass="file:h-10 file:bg-black/8 hover:file:bg-black/10
-                dark:file:bg-white/8 dark:hover:file:bg-white/10"
+                    id="light_logo"
                 />
                 <InputError v-if="props.form.errors?.light_logo" :message="props.form.errors.light_logo" />
             </div>
@@ -141,11 +139,9 @@ const updateField = (field: string, value: any) => {
                 :description="$t('websiteBuilder.thirdStep.dark_logo_description')"
             />
             <div class="flex flex-col gap-1 ps-2">
-                <File
+                <FileUploader
                     v-model="dark_logo"
-                    fileClass="h-10"
-                    fileInputClass="file:h-10 file:bg-black/8 hover:file:bg-black/10
-                dark:file:bg-white/8 dark:hover:file:bg-white/10"
+                    id="dark_logo"
                 />
                 <InputError v-if="props.form.errors?.dark_logo" :message="props.form.errors.dark_logo" />
             </div>

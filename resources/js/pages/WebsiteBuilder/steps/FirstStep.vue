@@ -106,6 +106,7 @@ const languages = () => {
                     :placeholder="$t('websiteBuilder.firstStep.website_type_placeholder')"
                     :options="mappedTypes"
                     class="h-10"
+                    :withReset="false"
                 />
                 <InputError v-if="props.form.errors?.website_type_id" :message="props.form.errors.website_type_id" />
             </div>
@@ -119,7 +120,7 @@ const languages = () => {
                 :description="$t('websiteBuilder.firstStep.primary_language_description')"
             />
             <div class="flex flex-col gap-1 ps-2">
-                <Select v-model="language" :placeholder="$t('websiteBuilder.firstStep.primary_language_placeholder')" class="h-10">
+                <Select v-model="language" :placeholder="$t('websiteBuilder.firstStep.primary_language_placeholder')" class="h-10" :withReset="false">
                     <option v-for="option in languages()" :key="option.label" :value="option.value" selected>
                         {{ option.label }}
                     </option>
@@ -165,29 +166,28 @@ const languages = () => {
 
     <!-- About Us Section -->
     <div class="grid grid-cols-1 gap-4 md:col-span-3 md:grid-cols-2">
-
-    <div class="col-span-1 flex flex-col gap-2">
-        <HeadingSmall
-            :title="$t('websiteBuilder.firstStep.about_us_title_en')"
-            titleClass="text-body"
-            :description="$t('websiteBuilder.firstStep.about_us_description')"
-        />
-        <div class="flex flex-col ps-2">
-            <Textarea v-model="about_us" :placeholder="$t('websiteBuilder.firstStep.about_us_placeholder')" :maxlength="255" />
-            <InputError v-if="props.form.errors?.about_us" :message="props.form.errors.about_us" />
+        <div class="col-span-1 flex flex-col gap-2">
+            <HeadingSmall
+                :title="$t('websiteBuilder.firstStep.about_us_title_en')"
+                titleClass="text-body"
+                :description="$t('websiteBuilder.firstStep.about_us_description')"
+            />
+            <div class="flex flex-col ps-2">
+                <Textarea v-model="about_us" :placeholder="$t('websiteBuilder.firstStep.about_us_placeholder')" :maxlength="255" />
+                <InputError v-if="props.form.errors?.about_us" :message="props.form.errors.about_us" />
+            </div>
         </div>
-    </div>
 
-    <div class="col-span-1 flex flex-col gap-2">
-        <HeadingSmall
-            :title="$t('websiteBuilder.firstStep.about_us_title_ar')"
-            titleClass="text-body"
-            :description="$t('websiteBuilder.firstStep.about_us_description')"
-        />
-        <div class="flex flex-col ps-2">
-            <Textarea v-model="about_us_ar" :placeholder="$t('websiteBuilder.firstStep.about_us_placeholder')" :maxlength="255" />
-            <InputError v-if="props.form.errors?.about_us_ar" :message="props.form.errors.about_us_ar" />
+        <div class="col-span-1 flex flex-col gap-2">
+            <HeadingSmall
+                :title="$t('websiteBuilder.firstStep.about_us_title_ar')"
+                titleClass="text-body"
+                :description="$t('websiteBuilder.firstStep.about_us_description')"
+            />
+            <div class="flex flex-col ps-2">
+                <Textarea v-model="about_us_ar" :placeholder="$t('websiteBuilder.firstStep.about_us_placeholder')" :maxlength="255" />
+                <InputError v-if="props.form.errors?.about_us_ar" :message="props.form.errors.about_us_ar" />
+            </div>
         </div>
-    </div>
     </div>
 </template>
