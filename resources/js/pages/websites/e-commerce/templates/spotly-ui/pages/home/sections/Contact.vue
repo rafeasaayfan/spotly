@@ -24,6 +24,13 @@ const submitForm = () => {
         },
     });
 };
+
+const contactTypes = [
+    { value: 'support', label: page.props.lang === 'ar' ? 'الدعم' : 'Support' },
+    { value: 'suggestion', label: page.props.lang === 'ar' ? 'الاقتراح' : 'Suggestion' },
+    { value: 'complaint', label: page.props.lang === 'ar' ? 'الشكوى' : 'Complaint' },
+    { value: 'other', label: page.props.lang === 'ar' ? 'الاخرى' : 'Other' },
+];
 </script>
 
 <template>
@@ -85,11 +92,9 @@ const submitForm = () => {
                     parentClass="w-full"
                     class="web-bg-field web-text-active web-border-color h-11 w-full"
                     :class="form.errors.type ? 'border-[var(--destructive)]' : ''"
+                    :withReset="false"
                 >
-                    <option value="support">{{ $t('landing.contact_us.type_support') }}</option>
-                    <option value="suggestion">{{ $t('landing.contact_us.type_suggestion') }}</option>
-                    <option value="complaint">{{ $t('landing.contact_us.type_complaint') }}</option>
-                    <option value="other">{{ $t('landing.contact_us.type_other') }}</option>
+                    <option v-for="type in contactTypes" :key="type.value" :value="type.value">{{ $t(type.label) }}</option>
                 </Select>
                 <InputError v-if="form.errors.type" :message="form.errors.type" />
             </div>
