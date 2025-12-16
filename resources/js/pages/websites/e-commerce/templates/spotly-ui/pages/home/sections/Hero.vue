@@ -81,7 +81,7 @@ const handleInteraction = () => {
 </script>
 
 <template>
-    <section id="hero" class="relative z-5 flex grid min-h-[100vh] w-full grid-cols-5 pt-28 pb-22 backdrop-blur">
+    <section id="hero" class="relative z-5 flex grid min-h-[100vh] w-full grid-cols-5 pt-22 md:pt-28 pb-22 backdrop-blur">
         <div class="col-span-5 flex flex-col items-center justify-center gap-3">
             <h1 id="hero-title" class="eco-section-title-underline web-text-active text-3xl font-extrabold tracking-tight sm:text-4xl md:text-6xl">
                 {{ $t('landing.hero.title_part1') }} <span class="eco-gradient-text">{{ props.webName }}</span>
@@ -93,12 +93,12 @@ const handleInteraction = () => {
         </div>
 
         <div v-if="props.specialProducts && props.specialProducts.length > 0" class="col-span-5">
-            <div class="col-span-3 flex flex-col justify-center">
+            <div class="col-span-3 flex flex-col ">
                 <div
                     ref="carouselRef"
                     @scroll="handleInteraction"
                     @mousedown="handleInteraction"
-                    class="horizontal-carousel-track relative flex gap-15 overflow-x-scroll px-2 py-2 md:px-10 md:py-5"
+                    class="horizontal-carousel-track relative flex gap-0 md:gap-10 overflow-x-scroll px-0 py-0 md:px-10 md:py-5"
                 >
                     <SpecialProductCard
                         v-for="(product, index) in props.specialProducts"
@@ -122,7 +122,7 @@ const handleInteraction = () => {
         </div>
 
         <div class="absolute bottom-0 flex w-full items-center justify-center pb-15">
-            <ChevronDown class="size-5 animate-bounce text-[var(--danger_light)] dark:text-[var(--danger_dark)]" />
+            <ChevronDown class="size-5 animate-bounce web-text-body-muted" />
         </div>
     </section>
 
