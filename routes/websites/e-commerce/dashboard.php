@@ -6,6 +6,7 @@ use App\Http\Controllers\Websites\Ecommerce\Dashboard\Pages\CartsController;
 // use App\Http\Controllers\Websites\Ecommerce\Dashboard\Pages\DeliveryFeesController;
 use App\Http\Controllers\Websites\Ecommerce\Dashboard\Pages\OrdersController;
 use App\Http\Controllers\Websites\Ecommerce\Dashboard\Pages\ProductsController;
+use App\Http\Controllers\Websites\Ecommerce\Dashboard\Pages\TrackOrdersController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('dashboard')->name('dashboard.')->group(function () {
@@ -28,6 +29,9 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     //* Orders
     dashboardPagesRoutes('orders', OrdersController::class);
     Route::patch('orders/{id}/status', [OrdersController::class, 'changeStatus'])->name('orders.status');
+
+    //* Track Orders
+    dashboardPagesRoutes('track-orders', TrackOrdersController::class);
 
     //* Carts
     dashboardPagesRoutes('carts', CartsController::class);
