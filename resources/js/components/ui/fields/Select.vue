@@ -117,7 +117,7 @@ const page = usePage<SharedData>();
             {{ selectedLabel }}
           </span>
           <span v-else-if="props.withStatusColors" v-html="formatters.status(selectedLabel)"></span>
-          <span v-else>{{ selectedLabel }}</span>
+          <span v-else class="text-active">{{ selectedLabel }}</span>
 
           <div class="flex items-center">
             <XIcon v-if="modelValue && props.withReset" class="size-3.5 cursor-pointer text-body-muted" @click="emit('update:modelValue', '')" />
