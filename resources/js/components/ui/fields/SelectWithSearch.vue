@@ -130,7 +130,7 @@ const page = usePage<SharedData>()
                     props.class
                 )">
                     <div class="flex items-center justify-between gap-2">
-                        <span :class="selected ? 'text-body' : 'text-body-muted'" class="truncate">
+                        <span :class="selected ? 'text-active' : 'text-body-muted'" class="truncate">
                             {{ selected?.label || props.placeholder || 'Select an option' }}
                         </span>
 
