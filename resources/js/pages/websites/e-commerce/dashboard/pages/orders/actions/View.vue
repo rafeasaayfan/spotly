@@ -93,10 +93,10 @@ const props = defineProps<{
                     <p class="text-active text-base font-medium whitespace-pre-line">{{ props.data.note }}</p>
                 </div>
 
-                <!-- cancellation_reason -->
-                <div v-if="props.data.cancellation_reason" class="border-muted flex flex-col gap-2 border-b pb-4">
-                    <h4 class="text-body-muted text-sm font-semibold">Cancellation Reason:</h4>
-                    <p class="text-active text-base font-medium whitespace-pre-line">{{ props.data.cancellation_reason }}</p>
+                <!-- status_reason -->
+                <div v-if="props.data.status_reason" class="border-muted flex flex-col gap-2 border-b pb-4">
+                    <h4 class="text-body-muted text-sm font-semibold">Status Reason:</h4>
+                    <p class="text-active text-base font-medium whitespace-pre-line">{{ props.data.status_reason }}</p>
                 </div>
             </div>
 
@@ -109,7 +109,7 @@ const props = defineProps<{
                 >
                     <div v-for="item in props.data.items" :key="item.id" class="bg-body flex flex-col gap-1.5 rounded-md p-2.5 lg:p-4">
                         <div class="border-muted flex w-full items-center gap-2 border-b pb-2">
-                            <Image v-if="item.image_urls && item.image_urls.length > 0" :src="item.image_urls[0]" alt="Item Image" class="min-w-16 min-h-16 size-0 rounded-full shadow" />
+                            <Image v-if="item.image_urls && item.image_urls.length > 0" :src="item.image_urls[0]" alt="Item Image" class="min-w-16 min-h-16 max-w-16 max-h-16 size-0 rounded-full shadow" />
                             <div class="flex flex-col gap-1">
                                 <p class="text-active-link font-bold">{{ item.product.name }}</p>
 
