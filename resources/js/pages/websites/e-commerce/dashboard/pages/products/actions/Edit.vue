@@ -40,14 +40,21 @@ function initializeAttributes(variantAttributes?: any[]) {
             if (attr.name === 'color') {
                 return va.attribute_id === attr.id && va.color_id;
             }
-            return va.attribute_id === attr.id && va.attribute_value_id;
+            return va.attribute_id === attr.id && va.attribute_value_value;
         });
+
+        let value = null;
+        if(variantAttr) {
+            if(attr.name === 'color') {
+                value = variantAttr.color_id;
+            } else {
+                value = variantAttr.attribute_value_id ?? variantAttr.attribute_value_value;
+            }
+        }
 
         return {
             ...attr,
-            value: variantAttr 
-                ? (attr.name === 'color' ? variantAttr.color_id : variantAttr.attribute_value_id)
-                : null,
+            value: value
         };
     });
 }

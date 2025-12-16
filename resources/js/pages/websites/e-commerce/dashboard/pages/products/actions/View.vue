@@ -35,9 +35,13 @@ const props = defineProps<{
                 <div class="grid grid-cols-1 gap-y-4 lg:grid-cols-2">
                     <!-- Pricing & Stock -->
                     <div class="border-muted border-muted flex flex-col gap-4 border-b pb-4 lg:border-e lg:pe-3">
-                        <p class="text-body-muted flex w-full items-center justify-between text-sm">
-                            Base Price: <span class="text-active text-base font-medium">{{ props.data.price }}$</span>
-                        </p>
+                        <div class="text-body-muted flex w-full items-center justify-between text-sm">
+                            Base Price:
+                            <div class="text-active flex items-center gap-1 text-base font-medium md:gap-2">
+                                <span> {{ props.data.is_discount ? props.data.price - props.data.discount_price : props.data.price }}$ </span>
+                                <span v-if="props.data.is_discount" class="text-body-muted text-sm line-through"> {{ props.data.price }}$ </span>
+                            </div>
+                        </div>
                         <p v-if="props.data.discount_price" class="text-body-muted flex w-full items-center justify-between text-sm">
                             Discount Price: <span class="text-active text-base font-medium">{{ props.data.discount_price }}$</span>
                         </p>
@@ -92,8 +96,7 @@ const props = defineProps<{
                         class="bg-body flex flex-col gap-3 rounded-md px-2.5 pb-2.5 lg:px-4 lg:pb-4"
                     >
                         <div
-                            class="border-muted custom-scrollbar flex w-full max-w-full items-center gap-2 
-                            overflow-x-auto border-b pt-2 pb-2 lg:pt-4"
+                            class="border-muted custom-scrollbar flex w-full max-w-full items-center gap-2 overflow-x-auto border-b pt-2 pb-2 lg:pt-4"
                         >
                             <Image
                                 v-for="image in variant.ecommerce_product_images"
@@ -113,15 +116,31 @@ const props = defineProps<{
                             <p class="text-body-muted flex items-center justify-between gap-2 text-xs">
                                 Stock Quantity: <span class="text-body text-sm font-bold">{{ variant.stock_quantity }}</span>
                             </p>
-                            <p class="text-body-muted flex items-center justify-between gap-2 text-xs">
+                            <p v-if="variant.reserved_quantity" class="text-body-muted flex items-center justify-between gap-2 text-xs">
                                 Reserved Quantity: <span class="text-body text-sm font-bold">{{ variant.reserved_quantity }}</span>
                             </p>
-                            <p class="text-body-muted flex items-center justify-between gap-2 text-xs">
-                                Price: <span class="text-body text-sm font-bold">{{ variant.price }}$</span>
-                            </p>
-                            <p v-for="attribute in variant.attributes" :key="attribute.id" class="text-body-muted flex items-center justify-between gap-2 text-xs">
-                                <span class="capitalize">{{ attribute.attribute_name }}: </span>
+                            <div class="text-body-muted flex items-center justify-between gap-2 text-xs">
+                                Price:
 
+                                <div class="text-active flex items-center gap-1 text-base font-medium md:gap-2">
+                                    <span v-if="variant.price">
+                                        {{ props.data.is_discount ? variant.price - props.data.discount_price : variant.price }}$
+                                    </span>
+                                    <span v-else>
+                                        {{ props.data.is_discount ? props.data.price - props.data.discount_price : props.data.price }}$
+                                    </span>
+                                    <span v-if="props.data.is_discount" class="text-body-muted text-sm line-through"
+                                        >{{ variant.price ?? props.data.price }}$
+                                    </span>
+                                </div>
+                            </div>
+                            <p
+                                v-for="attribute in variant.attributes"
+                                :key="attribute.id"
+                                class="text-body-muted flex items-center justify-between gap-2 text-xs"
+                            >
+                                <span class="capitalize">{{ attribute.attribute_name }}: </span>
+                                
                                 <span v-if="attribute.color_id" class="text-body text-sm font-bold flex items-center gap-1">
                                     <span :style="{ backgroundColor: attribute.color.code }" 
                                         class="border-muted size-4 rounded-full border shadow-sm">
@@ -130,7 +149,7 @@ const props = defineProps<{
                                 </span>
 
                                 <span v-else class="text-body text-sm font-bold">
-                                    {{ attribute.attribute_value.value }}
+                                    {{ attribute.attribute_value_value }}
                                 </span>
                             </p>
                         </div>
@@ -142,7 +161,7 @@ const props = defineProps<{
         <p class="text-body-muted relative flex items-center justify-between gap-1 px-4 pt-4 text-xs">
             Created At: <span class="font-medium">{{ formatters.date(props.data.created_at, 'long') }}</span>
         </p>
-        <p class="text-body-muted relative flex items-center justify-between gap-1 px-4 pt-3 text-xs">  
+        <p class="text-body-muted relative flex items-center justify-between gap-1 px-4 pt-3 text-xs">
             Updated At: <span class="font-medium">{{ formatters.date(props.data.updated_at, 'long') }}</span>
         </p>
     </div>
