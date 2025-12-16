@@ -83,13 +83,13 @@ const searchOrder = () => {
 
                 <div class="web-border-color grid grid-cols-1 gap-5 sm:gap-3 border-t-4 border-double py-4 sm:grid-cols-5">
                     <div class="web-border-color col-span-1 flex flex-col gap-3 sm:col-span-2 sm:border-e sm:pe-3 md:col-span-1">
-                        <div class="rounded-md bg-[var(--bg_content_light)] p-2 text-sm dark:bg-[var(--bg_content_dark)]">
+                        <div class="bg-[var(--bg_content_light)] p-2 text-sm dark:bg-[var(--bg_content_dark)]">
                             {{ $t('trackOrder.orderTracking') }}
                         </div>
 
                         <div v-if="props.order" class="relative flex flex-col gap-8">
                             <div v-for="(track, index) in props.order.track_order" :key="track.id" class="flex items-center gap-5">
-                                <span class="bg-[var(--bg_content_hover_light)] dark:bg-[var(--bg_content_hover_dark)] backdrop-blur flex size-9 items-center justify-center rounded-full text-white z-3">
+                                <span class="bg-[var(--bg_content_hover_light)] dark:bg-[var(--bg_content_hover_dark)] backdrop-blur flex size-9 items-center justify-center rounded-full text-active z-3">
                                     {{ index + 1 }}
                                 </span>
                                 <div class="flex flex-col gap-1">
@@ -111,7 +111,7 @@ const searchOrder = () => {
 
                     <div class="col-span-1 flex flex-col gap-3 sm:col-span-3 md:col-span-4">
                         <div class="flex flex-col gap-2">
-                            <div class="rounded-md bg-[var(--bg_content_light)] p-2 text-sm dark:bg-[var(--bg_content_dark)]">
+                            <div class="bg-[var(--bg_content_light)] p-2 text-sm dark:bg-[var(--bg_content_dark)]">
                                 {{ $t('trackOrder.orderDetails') }}
                             </div>
 
@@ -168,7 +168,7 @@ const searchOrder = () => {
                         </div>
 
                         <div class="flex flex-col gap-2">
-                            <div class="rounded-md bg-[var(--bg_content_light)] p-2 text-sm dark:bg-[var(--bg_content_dark)]">
+                            <div class="bg-[var(--bg_content_light)] p-2 text-sm dark:bg-[var(--bg_content_dark)]">
                                 {{ $t('order.items') }}
                             </div>
 
