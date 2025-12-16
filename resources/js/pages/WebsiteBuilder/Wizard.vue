@@ -14,7 +14,6 @@ import AppLogoIcon from '@/components/logo/AppLogoIcon.vue';
 import AppearenceBtn from '@/components/appearance/AppearanceBtn.vue';
 import LanguagesMenu from '@/components/languages/Languages.vue';
 
-import { useWizard } from '@/composables/useWizard';
 import { toast } from '@/lib/sweetAlert';
 import { CreditCard, LayoutTemplate, LoaderCircle, Phone, Store } from 'lucide-vue-next';
 import { SharedData } from '@/types';
@@ -73,23 +72,60 @@ const form = useForm({
 
 const currentStep = ref(1);
 const totalSteps = 4;
+const isFormValid = ref(false);
+const isNewData = ref(false);
+
+const checkIfRequiredFieldsAreFilled = () => {
+    switch (currentStep.value) {
+        case 1:
+            if (form.website_type_id && form.name && form.subdomain && form.language) {
+                isFormValid.value = true;
+                return;
+            }
+            break;
+        case 2:
+            if (form.email) {
+                isFormValid.value = true;
+                return;
+            }
+            break;
+        case 3:
+            if (form.template_id && form.template_color_id) {
+                isFormValid.value = true;
+                return;
+            }
+            break;
+        case 4:
+            if (form.acceptSteps) {
+                isFormValid.value = true;
+                return;
+            }
+            break;
+        default:
+            isFormValid.value = false;
+            return;
+    }
+
+    isFormValid.value = false;
+}
+
+const nextStep = () => {
+    if (currentStep.value < totalSteps) {
+        currentStep.value++;
+
+        checkIfRequiredFieldsAreFilled();
+    }
+};
 
 const submitForm = () => {
-    const { isValid } = useWizard(currentStep.value, form);
-
-    if (!isValid) {
-        toast.fire({
-            icon: 'error',
-            title: page.props.lang === 'ar' ? 'الرجاء إصلاح الأخطاء قبل المتابعة.' : 'Please fix the errors before proceeding.',
-        });
+    if (!isNewData.value) {
+        nextStep();
         return;
     }
 
     form.post(route('websiteBuilder.wizard', { step: currentStep.value }), {
         onSuccess() {
-            if (currentStep.value < totalSteps) {
-                currentStep.value++;
-            }
+            nextStep();
         },
     });
 };
@@ -97,17 +133,25 @@ const submitForm = () => {
 const prevStep = () => {
     if (currentStep.value > 1) {
         currentStep.value--;
+
+        checkIfRequiredFieldsAreFilled();
+
+        isNewData.value = false;
     }
 };
 
 const typeRef = ref(props.type);
 
 const updateField = (field: string, value: any) => {
+    isNewData.value = true;
+
     if (field === 'type') {
         typeRef.value = value;
         fetchNewType();
     } else {
         (form as any)[field] = value;
+
+        checkIfRequiredFieldsAreFilled();
     }
 };
 
@@ -140,10 +184,6 @@ const fetchNewType = async () => {
                             <div
                                 class="border-muted relative col-span-1 flex w-full flex-wrap items-center justify-between gap-1 border-b pb-2 md:col-span-3"
                             >
-                                <div
-                                    class="pointer-events-none absolute start-0 top-0 h-full w-full rounded-full bg-gradient-to-br from-transparent via-black to-transparent opacity-15 blur-xl dark:via-white dark:opacity-5"
-                                ></div>
-
                                 <h1 class="text-active flex items-center gap-2 text-xl font-bold sm:text-2xl">
                                     <Store class="size-5 sm:size-6" />
                                     <span>{{ $t('websiteBuilder.wizard.business_information') }}</span>
@@ -172,10 +212,6 @@ const fetchNewType = async () => {
                             <div
                                 class="border-muted relative col-span-1 flex w-full flex-wrap items-center justify-between gap-1 border-b pb-2 md:col-span-3"
                             >
-                                <div
-                                    class="pointer-events-none absolute start-0 top-0 h-full w-full rounded-full bg-gradient-to-br from-transparent via-black to-transparent opacity-15 blur-xl dark:via-white dark:opacity-5"
-                                ></div>
-
                                 <h1 class="text-active flex items-center gap-2 text-xl font-bold sm:text-2xl">
                                     <Phone class="size-5 sm:size-6" />
                                     <span>{{ $t('websiteBuilder.wizard.contact_information') }}</span>
@@ -202,10 +238,6 @@ const fetchNewType = async () => {
                             <div
                                 class="border-muted relative col-span-1 flex w-full flex-wrap items-center justify-between gap-1 border-b pb-2 md:col-span-3"
                             >
-                                <div
-                                    class="pointer-events-none absolute start-0 top-0 h-full w-full rounded-full bg-gradient-to-br from-transparent via-black to-transparent opacity-15 blur-xl dark:via-white dark:opacity-5"
-                                ></div>
-
                                 <h1 class="text-active flex items-center gap-2 text-xl font-bold sm:text-2xl">
                                     <LayoutTemplate class="size-5 sm:size-6" />
                                     <span>{{ $t('websiteBuilder.wizard.templates_ui') }}</span>
@@ -237,10 +269,6 @@ const fetchNewType = async () => {
                             <div
                                 class="border-muted relative col-span-1 flex w-full flex-wrap items-center justify-between gap-1 border-b pb-2 md:col-span-3"
                             >
-                                <div
-                                    class="pointer-events-none absolute start-0 top-0 h-full w-full rounded-full bg-gradient-to-br from-transparent via-black to-transparent opacity-15 blur-xl dark:via-white dark:opacity-5"
-                                ></div>
-
                                 <h1 class="text-active flex items-center gap-2 text-xl font-bold sm:text-2xl">
                                     <CreditCard class="size-5 sm:size-6" />
                                     <span>{{ $t('websiteBuilder.wizard.billing_plan') }}</span>
@@ -280,7 +308,7 @@ const fetchNewType = async () => {
                             type="button"
                             @click="submitForm"
                             :class="currentStep < totalSteps ? '' : 'glow-button'"
-                            :disabled="(currentStep === totalSteps && !form.acceptSteps) || form.processing"
+                            :disabled="!isFormValid || form.processing"
                         >
                             <LoaderCircle v-if="form.processing" class="size-4 animate-spin" />
                             <template v-if="currentStep < totalSteps">{{ $t('websiteBuilder.wizard.next_step') }}</template>
