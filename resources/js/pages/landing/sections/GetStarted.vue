@@ -8,9 +8,6 @@ const props = defineProps<{
     websiteTypes: Record<string, any>;
 }>();
 
-console.log(props.websiteTypes);
-
-
 const page = usePage<SharedData>();
 </script>
 

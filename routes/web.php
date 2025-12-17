@@ -43,28 +43,30 @@ Route::domain('spotly.test')->middleware([HandleLanguage::class, 'userStatus'])-
 });
 
 //! Websites Routes
-$subdomain = app('subdomain');
-// Websites Routes domain('{website?}.spotly.test')->
-Route::domain("$subdomain.spotly.test")->middleware([IdentifyWebsite::class, 'websiteUserStatus', HandleLanguage::class])->name('website.')->group(function () {
-    require __DIR__ . '/websites/main.php';
-
+if (app()->bound('subdomain')) {
     $subdomain = app('subdomain');
+    
+    Route::domain("$subdomain.spotly.test")->middleware([IdentifyWebsite::class, 'websiteUserStatus', HandleLanguage::class])->name('website.')->group(function () {
+        require __DIR__ . '/websites/main.php';
 
-    $website = Website::where('subdomain', $subdomain)
-        ->active()->status('approved')
-        ->with(['websiteType:id,type'])
-        ->first();
-    $websiteType = $website->websiteType->type ?? null;
+        $subdomain = app('subdomain');
 
-    switch ($websiteType) {
-        case 'e-commerce':
-            require __DIR__ . '/websites/e-commerce/web.php';
-            break;
-        case 'restaurant':
-            require __DIR__ . '/websites/restaurant/web.php';
-            break;
-    }
-});
+        $website = Website::where('subdomain', $subdomain)
+            ->active()->status('approved')
+            ->with(['websiteType:id,type'])
+            ->first();
+        $websiteType = $website->websiteType->type ?? null;
+
+        switch ($websiteType) {
+            case 'e-commerce':
+                require __DIR__ . '/websites/e-commerce/web.php';
+                break;
+            case 'restaurant':
+                require __DIR__ . '/websites/restaurant/web.php';
+                break;
+        }
+    });
+}
 
 // Dashboards Routes function
 function dashboardPagesRoutes($uri, $controller)

@@ -31,11 +31,13 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Super Admin',
             'email' => 'rafehsaayfan@gmail.com',
+            'password' => 'RS7$2.0.0.3RS7$'
         ])->assignRole('super_admin');
 
         User::factory()->create([
             'name' => 'Admin',
             'email' => 'rafe3souayfan@gmail.com',
+            'password' => 'Servusrafehfcb7$'
         ])->assignRole('admin');
 
         $this->call([

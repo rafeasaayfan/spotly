@@ -33,7 +33,7 @@ class RegisteredUserController extends BaseController
     public function store(RegisterRequest $request): RedirectResponse
     {
         $website = app('website');
-        $guestSessionId = session()->getId();
+        $guestSessionId = session()->getId(); 
 
         $websiteUser = WebsiteUser::create([
             'website_id' => $website->id,

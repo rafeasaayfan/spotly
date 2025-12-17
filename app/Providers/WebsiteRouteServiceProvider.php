@@ -15,7 +15,9 @@ class WebsiteRouteServiceProvider extends ServiceProvider
         $parts = explode('.', $host);
         $subdomain = $parts[0];
 
-        app()->instance('subdomain', $subdomain);
+        if ($subdomain !== '' && strtolower($subdomain) !== strtolower(config('app.name'))) {
+            app()->instance('subdomain', $subdomain);
+        }
     }
 
     /**

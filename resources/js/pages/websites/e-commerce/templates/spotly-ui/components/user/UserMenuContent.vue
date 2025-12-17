@@ -16,13 +16,13 @@ const handleLogout = () => {
     router.flushAll();
 };
 
-defineProps<Props>();
+const props = defineProps<Props>();
 </script>
 
 <template>
     <DropdownMenuLabel class="web-bg-content p-0 font-normal">
         <div class="flex items-center gap-2 px-2 py-3 text-sm">
-            <UserInfo :user="website_user" :show-email="true" />
+            <UserInfo :user="props.website_user" :show-email="true" />
         </div>
     </DropdownMenuLabel>
 
@@ -50,7 +50,7 @@ defineProps<Props>();
         </DropdownMenuItem>
 
         <DropdownMenuItem
-            v-if="websiteUserRole.includes('admin') || websiteUserRole.includes('owner')"
+            v-if="props.websiteUserRole.includes('admin') || props.websiteUserRole.includes('owner')"
             :as-child="true"
             class="web-text-body bg-transparent hover:bg-[var(--bg_content_hover_light)] dark:hover:bg-[var(--bg_content_hover_dark)]"
         >
