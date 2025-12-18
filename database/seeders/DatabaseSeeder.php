@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
         ]);
 
-        User::factory()->create([
+        User::create([
             'name' => 'Super Admin',
             'email' => 'rafehsaayfan@gmail.com',
             'email_verified_at' => now(),
@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
             'remember_token' => Str::random(10),
         ])->assignRole('super_admin');
 
-        User::factory()->create([
+        User::create([
             'name' => 'Admin',
             'email' => 'rafe3souayfan@gmail.com',
             'password' => Hash::make('Servusrafehfcb7$'),
