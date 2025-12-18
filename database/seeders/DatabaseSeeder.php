@@ -12,6 +12,8 @@ use Database\Seeders\Tables\PlanSeeder;
 use Database\Seeders\Tables\WebsiteTypeSeeder;
 use Database\Seeders\Tables\TemplateColorSeeder;
 use Database\Seeders\Tables\TemplateSeeder;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -31,13 +33,16 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Super Admin',
             'email' => 'rafehsaayfan@gmail.com',
-            'password' => 'RS7$2.0.0.3RS7$'
+            'email_verified_at' => now(),
+            'password' => Hash::make('RS7$2.0.0.3RS7$'),
+            'remember_token' => Str::random(10),
         ])->assignRole('super_admin');
 
         User::factory()->create([
             'name' => 'Admin',
             'email' => 'rafe3souayfan@gmail.com',
-            'password' => 'Servusrafehfcb7$'
+            'password' => Hash::make('Servusrafehfcb7$'),
+            'remember_token' => Str::random(10),
         ])->assignRole('admin');
 
         $this->call([
@@ -49,6 +54,6 @@ class DatabaseSeeder extends Seeder
             ColorSeeder::class,
         ]);
 
-        User::factory(1000)->create();
+        // User::factory(1000)->create();
     }
 }
