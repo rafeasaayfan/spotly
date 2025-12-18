@@ -1,0 +1,1 @@
+import{_ as a}from"./DialogTrigger-C2yyRleH.js";import{d as o,c as r,o as n,u as p,E as c,w as _,y as i}from"./app-CewkRQRP.js";const d=o({__name:"SheetTrigger",props:{asChild:{type:Boolean},as:{}},setup(e){const s=e;return(t,l)=>(n(),r(p(a),c({"data-slot":"sheet-trigger"},s),{default:_(()=>[i(t.$slots,"default")]),_:3},16))}});export{d as _};

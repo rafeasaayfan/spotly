@@ -1,0 +1,1 @@
+import{d as n,q as a,h as c,o as l,y as m}from"./app-CewkRQRP.js";const p={class:"web-body"},u=n({__name:"StyleLayout",props:{colors:{}},setup(o){const s=o;return a(()=>s.colors,e=>{Object.entries(e).forEach(([t,r])=>{document.documentElement.style.setProperty(`--${t}`,r)})},{deep:!0,immediate:!0}),(e,t)=>(l(),c("main",p,[m(e.$slots,"default")]))}});export{u as _};

@@ -1,0 +1,1 @@
+import{d as t,z as o,D as r,o as n,h as c,b as i,n as m,u as p,t as l}from"./app-CewkRQRP.js";import{c as u}from"./utils-DjqsqOe8.js";const g=t({__name:"InputError",props:{class:{},message:{}},setup(e){const a=e;return(s,f)=>o((n(),c("div",null,[i("p",{class:m(p(u)("text-sm text-active-link-2",a.class))},l(s.message),3)],512)),[[r,s.message]])}});export{g as _};
