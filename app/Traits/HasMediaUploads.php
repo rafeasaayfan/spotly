@@ -7,55 +7,55 @@ use Illuminate\Http\UploadedFile;
 trait HasMediaUploads
 {
     /**
-     * Normalize the input into an array of UploadedFile
+     * Store new media image
+     *
+     * @param UploadedFile $imageFile
+     * @param string $collection
      */
-    private function normalizeFiles($filesRequest): array
+    public function storeMediaImage($imageFile, string $collection)
     {
-        if (!$filesRequest) {
-            return [];
+        if (!empty($imageFile) && !empty($collection) && ($imageFile instanceof UploadedFile)) {
+            $this->addMedia($imageFile)->toMediaCollection($collection);
         }
 
-        // If single file → wrap in array
-        if ($filesRequest instanceof UploadedFile) {
-            return [$filesRequest];
-        }
-
-        // If array → filter valid UploadedFile
-        if (is_array($filesRequest)) {
-            $files = [];
-            $existingIds = [];
-
-            foreach ($filesRequest as $file) {
-                if (isset($file['file']) && $file['file'] instanceof UploadedFile) {
-                    $files[] = $file['file'];
-                }
-                elseif (isset($file['id'])) {
-                    $existingIds[] = $file['id'];
-                }
-            }
-
-            return [
-                'files' => $files,
-                'existingIds' => $existingIds,
-            ];
-        }
-
-        return [];
+        return $this;
     }
 
     /**
-     * Store new media images (no deletion)
+     * Store new media images
      *
-     * @param UploadedFile|UploadedFile[]|array|null $files
+     * @param array $imageFiles
      * @param string $collection
      */
-    public function storeMediaImages($filesRequest, string $collection)
+    public function storeMediaImages($imageFiles, string $collection)
     {
-        $data = $this->normalizeFiles($filesRequest);
-        $files = $data['files'] ?? $data;
+        if (!empty($imageFiles) && !empty($collection) && is_array($imageFiles)) {
+            foreach ($imageFiles as $file) {
 
-        foreach ($files as $file) {
-            $this->addMedia($file)->toMediaCollection($collection);
+                if (isset($file['file']) && $file['file'] instanceof UploadedFile) {
+                    $this->addMedia($file['file'])->toMediaCollection($collection);
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Update media image
+     * 
+     * @param UploadedFile $imageFile
+     * @param string $collection
+     */
+    public function updateMediaImage($imageFile, string $collection)
+    {
+        if (!empty($imageFile) && !empty($collection) && ($imageFile instanceof UploadedFile)) {
+            $this->clearMediaCollection($collection);
+
+            $this->addMedia($imageFile)->toMediaCollection($collection);
+
+        } elseif ($imageFile === null) {
+            $this->clearMediaCollection($collection);
         }
 
         return $this;
@@ -64,32 +64,60 @@ trait HasMediaUploads
     /**
      * Update media images
      * 
-     * @param UploadedFile|UploadedFile[]|array|null $files
+     * @param array $imageFiles
      * @param string $collection
-     * @param bool $replaceOld   If true → remove old images first
      */
-    public function updateMediaImages($filesRequest, string $collection, bool $replaceOld = true)
+    public function updateMediaImages($imageFiles, string $collection)
     {
-        $data = $this->normalizeFiles($filesRequest);
-        $files = $data['files'] ?? $data;
-        $existingIds = $data['existingIds'] ?? [];
+        if (!empty($imageFiles) && !empty($collection) && is_array($imageFiles)) {
+            $data = $this->normalizeFiles($imageFiles);
 
-        // Replace old images?
-        if ($replaceOld || empty($existingIds)) {
+            $files = $data['files'] ?? [];
+            $existingIds = $data['existingIds'] ?? [];
+
+            // Replace old images?
+            if (empty($existingIds)) {
+                $this->clearMediaCollection($collection);
+
+            } else {
+                $this->media()
+                    ->where('collection_name', $collection)
+                    ->whereNotIn('id', $existingIds)
+                    ->delete();
+            }
+
+            if (!empty($files)) {
+                foreach ($files as $file) {
+                    $this->addMedia($file)->toMediaCollection($collection);
+                }
+            }
+
+        } elseif ($imageFiles === null) {
             $this->clearMediaCollection($collection);
-
-        }  
-        elseif (!empty($existingIds)) {
-            $this->media()
-                ->where('collection_name', $collection)
-                ->whereNotIn('id', $existingIds)
-                ->delete();
-        }
-
-        foreach ($files as $file) {
-            $this->addMedia($file)->toMediaCollection($collection);
         }
 
         return $this;
+    }
+
+    /**
+     * Normalize the input into an array of UploadedFile
+     */
+    private function normalizeFiles($filesRequest): array
+    {
+        $files = [];
+        $existingIds = [];
+
+        foreach ($filesRequest as $file) {
+            if (isset($file['file']) && $file['file'] instanceof UploadedFile) {
+                $files[] = $file['file'];
+            } elseif (isset($file['id'])) {
+                $existingIds[] = $file['id'];
+            }
+        }
+
+        return [
+            'files' => $files,
+            'existingIds' => $existingIds,
+        ];
     }
 }
