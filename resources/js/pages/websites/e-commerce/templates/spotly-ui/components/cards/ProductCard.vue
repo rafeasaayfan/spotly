@@ -74,7 +74,7 @@ onMounted(() => {
                     @click.prevent.stop
                     parentClass="h-full w-full hover:scale-100 group-hover:scale-130 cursor-default transition-all duration-300 ease-in-out"
                     :showArrows="false"
-                    imgClass="object-auto"
+                    imgClass="object-auto h-full w-full"
                 />
 
                 <div v-else class="web-bg-content flex h-40 sm:h-full w-full items-center justify-center text-xs">
