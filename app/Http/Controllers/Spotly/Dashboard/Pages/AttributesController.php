@@ -7,8 +7,8 @@ use App\Traits\DataTableTrait;
 use Illuminate\Http\Request;
 use App\Http\Requests\Dashboard\Pages\Attributes\StoreAttributeRequest;
 use App\Http\Requests\Dashboard\Pages\Attributes\UpdateAttributeRequest;
-use App\Models\EcommerceProductAttribute;
-use App\Models\EcommerceProductAttributeValue;
+use App\Models\Attribute;
+use App\Models\AttributeValue;
 use App\Models\Website;
 
 class AttributesController extends Controller
@@ -20,7 +20,7 @@ class AttributesController extends Controller
      */
     public function index(Request $request)
     {
-        $query = EcommerceProductAttribute::query();
+        $query = Attribute::query();
 
         $columnsSearching = ['website.name', 'name'];
         $relations = ['website_name', 'values_value:attribute_id'];
@@ -40,7 +40,7 @@ class AttributesController extends Controller
      */
     public function create()
     {
-        $attributes = config('ecommerce_attributes.attributes');
+        $attributes = config('attributes.ecommerce_attributes');
         $websites = Website::select(['id', 'name'])->get();
 
         return $this->jsonSuccess('',
@@ -61,14 +61,14 @@ class AttributesController extends Controller
             $values = $validated['values'] ?? [];
             unset($validated['values']);
 
-            $attribute = new EcommerceProductAttribute($validated);
+            $attribute = new Attribute($validated);
             $attribute->type = $values || $validated['name'] === 'color' ? 'select' : 'text';
             $attribute->save();
 
             // Save attribute values if provided
             if (!empty($values)) {
                 foreach ($values as $valueData) {
-                    EcommerceProductAttributeValue::create([
+                    AttributeValue::create([
                         'attribute_id' => $attribute->id,
                         'value' => $valueData['value'],
                         'value_ar' => $valueData['value_ar'],
@@ -88,7 +88,7 @@ class AttributesController extends Controller
     public function show(string $id)
     {
         try {
-            $query = EcommerceProductAttribute::with(['values', 'website:id,name'])
+            $query = Attribute::with(['values', 'website:id,name'])
             ->findOrFail($id);
             $attribute = $this->flattenRelationData($query, ['values_value', 'website_name']);
 
@@ -106,9 +106,9 @@ class AttributesController extends Controller
     public function edit(string $id)
     {
         try {
-            $attribute = EcommerceProductAttribute::with(['values'])
+            $attribute = Attribute::with(['values'])
             ->findOrFail($id);
-            $attributes = config('ecommerce_attributes.attributes');
+            $attributes = config('attributes.ecommerce_attributes');
             $websites = Website::select(['id', 'name'])->get();
 
             return $this->jsonSuccess('', [
@@ -124,7 +124,7 @@ class AttributesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAttributeRequest $request, EcommerceProductAttribute $attribute)
+    public function update(UpdateAttributeRequest $request, Attribute $attribute)
     {
         try {
             $validated = $request->validated();
@@ -135,15 +135,30 @@ class AttributesController extends Controller
             $attribute->type = $values || $validated['name'] === 'color' ? 'select' : 'text';
             $attribute->save();
 
-            // Delete existing values and create new ones
-            $attribute->values()->delete();
             if (!empty($values)) {
+                $existingIds = collect($values)
+                    ->pluck('id')
+                    ->filter()
+                    ->toArray();
+
+                    AttributeValue::where('attribute_id', $attribute->id)
+                    ->whereNotIn('id', $existingIds)
+                    ->delete();
+
                 foreach ($values as $valueData) {
-                    EcommerceProductAttributeValue::create([
-                        'attribute_id' => $attribute->id,
-                        'value' => $valueData['value'],
-                        'value_ar' => $valueData['value_ar'],
-                    ]);
+                    if (isset($valueData['id']) && !empty($valueData['id'])) {
+                        AttributeValue::where('id', $valueData['id'])->where('attribute_id', $attribute->id)
+                            ->update([
+                                'value' => $valueData['value'],
+                                'value_ar' => $valueData['value_ar'],
+                            ]);
+                    } else {
+                        AttributeValue::create([
+                            'attribute_id' => $attribute->id,
+                            'value' => $valueData['value'],
+                            'value_ar' => $valueData['value_ar'],
+                        ]);
+                    }
                 }
             }
 
@@ -161,10 +176,10 @@ class AttributesController extends Controller
         try {
             $validated = $request->validate([
                 'ids' => 'required|array',
-                'ids.*' => 'integer|exists:ecommerce_product_attributes,id',
+                'ids.*' => 'integer|exists:attributes,id',
             ]);
 
-            EcommerceProductAttribute::destroy($validated['ids']);
+            Attribute::destroy($validated['ids']);
 
             return $this->backSuccess('Attribute(s) deleted successfully');
         } catch (\Exception $e) {
@@ -178,7 +193,7 @@ class AttributesController extends Controller
     public function toggleActive(Request $request, $id)
     {
         try {
-            $attribute = EcommerceProductAttribute::findOrFail($id);
+            $attribute = Attribute::findOrFail($id);
 
             $validated = $request->validate([
                 'is_active' => 'required|boolean',
@@ -204,7 +219,7 @@ class AttributesController extends Controller
     public function toggleRequired(Request $request, $id)
     {
         try {
-            $attribute = EcommerceProductAttribute::findOrFail($id);
+            $attribute = Attribute::findOrFail($id);
 
             $validated = $request->validate([
                 'is_required' => 'required|boolean',
