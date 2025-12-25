@@ -53,7 +53,7 @@ function submit() {
     if (selectedAttribute.value === 'color') {
         form.values = [];
     }
-    
+
     form.post(route('dashboard.attributes.update', { attribute: props.data.id }), {
         onSuccess: () => {
             const closeButton = document.querySelector('[data-slot="dialog-close"]');
@@ -94,6 +94,16 @@ function submit() {
             <InputError :message="form.errors.name_ar" />
         </div>
 
+        <!-- Is Active -->
+        <div class="flex flex-col gap-1.5">
+            <Label>Is Active</Label>
+            <Select v-model="form.is_active" placeholder="Is this attribute active?" required>
+                <option value="1">Yes, Active</option>
+                <option value="0">No, Inactive</option>
+            </Select>
+            <InputError :message="form.errors.is_active" />
+        </div>
+
         <!-- Values -->
         <div v-if="selectedAttribute !== 'color'" class="mb-3 flex flex-col gap-2 lg:col-span-2">
             <Label>Possible Values (Optional — leave empty to allow any value)</Label>
@@ -107,7 +117,7 @@ function submit() {
                         <Label>Value in Arabic</Label>
                         <Input v-model="item.value_ar" type="text" placeholder="e.g. XL, كبير" />
                     </div>
-                    <div class="md:col-span-2 flex h-full items-end justify-end">
+                    <div class="flex h-full items-end justify-end md:col-span-2">
                         <Button
                             type="button"
                             variant="destructive"
@@ -132,19 +142,9 @@ function submit() {
             </div>
             <InputError :message="form.errors.values" />
         </div>
-        <div v-else class="mb-3 flex gap-2 items-center lg:col-span-2">
-            <InfoIcon class="size-4 text-active-link" />
+        <div v-else class="mb-3 flex items-center gap-2 lg:col-span-2">
+            <InfoIcon class="text-active-link size-4" />
             <span class="font-bold">All colors are already available in our system.</span>
-        </div>
-
-        <!-- Is Active -->
-        <div class="flex flex-col gap-1.5">
-            <Label>Is Active</Label>
-            <Select v-model="form.is_active" placeholder="Is this attribute active?" required>
-                <option value="1">Yes, Active</option>
-                <option value="0">No, Inactive</option>
-            </Select>
-            <InputError :message="form.errors.is_active" />
         </div>
 
         <!-- Description -->
