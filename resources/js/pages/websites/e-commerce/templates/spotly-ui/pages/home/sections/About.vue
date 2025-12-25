@@ -69,11 +69,11 @@ const page = usePage<SharedData>();
             </div>
         </div>
 
-        <div
+        <!-- <div
             class="pointer-events-none absolute inset-0 start-0 top-0 z-0 rounded-full bg-gradient-to-br 
             from-transparent to-[var(--primary_light)] dark:to-[var(--primary_dark)] 
             opacity-20 blur-2xl dark:opacity-5"
-        ></div>
+        ></div> -->
     </section>
 </template>
 
