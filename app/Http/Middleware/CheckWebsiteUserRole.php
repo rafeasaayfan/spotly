@@ -25,7 +25,11 @@ class CheckWebsiteUserRole
         }
     
         if (! $user) {
-            return  redirect()->route('website.login');
+            return redirect()->route('website.login');
+        }
+
+        if ($user->website_id !== $website->id) {
+            abort(403, 'User does not belong to this website.');
         }
 
         if ($role === 'admin' && ($user->role->value !== 'admin' && $user->role->value !== 'owner')) {
