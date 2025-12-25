@@ -46,9 +46,13 @@ class ProductService
         $product = $productVariantQuantityService->updateProductQuantity($product, $cartItems);
 
         // Add attributes map for hierarchical selection
-        $product->most_used_attribute = $this->getMostUsedAttribute($product);
-        $product->attributes_values_map = $this->getProductAttributesValuesMap($product);
-        $product->is_out_of_stock = $this->checkIFOutOfStock($product);
+        // $product->most_used_attribute = $this->getMostUsedAttribute($product);
+
+        $product->variant_display_type = $this->resolveVariantDisplayType($product);
+        if ($product->variant_display_type === 'steps') {
+            $product->attributes_values_map = $this->getProductAttributesValuesMap($product);
+        }
+        $product->is_out_of_stock = $this->isProductOutOfStock($product);
 
         return $product;
     }
@@ -56,7 +60,7 @@ class ProductService
     /**
      * Get shop products.
      */
-    public function getShopProducts(array $filters) 
+    public function getShopProducts(array $filters)
     {
         return $this->getProducts('shop', $filters);
     }
@@ -81,20 +85,18 @@ class ProductService
 
         if ($type === 'special') {
             $query->special()->inHome();
-
         } else if ($type === 'home') {
             $query->inHome();
-
         } else if ($type === 'shop') {
-           $paginatedProducts = $this->filterProducts($filters, $query);
-           $products = $paginatedProducts->through(fn($product) => $this->enrichProduct($product));
-           $products->each(fn($product) => $product->is_out_of_stock = $this->checkIFOutOfStock($product));
+            $paginatedProducts = $this->filterProducts($filters, $query);
+            $products = $paginatedProducts->through(fn($product) => $this->enrichProduct($product));
+            $products->each(fn($product) => $product->is_out_of_stock = $this->isProductOutOfStock($product));
 
-           return $products;
+            return $products;
         }
 
         $products = $query->get()->map(fn($product) => $this->enrichProduct($product));
-        $products->each(fn($product) => $product->is_out_of_stock = $this->checkIFOutOfStock($product));
+        $products->each(fn($product) => $product->is_out_of_stock = $this->isProductOutOfStock($product));
 
         return $products;
     }
@@ -146,6 +148,7 @@ class ProductService
         return $product->variants
             ->flatMap(fn($variant) => $variant->getMedia('ecommerce_product_images'))
             ->map(fn($media) => $media->getUrl())
+            ->take(6)
             ->values();
     }
 
@@ -197,54 +200,129 @@ class ProductService
     }
 
     /**
-        * Get hierarchical attributes map showing dependencies between attributes.
+     * Determines how product variants should be displayed: 
+     * 'single' for products with only one variant,
+     * 'cards' if there are no attributes,
+     * 'steps' if there is an attribute common to all variants,
+     * otherwise defaults to 'cards'.
+     */
+    protected function resolveVariantDisplayType(EcommerceProduct $product): string
+    {
+        $variants = $product->variants;
+
+        if ($variants->count() === 1) {
+            return 'single';
+        }
+
+        if ($variants->every(fn($v) => $v->attributes->isEmpty())) {
+            return 'cards';
+        }
+
+        $attributeCount = 0;
+
+        foreach($variants as $variant) {
+            if($attributeCount === 0) {
+                $attributeCount = $variant->attributes->count();
+            } elseif($attributeCount > 0 && $attributeCount !== $variant->attributes->count()) {
+                return 'cards';
+            }
+        }
+        return 'steps';
+    }
+
+    /**
+     * Get hierarchical attributes map showing dependencies between attributes.
      */
     protected function getProductAttributesValuesMap(EcommerceProduct $product)
     {
-        $attributesValuesMap = [];
+        $attributes = [];
 
         foreach ($product->variants as $variant) {
-            foreach ($variant->attributes as $attribute) {
-                $attributesValuesMap[] = [
-                    'variant_id' => $variant->id,
-                    'attribute_name' => $attribute->attribute_name,
-                    'attribute_value_id' => $attribute->attribute_value_id ?? null,
-                    'attribute_value_value' => $attribute->attribute_value_value ?? null,
-                    'attribute_value_value_ar' => $attribute->attribute_value_value_ar ?? null,
-                    'color_id' => $attribute->color_id ?? null,
-                    'color_name' => $attribute->color_name ?? null,
-                    'color_name_ar' => $attribute->color_name_ar ?? null,
-                    'color_code' => $attribute->color_code ?? null,
-                ];
+            if ($variant->display_quantity !== 0) {
+
+                foreach ($variant->attributes as $variantAttribute) {
+                    $attributeId = $variantAttribute->attribute_id;
+
+                    if (!isset($attributes[$attributeId])) {
+                        $attributes[$attributeId] = [
+                            'id' => $variantAttribute->attribute_id,
+                            'attribute_name' => $variantAttribute->attribute_name,
+                            'attribute_name_ar' => $variantAttribute->attribute_name_ar,
+                            'values' => [],
+                        ];
+                    }
+
+                    if ($variantAttribute->attribute_name === 'color') {
+                        if (!isset($attributes[$attributeId]['values'][$variantAttribute->color_id])) {
+                            $attributes[$attributeId]['values'][$variantAttribute->color_id] = [
+                                'id' => $variantAttribute->color_id,
+                                'color_name' => $variantAttribute->color_name,
+                                'color_name_ar' => $variantAttribute->color_name_ar,
+                                'color_code' => $variantAttribute->color_code,
+                                'variant_ids' => [$variant->id],
+                            ];
+                        } else {
+                            if (!in_array($variant->id, $attributes[$attributeId]['values'][$variantAttribute->color_id]['variant_ids'])) {
+                                $attributes[$attributeId]['values'][$variantAttribute->color_id]['variant_ids'][] = $variant->id;
+                            }
+                        }
+                    } elseif($variantAttribute->attribute_value_id !== null) {
+                        if (!isset($attributes[$attributeId]['values'][$variantAttribute->attribute_value_id])) {
+                            $attributes[$attributeId]['values'][$variantAttribute->attribute_value_id] = [
+                                'id' => $variantAttribute->attribute_value_id,
+                                'attribute_value_value' => $variantAttribute->attribute_value ?? $variantAttribute->attribute_value_value,
+                                'attribute_value_value_ar' => $variantAttribute->attribute_value ?? $variantAttribute->attribute_value_value_ar,
+                                'variant_ids' => [$variant->id],
+                            ];
+                        } else {
+                            if (!in_array($variant->id, $attributes[$attributeId]['values'][$variantAttribute->attribute_value_id]['variant_ids'])) {
+                                $attributes[$attributeId]['values'][$variantAttribute->attribute_value_id]['variant_ids'][] = $variant->id;
+                            }
+                        }
+                    } else {
+                        if (!isset($attributes[$attributeId]['values'][$variantAttribute->attribute_value])) {
+                            $attributes[$attributeId]['values'][$variantAttribute->attribute_value] = [
+                                'id' => $variantAttribute->attribute_value,
+                                'attribute_value_value' => $variantAttribute->attribute_value ?? $variantAttribute->attribute_value_value,
+                                'attribute_value_value_ar' => $variantAttribute->attribute_value ?? $variantAttribute->attribute_value_value_ar,
+                                'variant_ids' => [$variant->id],
+                            ];
+                        } else {
+                            if (!in_array($variant->id, $attributes[$attributeId]['values'][$variantAttribute->attribute_value]['variant_ids'])) {
+                                $attributes[$attributeId]['values'][$variantAttribute->attribute_value]['variant_ids'][] = $variant->id;
+                            }
+                        }
+                    }
+                }
             }
         }
 
-        return $attributesValuesMap;
+        return array_values($attributes);
     }
 
-    protected function checkIFOutOfStock(EcommerceProduct $product): bool
+    /**
+     * Check if a given product is out of stock across all its variants.
+     *
+     * Returns true if all variants are out of stock;
+     * returns false if at least one variant is available or stock is not set.
+     */
+    protected function isProductOutOfStock(EcommerceProduct $product): bool
     {
-        $isOutOfStock = false;
-
         foreach ($product->variants as $variant) {
-            if($variant->stock_quantity === null) {
-                $isOutOfStock = false;
+            $stock = $variant->stock_quantity;
+            $reserved = $variant->reserved_quantity;
 
-                return $isOutOfStock;
+            if ($stock === null) {
+                return false;
             }
 
-            else if(($variant->stock_quantity - ($variant->reserved_quantity ?? 0)) > 0) {
-                $isOutOfStock = false;
-
-                return $isOutOfStock;
-            }
-
-            else {
-                $isOutOfStock = true;
+            $available = $stock - ($reserved ?? 0);
+            if ($available > 0) {
+                return false;
             }
         }
 
-        return $isOutOfStock;
+        return true;
     }
 
     /**
@@ -306,7 +384,7 @@ class ProductService
     /**
      * Get filtered orders.
      */
-    protected function getFilteredOrders(array $filters) 
+    protected function getFilteredOrders(array $filters)
     {
         $status = $filters['status'] ?? 'pending';
         $search = isset($filters['search']) ? trim($filters['search']) : null;
