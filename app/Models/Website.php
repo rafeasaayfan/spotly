@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Enums\Spotly\WebsiteStatus;
+use App\Traits\HasMediaUploads;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Website extends Model implements HasMedia
 {
-    use InteractsWithMedia;
+    use InteractsWithMedia, HasMediaUploads;
 
     protected $appends = ['light_logo', 'dark_logo'];
 
