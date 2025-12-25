@@ -3,9 +3,11 @@ import { Label } from '@/components/ui/label';
 
 import { Carousel } from '@/components/ui/carousel';
 import { Input } from '@/components/ui/fields';
+import { Image } from '@/components/ui/image';
 import DashboardLayout from '@/layouts/DashboardLayout.vue';
 import { formatters } from '@/lib/dataTable';
 import { toast } from '@/lib/sweetAlert';
+import { typeColor } from '@/lib/websiteTypes';
 import { SharedData, type BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/vue3';
 import {
@@ -32,8 +34,6 @@ import {
     Youtube,
 } from 'lucide-vue-next';
 import { ref, watchEffect } from 'vue';
-import { Image } from '@/components/ui/image';
-import { typeColor } from '@/lib/websiteTypes';
 
 const page = usePage<SharedData>();
 
@@ -83,7 +83,7 @@ const copyUrl = async () => {
     <Head title="Website-Edit" />
 
     <DashboardLayout :breadcrumbs="breadcrumbs">
-        <div class="border-muted relative mx-2 md:mx-4 my-4 grid grid-cols-1 rounded-md border sm:grid-cols-9 md:grid-cols-5 lg:grid-cols-6">
+        <div class="border-muted relative mx-2 my-4 grid grid-cols-1 rounded-md border sm:grid-cols-9 md:mx-4 md:grid-cols-5 lg:grid-cols-6">
             <div class="flex flex-col rounded-s-md sm:col-span-4 md:col-span-2 lg:col-span-2">
                 <div class="border-muted flex flex-col gap-2 border-b p-4 md:p-6">
                     <h1 class="text-active rounded-md bg-gradient-to-br from-blue-500/40 via-blue-500/30 to-blue-500/60 px-4 py-2 font-extrabold">
@@ -97,9 +97,7 @@ const copyUrl = async () => {
 
                         <div class="flex w-full items-center justify-between">
                             <div class="flex h-full flex-1 items-center">
-                                <div
-                                    class="flex h-full w-10 items-center justify-center rounded-s-md bg-card"
-                                >
+                                <div class="bg-card flex h-full w-10 items-center justify-center rounded-s-md">
                                     <Globe class="size-4 text-gray-500" />
                                 </div>
 
@@ -120,8 +118,7 @@ const copyUrl = async () => {
                             <button
                                 type="button"
                                 @click="copyUrl"
-                                class="flex h-full w-10 cursor-pointer items-center justify-center rounded-e-md bg-primary text-for-bg-primary
-                                transition-all duration-200 ease-in-out"
+                                class="bg-primary text-for-bg-primary flex h-full w-10 cursor-pointer items-center justify-center rounded-e-md transition-all duration-200 ease-in-out"
                                 :class="copied ? 'pointer-events-none opacity-50' : ''"
                             >
                                 <CopyCheck v-if="copied" class="size-4" />
@@ -245,9 +242,10 @@ const copyUrl = async () => {
                             {{ $t('phone') }}
                         </Label>
 
-                        <a :href="'tel:' + props.website.phone_number" class="w-full cursor-pointer [direction:ltr]" rel="noopener noreferrer">
+                        <a v-if="props.website.phone_number" :href="'tel:' + props.website.phone_number" class="w-full cursor-pointer [direction:ltr]" rel="noopener noreferrer">
                             <Input :defaultValue="props.website.phone_number" class="cursor-pointer text-[var(--primary)]" readonly />
                         </a>
+                        <Input v-else :placeholder="page.props.lang === 'ar' ? 'لا يوجد رقم هاتف' : 'No phone number provided'" readonly />
                     </div>
 
                     <div class="flex flex-col gap-1">
@@ -259,7 +257,7 @@ const copyUrl = async () => {
                         <a v-if="props.website.email" :href="'mailto:' + props.website.email" class="w-full cursor-pointer" rel="noopener noreferrer">
                             <Input :defaultValue="props.website.email" class="cursor-pointer text-[var(--primary)]" readonly />
                         </a>
-                        <Input v-else :defaultValue="page.props.lang === 'ar' ? 'لا يوجد بريد إلكتروني' : 'No email provided'" readonly />
+                        <Input v-else :placeholder="page.props.lang === 'ar' ? 'لا يوجد بريد إلكتروني' : 'No email provided'" readonly />
                     </div>
                 </div>
 
@@ -279,7 +277,7 @@ const copyUrl = async () => {
                         </Label>
 
                         <Input v-if="props.website.city" :defaultValue="props.website.city" readonly />
-                        <Input v-else :defaultValue="page.props.lang === 'ar' ? 'لا توجد مدينة' : 'No city provided'" readonly />
+                        <Input v-else :placeholder="page.props.lang === 'ar' ? 'لا توجد مدينة' : 'No city provided'" readonly />
                     </div>
                     <div class="flex flex-col gap-1">
                         <Label for="address" class="text-body-muted mb-1 text-xs">
@@ -288,7 +286,7 @@ const copyUrl = async () => {
                         </Label>
 
                         <Input v-if="props.website.address" :defaultValue="props.website.address" readonly />
-                        <Input v-else :defaultValue="page.props.lang === 'ar' ? 'لا يوجد عنوان' : 'No address provided'" readonly />
+                        <Input v-else :placeholder="page.props.lang === 'ar' ? 'لا يوجد عنوان' : 'No address provided'" readonly />
                     </div>
                     <div class="flex flex-col gap-1">
                         <Label for="language" class="text-body-muted mb-1 text-xs">
@@ -316,11 +314,7 @@ const copyUrl = async () => {
                         >
                             <Input :defaultValue="props.website.instagram" class="cursor-pointer text-[var(--primary)]" readonly />
                         </a>
-                        <Input
-                            v-else
-                            :defaultValue="page.props.lang === 'ar' ? 'لا يوجد حساب' : 'No account provided'"
-                            readonly
-                        />
+                        <Input v-else :placeholder="page.props.lang === 'ar' ? 'لا يوجد حساب' : 'No account provided'" readonly />
                     </div>
                     <div class="flex flex-col gap-1">
                         <Label
@@ -348,11 +342,7 @@ const copyUrl = async () => {
                         >
                             <Input :defaultValue="props.website.tiktok" class="cursor-pointer text-[var(--primary)]" readonly />
                         </a>
-                        <Input
-                            v-else
-                            :defaultValue="page.props.lang === 'ar' ? 'لا يوجد حساب' : 'No account provided'"
-                            readonly
-                        />
+                        <Input v-else :placeholder="page.props.lang === 'ar' ? 'لا يوجد حساب' : 'No account provided'" readonly />
                     </div>
                     <div class="flex flex-col gap-1">
                         <Label for="youtube" class="text-body-muted mb-1 text-xs">
@@ -369,11 +359,7 @@ const copyUrl = async () => {
                         >
                             <Input :defaultValue="props.website.youtube" class="cursor-pointer text-[var(--primary)]" readonly />
                         </a>
-                        <Input
-                            v-else
-                            :defaultValue="page.props.lang === 'ar' ? 'لا يوجد حساب' : 'No account provided'"
-                            readonly
-                        />
+                        <Input v-else :placeholder="page.props.lang === 'ar' ? 'لا يوجد حساب' : 'No account provided'" readonly />
                     </div>
                     <div class="flex flex-col gap-2">
                         <Label for="facebook" class="text-body-muted text-xs">
@@ -390,21 +376,30 @@ const copyUrl = async () => {
                         >
                             <Input :defaultValue="props.website.facebook" class="cursor-pointer text-[var(--primary)]" readonly />
                         </a>
-                        <Input
-                            v-else
-                            :defaultValue="page.props.lang === 'ar' ? 'لا يوجد حساب' : 'No account provided'"
-                            readonly
-                        />
+                        <Input v-else :placeholder="page.props.lang === 'ar' ? 'لا يوجد حساب' : 'No account provided'" readonly />
                     </div>
                 </div>
 
-                <div class="border-muted flex w-full flex-col border-t pt-6">
-                    <Label for="about_us" class="text-body-muted mb-2 text-xs">
-                        <Info class="size-3.5" />
-                        {{ $t('about_us_section') }}
-                    </Label>
+                <div class="border-muted flex w-full flex-col gap-5 border-t pt-6">
+                    <div class="flex flex-col">
+                        <Label for="about_us" class="text-body-muted mb-2 text-xs">
+                            <Info class="size-3.5" />
+                            {{ $t('about_us_section') }}
+                        </Label>
 
-                    <Input :defaultValue="props.website.about_us" readonly />
+                        <Input v-if="props.website.about_us" :defaultValue="props.website.about_us" readonly />
+                        <Input v-else :placeholder="page.props.lang === 'ar' ? 'لا يوجد محتوى' : 'No content provided'" readonly />
+                    </div>
+
+                    <div class="flex flex-col">
+                        <Label for="about_us" class="text-body-muted mb-2 text-xs">
+                            <Info class="size-3.5" />
+                            {{ $t('about_us_section_ar') }}
+                        </Label>
+
+                        <Input v-if="props.website.about_us_ar" :defaultValue="props.website.about_us_ar" readonly />
+                        <Input v-else :placeholder="page.props.lang === 'ar' ? 'لا يوجد محتوى' : 'No content provided'" readonly />
+                    </div>
                 </div>
 
                 <div class="border-muted flex w-full flex-col border-t pt-6">
@@ -413,26 +408,23 @@ const copyUrl = async () => {
                         {{ page.props.lang === 'ar' ? 'قالب الواجهة النشط' : 'Active UI Template' }}
                     </Label>
 
-                    <div v-if="props.website.active_website_template.template_images" 
-                        class="bg-field flex flex-col gap-3 px-2 md:px-4 py-4 rounded-md border border-muted"
+                    <div
+                        v-if="props.website.active_website_template.template_images"
+                        class="bg-field border-muted flex flex-col gap-3 rounded-md border px-2 py-4 md:px-4"
                     >
                         <div class="flex items-center gap-2">
-                            <span
-                                class="rounded-md text-sm text-active px-3 py-1.5 bg-card border border-muted"
-                            >
+                            <span class="text-active bg-card border-muted rounded-md border px-3 py-1.5 text-sm">
                                 {{ props.website.active_website_template.template.name }}
                             </span>
                             <PlusCircle class="size-3.5" />
-                            <span
-                                class="rounded-md text-sm text-active px-3 py-1.5 bg-card border border-muted"
-                            >
+                            <span class="text-active bg-card border-muted rounded-md border px-3 py-1.5 text-sm">
                                 {{ props.website.active_website_template.template_color.name }}
                             </span>
                         </div>
                         <Carousel
                             v-if="Array.isArray(props.website.active_website_template.template_images)"
                             :items="props.website.active_website_template.template_images"
-                            class="h-60 md:h-80 lg:h-90 w-full"
+                            class="h-60 w-full md:h-80 lg:h-90"
                             :showArrows="false"
                         />
                     </div>

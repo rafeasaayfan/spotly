@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogDescription, DialogHeader, DialogScrollContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { File, Input, InputError, PhoneNumberField, Select, SelectWithSearch, Textarea, Toggle } from '@/components/ui/fields';
+import { FileUploader, Input, InputError, PhoneNumberField, Select, SelectWithSearch, Textarea, Toggle } from '@/components/ui/fields';
 import { Label } from '@/components/ui/label';
 
 import DashboardLayout from '@/layouts/DashboardLayout.vue';
@@ -61,8 +61,8 @@ const mappedCities = Object.entries(props.cities).map(([key, city]: [string, any
 
 const form = useForm<Record<string, any>>({
     ...props.website,
-    light_logo: null,
-    dark_logo: null,
+    light_logo: props.website.light_logo,
+    dark_logo: props.website.dark_logo,
 });
 
 const submit = () => {
@@ -93,15 +93,15 @@ const activate = (toggleVal: boolean) => {
 
                 <!-- Logo -->
                 <div class="border-muted flex flex-col items-center gap-5 border-b p-4 md:p-6">
-                    <div class="flex flex-col gap-1">
+                    <div class="flex w-full flex-col gap-1">
                         <Label for="light_logo" class="text-body-muted mb-1 text-xs">{{ $t('myWebsites.light_logo') }}</Label>
-                        <File id="light_logo" v-model="form.light_logo" :src="props.website.light_logo" :label="$t('myWebsites.light_logo')" />
+                        <FileUploader v-model="form.light_logo" id="light_logo" name="light_logo" />
                         <InputError v-if="form.errors?.light_logo" :message="form.errors.light_logo" class="text-xs" />
                     </div>
 
-                    <div class="flex flex-col gap-1">
+                    <div class="flex w-full flex-col gap-1">
                         <Label for="dark_logo" class="text-body-muted mb-1 text-xs">{{ $t('myWebsites.dark_logo') }}</Label>
-                        <File id="dark_logo" v-model="form.dark_logo" :src="props.website.dark_logo" :label="$t('myWebsites.dark_logo')" />
+                        <FileUploader v-model="form.dark_logo" id="dark_logo" name="dark_logo" />
                         <InputError v-if="form.errors?.dark_logo" :message="form.errors.dark_logo" class="text-xs" />
                     </div>
                 </div>
@@ -178,11 +178,7 @@ const activate = (toggleVal: boolean) => {
                             <Building2 class="size-3.5" />
                             {{ $t('city') }}
                         </Label>
-                        <SelectWithSearch
-                            v-model="form.city"
-                            placeholder="Select a city..."
-                            :options="mappedCities"
-                        />
+                        <SelectWithSearch v-model="form.city" placeholder="Select a city..." :options="mappedCities" />
                         <InputError v-if="form.errors?.city" :message="form.errors.city" />
                     </div>
                     <div class="flex flex-col gap-1">
@@ -224,8 +220,11 @@ const activate = (toggleVal: boolean) => {
                         <InputError v-if="form.errors?.instagram" :message="form.errors.instagram" />
                     </div>
                     <div class="flex flex-col gap-1">
-                        <Label for="tiktok" class="text-body-muted mb-1 text-xs">
-                            <svg viewBox="0 0 256 256" class="size-3.5 stroke-black transition-all duration-300 dark:stroke-white">
+                        <Label
+                            for="tiktok"
+                            class="text-body-muted mb-1 stroke-black/50 text-xs hover:stroke-black dark:stroke-white/50 hover:dark:stroke-white"
+                        >
+                            <svg viewBox="0 0 256 256" class="size-3.5 transition-all duration-300">
                                 <path
                                     d="M168,106a95.9,95.9,0,0,0,56,18V84a56,56,0,0,1-56-56H128V156a28,28,0,1,1-40-25.3V89.1A68,68,0,1,0,168,156Z"
                                     fill="none"
@@ -257,13 +256,36 @@ const activate = (toggleVal: boolean) => {
                     </div>
                 </div>
 
-                <div class="border-muted flex w-full flex-col border-t pt-6">
-                    <Label for="about_us" class="mb-2">
-                        <Info class="size-3.5" />
-                        {{ $t('about_us_section') }}
-                    </Label>
-                    <Textarea id="about_us" v-model="form.about_us" :maxlength="255" required />
-                    <InputError v-if="form.errors?.about_us" :message="form.errors.about_us" />
+                <div class="border-muted flex w-full flex-col gap-5 border-t pt-6">
+                    <div class="flex flex-col">
+                        <Label for="about_us" class="mb-2">
+                            <Info class="size-3.5" />
+                            {{ $t('about_us_section') }}
+                        </Label>
+                        <Textarea
+                            id="about_us"
+                            v-model="form.about_us"
+                            :maxlength="255"
+                            :placeholder="$t('websiteBuilder.firstStep.about_us_placeholder')"
+                            required
+                        />
+                        <InputError v-if="form.errors?.about_us" :message="form.errors.about_us" />
+                    </div>
+
+                    <div class="flex flex-col">
+                        <Label for="about_us_ar" class="mb-2">
+                            <Info class="size-3.5" />
+                            {{ $t('about_us_section_ar') }}
+                        </Label>
+                        <Textarea
+                            id="about_us_ar"
+                            v-model="form.about_us_ar"
+                            :placeholder="$t('websiteBuilder.firstStep.about_us_placeholder_ar')"
+                            :maxlength="255"
+                            required
+                        />
+                        <InputError v-if="form.errors?.about_us_ar" :message="form.errors.about_us_ar" />
+                    </div>
                 </div>
             </div>
         </form>
