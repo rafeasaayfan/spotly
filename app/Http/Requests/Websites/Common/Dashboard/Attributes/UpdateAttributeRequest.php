@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Websites\Ecommerce\Dashboard\Pages\Attributes;
+namespace App\Http\Requests\Websites\Common\Dashboard\Attributes;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreAttributeRequest extends FormRequest
+class UpdateAttributeRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -22,19 +22,27 @@ class StoreAttributeRequest extends FormRequest
                 'string',
                 'min:3',
                 'max:50',
-                Rule::unique('ecommerce_product_attributes', 'name')->where('website_id', $website->id),
-                Rule::in(array_column(config('ecommerce_attributes.attributes'), 'value'))
+                Rule::unique('attributes', 'name')
+                    ->where('website_id', $website->id)
+                    ->ignore($this->route('attribute')->id),
+                Rule::in(array_column(config('attributes.ecommerce_attributes'), 'value'))
             ],
             'name_ar' => [
                 'required',
                 'string',
                 'min:3',
                 'max:50',
-                Rule::unique('ecommerce_product_attributes', 'name_ar')->where('website_id', $website->id),
-                Rule::in(array_column(config('ecommerce_attributes.attributes'), 'value_ar'))
+                Rule::unique('attributes', 'name_ar')->where('website_id', $website->id)
+                    ->ignore($this->route('attribute')->id),
+                Rule::in(array_column(config('attributes.ecommerce_attributes'), 'value_ar'))
             ],
 
             'values' => ['nullable', 'array'],
+            'values.*.id' => [
+                'sometimes', 
+                'integer', 
+                'exists:attribute_values,id'
+            ],
             'values.*.value' => [
                 'required', 
                 'string', 
@@ -48,6 +56,22 @@ class StoreAttributeRequest extends FormRequest
 
             'description' => ['nullable', 'string', 'max:200'],
             'is_active' => ['required', 'boolean'],
+        ];
+        
+    }
+
+    public function messages(): array
+    {
+        return [
+            // Values array validation messages
+            'values.*.value.required' => 'Each attribute value is required.',
+            'values.*.value.string' => 'Each attribute value must be a valid string.',
+            'values.*.value.max' => 'Each attribute value must not exceed :max characters.',
+
+            // Arabic values validation messages
+            'values.*.value_ar.required' => 'Each Arabic attribute value is required.',
+            'values.*.value_ar.string' => 'Each Arabic attribute value must be a valid string.',
+            'values.*.value_ar.max' => 'Each Arabic attribute value must not exceed :max characters.',
         ];
     }
 
