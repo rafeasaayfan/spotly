@@ -26,8 +26,8 @@ class WebsitesController extends Controller
     {
         $query = Website::query();
 
-        $columnsSearching = ['owner.name', 'websiteType.type', 'name', 'subdomain', 'phone_number'];
-        $columnsSelection = ['id', 'owner_id', 'website_type_id', 'approved_or_denied_by', 'subdomain', 'address', 'phone_number', 'is_active', 'status'];
+        $columnsSearching = ['owner.name', 'websiteType.type', 'name', 'subdomain', 'email'];
+        $columnsSelection = ['id', 'owner_id', 'website_type_id', 'approved_or_denied_by', 'subdomain', 'email', 'is_active', 'status', 'created_at'];
         $relations = ['owner_name', 'websiteType_type', 'approvedOrDeniedBy_name'];
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
