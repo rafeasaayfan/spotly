@@ -33,7 +33,8 @@
     "tiktok": "TikTok",
     "youtube": "YouTube",
     "facebook": "Facebook",
-    "about_us_section": "About Us Section",
+    "about_us_section": "About Us Section (en)",
+    "about_us_section_ar": "About Us Section (ar)",
     "street_address_placeholder": "123 Main Street",
     "delete": "Delete",
     "remove": "Remove",
@@ -273,6 +274,7 @@
     "websiteBuilder.firstStep.about_us_title_ar": "About Your Business (ar)",
     "websiteBuilder.firstStep.about_us_description": "Provide a brief summary describing your business.",
     "websiteBuilder.firstStep.about_us_placeholder": "e.g., A cozy spot for coffee lovers... (120-255 characters)",
+    "websiteBuilder.firstStep.about_us_placeholder_ar": "مثال: مكان دافئ لعشاق القهوة... (١٢٠-٢٥٥ حرفًا)",
 
     "websiteBuilder.secondStep.phone_number_title": "Phone Number",
     "websiteBuilder.secondStep.phone_number_description": "Enter your business contact number.",
