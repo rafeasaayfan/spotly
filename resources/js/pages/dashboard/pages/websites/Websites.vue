@@ -22,8 +22,7 @@ const columns = [
     { key: 'websiteType_type', label: 'Type' },
     { key: 'approvedOrDeniedBy_name', label: 'Viewed By' },
     { key: 'subdomain', label: 'Sub Domain' },
-    { key: 'phone_number', label: 'Phone Number', type: 'phone_number' },
-    { key: 'address', label: 'Address' },
+    { key: 'email', label: 'Email', type: 'email' },
     { key: 'is_active', label: 'Active', type: 'toggle' },
     {
         key: 'status',
@@ -35,6 +34,7 @@ const columns = [
             { value: 'approved', label: 'Approved' },
         ],
     },
+    { key: 'created_at', label: 'Created At', type: 'date' },
 ];
 
 const filter = [
