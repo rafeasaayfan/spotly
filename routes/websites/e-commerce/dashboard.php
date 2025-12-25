@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Websites\Ecommerce\Dashboard\DashboardController;
-use App\Http\Controllers\Websites\Ecommerce\Dashboard\Pages\AttributesController;
 use App\Http\Controllers\Websites\Ecommerce\Dashboard\Pages\CartsController;
 // use App\Http\Controllers\Websites\Ecommerce\Dashboard\Pages\DeliveryFeesController;
 use App\Http\Controllers\Websites\Ecommerce\Dashboard\Pages\OrdersController;
@@ -11,10 +10,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
-
-    //* Attributes
-    dashboardPagesRoutes('attributes', AttributesController::class);
-    Route::patch('attributes/{id}/is_active', [AttributesController::class, 'toggleActive'])->name('attributes.is_active');
 
     //* Products
     dashboardPagesRoutes('products', ProductsController::class);

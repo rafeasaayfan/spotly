@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Websites\Common\Dashboard\AttributesController;
 use App\Http\Controllers\Websites\Common\Dashboard\BrandsController;
 use App\Http\Controllers\Websites\Common\Dashboard\CategoriesController;
 use App\Http\Controllers\Websites\Common\Dashboard\MessagesController;
@@ -23,6 +24,10 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     //* Brands
     dashboardPagesRoutes('brands', BrandsController::class);
     Route::patch('brands/{id}/is_active', [BrandsController::class, 'toggleActive'])->name('brands.is_active');
+
+    //* Attributes
+    dashboardPagesRoutes('attributes', AttributesController::class);
+    Route::patch('attributes/{id}/is_active', [AttributesController::class, 'toggleActive'])->name('attributes.is_active');
 
     //* Messages
     dashboardPagesRoutes('messages', MessagesController::class);
