@@ -1,1 +1,0 @@
-import{H as r}from"./house-pYF9ticV.js";import{S as o}from"./shopping-bag-CFcFR1Oo.js";import{L as e}from"./list-ordered-Z96Skztm.js";import{T as t}from"./truck-DPlkWkom.js";const m=[{title:"nav.home",href:"/",icon:r},{title:"nav.shop",href:"/shop",icon:o},{title:"nav.my.orders",href:"/orders",icon:e},{title:"nav.trackOrder",href:"/track-order",icon:t}];export{m as n};
