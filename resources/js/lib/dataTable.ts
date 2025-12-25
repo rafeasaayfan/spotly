@@ -77,6 +77,10 @@ export const formatters = {
             failed: 'bg-destructive text-for-bg-destructive',
             refunded: 'bg-destructive text-for-bg-destructive',
             cancelled: 'bg-destructive text-for-bg-destructive',
+
+            owner: 'bg-yellow-500 text-white',
+            admin: 'bg-blue-500 text-white',
+            user: 'bg-green-500 text-white',
         };
 
         const color = colorMap[value.toLowerCase()] || 'bg-content text-active border border-muted shadow';
