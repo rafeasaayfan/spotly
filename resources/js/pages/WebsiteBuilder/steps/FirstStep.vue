@@ -185,7 +185,7 @@ const languages = () => {
                 :description="$t('websiteBuilder.firstStep.about_us_description')"
             />
             <div class="flex flex-col ps-2">
-                <Textarea v-model="about_us_ar" :placeholder="$t('websiteBuilder.firstStep.about_us_placeholder')" :maxlength="255" />
+                <Textarea v-model="about_us_ar" :placeholder="$t('websiteBuilder.firstStep.about_us_placeholder_ar')" :maxlength="255" />
                 <InputError v-if="props.form.errors?.about_us_ar" :message="props.form.errors.about_us_ar" />
             </div>
         </div>
