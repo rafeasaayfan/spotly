@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { toast } from '@/lib/sweetAlert';
 import { SharedData } from '@/types';
 import { useForm, usePage } from '@inertiajs/vue3';
-import { LoaderCircle, Trash2 } from 'lucide-vue-next';
+import { LoaderCircle, MessageCircleWarning, Trash2 } from 'lucide-vue-next';
 import { reactive } from 'vue';
 
 const props = defineProps<{
@@ -145,7 +145,7 @@ function submit() {
         <div class="mb-3 flex flex-col gap-2 lg:col-span-2">
             <Label>Variants</Label>
             <div v-for="(variant, index) in form.variants" :key="variant.id || index" class="border-muted mb-2 rounded border p-2">
-                <div class="bg-[var(--primary)]/10 dark:bg-[var(--primary)]/5 mb-3 flex w-full items-center justify-between gap-2 rounded-md p-2">
+                <div class="mb-3 flex w-full items-center justify-between gap-2 rounded-md bg-[var(--primary)]/10 p-2 dark:bg-[var(--primary)]/5">
                     <span class="text-body-muted text-sm">Variant {{ index + 1 }}</span>
                     <Button
                         type="button"
@@ -161,13 +161,9 @@ function submit() {
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div class="flex flex-col gap-1 md:col-span-2">
                         <Label>Images*</Label>
-                        <FileUploader
-                            v-model="variant.ecommerce_product_images"
-                            :multiple="true"
-                            :id="`ecommerce_product_images_${index}`"
-                         />
+                        <FileUploader v-model="variant.ecommerce_product_images" :multiple="true" :id="`ecommerce_product_images_${index}`" />
                     </div>
-                    <div class="flex flex-col gap-1.5">
+                    <div v-if="props.attributes.length > 0" class="flex flex-col gap-1.5">
                         <Label>Price</Label>
                         <Input v-model="variant.price" type="number" placeholder="e.g. 999" required />
                     </div>
@@ -175,27 +171,28 @@ function submit() {
                         <Label>Stock Quantity</Label>
                         <Input v-model="variant.stock_quantity" type="number" min="0" placeholder="e.g. 10" />
                     </div>
-                    <div v-for="attribute in variant.attributes" :key="attribute.id" class="flex flex-col gap-1">
-                        <Label class="capitalize">{{ attribute.name }}</Label>
-                        <Input 
-                            v-if="attribute.type === 'text'" 
-                            v-model="attribute.value" 
-                            type="text" 
-                            :placeholder="`Enter ${attribute.name}`" 
-                        />
-                        <SelectWithSearch 
-                            v-else-if="attribute.type === 'select'" 
-                            v-model="attribute.value" 
-                            :options="attribute.name === 'color' ? mappedColors : attribute.values.map((value: any) => ({
-                                value: value.id,
-                                label: value.value,
-                            }))" 
-                            :placeholder="`Select ${attribute.name}`"
-                        />
-                    </div>
+                    <template v-if="props.attributes.length > 0">
+                        <div v-for="attribute in variant.attributes" :key="attribute.id" class="flex flex-col gap-1">
+                            <Label class="capitalize">{{ attribute.name }}</Label>
+                            <Input v-if="attribute.type === 'text'" v-model="attribute.value" type="text" :placeholder="`Enter ${attribute.name}`" />
+                            <SelectWithSearch
+                                v-else-if="attribute.type === 'select'"
+                                v-model="attribute.value"
+                                :options="
+                                    attribute.name === 'color'
+                                        ? mappedColors
+                                        : attribute.values.map((value: any) => ({
+                                              value: value.id,
+                                              label: value.value,
+                                          }))
+                                "
+                                :placeholder="`Select ${attribute.name}`"
+                            />
+                        </div>
+                    </template>
                 </div>
             </div>
-            <div class="">
+            <div class="" v-if="props.attributes.length > 0">
                 <Button
                     type="button"
                     size="sm"
@@ -205,6 +202,10 @@ function submit() {
                     Add Variant
                 </Button>
             </div>
+            <p v-else class="flex items-center gap-1 text-sm text-yellow-600 dark:text-yellow-400">
+                <MessageCircleWarning class="size-5" />
+                <span>To create multiple variants, please add at least one attribute first.</span>
+            </p>
             <InputError :message="form.errors.variants" />
         </div>
 
