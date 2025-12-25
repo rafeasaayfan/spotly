@@ -24,29 +24,6 @@ const columns = [
         required: true,
         options: mappedCountries,
     },
-    {
-        key: 'status',
-        label: 'Status',
-        type: 'select',
-        placeholder: 'Enter the user status',
-        required: true,
-        options: [
-            { value: 'active', label: 'Active' },
-            { value: 'inactive', label: 'Inactive' },
-            { value: 'banned', label: 'Banned' },
-        ],
-    },
-    {
-        key: 'role',
-        label: 'Role',
-        type: 'select',
-        placeholder: 'Enter the user role',
-        required: true,
-        options: [
-            { value: 'admin', label: 'Admin' },
-            { value: 'user', label: 'User' },
-        ],
-    },
 ];
 </script>
 
