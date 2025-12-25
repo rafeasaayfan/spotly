@@ -42,22 +42,15 @@ class EditWebsiteController extends Controller
 
         try {
             $validated = $request->validated();
+            $validatedLightLogo = $validated['light_logo'];
+            $validatedDarkLogo = $validated['dark_logo'];
             unset($validated['light_logo'], $validated['dark_logo']);
 
             $website->fill($validated);
-
-            if ($request->hasFile('light_logo') && $request->file('light_logo')->isValid()) {
-                $website->clearMediaCollection('light_logo');
-                $website->addMediaFromRequest('light_logo')
-                    ->toMediaCollection('light_logo');
-            }
-            if ($request->hasFile('dark_logo') && $request->file('dark_logo')->isValid()) {
-                $website->clearMediaCollection('dark_logo');
-                $website->addMediaFromRequest('dark_logo')
-                    ->toMediaCollection('dark_logo');
-            }
-
             $website->save();
+
+            $website->updateMediaImage($validatedLightLogo, 'light_logo');
+            $website->updateMediaImage($validatedDarkLogo, 'dark_logo');
 
             return $this->backSuccess(__('messages.website_updated'));
         } catch (\Exception $e) {
