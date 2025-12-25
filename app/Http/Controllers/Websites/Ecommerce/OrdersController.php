@@ -7,6 +7,7 @@ use App\Http\Requests\Websites\Ecommerce\OrderRequest;
 use App\Models\EcommerceOrder;
 use App\Services\Websites\Ecommerce\ProductService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrdersController extends BaseController
 {
@@ -18,8 +19,27 @@ class OrdersController extends BaseController
         $productService = new ProductService($this->website->id);
         $orders = $productService->getOrderProducts($request->validated());
 
+        $orderStats = EcommerceOrder::where('website_id', $this->website->id);
+
+        $orderStats = EcommerceOrder::where('website_id', $this->website->id)
+            ->when(Auth::guard('website')->check(), function ($q) {
+                $q->where('website_user_id', Auth::guard('website')->id());
+            }, function ($q) {
+                $q->where('session_id', session()->getId());
+            })->selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status');
+
         return $this->inertiaRender('pages/orders/Orders', [
             'orders' => $orders,
+            'orderStats' => [
+                'pending' => $orderStats['pending'] ?? 0,
+                'confirmed' => $orderStats['confirmed'] ?? 0,
+                'delivered' => $orderStats['delivered'] ?? 0,
+                'cancelled' => $orderStats['cancelled'] ?? 0,
+                'rejected' => $orderStats['rejected'] ?? 0,
+                'refunded' => $orderStats['refunded'] ?? 0,
+            ],
             'colors' => $this->websiteTemplate()->templateColor,
             'websiteNameAndLogo' => $this->websiteNameAndLogo(),
             'websiteFooterData' => $this->websiteFooterData(),
