@@ -47,10 +47,9 @@ class CountriesController extends Controller
             unset($validated['flag']);
 
             $country = new Country($validated);
-
-            $country->storeMediaImages($imagesData, 'flag');
-
             $country->save();
+
+            $country->storeMediaImage($imagesData, 'flag');
 
             return $this->redirectSuccess('dashboard.countries.index', 'Country created successfully');
         } catch (\Exception $e) {
@@ -64,7 +63,7 @@ class CountriesController extends Controller
     public function show(string $id)
     {
         try {
-            $country = Country::with('media')->findOrFail($id);
+            $country = Country::findOrFail($id);
 
             return $this->jsonSuccess('', [
                 'data' => $country,
@@ -80,7 +79,7 @@ class CountriesController extends Controller
     public function edit(string $id)
     {
         try {
-            $country = Country::with('media')->findOrFail($id);
+            $country = Country::findOrFail($id);
 
             return $this->jsonSuccess('', [
                 'data' => $country,
@@ -102,7 +101,7 @@ class CountriesController extends Controller
 
             $country->fill($validated);
 
-            $country->updateMediaImages($imagesData, 'flag');
+            $country->updateMediaImage($imagesData, 'flag');
 
             $country->save();
 
@@ -135,13 +134,13 @@ class CountriesController extends Controller
     public function toggleActive(Request $request, $id)
     {
         try {
-            $websiteType = Country::findOrFail($id);
+            $country = Country::findOrFail($id);
 
             $validated = $request->validate([
                 'is_active' => 'required|boolean',
             ]);
 
-            $websiteType->update([
+            $country->update([
                 'is_active' => $validated['is_active'],
             ]);
 
