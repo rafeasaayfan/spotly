@@ -66,7 +66,7 @@ class ProductsService
                 ]);
 
                 // Handle Images
-                $productVariant->updateMediaImages($variant['ecommerce_product_images'], 'ecommerce_product_images', false);
+                $productVariant->updateMediaImages($variant['ecommerce_product_images'], 'ecommerce_product_images');
 
                 // Handle Attributes
                 if (!empty($variant['attributes'])) {
@@ -89,10 +89,12 @@ class ProductsService
     {
         try {
             $payload = [];
+            $deletedValues = [];
 
             foreach ($attributes as $attribute) {
                 if (empty($attribute['value'])) {
-                    continue; // Skip attributes without values
+                    $deletedValues[] = $attribute['id'];
+                    continue;
                 }
 
                 $attribute_value_id = null;
@@ -100,7 +102,6 @@ class ProductsService
                 if ($attribute['name'] !== 'color') {
                     if ($attribute['type'] === 'text') {
                         $attribute_value = $attribute['value'];
-
                     } elseif ($attribute['type'] === 'select') {
                         $attribute_value_id = $attribute['value'];
                     }
@@ -123,6 +124,11 @@ class ProductsService
                     ['product_variant_id', 'attribute_id'],
                     ['color_id', 'attribute_value_id', 'attribute_value', 'updated_at']
                 );
+            }
+            if (!empty($deletedValues)) {
+                EcommerceProductVariantAttribute::where('product_variant_id', $productVariantId)
+                    ->whereIn('attribute_id', $deletedValues)
+                    ->delete();
             }
         } catch (\Exception $e) {
             throw new \Exception('An error occurred while storing the product variant attributes: ' . $e->getMessage(), 0, $e);
