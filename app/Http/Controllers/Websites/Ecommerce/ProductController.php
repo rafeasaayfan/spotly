@@ -20,7 +20,7 @@ class ProductController extends BaseController
         $product = $productService->getProductBySlug($slug, $this->cartItems());
         $product->increment('views_count');
 
-        return $this->inertiaRender('pages/Product', [
+        return $this->inertiaRender('pages/product/Product', [
             'colors' => $this->websiteTemplate()->templateColor,
             'iniProduct' => $product,
             'websiteNameAndLogo' => $this->websiteNameAndLogo(),
