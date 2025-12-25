@@ -39,7 +39,7 @@ class EcommerceProductVariantAttribute extends Model
      */
     public function attribute()
     {
-        return $this->belongsTo(EcommerceProductAttribute::class, 'attribute_id');
+        return $this->belongsTo(Attribute::class, 'attribute_id');
     }
 
     /**
@@ -47,7 +47,7 @@ class EcommerceProductVariantAttribute extends Model
      */
     public function attributeValue()
     {
-        return $this->belongsTo(EcommerceProductAttributeValue::class, 'attribute_value_id');
+        return $this->belongsTo(AttributeValue::class, 'attribute_value_id');
     }
 
     /**

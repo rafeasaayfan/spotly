@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('ecommerce_product_variant_attributes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_variant_id')->constrained('ecommerce_product_variants')->onDelete('cascade');
-            $table->foreignId('attribute_id')->constrained('ecommerce_product_attributes')->onDelete('cascade');
-            $table->foreignId('attribute_value_id')->nullable()->constrained('ecommerce_product_attribute_values')->onDelete('cascade');
+            $table->foreignId('attribute_id')->constrained('attributes')->onDelete('cascade');
+            $table->foreignId('attribute_value_id')->nullable()->constrained('attribute_values')->onDelete('cascade');
             $table->string('attribute_value')->nullable();
             $table->foreignId('color_id')->nullable()->constrained('colors')->onDelete('cascade');
             $table->timestamps();

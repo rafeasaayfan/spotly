@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EcommerceProductAttribute extends Model
+class Attribute extends Model
 {
     protected $fillable = [
         'website_id',
@@ -29,7 +29,7 @@ class EcommerceProductAttribute extends Model
      */
     public function values()
     {
-        return $this->hasMany(EcommerceProductAttributeValue::class, 'attribute_id')->orderBy('id', 'asc');
+        return $this->hasMany(AttributeValue::class, 'attribute_id')->orderBy('id', 'asc');
     }
 
     /**

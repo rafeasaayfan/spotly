@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EcommerceProductAttributeValue extends Model
+class AttributeValue extends Model
 {
     protected $fillable = [
         'attribute_id',
@@ -18,6 +18,6 @@ class EcommerceProductAttributeValue extends Model
      */
     public function attribute()
     {
-        return $this->belongsTo(EcommerceProductAttribute::class, 'attribute_id');
+        return $this->belongsTo(Attribute::class, 'attribute_id');
     }
 }

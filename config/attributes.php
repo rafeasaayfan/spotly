@@ -8,7 +8,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'attributes' => [
+    'ecommerce_attributes' => [
         ['value' => 'color', 'label' => 'Color', 'value_ar' => 'اللون'],
         ['value' => 'size', 'label' => 'Size', 'value_ar' => 'الحجم'],
         ['value' => 'material', 'label' => 'Material', 'value_ar' => 'المادة'],

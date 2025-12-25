@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ecommerce_product_attribute_values', function (Blueprint $table) {
+        Schema::create('attribute_values', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('attribute_id')->constrained('ecommerce_product_attributes')->onDelete('cascade');
+            $table->foreignId('attribute_id')->constrained('attributes')->onDelete('cascade');
 
             $table->string('value');
             $table->string('value_ar')->nullable();
@@ -21,9 +21,9 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
-            $table->unique(['attribute_id', 'value'], 'epav_unique_idx');
-            $table->unique(['attribute_id', 'value_ar'], 'epav_ar_unique_idx');
-            $table->index(['attribute_id', 'value'], 'epav_idx');
+            $table->unique(['attribute_id', 'value'], 'av_unique_idx');
+            $table->unique(['attribute_id', 'value_ar'], 'av_ar_unique_idx');
+            $table->index(['attribute_id', 'value'], 'av_idx');
         });
     }
 
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ecommerce_product_attribute_values');
+        Schema::dropIfExists('attribute_values');
     }
 };
