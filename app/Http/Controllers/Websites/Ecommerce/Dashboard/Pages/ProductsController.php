@@ -12,7 +12,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\EcommerceProduct;
-use App\Models\EcommerceProductAttribute;
+use App\Models\Attribute;
 use App\Services\Websites\Ecommerce\Dashboard\ProductsService;
 use Illuminate\Support\Facades\DB;
 
@@ -50,13 +50,17 @@ class ProductsController extends BaseController
     public function create()
     {
         try {
+            $colors = Color::all();
+
             $categories = Category::active()->where('website_id', $this->website->id)->select(['id', 'name'])->get();
             $brands = Brand::active()->where('website_id', $this->website->id)->select(['id', 'name'])->get();
 
-            $attributes = EcommerceProductAttribute::active()->where('website_id', $this->website->id)
+            $attributes = Attribute::active()
+                ->where('website_id', $this->website->id)
                 ->with(['values:id,attribute_id,value'])
-                ->select(['id', 'name', 'type'])->get();
-            $colors = Color::all();
+                ->select(['id', 'name', 'type'])
+                ->orderBy('created_at', 'asc')
+                ->get();
 
             return $this->jsonSuccess('', [
                 'categories' => $categories,
@@ -129,10 +133,12 @@ class ProductsController extends BaseController
             $categories = Category::active()->where('website_id', $this->website->id)->select(['id', 'name'])->get();
             $brands = Brand::active()->where('website_id', $this->website->id)->select(['id', 'name'])->get();
 
-            $attributes = EcommerceProductAttribute::active()->where('website_id', $this->website->id)
-                ->with(['values:id,attribute_id,value'])
-                ->select(['id', 'name', 'type'])->get();
             $colors = Color::all();
+
+            $attributes = Attribute::active()->where('website_id', $this->website->id)
+                ->with(['values:id,attribute_id,value'])
+                ->select(['id', 'name', 'type'])
+                ->orderBy('created_at', 'asc')->get();
 
             return $this->jsonSuccess('', [
                 'data' => $product,
