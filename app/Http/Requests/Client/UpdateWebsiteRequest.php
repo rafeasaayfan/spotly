@@ -25,21 +25,21 @@ class UpdateWebsiteRequest extends FormRequest
         return [
             'light_logo' => [
                 'nullable',
-                'file',
-                'mimes:svg',
-                'max:600',
-                when(!$this->route('website')->hasMedia('dark_logo'), 'required_with:dark_logo')
+                'required_with:dark_logo',
+                $this->hasFile('light_logo')
+                    ? ['file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:600']
+                    : ['string', 'max:255']
             ],
             'dark_logo' => [
                 'nullable',
-                'file',
-                'mimes:svg',
-                'max:600',
-                when(!$this->route('website')->hasMedia('dark_logo'), 'required_with:light_logo')
+                'required_with:light_logo',
+                $this->hasFile('light_logo')
+                    ? ['file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:600']
+                    : ['string', 'max:255']
             ],
 
             'phone_number' => [
-                'required',
+                'nullable',
                 'regex:/^(?:\+961)?(03\d{6}|70\d{6}|71\d{6}|76\d{6}|78\d{6}|79\d{6}|81\d{6})$/',
                 Rule::unique('websites', 'phone_number')->ignore($this->route('website')->id)
             ],
@@ -76,7 +76,7 @@ class UpdateWebsiteRequest extends FormRequest
             'tiktok' => ['nullable', 'url', 'max:255'],
             'youtube' => ['nullable', 'url', 'max:255'],
 
-            'about_us' => ['required', 'string', 'max:255', 'min:30'],
+            'about_us' => ['nullable', 'string', 'max:255', 'min:30'],
         ];
     }
 }
