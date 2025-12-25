@@ -90,11 +90,11 @@ const searchOrder = () => {
                         <div v-if="props.order" class="relative flex flex-col gap-8">
                             <div v-for="(track, index) in props.order.track_order" :key="track.id" class="flex items-center gap-5">
                                 <span class="bg-[var(--bg_content_hover_light)] dark:bg-[var(--bg_content_hover_dark)] backdrop-blur flex size-9 items-center justify-center rounded-full text-active z-3">
-                                    {{ index + 1 }}
+                                    {{ Number(index) + 1 }}
                                 </span>
                                 <div class="flex flex-col gap-1">
                                     <span v-html="formatters.status(track.status)"></span>
-                                    <span class="web-text-body-muted text-xs">{{ formatters.date(track.created_at) }}</span>
+                                    <span class="web-text-body-muted text-xs">{{ formatters.date(track.created_at, 'long') }}</span>
                                 </div>
                             </div>
 
