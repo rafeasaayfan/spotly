@@ -5,10 +5,13 @@ import { toast } from '@/lib/sweetAlert';
 import { SharedData } from '@/types';
 import { Head, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
-import { Ban, Info, LoaderCircle, ShoppingCart, TriangleAlert } from 'lucide-vue-next';
+import { Info, LoaderCircle, ShoppingCart, TriangleAlert } from 'lucide-vue-next';
 import { ref, watch, watchEffect } from 'vue';
-import Highlight from '../components/cards/Highlight.vue';
-import Layout from './Layout.vue';
+import Highlight from '../../components/cards/Highlight.vue';
+import Layout from '../Layout.vue';
+import VariantSteps from './sections/VariantSteps.vue';
+import VariantCards from './sections/VariantCards.vue';
+import SingleVariant from './sections/SingleVariant.vue';
 
 const props = defineProps<{
     iniProduct: Record<string, any>;
@@ -28,13 +31,15 @@ watchEffect(() => {
         toast.fire({ icon: props.flash?.toastType, title: message });
     }
 });
+const page = usePage<SharedData>();
 
 const product = ref<Record<string, any>>(props.iniProduct);
 const cartItemsCount = ref<number>(props.iniCartItemsCount);
 
-const page = usePage<SharedData>();
-
-const selectedVariant = ref<Record<string, any> | null>(null);
+const selectedVariant = ref<Record<string, any> | null>(product.value.variant_display_type === 'single' ? product.value.variants[0] : null);
+const changeSelectedVariant = (newSelectedVariant: Record<string, any> | null) => {
+    selectedVariant.value = newSelectedVariant;
+}
 
 const bigImage = ref<string>(
     selectedVariant.value
@@ -88,7 +93,19 @@ const addToCart = async () => {
             product.value = response.data.props.product;
             cartItemsCount.value = response.data.props.cartItemsCount;
 
-            selectedVariant.value = null;
+            if(product.value.variant_display_type === 'single') {
+                selectedVariant.value = product.value.variants[0];
+
+            } else {
+                const variantId = selectedVariant.value.id;
+                const variant = product.value.variants.find((variant: any) => variant.id === variantId);
+                
+                if(variant.display_quantity === 0) {
+                    selectedVariant.value = null;
+                } else {
+                    selectedVariant.value = variant;
+                }
+            }
 
             toast.fire({ icon: 'success', title: response.data.message });
         }
@@ -118,7 +135,7 @@ const addToCart = async () => {
                     product.variants ? '' : 'flex h-full w-full items-center justify-center',
                 ]"
             >
-                <div v-if="product.variants && product.variants.length > 0" class="grid grid-cols-1 gap-6 sm:grid-cols-5">
+                <div v-if="product.variants && product.variants.length > 0" class="grid grid-cols-1 gap-6 sm:grid-cols-5 lg:gap-10">
                     <!-- Images -->
                     <div class="col-span-1 flex w-full flex-col gap-1 sm:col-span-2">
                         <div class="flex flex-col items-center gap-3">
@@ -192,7 +209,7 @@ const addToCart = async () => {
                         </div>
 
                         <!-- Variants -->
-                        <div class="flex flex-col" v-if="product.variants && product.variants.length > 0">
+                        <div class="flex flex-col" v-if="['steps', 'cards'].includes(product.variant_display_type)">
                             <span
                                 class="web-text-active-link flex w-fit items-center gap-1.5 rounded-md bg-[var(--bg_content_light)] px-3 py-2 text-xs dark:bg-[var(--bg_content_dark)]"
                             >
@@ -200,81 +217,26 @@ const addToCart = async () => {
                                 {{ $t('choose.order') }}
                             </span>
 
-                            <div class="custom-scrollbar flex max-w-full gap-3 overflow-x-auto pt-4">
-                                <div
-                                    v-for="variant in product.variants"
-                                    :key="variant.id"
-                                    @click="selectedVariant = variant"
-                                    class="web-text-body flex min-w-45 cursor-pointer flex-col gap-2 rounded-md border-2 border-[var(--border_color_light)] bg-black/2 px-2 py-2 transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--primary_light)] dark:border-[var(--border_color_dark)] dark:bg-white/2 dark:hover:border-[var(--primary_dark)]"
-                                    :class="[
-                                        selectedVariant?.id === variant.id
-                                            ? '-translate-y-1 border-[var(--primary_light)] hover:-translate-y-1 dark:border-[var(--primary_dark)]'
-                                            : '',
-                                        variant.display_quantity === 0 ? 'pointer-events-none relative' : '',
-                                    ]"
-                                >
-                                    <div
-                                        v-if="variant.display_quantity === 0"
-                                        class="absolute inset-0 z-10 flex h-full w-full items-center justify-center"
-                                    >
-                                        <div
-                                            class="flex -rotate-18 items-center gap-1 rounded-md bg-red-500/10 p-2 text-sm backdrop-blur-lg dark:bg-red-500/10"
-                                        >
-                                            <Ban class="web-text-danger size-3.5" />
-                                            <span class="web-text-danger font-bold">{{ $t('out.of.stock') }}</span>
-                                        </div>
-                                    </div>
+                            <VariantSteps
+                                v-if="product.variant_display_type === 'steps'"
+                                :selectedVariant="selectedVariant"
+                                :product="product"
+                                @changeSelectedVariant="changeSelectedVariant"
+                            />
 
-                                    <div
-                                        class="web-border-color flex flex-col gap-2 border-b pb-1"
-                                        v-if="variant.display_quantity !== null || variant.price !== null"
-                                        :class="variant.display_quantity === 0 ? 'pointer-events-none opacity-50 blur-[1px]' : ''"
-                                    >
-                                        <div class="flex w-full items-center justify-between" v-if="variant.display_quantity !== null">
-                                            <span class="web-text-body-muted text-[10px] uppercase"> {{ $t('quantity') }}: </span>
-                                            <span class="web-text-active text-sm font-bold">
-                                                {{ variant.display_quantity }}
-                                            </span>
-                                        </div>
-                                        <div class="flex w-full items-center justify-between" v-if="variant.price !== null">
-                                            <span class="web-text-body-muted text-[10px] uppercase">
-                                                {{ $t('unit.price') }}
-                                            </span>
-                                            <span class="web-text-active text-sm font-bold"> {{ variant.price }}$ </span>
-                                        </div>
-                                    </div>
-
-                                    <div
-                                        v-for="attribute in variant.attributes"
-                                        :key="attribute.id"
-                                        class="flex items-center justify-between"
-                                        :class="variant.display_quantity === 0 ? 'pointer-events-none opacity-50 blur-[1px]' : ''"
-                                    >
-                                        <span class="web-text-body-muted text-[10px] uppercase"
-                                            >{{ page.props.lang === 'ar' ? attribute.attribute_name_ar : attribute.attribute_name }}:</span
-                                        >
-                                        <div class="flex flex-wrap items-center gap-2 text-sm font-medium">
-                                            <span v-if="attribute.attribute_value_id">{{
-                                                page.props.lang === 'ar' ? attribute.attribute_value_value_ar : attribute.attribute_value_value
-                                            }}</span>
-                                            <span v-else-if="attribute.color_id" class="flex items-center gap-1">
-                                                <div
-                                                    class="web-border-color size-4 rounded-full border"
-                                                    :style="{ backgroundColor: attribute.color_code }"
-                                                ></div>
-                                                {{ page.props.lang === 'ar' ? attribute.color_name_ar : attribute.color_name }}
-                                            </span>
-                                            <span v-else>{{
-                                                page.props.lang === 'ar' ? attribute.attribute_value_value_ar : attribute.attribute_value_value
-                                            }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <VariantCards
+                                v-if="product.variant_display_type === 'cards'"
+                                :selectedVariant="selectedVariant"
+                                :product="product"
+                                @changeSelectedVariant="changeSelectedVariant"
+                            />
+                        </div>
+                        <div v-else-if="product.variant_display_type === 'single'" class="flex flex-col gap-2">
+                            <SingleVariant :product="product" />
                         </div>
 
                         <!-- Quantity -->
-                        <div v-if="selectedVariant" class="flex flex-col gap-1">
+                        <div v-if="selectedVariant && selectedVariant.display_quantity !== 0" class="flex flex-col gap-1">
                             <span class="web-text-body-muted text-xs">{{ $t('quantity') }}</span>
 
                             <div class="flex flex-wrap items-center gap-1">
@@ -312,8 +274,9 @@ const addToCart = async () => {
                                 </div>
                             </div>
 
+                            <!-- Total Price -->
                             <div
-                                v-if="addToCartCondition()"
+                                v-if="addToCartCondition() && selectedVariant?.display_quantity !== 0" 
                                 class="flex w-full items-center justify-between gap-4 rounded-md bg-[var(--bg_content_hover_light)] px-2 py-2 md:px-4 dark:bg-[var(--bg_content_hover_dark)]"
                             >
                                 <span class="web-text-body text-xs md:text-sm">{{ $t('total.price') }}</span>
@@ -336,7 +299,7 @@ const addToCart = async () => {
                         </div>
 
                         <!-- Add to Cart -->
-                        <div class="web-border-color flex w-full justify-end border-t pt-4" v-if="!product.is_out_of_stock">
+                        <div class="web-border-color flex w-full justify-end border-t pt-4" v-if="!product.is_out_of_stock && selectedVariant?.display_quantity !== 0">
                             <Button
                                 type="button"
                                 class="web-bg-primary web-text-for-primary eco-glow-button"
