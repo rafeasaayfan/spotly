@@ -23,17 +23,11 @@ class MessagesController extends BaseController
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection);
 
-        $websiteNameAndLogo = [
-            'light_logo' => $this->website->light_logo,
-            'dark_logo' => $this->website->dark_logo,
-            'name' => $this->website->name,
-        ];
-
         return $this->inertiaRender(
             'pages/messages/Messages',
             [
                 'messages' => $data,
-                'websiteNameAndLogo' => $websiteNameAndLogo
+                'websiteNameAndLogo' => $this->websiteNameAndLogo()
             ],
             true,
             true

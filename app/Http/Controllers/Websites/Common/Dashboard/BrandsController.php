@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Websites\Common\Dashboard;
 
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\Websites\BaseController;
 use App\Models\Brand;
 use App\Traits\DataTableTrait;
@@ -26,17 +25,11 @@ class BrandsController extends BaseController
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection);
 
-        $websiteNameAndLogo = [
-            'light_logo' => $this->website->light_logo,
-            'dark_logo' => $this->website->dark_logo,
-            'name' => $this->website->name,
-        ];
-
         return $this->inertiaRender(
             'pages/brands/Brands',
             [
                 'brands' => $data,
-                'websiteNameAndLogo' => $websiteNameAndLogo
+                'websiteNameAndLogo' => $this->websiteNameAndLogo()
             ],
             true,
             true
@@ -106,7 +99,7 @@ class BrandsController extends BaseController
      */
     public function update(UpdateBrandRequest $request, Brand $brand)
     {
-        if ($brand->website_id !== $this->website->id) return;
+        if ($brand->website_id !== $this->website->id) return $this->backError('You are not authorized to update this attribute');
 
         try {
             $validated = $request->validated();

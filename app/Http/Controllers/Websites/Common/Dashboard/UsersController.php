@@ -32,17 +32,11 @@ class UsersController extends BaseController
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection);
 
-        $websiteNameAndLogo = [
-            'light_logo' => $this->website->light_logo,
-            'dark_logo' => $this->website->dark_logo,
-            'name' => $this->website->name,
-        ];
-
         return $this->inertiaRender(
             'pages/users/Users',
             [
                 'users' => $data,
-                'websiteNameAndLogo' => $websiteNameAndLogo
+                'websiteNameAndLogo' => $this->websiteNameAndLogo()
             ],
             true,
             true
@@ -157,13 +151,11 @@ class UsersController extends BaseController
     {
         if ($user->website_id !== $this->website->id) return;
 
-        if ($user->role === 'owner') {
+        if ($user->role->value === 'owner') {
             return $this->backError('To update the owner profile, please use the profile settings in Spotly Settings');
         }
 
         try {
-            $oldStatus = $user->status;
-
             $validated = $request->validated();
 
             if (!empty($validated['password'])) {
@@ -173,18 +165,6 @@ class UsersController extends BaseController
             }
 
             $user->update($validated);
-
-            if ($oldStatus !== $validated['status']) {
-                UserStatusMailJob::dispatch(
-                    $this->website->email,
-                    $this->website->name,
-                    $this->website->subdomain,
-                    $this->website->websiteType->type,
-                    $user->email,
-                    $user->name,
-                    $validated['status']
-                );
-            }
 
             return $this->redirectSuccess('dashboard.users.index', 'User updated successfully', forWebsite: true);
         } catch (\Exception $e) {
@@ -273,9 +253,10 @@ class UsersController extends BaseController
             if ($user->role === UserRole::OWNER) {
                 return $this->backError('You cannot change the owner role!');
             }
-            if ($validated['role'] === UserRole::OWNER) {
+            if ($validated['role'] === UserRole::OWNER->value) {
                 return $this->backError('There can only be one owner per website!');
             }
+
             $user->update(['role' => $validated['role']]);
 
             if ($validated['role'] === UserRole::ADMIN) {

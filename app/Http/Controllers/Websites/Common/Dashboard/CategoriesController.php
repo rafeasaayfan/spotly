@@ -25,17 +25,11 @@ class CategoriesController extends BaseController
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, ['parent_name']);
 
-        $websiteNameAndLogo = [
-            'light_logo' => $this->website->light_logo,
-            'dark_logo' => $this->website->dark_logo,
-            'name' => $this->website->name,
-        ];
-
         return $this->inertiaRender(
             'pages/categories/Categories',
             [
                 'categories' => $data,
-                'websiteNameAndLogo' => $websiteNameAndLogo
+                'websiteNameAndLogo' => $this->websiteNameAndLogo()
             ],
             true,
             true
