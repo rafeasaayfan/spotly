@@ -13,6 +13,7 @@ import OrderStatusActions from './sections/OrderStatusActions.vue';
 
 const props = defineProps<{
     orders: DataTableProps;
+    orderStats: Record<string, any>;
     colors: Record<string, string>;
     websiteNameAndLogo: Record<string, string>;
     websiteFooterData: Record<string, string>;
@@ -38,7 +39,7 @@ interface Filter {
     search: string;
     sort_by: string;
     sort_dir: string;
-    page: number,
+    page: number;
 }
 const filter = ref<Filter>({
     search: query?.search ? String(query.search) : '',
@@ -82,8 +83,8 @@ const fetchFilter = (newFilter: Filter) => {
 const goToPage = (page: number) => {
     filter.value.page = page;
 
-    fetchFilter(filter.value)
-}
+    fetchFilter(filter.value);
+};
 
 const processing = ref(false);
 const fetchOrders = (newStatus: string) => {
@@ -198,6 +199,7 @@ const handleDialogCancel = async (orderId: number) => {
 
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-5">
                 <OrderStatusActions
+                    :orderStats="props.orderStats"
                     :fetchOrders="fetchOrders"
                     :status="status"
                     :processing="processing || processingFilter || cancelOrderProcessing"

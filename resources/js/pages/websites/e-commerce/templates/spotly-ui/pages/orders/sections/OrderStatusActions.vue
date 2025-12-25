@@ -5,6 +5,7 @@ import { CheckCircle2, Clock, PackageCheck, RotateCcw, XCircle, Ban } from 'luci
 import { computed } from 'vue';
 
 const props = defineProps<{
+    orderStats: Record<string, any>;
     fetchOrders: (newStatus: string) => any;
     status: string;
     processing: boolean
@@ -17,36 +18,42 @@ const statusFilters = [
         name: 'pending',
         icon: Clock,
         active: 'web-text-active',
+        count: props.orderStats['pending']
     },
     {
         title: page.props.lang === 'ar' ? 'تم التأكيد' : 'Confirmed',
         name: 'confirmed',
         icon: CheckCircle2,
         active: 'text-green-600',
+        count: props.orderStats['confirmed']
     },
     {
         title: page.props.lang === 'ar' ? 'تم التوصيل' : 'Delivered',
         name: 'delivered',
         icon: PackageCheck,
         active: 'web-text-active-link',
+        count: props.orderStats['delivered']
     },
     {
         title: page.props.lang === 'ar' ? 'تم الرفض' : 'Rejected',
         name: 'rejected',
         icon: XCircle,
         active: 'text-pink-600', 
+        count: props.orderStats['rejected']
     },
     {
         title: page.props.lang === 'ar' ? 'تم الإلغاء' : 'Cancelled',
         name: 'cancelled',
         icon: Ban,
         active: 'web-text-danger',
+        count: props.orderStats['cancelled']
     },
     {
         title: page.props.lang === 'ar' ? 'تم الاسترداد' : 'Refunded',
         name: 'refunded',
         icon: RotateCcw,
         active: 'text-orange-600',
+        count: props.orderStats['refunded']
     },
 ];
 
@@ -73,7 +80,10 @@ const isProcessing = computed(() => props.processing);
             ]"
         >
             <component :is="item.icon" class="size-3.5 lg:size-4.5" />
-            <span>{{ item.title }}</span>
+            <span class="flex items-center gap-2">
+                <span>{{ item.title }}</span>
+                <span class="text-xs web-text-body-muted">( {{ item.count }} )</span>
+            </span>
         </div>
     </div>
 </template>
