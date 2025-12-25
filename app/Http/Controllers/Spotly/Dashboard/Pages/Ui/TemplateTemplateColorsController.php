@@ -27,7 +27,12 @@ class TemplateTemplateColorsController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
-        return $this->inertiaRender('dashboard/pages/ui/templateTemplateColors/TemplateTemplateColors', ['templateTemplateColors' => $data]);
+        return $this->inertiaRender(
+            'dashboard/pages/ui/templateTemplateColors/TemplateTemplateColors',
+            [
+                'templateTemplateColors' => $data
+            ]
+        );
     }
 
     /**
@@ -97,7 +102,7 @@ class TemplateTemplateColorsController extends Controller
     public function edit(string $id)
     {
         try {
-            $templateTemplateColor = TemplateTemplateColor::with('media')->findOrFail($id);
+            $templateTemplateColor = TemplateTemplateColor::findOrFail($id);
 
             $templates = $this->getRelation('template', ['name']);
             $templateColors = $this->getRelation('templateColor', ['name']);
@@ -126,7 +131,7 @@ class TemplateTemplateColorsController extends Controller
 
             $templateTemplateColor->fill($validated);
 
-            $templateTemplateColor->updateMediaImages($imagesData, 'uiImages', false);
+            $templateTemplateColor->updateMediaImages($imagesData, 'uiImages');
 
             $templateTemplateColor->save();
 
