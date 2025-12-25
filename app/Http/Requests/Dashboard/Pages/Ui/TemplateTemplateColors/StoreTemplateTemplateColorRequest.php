@@ -15,7 +15,7 @@ class StoreTemplateTemplateColorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'website_type_id' => ['required', 'exists:website_types,id,is_active,1'],
+            'website_type_id' => ['required', 'exists:website_types,id'],
             'template_id' => [
                 'required',
                 'exists:templates,id,is_active,1',
