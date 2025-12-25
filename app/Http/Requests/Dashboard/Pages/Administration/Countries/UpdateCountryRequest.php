@@ -15,7 +15,13 @@ class UpdateCountryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'flag' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:600'],
+            'flag' => array_merge(
+                ['required'],
+                $this->hasFile('flag') 
+                    ? ['file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:600']
+                    : ['string', 'max:255']
+            ),
+            
             'country' => [
                 'required',
                 'string',
