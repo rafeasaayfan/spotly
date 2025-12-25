@@ -147,7 +147,7 @@ function submit() {
         </DialogClose>
         <Button type="submit" :disabled="form.processing" @click="submit">
             <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-            <span>Create</span>
+            <span>Update</span>
         </Button>
     </DialogFooter>
 </template>
