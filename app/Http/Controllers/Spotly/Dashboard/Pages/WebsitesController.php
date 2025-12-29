@@ -32,7 +32,12 @@ class WebsitesController extends Controller
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
-        return $this->inertiaRender('dashboard/pages/websites/Websites', ['websites' => $data]);
+        return $this->inertiaRender(
+            'dashboard/pages/websites/Websites', 
+            [
+                'websites' => $data
+            ]
+        );
     }
 
     /**
