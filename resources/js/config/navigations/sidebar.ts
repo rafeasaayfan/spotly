@@ -20,7 +20,7 @@ export const mainSidebarItems = (): SidebarSection[] => {
             ],
         },
         {
-            name: page.props?.lang === 'ar' ? 'لوحة التحكم' : 'Control Panel',
+            name: page.props?.lang === 'ar' ? 'عملي' : 'My Business',
             items: [
                 {
                     title: page.props?.lang === 'ar' ? 'لوحة الإحصاءات' : 'Statistics',
