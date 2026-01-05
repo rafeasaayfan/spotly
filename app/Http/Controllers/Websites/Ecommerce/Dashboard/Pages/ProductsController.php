@@ -200,7 +200,16 @@ class ProductsController extends BaseController
                 'ids.*' => 'integer|exists:ecommerce_products,id,website_id,' . $this->website->id,
             ]);
 
-            EcommerceProduct::destroy($validated['ids']);
+            EcommerceProduct::whereIn('id', $validated['ids'])
+                ->with('variants') 
+                ->chunkById(20, function ($products) {
+                    foreach ($products as $product) {
+                        foreach ($product->variants as $variant) {
+                            $variant->delete();
+                        }
+                        $product->delete();
+                    }
+                });
 
             return $this->backSuccess('Product(s) deleted successfully');
         } catch (\Exception $e) {
