@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('subdomain')->unique();
             $table->string('phone_number')->nullable();
             $table->string('email')->unique()->nullable();
+            $table->timestamp('email_verified_at')->nullable();
 
             $table->text('about_us')->nullable();
             $table->text('about_us_ar')->nullable();
