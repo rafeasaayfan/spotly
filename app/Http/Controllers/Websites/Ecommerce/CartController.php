@@ -85,6 +85,7 @@ class CartController extends BaseController
                 $this->website->id,
                 $this->website->name,
                 $this->website->email,
+                $this->website->email_verified_at ? true : false,
                 $this->website->subdomain
             );
             if (is_string($result)) {
