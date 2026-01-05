@@ -48,6 +48,23 @@
 .landing-body .bg-content-active {
     background-color: var(--landing-content-bg-active);
 }
+
+
+.bg-landing-content-2 {
+    background-color: var(--content-2-bg);
+}
+
+.bg-landing-content-2:hover {
+    background-color: var(--landing-content-bg-hover);
+}
+
+.bg-landing-content-2:active {
+    background-color: var(--landing-content-bg-active);
+}
+
+.bg-landing-content-2-active {
+    background-color: var(--landing-content-bg-active);
+}
 /* // */
 
 
