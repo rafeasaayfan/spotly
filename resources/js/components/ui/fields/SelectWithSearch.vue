@@ -30,11 +30,13 @@ const props = withDefaults(defineProps<{
     parentClass?: HTMLAttributes['class']
     class?: HTMLAttributes['class']
     classDropdown?: HTMLAttributes['class']
+    dropdownItemClass?: HTMLAttributes['class']
     searchClass?: HTMLAttributes['class']
     name?: string
     id?: string
     withReset?: boolean
 }>(), {
+    dropdownItemClass: 'bg-content-2',
     withReset: true,
 })
 
@@ -160,8 +162,8 @@ const page = usePage<SharedData>()
                 <!-- Options List -->
                 <div v-for="option in filteredOptions" :key="option.value" @click="selectOption(option.value)" :class="cn(
                     'flex items-center gap-2 cursor-pointer px-3 py-2 text-sm rounded-md',
-                    'transition-all duration-100 ease-in-out bg-content-2 text-body',
-                    'hover:font-medium',
+                    'transition-all duration-100 ease-in-out text-body',
+                    'hover:font-medium', props.dropdownItemClass,
                     {
                         'font-semibold text-active-link': option.value === props.modelValue
                     }

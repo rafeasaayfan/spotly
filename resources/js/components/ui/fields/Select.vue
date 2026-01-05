@@ -19,9 +19,11 @@ const props = withDefaults(defineProps<{
   parentClass?: HTMLAttributes['class']
   class?: HTMLAttributes['class']
   dropdownClass?: HTMLAttributes['class']
+  dropdownItemClass?: HTMLAttributes['class']
   withStatusColors?: boolean
   withReset?: boolean
 }>(), {
+  dropdownItemClass: 'bg-content-2',
   withStatusColors: false,
   withReset: true,
 })
@@ -131,8 +133,8 @@ const page = usePage<SharedData>();
         <!-- Custom dropdown -->
         <div v-for="option in options" :key="option.value" @click="selectOption(option)" :class="cn(
           'flex items-center gap-2 cursor-pointer px-3 py-2 text-sm rounded-md',
-          'transition-all duration-100 ease-in-out bg-content-2 text-body',
-          'hover:font-medium',
+          'transition-all duration-100 ease-in-out text-body',
+          'hover:font-medium', props.dropdownItemClass,
           {
             'font-semibold text-active-link': option.value === modelValue
           }
