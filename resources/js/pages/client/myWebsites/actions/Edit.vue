@@ -11,6 +11,7 @@ import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { AlertTriangle, Building2, Facebook, Flag, Info, Instagram, Languages, LoaderCircle, Locate, Mail, Phone, Youtube } from 'lucide-vue-next';
 import { watchEffect } from 'vue';
 import Delete from './Delete.vue';
+import VerifyEmail from './VerifyEmail.vue';
 
 const page = usePage<SharedData>();
 
@@ -155,10 +156,32 @@ const activate = (toggleVal: boolean) => {
                     </div>
 
                     <div class="flex flex-col gap-1">
-                        <Label for="email" class="text-body-muted mb-1 text-xs">
-                            <Mail class="size-3.5" />
-                            {{ $t('email') }}
-                        </Label>
+                        <div class="flex gap-2">
+                            <Label for="email" class="text-body-muted mb-1 text-xs">
+                                <Mail class="size-3.5" />
+                                {{ $t('email') }}
+                            </Label>
+
+                            <p v-if="props.website.email_verified_at && props.website.email" class="text-active-link text-xs font-bold">Verified</p>
+                            <Dialog v-else-if="!props.website.email_verified_at && props.website.email">
+                                <DialogTrigger as-child>
+                                    <p class="text-active-link-2 cursor-pointer text-xs font-bold hover:underline">{{ $t('myWebsites.verify_now') }}</p>
+                                </DialogTrigger>
+
+                                <DialogScrollContent>
+                                    <DialogHeader>
+                                        <DialogTitle>{{ $t('myWebsites.verify_your') }} {{ props.website.name }} {{ $t('email') }}: 
+                                            <span class="text-active-link">{{ props.website.email }}</span>
+                                        </DialogTitle>
+                                        <DialogDescription class="sr-only"> No description provided. </DialogDescription>
+                                    </DialogHeader>
+
+                                    <VerifyEmail :websiteId="props.website.id" />
+                                </DialogScrollContent>
+                            </Dialog>
+                            <!-- <div v-html="formatters.emailVerified(props.website.email_verified_at)" class="!px-0"></div> -->
+                        </div>
+
                         <Input type="email" id="email" v-model="form.email" placeholder="contact@yourbusiness.com" required />
                         <InputError v-if="form.errors?.email" :message="form.errors.email" />
                     </div>
@@ -301,7 +324,7 @@ const activate = (toggleVal: boolean) => {
 
                     <DialogScrollContent>
                         <DialogHeader>
-                            <DialogTitle>Delete {{ props.website.name }}</DialogTitle>
+                            <DialogTitle>{{ $t('delete') }} {{ props.website.name }}</DialogTitle>
                             <DialogDescription class="sr-only"> No description provided. </DialogDescription>
                         </DialogHeader>
 
