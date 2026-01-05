@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { SharedData } from '@/types';
 import { usePage } from '@inertiajs/vue3';
-import { CheckCheck, LucideGlobe } from 'lucide-vue-next';
+import { CheckCheck, Languages } from 'lucide-vue-next';
 import Image from '../ui/image/Image.vue';
 
 const props = withDefaults(
@@ -39,7 +39,7 @@ const changeLanguage = (lang: string) => {
     <DropdownMenu>
         <DropdownMenuTrigger as-child>
             <Button variant="ghost" size="icon" class="rounded-full">
-                <LucideGlobe class="size-5" />
+                <Languages class="size-5" />
                 <!-- <span class="block rounded-md px-3 py-2 md:hidden">Languages</span> -->
             </Button>
         </DropdownMenuTrigger>

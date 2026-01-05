@@ -12,7 +12,7 @@ import {
 import Image from '@/components/ui/image/Image.vue';
 import { SharedData } from '@/types';
 import { usePage } from '@inertiajs/vue3';
-import { CheckCheck, LucideGlobe } from 'lucide-vue-next';
+import { CheckCheck, Languages } from 'lucide-vue-next';
 
 const languages = [
     { key: 'العربية', value: 'ar', src: '/images/flags/ar.avif' },
@@ -30,7 +30,7 @@ const changeLanguage = (lang: string) => {
     <DropdownMenu>
         <DropdownMenuTrigger as-child>
             <Button variant="ghost" size="icon" class="rounded-full web-bg-content web-text-muted-body">
-                <LucideGlobe class="size-5" />
+                <Languages class="size-5" />
             </Button>
         </DropdownMenuTrigger>
 
