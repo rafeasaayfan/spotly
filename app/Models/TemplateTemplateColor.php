@@ -45,6 +45,14 @@ class TemplateTemplateColor extends Model implements HasMedia
     }
 
     /**
+     * Scope a query to only include active resource.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', 1);
+    }
+
+    /**
      * Get the uiImages from media.
      */
     public function getUiImagesAttribute()
