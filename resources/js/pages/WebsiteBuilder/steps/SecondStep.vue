@@ -142,6 +142,8 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
                     v-model="country"
                     :placeholder="$t('websiteBuilder.secondStep.country_placeholder')"
                     :options="mappedCountries"
+                    dropdownItemClass="bg-landing-content-2"
+                    searchClass="bg-[var(--field-landing)]"
                     class="h-10"
                     :withReset="false"
                 />
@@ -155,9 +157,11 @@ const mappedCountryPhones = props.countries.map((item: any) => ({
                 <SelectWithSearch
                     v-model="city"
                     :placeholder="$t('websiteBuilder.secondStep.city_placeholder')"
+                    dropdownItemClass="bg-landing-content-2"
+                    searchClass="bg-[var(--field-landing)]"
                     :options="
                         Object.entries(props.cities).map(([key, city]: [string, any]) => ({
-                            value: key, 
+                            value: key,
                             label: page.props.lang === 'ar' ? city.ar : city.en,
                         }))
                     "

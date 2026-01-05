@@ -104,6 +104,8 @@ const languages = () => {
                 <SelectWithSearch
                     v-model="website_type_id"
                     :placeholder="$t('websiteBuilder.firstStep.website_type_placeholder')"
+                    dropdownItemClass="bg-landing-content-2"
+                    searchClass="bg-[var(--field-landing)]"
                     :options="mappedTypes"
                     class="h-10"
                     :withReset="false"
@@ -120,7 +122,13 @@ const languages = () => {
                 :description="$t('websiteBuilder.firstStep.primary_language_description')"
             />
             <div class="flex flex-col gap-1 ps-2">
-                <Select v-model="language" :placeholder="$t('websiteBuilder.firstStep.primary_language_placeholder')" class="h-10" :withReset="false">
+                <Select
+                    v-model="language"
+                    :placeholder="$t('websiteBuilder.firstStep.primary_language_placeholder')"
+                    dropdownItemClass="bg-landing-content-2"
+                    class="h-10"
+                    :withReset="false"
+                >
                     <option v-for="option in languages()" :key="option.label" :value="option.value" selected>
                         {{ option.label }}
                     </option>

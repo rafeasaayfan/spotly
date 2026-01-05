@@ -84,7 +84,7 @@ const checkIfRequiredFieldsAreFilled = () => {
             }
             break;
         case 2:
-            if (form.email) {
+            if (form.email && form.phone_number) {
                 isFormValid.value = true;
                 return;
             }
@@ -192,7 +192,7 @@ const fetchNewType = async () => {
                                 <div class="flex items-center space-x-2">
                                     <AppearenceBtn />
 
-                                    <LanguagesMenu />
+                                    <LanguagesMenu :forLanding="true" />
                                 </div>
                             </div>
 

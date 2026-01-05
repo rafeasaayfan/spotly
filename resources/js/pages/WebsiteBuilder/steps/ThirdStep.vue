@@ -23,6 +23,13 @@ const emit = defineEmits<{
     (e: 'update', field: string, value: string | boolean | Record<string, any> | File): void;
 }>();
 
+const uniqueTemplateTemplateColors = computed(() => {
+    return props.templateTemplateColors.filter(
+        (item: any, index: number, self: any[]) =>
+            self.findIndex((t) => t.template_id === item.template_id) === index
+    );
+});
+
 const selectedtemplateTemplateColors = ref<Record<string, any>>([]);
 const animate = ref(false);
 
@@ -160,7 +167,7 @@ const updateField = (field: string, value: any) => {
 
             <div class="custom-scrollbar flex w-full items-center gap-3 overflow-x-auto p-2">
                 <TemplateBtn
-                    v-for="templateTemplateColor in props.templateTemplateColors"
+                    v-for="templateTemplateColor in uniqueTemplateTemplateColors"
                     :key="templateTemplateColor.id"
                     :templateId="templateTemplateColor.template.id"
                     :selectedTemplateId="template_id"
