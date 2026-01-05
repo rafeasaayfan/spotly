@@ -103,7 +103,7 @@ export const mainSidebarItems = (): SidebarSection[] => {
                             href: '/dashboard/ui/template-colors',
                         },
                         {
-                            title: 'Template Template Colors',
+                            title: 'Template with Colors',
                             href: '/dashboard/ui/template-template-colors',
                         },
                     ],

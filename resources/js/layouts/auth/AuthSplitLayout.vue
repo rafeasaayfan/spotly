@@ -19,18 +19,22 @@ defineProps<{
 </script>
 
 <template>
-    <div class="landing-body relative grid h-screen flex-col items-center justify-center px-4 sm:px-0 lg:max-w-none lg:grid-cols-2 lg:px-0">
-        <div class="border-muted relative hidden h-full flex-col border-e p-10 lg:flex items-center justify-center">
-            <div class="bg-[var(--secondary-background)] dark:bg-[var(--background)] absolute inset-0" />
+    <div class="landing-body relative grid h-screen flex-col items-center justify-center px-4 sm:px-0 lg:max-w-none lg:grid-cols-3 lg:px-0">
+        <div class="relative hidden h-full lg:flex flex-col items-center justify-center border-muted border-e-5 border-double col-span-1">
+            <div :class="page.props.lang === 'ar' ? 'bg-gradient-to-l' : 'bg-gradient-to-r'" class="from-[var(--secondary-background)] dark:from-[var(--background)] absolute inset-0" />
 
-            <div class="absolute top-0 start-0 w-full h-full flex items-center justify-center">
-                <div class="bg-[var(--background)] dark:bg-gray-950 rounded-full size-130 blur-xl opacity-60"></div>
-            </div>
+                <Link href="/" class="z-10">
+                    <AppLogoIcon class="size-65 fill-current" />
+                </Link>
 
-            <Link href="/" class="z-20 flex flex-col items-center justify-center gap-2 font-medium pb-10">
-                <AppLogoIcon class="size-86 fill-current" />
-                <span class="text-active text-6xl font-extrabold tracking-widest">{{ page.props.lang === 'ar' ? 'سبوتلي' : name }}</span>
-            </Link>
+                <!-- <div class="bg-[var(--background)] dark:bg-gray-950 rounded-full size-130 blur-xl opacity-60"></div> -->
+
+                <Link href="/" class="border-muted rounded-md border-double z-10">
+                    <span class="text-active text-5xl font-bold tracking-widest ">{{
+                        page.props.lang === 'ar' ? 'سبوتلي' : name
+                    }}</span>
+                </Link>
+
             <!-- <div v-if="quote" class="relative z-20 mt-auto">
                 <blockquote class="space-y-2">
                     <p class="text-lg">&ldquo;{{ quote.message }}&rdquo;</p>
@@ -39,10 +43,11 @@ defineProps<{
             </div> -->
         </div>
 
-        <div class="pb-5 lg:p-8">
+        <div class="pb-5 lg:p-8 col-span-2">
             <div class="mx-auto flex w-full flex-col justify-center space-y-5 sm:w-[350px]">
-                <Link :href="route('landing')" class="relative z-20 flex lg:hidden h-full items-center justify-center gap-2 font-medium 
-                    bg-body rounded-b-md py-3"
+                <Link
+                    :href="route('landing')"
+                    class="bg-body relative z-20 flex h-full items-center justify-center gap-2 rounded-b-md py-3 font-medium lg:hidden"
                 >
                     <AppLogoIcon class="size-24 fill-current" />
                 </Link>
