@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Actions\DeleteWebsiteData;
 use App\Enums\Spotly\WebsiteStatus;
 use App\Traits\HasMediaUploads;
 use Illuminate\Database\Eloquent\Model;
@@ -23,6 +24,7 @@ class Website extends Model implements HasMedia
         'subdomain',
         'phone_number',
         'email',
+        'email_verified_at',
 
         'about_us',
         'about_us_ar',
@@ -48,6 +50,14 @@ class Website extends Model implements HasMedia
     protected $casts = [
         'status' => WebsiteStatus::class,
     ];
+
+    //! On Delete The Website
+    protected static function booted()
+    {
+        static::deleting(function ($website) {
+            app(DeleteWebsiteData::class)->handle($website);
+        });
+    }
 
     /**
      * The website has owner.
@@ -188,5 +198,13 @@ class Website extends Model implements HasMedia
     public function ecommerceOrders()
     {
         return $this->hasMany(EcommerceOrder::class, 'website_id');
+    }
+
+    /**
+     * Get the products for the website.
+     */
+    public function ecommerceProducts()
+    {
+        return $this->hasMany(EcommerceProduct::class, 'website_id');
     }
 }
