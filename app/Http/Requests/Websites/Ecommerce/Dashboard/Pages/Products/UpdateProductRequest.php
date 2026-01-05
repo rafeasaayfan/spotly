@@ -103,32 +103,44 @@ class UpdateProductRequest extends FormRequest
                     'array',
                     $activeWebsiteAttributes > 0 ? 'min:1' : 'max:0',
                 ]),
-                $activeWebsiteAttributes > 0 ? [
+                [
                     function ($attribute, $value, $fail) use ($activeWebsiteAttributes) {
+                        // Get the variants count
+                        $variants = $this->input('variants', []);
+                        $variantsCount = count($variants);
+
                         // Extract variant index from attribute name (e.g., "variants.0.attributes" -> 0)
                         preg_match('/variants\.(\d+)\.attributes/', $attribute, $matches);
                         $variantIndex = isset($matches[1]) ? (int)$matches[1] : null;
                         $variantNumber = $variantIndex !== null ? $variantIndex + 1 : '';
                         $variantPrefix = $variantNumber ? "Variant {$variantNumber}: " : '';
 
-                        if (!is_array($value) || empty($value)) {
-                            return $fail("{$variantPrefix}At least one attribute must be provided.");
+                        // If there's only one variant, allow empty attributes
+                        if ($variantsCount === 1) {
+                            return;
                         }
 
-                        // Check if at least one attribute has a non-null value
-                        $hasValidValue = false;
-                        foreach ($value as $attr) {
-                            if (isset($attr['value']) && $attr['value'] !== null && $attr['value'] !== '') {
-                                $hasValidValue = true;
-                                break;
+                        // If there are multiple variants, require at least one attribute with a non-null value
+                        if ($variantsCount > 1) {
+                            if (!is_array($value) || empty($value)) {
+                                return $fail("{$variantPrefix}At least one attribute must be provided.");
+                            }
+
+                            // Check if at least one attribute has a non-null value
+                            $hasValidValue = false;
+                            foreach ($value as $attr) {
+                                if (isset($attr['value']) && $attr['value'] !== null && $attr['value'] !== '') {
+                                    $hasValidValue = true;
+                                    break;
+                                }
+                            }
+
+                            if (!$hasValidValue) {
+                                return $fail("{$variantPrefix}At least one attribute must have a non-null value.");
                             }
                         }
-
-                        if (!$hasValidValue) {
-                            return $fail("{$variantPrefix}At least one attribute must have a non-null value.");
-                        }
                     }
-                ] : []
+                ]
             ),
             'variants.*.attributes.*.id' => [
                 'nullable',
