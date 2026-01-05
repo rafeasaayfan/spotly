@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Spotly\Client\Websites\Actions;
 
+use App\Enums\Spotly\OtpType;
 use App\Http\Controllers\Controller;
 use App\Models\Website;
 use Illuminate\Support\Facades\Auth;
@@ -25,8 +26,9 @@ class DeleteWebsiteController extends Controller
         try {
             $otpService = new OtpService(
                 Auth::user(),    
-                $website->id,        
-                'delete_website'     
+                $website->id,     
+                null,  
+                OtpType::DELETE_WEBSITE
             );
             if ($otpService->verify($validate['code'])) {
                 $website->delete();
@@ -54,8 +56,9 @@ class DeleteWebsiteController extends Controller
 
             $otpService = new OtpService(
                 Auth::user(),    
-                $website->id,        
-                'delete_website'     
+                $website->id,      
+                null,  
+                OtpType::DELETE_WEBSITE
             );
             $result = $otpService->sendCode();
 
@@ -81,8 +84,9 @@ class DeleteWebsiteController extends Controller
         try {
             $otpService = new OtpService(
                 Auth::user(),    
-                $website->id,        
-                'delete_website'     
+                $website->id,     
+                null,  
+                OtpType::DELETE_WEBSITE
             );
             $timer = $otpService->checkLastOtp($website);
             if ($timer) {
