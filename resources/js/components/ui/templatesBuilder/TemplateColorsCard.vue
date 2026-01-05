@@ -39,16 +39,22 @@ const preview = (action: 'create' | 'view', templateName: string, colors: Record
 </script>
 
 <template>
-    <div v-if="props.isDefault && props.item !== undefined && props.selectedTemplateColorId !== undefined"
+    <div 
+        v-if="props.isDefault && props.item !== undefined && props.selectedTemplateColorId !== undefined"
         class="backdrop-blur border-[var(--border)] relative flex min-h-[280px] min-w-[450px] max-h-[280px] 
-        max-w-[450px] flex-col rounded-lg border bg-black/3 transition-all duration-200 
-        ease-in-out hover:-translate-y-1 hover:bg-black/4 dark:bg-white/3 dark:hover:bg-white/4"
-        :class="props.selectedTemplateColorId === props.item.template_color.id ? 
-        '-translate-y-1 bg-black/6 dark:bg-white/6' : ''
-        ">
+            max-w-[450px] flex-col rounded-lg border bg-black/3 transition-all duration-200 
+            ease-in-out hover:-translate-y-1 hover:bg-black/4 dark:bg-white/3 dark:hover:bg-white/4"
+        :class="[props.selectedTemplateColorId === props.item.template_color.id ? 
+            '-translate-y-1' : '']"
+    >
 
-        <div class="z-20 flex items-center justify-between rounded-md bg-black/1 p-2">
-            <span class="text-active text-lg">
+        <div class="z-20 flex items-center justify-between rounded-md bg-black/1 p-3">
+            <span 
+                class="text-active text-lg" 
+               :class="[
+                    props.selectedTemplateColorId === props.item.template_color.id ? 'font-bold' : ''
+                ]"
+            >
                 {{ props.item.template_color.name }}
             </span>
 
@@ -70,14 +76,17 @@ const preview = (action: 'create' | 'view', templateName: string, colors: Record
                     <View v-if="modalType === 'view' && previewData" :data="previewData" @close="closeModals" />
                 </Dialog>
 
-                <button type="button"
-                    class="bg-[var(--primary)]/60 flex cursor-pointer items-center justify-center rounded-md text-xs backdrop-blur-3xl"
-                    @click="selectingItem(item, false)">
+                <button 
+                    type="button"
+                    class="flex cursor-pointer items-center justify-center rounded-md text-xs backdrop-blur-3xl"
+                    @click="selectingItem(item, false)"
+                >
                     <div v-if="selectedTemplateColorId === props.item.template_color.id"
-                        class="h-full w-full rounded-md bg-gradient-to-r from-[var(--primary)] via-[var(--primary-hover)] to-[var(--primary-active)] px-3 py-2 font-bold text-white">
+                        class="bg-primary text-white h-full w-full rounded-md opacity-100 font-bold px-3 py-2"
+                    >
                         {{ $t('template.btn.selected') }}
                     </div>
-                    <div v-else class="bg-content h-full w-full rounded-md px-3 py-2">{{ $t('template.btn.select') }}</div>
+                    <div v-else class="bg-primary text-white opacity-50 h-full w-full rounded-md px-3 py-2">{{ $t('template.btn.select') }}</div>
                 </button>
             </div>
         </div>
@@ -88,7 +97,8 @@ const preview = (action: 'create' | 'view', templateName: string, colors: Record
     <div v-else-if="!props.isDefault && props.colors !== undefined && props.templateTemplateColors !== undefined"
         class="backdrop-blur border-muted relative flex min-h-[280px] min-w-[450px] max-h-[280px] max-w-[450px] flex-col rounded-lg border 
         bg-black/3 transition-all duration-200 ease-in-out hover:-translate-y-1 hover:bg-black/4 dark:bg-white/3 dark:hover:bg-white/4"
-        :class="props.custom_template_color || Object.keys(props.colors).length > 0 ? '-translate-y-1' : 'hidden'">
+        :class="props.custom_template_color || Object.keys(props.colors).length > 0 ? '-translate-y-1' : 'hidden'"
+    >
 
         <div class="z-20 flex items-center justify-between rounded-md p-2">
             <span class="text-active text-lg">
