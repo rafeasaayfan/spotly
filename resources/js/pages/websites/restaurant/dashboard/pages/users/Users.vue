@@ -106,15 +106,15 @@ const tableConditions = {
 <template>
     <Head title="Users" />
 
-    <DashboardLayout :breadcrumbs="breadcrumbs" dashboardFor="e-commerce" :websiteNameAndLogo="props.websiteNameAndLogo">
+    <DashboardLayout :breadcrumbs="breadcrumbs" dashboardFor="restaurant" :websiteNameAndLogo="props.websiteNameAndLogo">
         <DataTable
             :tableData="props.users"
             :filter="filter"
             :columns="columns"
-            routeName="website.e-commerce.dashboard.users"
+            routeName="website.restaurant.dashboard.users"
             :tableConditions="tableConditions"
             path="users"
-            dashboardFor="e-commerce"
+            dashboardFor="restaurant"
         />
     </DashboardLayout>
 </template>

@@ -11,7 +11,6 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::middleware('websiteUserRole:owner')->group(function () {
         //* Users
         dashboardPagesRoutes('users', UsersController::class);
-        Route::patch('users/{id}/is_active', [UsersController::class, 'toggleActive'])->name('brands.is_active');
         Route::patch('users/{id}/status', [UsersController::class, 'changeStatus'])->name('users.status');
         Route::patch('users/{id}/role', [UsersController::class, 'changeRole'])->name('users.role');
     });

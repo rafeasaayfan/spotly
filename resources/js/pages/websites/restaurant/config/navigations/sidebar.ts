@@ -32,11 +32,6 @@ export const mainSidebarItems: SidebarSection[] = [
                 icon: icons.FolderTree,
             },
             {
-                title: 'Brands',
-                href: '/dashboard/brands',
-                icon: icons.Tags,
-            },
-            {
                 title: 'Delivery Fees',
                 href: '/dashboard/delivery-fees',
                 icon: icons.Truck,

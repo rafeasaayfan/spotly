@@ -1,19 +1,31 @@
 <?php
 
+use App\Http\Controllers\Websites\Restaurant\HomeController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 
 Route::name('restaurant.')->group(function () {
-    Route::get('/', function () {
-        return Inertia::render('websites/restaurant/templates/spotly-ui/pages/home/Home');
-    })->name('home');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::put('/contactUs', [HomeController::class, 'contactUs'])->name('contactMessages');
 
-    Route::get('/shop', function () {
-        return Inertia::render('websites/restaurant/templates/spotly-ui/pages/shop/Shop');
-    })->name('shop');
+    // Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 
-    // Route::middleware(['auth:website', 'verified:website.verification.notice', 'websiteUserRole:admin'])->group(function () {
-    //     require __DIR__ . '/dashboard.php';
-    //     require __DIR__ . '/../common/dashboard.php';
-    // });
+    // Route::get('/product/{slug}', [ProductController::class, 'index'])->name('product');
+    // Route::post('/addToCart', [ProductController::class, 'addToCart'])->name('addToCart');
+
+    // Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    // Route::delete('/cart/removeItem', [CartController::class, 'removeItem'])->name('cart.removeItem');
+    // Route::patch('/cart/changeQuantity', [CartController::class, 'changeQuantity'])->name('cart.changeQuantity');
+    // Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+
+    // Route::get('/orders', [OrdersController::class, 'index'])->name('orders');
+    // Route::patch('/orders/{order}/cancel', [OrdersController::class, 'cancelOrder'])->name('orders.cancelOrder');
+
+    // Route::get('/track-order', [OrdersController::class, 'trackOrder'])->name('trackOrder');
+
+    Route::middleware(['auth:website', 'verified:website.verification.notice', 'websiteUserRole:admin'])->group(function () {
+        require __DIR__ . '/dashboard.php';
+        require __DIR__ . '/../common/dashboard.php';
+    });
 });
+
