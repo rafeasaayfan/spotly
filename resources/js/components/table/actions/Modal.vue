@@ -20,13 +20,18 @@ const websiteComponents = import.meta.glob('@/pages/websites/**/dashboard/pages/
 const components = props.dashboardFor === 'default'
   ? defaultComponents
   : websiteComponents;
-const matchingPath = Object.keys(components).find((path) =>
-    path.includes(`/pages/${props.path}/actions/${props.action.charAt(0).toUpperCase() + props.action.slice(1)}.vue`),
+const matchingPath = Object.keys(components).find((path) => {
+    if(props.dashboardFor !== 'default') {
+        return path.includes(`${props.dashboardFor}/dashboard/pages/${props.path}/actions/${props.action.charAt(0).toUpperCase() + props.action.slice(1)}.vue`);
+    }
+
+    return path.includes(`/pages/${props.path}/actions/${props.action.charAt(0).toUpperCase() + props.action.slice(1)}.vue`);
+}
 );
 if (!matchingPath) {
     throw new Error('Component not found');
 }
-const actionCompo = defineAsyncComponent(components[matchingPath] as () => Promise<DefineComponent>);
+const actionCompo = defineAsyncComponent(components[matchingPath] as () => Promise<DefineComponent>);    
 
 function getRoute(): string | null {
     switch (props.action) {
