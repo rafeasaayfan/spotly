@@ -36,7 +36,7 @@ class CheckWebsiteUserRole
             return redirect()->route("website.$type.home");
         }
     
-        if ($role === 'owner' && ($user->id !== $website->owner_id || $user->role->value !== 'owner')) {
+        if ($role === 'owner' && ($user->email !== $website->owner->email || $user->role->value !== 'owner')) {
             return redirect()->back()->with([
                 'success' => false,
                 'toastType' => 'error',
