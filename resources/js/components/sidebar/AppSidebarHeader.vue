@@ -4,6 +4,7 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItemType } from '@/types';
 import AppearenceBtn from '@/components/appearance/AppearanceBtn.vue';
 import LanguagesMenu from '@/components/languages/Languages.vue';
+import AuthAvatar from '../AuthAvatar.vue';
 
 withDefaults(
     defineProps<{
@@ -34,6 +35,8 @@ withDefaults(
             <AppearenceBtn />
 
             <LanguagesMenu />
+
+            <AuthAvatar />
         </div>
 
     </header>
