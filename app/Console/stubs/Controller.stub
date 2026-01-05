@@ -141,6 +141,17 @@ class {{ controllerName }} extends Controller
                 'ids' => 'required|array',
                 'ids.*' => 'integer|exists:{{ pluralVariable }},id',
             ]);
+
+            // {{ model }}::whereIn('id', $validated['ids'])
+            //   ->with('variants') 
+            //    ->chunkById(20, function ($products) {
+            //        foreach ($products as $product) {
+            //            foreach ($product->variants as $variant) {
+            //                $variant->delete();
+            //           }
+            //           $product->delete();
+            //      }
+            //  });
     
             {{ model }}::destroy($validated['ids']);
     
