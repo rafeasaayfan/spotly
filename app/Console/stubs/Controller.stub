@@ -52,14 +52,12 @@ class {{ controllerName }} extends Controller
     {
         try {
             $validated = $request->validated();
+            // $imagesData = $validated['flag'];
             // unset($validated['image']);
 
-            ${{ modelVariable }} = new {{ model }}($validated);
+            // ${{ modelVariable }} = new {{ model }}($validated);
 
-            // if ($request->hasFile('image') && $request->file('image')->isValid()) {
-                // ${{ modelVariable }}->addMediaFromRequest('image')
-                // ->toMediaCollection('image');
-            // }
+            ${{ modelVariable }}->storeMediaImage($imagesData, 'image');
 
             ${{ modelVariable }}->save();
 
@@ -117,11 +115,7 @@ class {{ controllerName }} extends Controller
 
             ${{ modelVariable }}->fill($validated);
 
-            // if ($request->hasFile('image') && $request->file('image')->isValid()) {
-                // ${{ modelVariable }}->clearMediaCollection('image');
-                // ${{ modelVariable }}->addMediaFromRequest('image')
-                // ->toMediaCollection('image');
-            // }
+            // ${{ modelVariable }}->updateMediaImage($imageData, 'image');
 
             ${{ modelVariable }}->save();
 
