@@ -34,7 +34,6 @@ const { canAny, hasAnyRole, websiteHasAnyRole } = useAuth();
 <template>
     <SidebarSection v-for="section in mainSidebarItems" :key="section.name">
         <SidebarGroup
-            class="px-2"
             v-if="
                 (section.permission ? canAny(section.permission) : true) &&
                 (section.role ? hasAnyRole(section.role) : true) &&
