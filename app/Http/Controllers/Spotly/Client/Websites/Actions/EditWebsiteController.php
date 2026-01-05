@@ -46,7 +46,12 @@ class EditWebsiteController extends Controller
             $validatedDarkLogo = $validated['dark_logo'];
             unset($validated['light_logo'], $validated['dark_logo']);
 
+            $oldEmail = $website->email;
+
             $website->fill($validated);
+            if($oldEmail !== $validated['email']) {
+                $website->email_verified_at = null;
+            }
             $website->save();
 
             $website->updateMediaImage($validatedLightLogo, 'light_logo');
