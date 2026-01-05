@@ -42,7 +42,7 @@ return [
         ],
 
         'website' => [
-            'driver' => 'session',
+            'driver' => 'website_session',
             'provider' => 'website_users',
         ],
     ],
