@@ -2,35 +2,38 @@
 
 namespace App\Services\Spotly;
 
+use App\Enums\Spotly\OtpType;
 use App\Models\Otp;
 use App\Jobs\Spotly\OtpJob;
 use App\Models\User;
 
 class OtpService
 {
-    protected User $user;
-    protected int $websiteId;
-    protected string $purpose;
+    protected ?User $user;
+    protected ?int $websiteId;
+    protected ?string $email;
+    protected OtpType $type;
     protected int $codeLength;
     protected int $expiresMinutes;
     protected int $maxAttempts;
 
-
     /**
      * Create a new OTP service instance.
      *
-     * @param User   $user            The user who will receive the OTP.
-     * @param int    $websiteId       The website ID to associate the OTP with.
-     * @param string $purpose         The purpose (e.g., "login", "register", "reset").
-     * @param int    $codeLength      The length of the OTP code (default: 6 digits).
-     * @param int    $expiresMinutes  The validity duration of the OTP in minutes (default: 3).
-     * @param int    $maxAttempts     The maximum number of OTP requests allowed within the limit (default: 3).
+     * @param User|null   $user            The user who will receive the OTP.
+     * @param int|null    $websiteId       The website ID to associate the OTP with.
+     * @param string|null $email           The email address to send the OTP to.
+     * @param OtpType     $type            The purpose (e.g., "login", "register", "reset").
+     * @param int         $codeLength      The length of the OTP code (default: 6 digits).
+     * @param int         $expiresMinutes  The validity duration of the OTP in minutes (default: 3).
+     * @param int         $maxAttempts     The maximum number of OTP requests allowed within the limit (default: 3).
      */
-    public function __construct(User $user, int $websiteId, string $purpose, int $codeLength = 6, int $expiresMinutes = 3, int $maxAttempts = 3)
+    public function __construct(?User $user, ?int $websiteId, ?string $email, OtpType $type, int $codeLength = 6, int $expiresMinutes = 3, int $maxAttempts = 3)
     {
         $this->user = $user;
         $this->websiteId = $websiteId;
-        $this->purpose = $purpose;
+        $this->email = $email;
+        $this->type = $type;
         $this->codeLength = $codeLength;
         $this->expiresMinutes = $expiresMinutes;
         $this->maxAttempts = $maxAttempts;
@@ -46,7 +49,11 @@ class OtpService
      */
     public function sendCode()
     {
-        $lastOtp = Otp::where('user_id', $this->user->id)->where('website_id', $this->websiteId)->first();
+        $lastOtp = Otp::where('user_id', $this->user->id)
+            ->where('website_id', $this->websiteId)
+            ->where('type', $this->type)
+            ->first();
+
         if ($lastOtp && !($lastOtp->isExpired())) {
             return 'find';
         }
@@ -61,7 +68,7 @@ class OtpService
     }
 
     /**
-     * Check the latest OTP for the user and return athe seconds until expiration.
+     * Check the latest OTP for the user and return the seconds remaining until expiration.
      *
      * - Returns null if no OTP exists or if the last OTP has expired.
      *
@@ -71,7 +78,8 @@ class OtpService
     {
         $otp = Otp::where('user_id', $this->user->id)
             ->where('website_id', $this->websiteId)
-            ->where('purpose', $this->purpose)
+            ->where('email', $this->email)
+            ->where('type', $this->type)
             ->first();
 
         if ($otp && !$otp->isExpired()) {
@@ -94,9 +102,20 @@ class OtpService
      */
     public function generate()
     {
+        $code = random_int(pow(10, $this->codeLength - 1), pow(10, $this->codeLength) - 1);
+
         $otp = Otp::firstOrCreate(
-            ['user_id' => $this->user->id, 'website_id' => $this->websiteId, 'purpose' => $this->purpose],
-            ['attempts' => 0, 'code' => rand(100000, 999999), 'expires_at' => now()->addMinutes($this->expiresMinutes)]
+            [
+                'user_id' => $this->user->id,
+                'website_id' => $this->websiteId,
+                'email' => $this->email,
+                'type' => $this->type
+            ],
+            [
+                'attempts' => 0,
+                'code' => hash('sha256', $code), // storing hashed code with sha256
+                'expires_at' => now()->addMinutes($this->expiresMinutes)
+            ]
         );
 
         // Just a 3 attempts in one hour
@@ -108,14 +127,17 @@ class OtpService
             return null;
         }
 
+        // If the OTP already exists (not recently created), regenerate the code, update expiration, increment attempts, and save.
         if (!$otp->wasRecentlyCreated) {
-            $otp->code = rand(pow(10, $this->codeLength - 1), pow(10, $this->codeLength) - 1);
+            $code = random_int(pow(10, $this->codeLength - 1), pow(10, $this->codeLength) - 1);
+
+            $otp->code = hash('sha256', $code);
             $otp->expires_at = now()->addMinutes($this->expiresMinutes);
             $otp->attempts += 1;
             $otp->save();
         }
 
-        OtpJob::dispatch($this->user->email, $otp->code);
+        OtpJob::dispatch($this->user->email, $code);
 
         return $otp;
     }
@@ -132,10 +154,18 @@ class OtpService
      */
     public function verify(string $code): bool
     {
-        $otp = Otp::where('user_id', $this->user->id)->where('website_id', $this->websiteId)->where('purpose', $this->purpose)->where('code', $code)
-        ->first();
+        $otp = Otp::where('user_id', $this->user->id)
+            ->where('website_id', $this->websiteId)
+            ->where('email', $this->email)
+            ->where('type', $this->type)
+            ->where('code', hash('sha256', $code))
+            ->first();
 
         if (!$otp) {
+            return false;
+        }
+
+        if ($otp->used_at) {
             return false;
         }
 
@@ -143,7 +173,7 @@ class OtpService
             return false;
         }
 
-        // $otp->delete();
+        $otp->delete();
 
         return true;
     }

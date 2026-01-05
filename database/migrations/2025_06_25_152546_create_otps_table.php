@@ -13,13 +13,21 @@ return new class extends Migration
     {
         Schema::create('otps', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('website_id')->constrained('websites')->onDelete('cascade');
-            $table->string('code');
-            $table->string('purpose');
-            $table->integer('attempts')->default(0);
-            $table->timestamp('expires_at');
-            $table->timestamps();
+            
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade'); 
+            $table->foreignId('website_id')->nullable()->constrained('websites')->onDelete('cascade');
+            
+            $table->string('email')->nullable();
+            
+            $table->string('code'); // Hash OTP code string
+            $table->string('type'); // Type (purpose) of OTP (e.g. delete_website, verify_website_email)
+            
+            $table->unsignedTinyInteger('attempts')->default(0); // Number of attempts
+            
+            $table->timestamp('expires_at'); // Expiration datetime for the OTP
+            $table->timestamp('used_at')->nullable(); // When the OTP has been used, this field stores the usage timestamp
+
+            $table->timestamps(); 
         });
     }
 
