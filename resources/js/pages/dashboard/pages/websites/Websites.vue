@@ -23,6 +23,7 @@ const columns = [
     { key: 'approvedOrDeniedBy_name', label: 'Viewed By' },
     { key: 'subdomain', label: 'Sub Domain' },
     { key: 'email', label: 'Email', type: 'email' },
+    { key: 'email_verified_at', label: 'Verification' },
     { key: 'is_active', label: 'Active', type: 'toggle' },
     {
         key: 'status',

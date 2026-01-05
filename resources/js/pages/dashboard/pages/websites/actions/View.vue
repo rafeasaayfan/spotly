@@ -80,6 +80,10 @@ const props = defineProps<{
                         Email:
                         <a :href="`mailto:${props.data.email}`" class="text-body text-base font-medium">{{ props.data.email }}</a>
                     </p>
+                    <div v-if="props.data.email" class="text-body-muted flex w-full items-center justify-between text-sm">
+                        Email Status:
+                        <div v-html="formatters.emailVerified(props.data.email_verified_at)"></div>
+                    </div>
                     <p v-if="props.data.phone_number" class="text-body-muted flex w-full items-center justify-between text-sm">
                         Phone Number:
                         <a :href="`tel:${props.data.phone_number}`" class="text-body text-base font-medium">{{ props.data.phone_number }}</a>

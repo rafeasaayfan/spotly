@@ -242,17 +242,32 @@ const copyUrl = async () => {
                             {{ $t('phone') }}
                         </Label>
 
-                        <a v-if="props.website.phone_number" :href="'tel:' + props.website.phone_number" class="w-full cursor-pointer [direction:ltr]" rel="noopener noreferrer">
+                        <a
+                            v-if="props.website.phone_number"
+                            :href="'tel:' + props.website.phone_number"
+                            class="w-full cursor-pointer [direction:ltr]"
+                            rel="noopener noreferrer"
+                        >
                             <Input :defaultValue="props.website.phone_number" class="cursor-pointer text-[var(--primary)]" readonly />
                         </a>
                         <Input v-else :placeholder="page.props.lang === 'ar' ? 'لا يوجد رقم هاتف' : 'No phone number provided'" readonly />
                     </div>
 
                     <div class="flex flex-col gap-1">
-                        <Label for="email" class="text-body-muted mb-1 text-xs">
-                            <Mail class="size-3.5" />
-                            {{ $t('email') }}
-                        </Label>
+                        <div class="flex gap-2">
+                            <Label for="email" class="text-body-muted mb-1 text-xs">
+                                <Mail class="size-3.5" />
+                                {{ $t('email') }}
+                            </Label>
+
+                            <p v-if="props.website.email_verified_at" class="text-active-link text-xs font-bold">
+                                Verified
+                            </p>
+                            <p v-else class="text-active-link-2 text-xs font-bold">
+                                Not Verified
+                            </p>
+                            <!-- <div v-html="formatters.emailVerified(props.website.email_verified_at)" class="!px-0"></div> -->
+                        </div>
 
                         <a v-if="props.website.email" :href="'mailto:' + props.website.email" class="w-full cursor-pointer" rel="noopener noreferrer">
                             <Input :defaultValue="props.website.email" class="cursor-pointer text-[var(--primary)]" readonly />
