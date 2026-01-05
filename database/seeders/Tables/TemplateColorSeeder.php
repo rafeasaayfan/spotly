@@ -13,6 +13,7 @@ class TemplateColorSeeder extends Seeder
      */
     public function run(): void
     {
+        // Spotly Template Colors
         TemplateColor::create([
             'created_by' => 1,
             'name' => 'spotly-ui-colors',
@@ -76,146 +77,193 @@ class TemplateColorSeeder extends Seeder
             'is_active' => '1',
         ]);
 
-        // Modern Purple/Violet Theme
+        // Basic Template Colors
         TemplateColor::create([
             'created_by' => 1,
             'name' => 'basic-ui-colors',
 
-            'bg_body_light' => '#FAFAFA',
-            'bg_body_dark' => 'hsl(220 15% 10%)',
+            'bg_body_light' => '#ffffff',
+            'bg_body_dark' => '#1a1a1a',
+            'bg_nav_light' => '#f8f9fa',
+            'bg_nav_dark' => '#2d2d2d',
+            'bg_footer_light' => '#f8f9fa',
+            'bg_footer_dark' => '#2d2d2d',
 
-            'bg_nav_light' => '#FFFFFF',
-            'bg_nav_dark' => 'hsl(220 15% 12%)',
-
-            'bg_footer_light' => '#FFFFFF',
-            'bg_footer_dark' => 'hsl(220 15% 12%)',
-
-            'foreground_light' => 'hsl(220 20% 20%)',
-            'foreground_dark' => 'hsl(0 0% 90%)',
-
+            'foreground_light' => '#212529',
+            'foreground_dark' => '#e9ecef',
             'foreground_active_light' => '#000000',
-            'foreground_active_dark' => '#FFFFFF',
+            'foreground_active_dark' => '#ffffff',
+            'foreground_muted_light' => '#6c757d',
+            'foreground_muted_dark' => '#adb5bd',
 
-            'foreground_muted_light' => 'hsl(220 10% 50%)',
-            'foreground_muted_dark' => 'hsl(220 10% 65%)',
+            'bg_field_light' => '#ffffff',
+            'bg_field_dark' => '#343a40',
 
-            'bg_field_light' => 'hsl(210 60% 97%)',
-            'bg_field_dark' => 'hsl(220 18% 18%)',
+            'bg_card_light' => '#ffffff',
+            'bg_card_hover_light' => '#f8f9fa',
+            'bg_card_dark' => '#2d2d2d',
+            'bg_card_hover_dark' => '#3a3a3a',
 
-            'bg_card_light' => '#FFFFFF',
-            'bg_card_hover_light' => 'hsl(0 0% 96%)',
-            'bg_card_dark' => 'hsl(220 15% 13%)',
-            'bg_card_hover_dark' => 'hsl(220 15% 18%)',
+            'bg_content_light' => '#ffffff',
+            'bg_content_hover_light' => '#f8f9fa',
+            'bg_content_active_light' => '#e9ecef',
+            'bg_content_dark' => '#2d2d2d',
+            'bg_content_hover_dark' => '#3a3a3a',
+            'bg_content_active_dark' => '#495057',
 
-            'bg_content_light' => 'hsl(210 90% 92%)',
-            'bg_content_hover_light' => 'hsl(210 90% 88%)',
-            'bg_content_active_light' => 'hsl(210 90% 83%)',
+            'bg_dropdown_light' => '#ffffff',
+            'bg_dropdown_dark' => '#343a40',
 
-            'bg_content_dark' => 'hsl(210 40% 22%)',
-            'bg_content_hover_dark' => 'hsl(210 40% 28%)',
-            'bg_content_active_dark' => 'hsl(210 40% 34%)',
+            'primary_light' => '#0d6efd',
+            'primary_hover_light' => '#0b5ed7',
+            'primary_dark' => '#0d6efd',
+            'primary_hover_dark' => '#3d8bfd',
+            'danger_light' => '#dc3545',
+            'danger_hover_light' => '#bb2d3b',
+            'danger_dark' => '#dc3545',
+            'danger_hover_dark' => '#e35d6a',
+            'secondary_light' => '#6c757d',
+            'secondary_hover_light' => '#5c636a',
+            'secondary_dark' => '#6c757d',
+            'secondary_hover_dark' => '#8a9199',
 
-            'bg_dropdown_light' => '#FFFFFF',
-            'bg_dropdown_dark' => 'hsl(220 15% 15%)',
+            'text_for_primary_light' => '#ffffff',
+            'text_for_primary_dark' => '#ffffff',
+            'text_for_danger_light' => '#ffffff',
+            'text_for_danger_dark' => '#ffffff',
 
-            'primary_light' => 'hsl(215 85% 45%)',
-            'primary_hover_light' => 'hsl(215 85% 35%)',
-            'primary_dark' => 'hsl(215 80% 50%)',
-            'primary_hover_dark' => 'hsl(215 80% 60%)',
+            'border_color_light' => '#dee2e6',
+            'border_color_dark' => '#495057',
 
-            'danger_light' => 'hsl(0 75% 55%)',
-            'danger_hover_light' => 'hsl(0 75% 45%)',
-            'danger_dark' => 'hsl(0 70% 60%)',
-            'danger_hover_dark' => 'hsl(0 70% 70%)',
-
-            'secondary_light' => 'hsl(220 10% 45%)',
-            'secondary_hover_light' => 'hsl(220 10% 40%)',
-            'secondary_dark' => 'hsl(220 10% 60%)',
-            'secondary_hover_dark' => 'hsl(220 10% 65%)',
-
-            'text_for_primary_light' => '#FFFFFF',
-            'text_for_primary_dark' => '#FFFFFF',
-            'text_for_danger_light' => '#FFFFFF',
-            'text_for_danger_dark' => '#FFFFFF',
-
-            'border_color_light' => 'hsl(220 15% 85%)',
-            'border_color_dark' => 'hsl(220 15% 22%)',
-
-            'description' => 'Basic clean UI colors',
-
-            'is_custom' => '0',
-            'is_active' => '1',
+            'description' => 'A clean and simple color scheme perfect for any project',
+            'is_custom' => false,
+            'is_active' => true,
         ]);
 
-        // 
+        // Modern Template Colors
         TemplateColor::create([
             'created_by' => 1,
-            'name' => 'special-premium-colors',
+            'name' => 'modern-ui-colors',
 
-            'bg_body_light' => '#FDFBFF',
-            'bg_body_dark' => 'hsl(260 30% 8%)',
+            'bg_body_light' => '#f5f7fa',
+            'bg_body_dark' => '#0f1419',
+            'bg_nav_light' => '#ffffff',
+            'bg_nav_dark' => '#1a1f2e',
+            'bg_footer_light' => '#2c3e50',
+            'bg_footer_dark' => '#1a1f2e',
 
-            'bg_nav_light' => '#FFFFFF',
-            'bg_nav_dark' => 'hsl(260 30% 11%)',
+            'foreground_light' => '#2d3748',
+            'foreground_dark' => '#e2e8f0',
+            'foreground_active_light' => '#1a202c',
+            'foreground_active_dark' => '#f7fafc',
+            'foreground_muted_light' => '#718096',
+            'foreground_muted_dark' => '#a0aec0',
 
-            'bg_footer_light' => '#FFFFFF',
-            'bg_footer_dark' => 'hsl(260 30% 11%)',
+            'bg_field_light' => '#ffffff',
+            'bg_field_dark' => '#1e2530',
 
-            'foreground_light' => 'hsl(260 20% 20%)',
-            'foreground_dark' => 'hsl(0 0% 92%)',
+            'bg_card_light' => '#ffffff',
+            'bg_card_hover_light' => '#f7fafc',
+            'bg_card_dark' => '#1e2530',
+            'bg_card_hover_dark' => '#2a3441',
 
+            'bg_content_light' => '#ffffff',
+            'bg_content_hover_light' => '#edf2f7',
+            'bg_content_active_light' => '#e2e8f0',
+            'bg_content_dark' => '#1e2530',
+            'bg_content_hover_dark' => '#2a3441',
+            'bg_content_active_dark' => '#374151',
+
+            'bg_dropdown_light' => '#ffffff',
+            'bg_dropdown_dark' => '#1e2530',
+
+            'primary_light' => '#667eea',
+            'primary_hover_light' => '#5568d3',
+            'primary_dark' => '#7c3aed',
+            'primary_hover_dark' => '#9333ea',
+            'danger_light' => '#f56565',
+            'danger_hover_light' => '#e53e3e',
+            'danger_dark' => '#fc8181',
+            'danger_hover_dark' => '#f56565',
+            'secondary_light' => '#48bb78',
+            'secondary_hover_light' => '#38a169',
+            'secondary_dark' => '#48bb78',
+            'secondary_hover_dark' => '#68d391',
+
+            'text_for_primary_light' => '#ffffff',
+            'text_for_primary_dark' => '#ffffff',
+            'text_for_danger_light' => '#ffffff',
+            'text_for_danger_dark' => '#ffffff',
+
+            'border_color_light' => '#e2e8f0',
+            'border_color_dark' => '#374151',
+
+            'description' => 'A modern and vibrant color palette with bold accents',
+            'is_custom' => false,
+            'is_active' => false,
+        ]);
+
+        // Ecommerce Template Colors
+        TemplateColor::create([
+            'created_by' => 1,
+            'name' => 'ecommerce-ui-colors',
+
+            'bg_body_light' => '#fafafa',
+            'bg_body_dark' => '#121212',
+            'bg_nav_light' => '#ffffff',
+            'bg_nav_dark' => '#1e1e1e',
+            'bg_footer_light' => '#263238',
+            'bg_footer_dark' => '#1e1e1e',
+
+            'foreground_light' => '#263238',
+            'foreground_dark' => '#e0e0e0',
             'foreground_active_light' => '#000000',
-            'foreground_active_dark' => '#FFFFFF',
+            'foreground_active_dark' => '#ffffff',
+            'foreground_muted_light' => '#757575',
+            'foreground_muted_dark' => '#9e9e9e',
 
-            'foreground_muted_light' => 'hsl(260 10% 48%)',
-            'foreground_muted_dark' => 'hsl(260 10% 65%)',
+            'bg_field_light' => '#ffffff',
+            'bg_field_dark' => '#2c2c2c',
 
-            'bg_field_light' => 'hsl(280 80% 96%)',
-            'bg_field_dark' => 'hsl(260 25% 16%)',
+            'bg_card_light' => '#ffffff',
+            'bg_card_hover_light' => '#f5f5f5',
+            'bg_card_dark' => '#1e1e1e',
+            'bg_card_hover_dark' => '#2c2c2c',
 
-            'bg_card_light' => '#FFFFFF',
-            'bg_card_hover_light' => 'hsl(260 20% 96%)',
-            'bg_card_dark' => 'hsl(260 28% 14%)',
-            'bg_card_hover_dark' => 'hsl(260 28% 20%)',
+            'bg_content_light' => '#ffffff',
+            'bg_content_hover_light' => '#fafafa',
+            'bg_content_active_light' => '#f5f5f5',
+            'bg_content_dark' => '#1e1e1e',
+            'bg_content_hover_dark' => '#2c2c2c',
+            'bg_content_active_dark' => '#383838',
 
-            'bg_content_light' => 'hsl(190 85% 85%)',
-            'bg_content_hover_light' => 'hsl(190 85% 80%)',
-            'bg_content_active_light' => 'hsl(190 85% 75%)',
+            'bg_dropdown_light' => '#ffffff',
+            'bg_dropdown_dark' => '#2c2c2c',
 
-            'bg_content_dark' => 'hsl(190 35% 24%)',
-            'bg_content_hover_dark' => 'hsl(190 35% 30%)',
-            'bg_content_active_dark' => 'hsl(190 35% 36%)',
+            'primary_light' => '#ff6b35',
+            'primary_hover_light' => '#ff5722',
+            'primary_dark' => '#ff7849',
+            'primary_hover_dark' => '#ff8a65',
+            'danger_light' => '#d32f2f',
+            'danger_hover_light' => '#c62828',
+            'danger_dark' => '#ef5350',
+            'danger_hover_dark' => '#e57373',
+            'secondary_light' => '#00897b',
+            'secondary_hover_light' => '#00796b',
+            'secondary_dark' => '#26a69a',
+            'secondary_hover_dark' => '#4db6ac',
 
-            'bg_dropdown_light' => '#FFFFFF',
-            'bg_dropdown_dark' => 'hsl(260 30% 14%)',
+            'text_for_primary_light' => '#ffffff',
+            'text_for_primary_dark' => '#ffffff',
+            'text_for_danger_light' => '#ffffff',
+            'text_for_danger_dark' => '#ffffff',
 
-            'primary_light' => 'hsl(275 75% 55%)',      // Purple
-            'primary_hover_light' => 'hsl(275 75% 45%)',
-            'primary_dark' => 'hsl(275 70% 60%)',
-            'primary_hover_dark' => 'hsl(275 70% 70%)',
+            'border_color_light' => '#e0e0e0',
+            'border_color_dark' => '#383838',
 
-            'danger_light' => 'hsl(350 75% 55%)',
-            'danger_hover_light' => 'hsl(350 75% 45%)',
-            'danger_dark' => 'hsl(350 70% 60%)',
-            'danger_hover_dark' => 'hsl(350 70% 70%)',
-
-            'secondary_light' => 'hsl(45 85% 45%)',     // Gold
-            'secondary_hover_light' => 'hsl(45 85% 40%)',
-            'secondary_dark' => 'hsl(45 85% 55%)',
-            'secondary_hover_dark' => 'hsl(45 85% 65%)',
-
-            'text_for_primary_light' => '#FFFFFF',
-            'text_for_primary_dark' => '#FFFFFF',
-            'text_for_danger_light' => '#FFFFFF',
-            'text_for_danger_dark' => '#FFFFFF',
-
-            'border_color_light' => 'hsl(260 15% 86%)',
-            'border_color_dark' => 'hsl(260 15% 22%)',
-
-            'description' => 'Special premium vibrant UI colors',
-
-            'is_custom' => '0',
-            'is_active' => '1',
+            'description' => 'Optimized for e-commerce with high contrast and conversion-focused colors',
+            'is_custom' => false,
+            'is_active' => false,
         ]);
     }
 }
