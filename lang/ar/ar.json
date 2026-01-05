@@ -359,6 +359,9 @@
     "myWebsites.send_my_code": "أرسل الرمز الخاص بي",
     "myWebsites.resend_in": "إعادة الإرسال في",
     "myWebsites.submit": "إرسال",
+    "myWebsites.verify_email": "تحقق البريد الإلكتروني",
+    "myWebsites.verify_your": "تحقق من",
+    "myWebsites.verify_now": "تحقق من بريدك الإلكتروني الآن",
     "myWebsites.items_per_page": "عناصر في الصفحة",
 
     "client.payments.make_payment_title": "إجراء عملية دفع",

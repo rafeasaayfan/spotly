@@ -359,6 +359,9 @@
     "myWebsites.send_my_code": "Send my code",
     "myWebsites.resend_in": "Resend in",
     "myWebsites.submit": "Submit",
+    "myWebsites.verify_email": "Verify Email",
+    "myWebsites.verify_your": "Verify Your",
+    "myWebsites.verify_now": "Verify Your email Now",
     "myWebsites.items_per_page": "Items per page",
 
     "client.payments.make_payment_title": "Make a Payment",

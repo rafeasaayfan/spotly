@@ -26,6 +26,7 @@ return [
     'website_deactivated' => 'Your Website deactivated successfully',
     'website_deleted' => 'Your Website deleted successfully',
     'invalid_or_expired' => 'Invalid or expired OTP',
+    'website_email_verified' => 'Your website email verified successfully',
     'otp_sent' => 'OTP sent successfully',
     'otp_rate_limited' => 'You have reached the maximum OTP requests for this hour',
     'active_code_exists' => 'You already have an active code',
