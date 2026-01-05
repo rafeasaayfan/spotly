@@ -49,13 +49,13 @@ class UsersController extends BaseController
     public function create()
     {
         try {
-            $countries = Country::with('media')->active()->get();
+            $countries = Country::active()->get();
 
             return $this->jsonSuccess('', [
                 'countries' => $countries,
             ]);
         } catch (\Exception $e) {
-            return $this->logJsonResponse('CategoriesController@create', $e, 'An error when fetching the create page');
+            return $this->logJsonResponse('UsersController@create', $e, 'An error when fetching the create page');
         }
     }
 
@@ -110,9 +110,9 @@ class UsersController extends BaseController
                         $q->where('status', 'rejected');
                     },
                 ])
-                ->withSum([
-                    'ecommerceOrders as total_spent' => fn($q) => $q->where('status', 'delivered'),
-                ], 'total_amount');
+                    ->withSum([
+                        'ecommerceOrders as total_spent' => fn($q) => $q->where('status', 'delivered'),
+                    ], 'total_amount');
             });
 
             $user = $query->findOrFail($id);
@@ -223,15 +223,17 @@ class UsersController extends BaseController
                 'banned' => 'User has been banned.',
             };
 
-            UserStatusMailJob::dispatch(
-                $this->website->email,
-                $this->website->name,
-                $this->website->subdomain,
-                $this->website->websiteType->type,
-                $user->email,
-                $user->name,
-                $validated['status']
-            );
+            if ($this->website->email && $this->website->email_verified_at) {
+                UserStatusMailJob::dispatch(
+                    $this->website->email,
+                    $this->website->name,
+                    $this->website->subdomain,
+                    $this->website->websiteType->type,
+                    $user->email,
+                    $user->name,
+                    $validated['status']
+                );
+            }
 
             return $this->backSuccess($message);
         } catch (\Exception $e) {
