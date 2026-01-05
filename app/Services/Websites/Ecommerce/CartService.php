@@ -98,7 +98,7 @@ class CartService
      * @param string $websiteSubdomain
      * @return array
      */
-    public static function checkout(array $validated, $cartItems, int $websiteId, string $websiteName, string $websiteEmail, string $websiteSubdomain)
+    public static function checkout(array $validated, $cartItems, int $websiteId, string $websiteName, string $websiteEmail, bool $isWebsiteEmailVerified, string $websiteSubdomain)
     {
         DB::beginTransaction();
 
@@ -126,15 +126,17 @@ class CartService
 
         DB::commit();
 
-        SendOrderEmailJob::dispatch(
-            $order->order_number,
-            'new_order',
-            $websiteId,
-            $websiteName,
-            $websiteEmail,
-            $websiteSubdomain,
-            Auth::guard('website')->check() ? Auth::guard('website')->user()->email : null
-        )->afterCommit();
+        if ($isWebsiteEmailVerified && $websiteEmail) {
+            SendOrderEmailJob::dispatch(
+                $order->order_number,
+                'new_order',
+                $websiteId,
+                $websiteName,
+                $websiteEmail,
+                $websiteSubdomain,
+                Auth::guard('website')->check() ? Auth::guard('website')->user()->email : null
+            )->afterCommit();
+        }
 
         return [
             'items' => $cartItems,

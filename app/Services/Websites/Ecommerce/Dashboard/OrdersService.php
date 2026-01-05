@@ -14,7 +14,7 @@ class OrdersService
      * Change the status of the order.
     */
     public static function changeStatus(
-        int $websiteId, string $websiteName, string $websiteEmail, string $websiteDomain, int $orderId, string $status
+        int $websiteId, string $websiteName, string $websiteEmail, bool $isWebsiteEmailVerified, string $websiteDomain, int $orderId, string $status
     ): array
     {
         $allowedTransitions = [
@@ -64,7 +64,7 @@ class OrdersService
             };
 
             if (in_array($newStatus, ['confirmed', 'cancelled', 'rejected', 'delivered'])) {
-                if ($order->website_user_id !== null) {
+                if ($order->website_user_id !== null && $isWebsiteEmailVerified && $websiteEmail) {
                     self::callTheOrderJob($websiteId, $websiteName, $websiteEmail, $websiteDomain, $order, $newStatus);
                 }
             }
