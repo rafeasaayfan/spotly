@@ -27,13 +27,13 @@ class WebsitesController extends Controller
         $query = Website::query();
 
         $columnsSearching = ['owner.name', 'websiteType.type', 'name', 'subdomain', 'email'];
-        $columnsSelection = ['id', 'owner_id', 'website_type_id', 'approved_or_denied_by', 'subdomain', 'email', 'is_active', 'status', 'created_at'];
+        $columnsSelection = ['id', 'owner_id', 'website_type_id', 'approved_or_denied_by', 'subdomain', 'email', 'email_verified_at', 'is_active', 'status', 'created_at'];
         $relations = ['owner_name', 'websiteType_type', 'approvedOrDeniedBy_name'];
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
         return $this->inertiaRender(
-            'dashboard/pages/websites/Websites', 
+            'dashboard/pages/websites/Websites',
             [
                 'websites' => $data
             ]
@@ -181,7 +181,12 @@ class WebsitesController extends Controller
                 'ids.*' => 'integer|exists:websites,id',
             ]);
 
-            Website::destroy($validated['ids']);
+            Website::whereIn('id', $validated['ids'])
+                ->chunkById(10, function ($websites) {
+                    foreach ($websites as $website) {
+                        $website->delete();
+                    }
+                });
 
             return $this->backSuccess('Website(s) deleted successfully');
         } catch (\Exception $e) {
