@@ -46,7 +46,10 @@ class RegisteredUserController extends BaseController
 
         Auth::guard('website')->login($websiteUser);
 
-        EcommerceSyncService::sync($guestSessionId);
+        match ($this->website->websiteType->type) {
+            'e-commerce' => EcommerceSyncService::sync($guestSessionId),
+            default => null,
+        };
 
         return $this->redirectSuccess('dashboard.index', '', forWebsite: true);
     }

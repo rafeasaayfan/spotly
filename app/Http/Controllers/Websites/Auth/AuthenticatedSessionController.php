@@ -34,7 +34,10 @@ class AuthenticatedSessionController extends BaseController
 
         $request->authenticate();
 
-        EcommerceSyncService::sync($guestSessionId);
+        match ($this->website->websiteType->type) {
+            'e-commerce' => EcommerceSyncService::sync($guestSessionId),
+            default => null,
+        };
 
         $request->session()->regenerate();
 
