@@ -31,8 +31,8 @@ class WebsiteBuilderController extends Controller
 
             $cities = config('cities.lebanon');
 
-            $templateTemplateColors = TemplateTemplateColor::where('website_type_id', $typeId)
-                ->with(['media', 'template', 'templateColor'])
+            $templateTemplateColors = TemplateTemplateColor::where('website_type_id', $typeId)->active()
+                ->with(['template', 'templateColor'])
                 ->get();
 
             return $this->inertiaRender('websiteBuilder/Wizard', [
