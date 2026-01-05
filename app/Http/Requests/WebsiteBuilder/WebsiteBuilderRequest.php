@@ -79,7 +79,7 @@ class WebsiteBuilderRequest extends FormRequest
             case '2':
                 $validation = [
                     'phone_number' => [
-                        'nullable',
+                        'required',
                         'regex:/^(?:\+961)?(03\d{6}|70\d{6}|71\d{6}|76\d{6}|78\d{6}|79\d{6}|81\d{6})$/'
                     ],
                     'email' => [
