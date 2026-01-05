@@ -2,12 +2,14 @@
 import SidebarContentFooter from '@/components/sidebar/content/SidebarContentFooter.vue';
 import SidebarContentHeader from '@/components/sidebar/content/SidebarContentHeader.vue';
 import SidebarMain from '@/components/sidebar/content/SidebarMain.vue';
-import SidebarUser from '@/components/sidebar/content/SidebarUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from '@/components/ui/sidebar';
-import { footerSidebarItems, mainSidebarItems, sidebarCollapsible, sidebarVariant } from '@/config/navigations';
-import { footerSidebarItems as ecommerceFooter, mainSidebarItems as ecommerceMain } from '@/pages/websites/e-commerce/config/navigations/sidebar';
 import { SharedData } from '@/types';
 import { usePage } from '@inertiajs/vue3';
+
+//* SideBars
+import { footerSidebarItems, mainSidebarItems, sidebarCollapsible, sidebarVariant } from '@/config/navigations';
+import { footerSidebarItems as ecommerceFooter, mainSidebarItems as ecommerceMain } from '@/pages/websites/e-commerce/config/navigations/sidebar';
+import { footerSidebarItems as restaurantFooter, mainSidebarItems as restaurantMain } from '@/pages/websites/restaurant/config/navigations/sidebar';
 
 const page = usePage<SharedData>();
 
@@ -24,6 +26,11 @@ const getSidebarConfig = (dashboard: string) => {
       return {
         main: ecommerceMain,
         footer: ecommerceFooter,
+      };
+    case 'restaurant':
+      return {
+        main: restaurantMain,
+        footer: restaurantFooter,
       };
     default:
       return {
@@ -49,7 +56,6 @@ const sidebarConfig = getSidebarConfig(props.dashboardForProps ?? '');
 
     <SidebarFooter>
       <SidebarContentFooter :footerSidebarItems="sidebarConfig.footer" />
-      <SidebarUser />
     </SidebarFooter>
   </Sidebar>
 </template>

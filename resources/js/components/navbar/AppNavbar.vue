@@ -69,10 +69,10 @@ onUnmounted(() => {
                 </div>
 
                 <div class="hidden md:block">
-                    <LanguagesMenu />
+                    <LanguagesMenu :forLanding="true" />
                 </div>
 
-                <AuthAvatar v-if="auth.user" />
+                <AuthAvatar v-if="auth.user" :forLanding="true" />
                 <Link v-else :href="route('register')">
                     <Button variant="outline" size="sm"> {{ $t('navbar.login.register') }} </Button>
                 </Link>

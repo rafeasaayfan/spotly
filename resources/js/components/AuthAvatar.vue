@@ -8,6 +8,15 @@ import { usePage } from '@inertiajs/vue3';
 import { SharedData } from '@/types';
 import { computed } from 'vue';
 
+const props = withDefaults(
+    defineProps<{
+        forLanding?: boolean;
+    }>(),
+    {
+        forLanding: false,
+    },
+);
+
 const page = usePage<SharedData>();
 const auth = computed(() => page.props.auth);
 </script>
@@ -30,7 +39,7 @@ const auth = computed(() => page.props.auth);
         </DropdownMenuTrigger>
 
         <DropdownMenuContent class="w-56">
-            <UserMenuContent :user="auth.user" />
+            <UserMenuContent :user="auth.user" :forLanding="props.forLanding" />
         </DropdownMenuContent>
     </DropdownMenu>
 </template>

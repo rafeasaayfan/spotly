@@ -14,6 +14,15 @@ import { usePage } from '@inertiajs/vue3';
 import { CheckCheck, LucideGlobe } from 'lucide-vue-next';
 import Image from '../ui/image/Image.vue';
 
+const props = withDefaults(
+    defineProps<{
+        forLanding?: boolean;
+    }>(),
+    {
+        forLanding: false,
+    },
+);
+
 const languages = [
     { key: 'العربية', value: 'ar', src: '/images/flags/ar.avif' },
     { key: 'English', value: 'en', src: '/images/flags/en.png' },
@@ -41,8 +50,19 @@ const changeLanguage = (lang: string) => {
             <DropdownMenuSeparator />
 
             <DropdownMenuGroup>
-                <DropdownMenuItem v-for="lang in languages" :key="lang.key" @click="changeLanguage(lang.value)"
-                    :class="page.props.lang == lang.value ? 'bg-content-active text-active font-medium' : ''">
+                <DropdownMenuItem
+                    v-for="lang in languages"
+                    :key="lang.key"
+                    @click="changeLanguage(lang.value)"
+                    :class="[
+                        page.props.lang == lang.value
+                            ? props.forLanding
+                                ? 'bg-landing-content-2-active text-active font-medium'
+                                : 'bg-content-active text-active font-medium'
+                            : '',
+                        props.forLanding ? 'bg-landing-content-2' : '',
+                    ]"
+                >
                     <div class="flex w-full items-center justify-between gap-2">
                         <div class="flex items-center gap-2">
                             <Image :src="lang.src" class="border-muted h-6 w-6 !rounded-full border" />
