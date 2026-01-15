@@ -8,9 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class EcommerceTrackOrder extends Model
 {
     protected $fillable = [
+        'website_id',
         'order_id',
+        'user_id',
+        
         'status_reason',
         'status',
+
+        'is_session_order'
     ];
 
     protected $casts = [
@@ -23,5 +28,13 @@ class EcommerceTrackOrder extends Model
     public function order()
     {
         return $this->belongsTo(EcommerceOrder::class, 'order_id');
+    }
+
+    /**
+     * Get the user that the track order is associated with.
+     */
+    public function user()
+    {
+        return $this->belongsTo(WebsiteUser::class, 'user_id');
     }
 }

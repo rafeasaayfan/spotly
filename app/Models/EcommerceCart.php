@@ -31,7 +31,7 @@ class EcommerceCart extends Model
     /**
      * Get the website user that the cart is associated with.
      */
-    public function websiteUser()
+    public function user()
     {
         return $this->belongsTo(WebsiteUser::class, 'website_user_id');
     }
