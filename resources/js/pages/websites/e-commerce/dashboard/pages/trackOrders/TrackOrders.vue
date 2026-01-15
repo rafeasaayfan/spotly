@@ -62,7 +62,6 @@ const tableConditions = {
     enableEdit: false,
     enableDelete: false,
     enableCreate: false,
-    enableView: false,
     enableRowsDelete: false,
 };
 </script>
