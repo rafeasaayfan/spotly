@@ -207,4 +207,21 @@ class Website extends Model implements HasMedia
     {
         return $this->hasMany(EcommerceProduct::class, 'website_id');
     }
+
+    // =================  Restaurant    ===================================
+    /**
+     * Get the orders for the website.
+     */
+    public function restaurantOrders()
+    {
+        return $this->hasMany(RestaurantOrder::class, 'website_id');
+    }
+
+    /**
+     * Get the menu items for the website.
+     */
+    public function restaurantMenuItems()
+    {
+        return $this->hasMany(RestaurantMenuItem::class, 'website_id');
+    }
 }
