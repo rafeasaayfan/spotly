@@ -72,18 +72,27 @@ class WebsiteUser extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get the wishlist items for the user.
-     */
-    public function ecommerceWishlist()
-    {
-        return $this->hasMany(EcommerceWishlist::class, 'website_user_id');
-    }
-
-    /**
      * Get the orders for the user.
      */
     public function ecommerceOrders()
     {
         return $this->hasMany(EcommerceOrder::class, 'website_user_id');
+    }
+
+    // ============================== Restaurant ==============================
+    /**
+     * Get the cart items for the user.
+     */
+    public function restaurantCart()
+    {
+        return $this->hasOne(RestaurantCart::class, 'website_user_id');
+    }
+
+    /**
+     * Get the orders for the user.
+     */
+    public function restaurantOrders()
+    {
+        return $this->hasMany(RestaurantOrder::class, 'website_user_id');
     }
 }
