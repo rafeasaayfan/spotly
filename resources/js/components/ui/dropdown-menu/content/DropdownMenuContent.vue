@@ -43,7 +43,7 @@ const align = computed(() => {
 <template>
   <DropdownMenuPortal>
     <DropdownMenuContent data-slot="dropdown-menu-content" v-bind="forwarded" :align="align" :class="cn(
-      'bg-body z-50 overflow-x-hidden overflow-y-auto rounded-md border border-muted p-2 shadow-md',
+      'bg-body z-50 overflow-x-hidden overflow-y-auto rounded-md border border-muted p-2 shadow-md dark:shadow-[0_4px_6px_-1px_rgb(255_255_255_/_0.03),_0_2px_4px_-2px_rgb(255_255_255_/_0.03)]',
       'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
       'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
       'data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
