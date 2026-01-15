@@ -47,6 +47,13 @@ class CustomPathGenerator implements PathGenerator
             if ($product) {
                 $prefix = "websites/{$product->website_id}/products/{$product->id}";
             }
+
+        } elseif ($media->model_type === \App\Models\RestaurantMenuItem::class) {
+            $menuItem = \App\Models\RestaurantMenuItem::find($media->model_id);
+
+            if ($menuItem) {
+                $prefix = "websites/{$menuItem->website_id}/menuItems/{$menuItem->id}";
+            }
         }
 
         if ($prefix !== '') {
