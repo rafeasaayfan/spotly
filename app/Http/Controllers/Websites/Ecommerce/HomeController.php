@@ -20,7 +20,7 @@ class HomeController extends BaseController
         $homeSpecialProducts = $productService->getHomeSpecialProducts();
         $homeProducts = $productService->getHomeProducts();
 
-        $categories = Category::active()->inHome()->where('website_id', $this->website->id)
+        $categories = Category::where('website_id', $this->website->id)->active()->inHome()
             ->withCount('ecommerceProducts')->get();
 
         return $this->inertiaRender(
