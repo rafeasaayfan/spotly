@@ -75,10 +75,19 @@ class Category extends Model
 
     // ============================== Ecommerce ==============================
     /**
-     * Get the ecommerce products for the category.
+     * Get the ecommerce products for a category.
      */
     public function ecommerceProducts()
     {
         return $this->hasMany(EcommerceProduct::class, 'category_id');
+    }
+
+    // ============================== Restaurant ==============================
+    /**
+     * Get the restaurant menu items for a category.
+     */
+    public function restaurantMenuItems()
+    {
+        return $this->hasMany(RestaurantMenuItem::class, 'category_id');
     }
 }
