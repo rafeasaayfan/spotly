@@ -14,8 +14,8 @@ class HomeController extends BaseController
      */
     public function index()
     {
-        // $categories = Category::active()->inHome()->where('website_id', $this->website->id)
-        //     ->withCount('ecommerceProducts')->get();
+        $categories = Category::where('website_id', $this->website->id)->active()->inHome()
+            ->withCount('restaurantMenuItems')->get();
 
         return $this->inertiaRender(
             'pages/home/Home',
@@ -25,7 +25,7 @@ class HomeController extends BaseController
                 'websiteFooterData' => $this->websiteFooterData(),
                 // 'homeSpecialProducts' => $homeSpecialProducts->isNotEmpty() ? $homeSpecialProducts : $homeProducts,
                 // 'homeProducts' => $homeProducts,
-                // 'categories' => $categories,
+                'categories' => $categories,
                 'aboutUs' => $this->website->about_us,
                 'aboutUsAr' => $this->website->about_us_ar,
                 'cartItemsCount' => $this->cartItems()?->count()
