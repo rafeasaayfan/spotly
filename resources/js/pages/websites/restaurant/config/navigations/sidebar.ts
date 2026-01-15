@@ -32,14 +32,9 @@ export const mainSidebarItems: SidebarSection[] = [
                 icon: icons.FolderTree,
             },
             {
-                title: 'Delivery Fees',
-                href: '/dashboard/delivery-fees',
-                icon: icons.Truck,
-            },
-            {
-                title: 'Products',
-                href: '/dashboard/products',
-                icon: icons.Package,
+                title: 'Menu Items',
+                href: '/dashboard/menu-items',
+                icon: icons.UtensilsCrossed,
             },
         ],
     },
@@ -56,6 +51,11 @@ export const mainSidebarItems: SidebarSection[] = [
                 href: '/dashboard/carts',
                 icon: icons.ShoppingCart,
             },
+            {
+                title: 'Track Orders',
+                href: '/dashboard/track-orders',
+                icon: icons.Route,
+            }
         ],
     },
 ];
