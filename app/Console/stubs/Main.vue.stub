@@ -44,6 +44,12 @@ watchEffect(() => {
 const tableConditions = {
     ...defaultTableConditions,
 };
+
+// const actionTypes: ActionTypes = {
+//     isModalForCreate: false,
+//     isModalForEdit: false,
+//     isModalForView: false,
+// }
 </script>
 
 <template>
