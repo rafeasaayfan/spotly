@@ -16,7 +16,7 @@ class TrackOrdersController extends BaseController
      */
     public function index(Request $request)
     {
-        $query = EcommerceTrackOrder::query();
+        $query = EcommerceTrackOrder::where('website_id', $this->website->id);
 
         $columnsSearching = ['order.order_number'];
         $columnsSelection = [];
@@ -56,7 +56,17 @@ class TrackOrdersController extends BaseController
      */
     public function show(string $id)
     {
-        //
+        try {
+            $cart = EcommerceTrackOrder::where('website_id', $this->website->id)
+                ->with(['order', 'user:id,name,email,phone_number'])
+                ->findOrFail($id);
+
+            return $this->jsonSuccess('', [
+                'data' => $cart,
+            ]);
+        } catch (\Exception $e) {
+            return $this->logJsonResponse('TrackOrdersController@show', $e, 'An error when fetching the show page');
+        }
     }
 
     /**
