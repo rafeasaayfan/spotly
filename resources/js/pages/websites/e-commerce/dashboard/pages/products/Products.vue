@@ -5,7 +5,7 @@ import DashboardLayout from '@/layouts/DashboardLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { watchEffect } from 'vue';
 
-import { type DataTableProps } from '@/composables/dataTable/useDataTable';
+import { ActionTypes, type DataTableProps } from '@/composables/dataTable/useDataTable';
 import { defaultTableConditions } from '@/lib/dataTable';
 import { toast } from '@/lib/sweetAlert';
 import { type BreadcrumbItem } from '@/types';
@@ -81,6 +81,12 @@ watchEffect(() => {
 const tableConditions = {
     ...defaultTableConditions,
 };
+
+const actionTypes: ActionTypes = {
+    isModalForCreate: false,
+    isModalForEdit: false,
+    isModalForView: false
+}
 </script>
 
 <template>
@@ -95,6 +101,7 @@ const tableConditions = {
             :tableConditions="tableConditions"
             path="products"
             dashboardFor="e-commerce"
+            :actionTypes="actionTypes"
         />
     </DashboardLayout>
 </template>
