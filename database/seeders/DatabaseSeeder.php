@@ -9,6 +9,7 @@ use Database\Seeders\Tables\Assignments\RoleSeeder;
 use Database\Seeders\Tables\ColorSeeder;
 use Database\Seeders\Tables\PaymentMethodSeeder;
 use Database\Seeders\Tables\PlanSeeder;
+use Database\Seeders\Tables\RestaurantMenuItemGroupSeeder;
 use Database\Seeders\Tables\WebsiteTypeSeeder;
 use Database\Seeders\Tables\TemplateColorSeeder;
 use Database\Seeders\Tables\TemplateSeeder;
@@ -52,6 +53,7 @@ class DatabaseSeeder extends Seeder
             PlanSeeder::class,
             PaymentMethodSeeder::class,
             ColorSeeder::class,
+            RestaurantMenuItemGroupSeeder::class
         ]);
 
         // User::factory(1000)->create();

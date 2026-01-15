@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('restaurant_menu_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('menu_id')->constrained('restaurant_menus')->onDelete('cascade');
+            $table->foreignId('website_id')->constrained('websites')->onDelete('cascade');
             $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
 
             $table->string('name');
@@ -22,6 +22,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->decimal('discount_price', 10, 2)->nullable();
 
+            $table->text('short_description')->nullable();
             $table->text('description')->nullable();
 
             $table->integer('views_count')->default(0);
@@ -32,6 +33,8 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             
             $table->timestamps();
+
+            $table->unique(['website_id', 'slug']);
         });
     }
 
