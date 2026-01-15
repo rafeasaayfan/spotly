@@ -27,7 +27,7 @@ class WebsiteTypeSeeder extends Seeder
             'type' => 'restaurant',
             'description' => 'Restaurant website for showcasing menu and services',
             'priority' => 2,
-            'is_active' => false,
+            'is_active' => true,
         ]);
 
         WebsiteType::create([
