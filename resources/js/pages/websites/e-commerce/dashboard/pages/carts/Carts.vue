@@ -18,7 +18,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const columns = [
-    { key: 'websiteUser_name', label: 'User' },
+    { key: 'user_name', label: 'User' },
     { key: 'items_count', label: 'Cart Items Count' },
     { key: 'status', label: 'Status', type: 'status' },
     { key: 'created_at', label: 'Created At', type: 'date' },

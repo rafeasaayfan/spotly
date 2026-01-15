@@ -14,8 +14,8 @@ const props = defineProps<{
             <div class="grid grid-cols-1 gap-4">
                 <!-- General Information -->
                 <div class="border-muted flex flex-col gap-1 border-b pb-4">
-                    <p v-if="props.data.websiteUser_name" class="text-body-muted text-sm">Cart For:</p>
-                    <h3 class="text-active-link text-xl font-bold">{{ props.data.websiteUser_name ?? 'Session Cart' }}</h3>
+                    <p v-if="props.data.user_name" class="text-body-muted text-sm">Cart For:</p>
+                    <h3 class="text-active-link text-xl font-bold">{{ props.data.user_name ?? 'Session Cart' }}</h3>
                 </div>
 
                 <div class="border-muted border-muted flex flex-col gap-3 border-b pb-4">
