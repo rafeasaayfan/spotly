@@ -18,9 +18,9 @@ class CartsController extends BaseController
     {
         $query = EcommerceCart::where('website_id', $this->website->id)->withCount('items');
 
-        $columnsSearching = ['websiteUser.name'];
+        $columnsSearching = ['user.name'];
         $columnsSelection = ['id', 'website_user_id', 'status', 'created_at'];
-        $relations = ['websiteUser_name'];
+        $relations = ['user_name'];
 
         $data = $this->dataTable($query, $request, $columnsSearching, $columnsSelection, $relations);
 
@@ -58,9 +58,9 @@ class CartsController extends BaseController
     {
         try {
             $query = EcommerceCart::where('website_id', $this->website->id)
-            ->with(['items', 'items.product:id,name'])->withCount('items')
-            ->findOrFail($id);
-            $cart = $this->flattenRelationData($query, ['websiteUser_name']);
+                ->with(['items', 'items.product:id,name'])->withCount('items')
+                ->findOrFail($id);
+            $cart = $this->flattenRelationData($query, ['user_name']);
 
             return $this->jsonSuccess('', [
                 'data' => $cart,
@@ -94,7 +94,7 @@ class CartsController extends BaseController
         try {
             $validated = $request->validate([
                 'ids' => 'required|array',
-                'ids.*' => 'integer|exists:carts,id,website_id,' . $this->website->id,
+                'ids.*' => 'integer|exists:ecommerce_carts,id,website_id,' . $this->website->id,
             ]);
     
             EcommerceCart::destroy($validated['ids']);
