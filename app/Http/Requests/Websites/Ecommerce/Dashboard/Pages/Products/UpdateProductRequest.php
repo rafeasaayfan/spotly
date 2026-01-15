@@ -19,9 +19,7 @@ class UpdateProductRequest extends FormRequest
     {
         $website = app('website');
 
-        $activeWebsiteAttributes = Attribute::where('website_id', $website->id)->active()->count();
-
-        return [
+        $baseRules = [
             'category_id' => [
                 'nullable',
                 'exists:categories,id,website_id,' . $website->id . ',is_active,1'
@@ -32,11 +30,22 @@ class UpdateProductRequest extends FormRequest
             ],
 
             'name'        => ['required', 'string', 'max:255'],
-            'price'       => ['required', 'numeric', 'min:0'],
+            'price'       => ['required', 'numeric', 'gt:0'],
             'discount_price'  => ['nullable', 'numeric', 'lte:price', 'gt:0'],
 
             'is_active'   => ['required', 'boolean'],
 
+            'short_description'  => ['nullable', 'string', 'max:255'],
+            'description'        => ['nullable', 'string', 'max:500'],
+        ];
+
+        if ((int) $this->input('step') === 1) {
+            return $baseRules;
+        }
+
+        $activeWebsiteAttributes = Attribute::where('website_id', $website->id)->active()->count();
+
+        return array_merge($baseRules, [
             'variants' => [
                 'required',
                 'array',
@@ -84,7 +93,7 @@ class UpdateProductRequest extends FormRequest
                 when($this->input('discount_price'), 'gte:discount_price')
             ],
             'variants.*.stock_quantity' => ['nullable', 'integer', 'min:0'],
-            'variants.*.ecommerce_product_images' => ['required', 'array', 'max:4'],
+            'variants.*.ecommerce_product_images' => ['required', 'array', 'max:3'],
             'variants.*.ecommerce_product_images.*.id' => [
                 'nullable',
                 'integer',
@@ -187,10 +196,7 @@ class UpdateProductRequest extends FormRequest
                     }
                 }
             ],
-
-            'short_description'  => ['nullable', 'string', 'max:255'],
-            'description'        => ['nullable', 'string', 'max:500'],
-        ];
+        ]);
     }
 
     public function messages(): array
