@@ -10,11 +10,12 @@ class DeleteWebsiteData
     {
         match ($website->website_type_id) {
             1 => $this->deleteEcommerceData($website),
+            2 => $this->deleteRestaurantData($website),
             default     => null,
         };
     }
 
-    // Ecommerce
+    //* Ecommerce
     protected function deleteEcommerceData(Website $website): void
     {
         $website->ecommerceProducts()
@@ -25,6 +26,17 @@ class DeleteWebsiteData
                         $variant->delete();
                     }
                     $product->delete();
+                }
+            });
+    }
+
+    //* Restaurant
+    protected function deleteRestaurantData(Website $website): void
+    {
+        $website->restaurantMenuItems()
+            ->chunkById(20, function ($menuItems) {
+                foreach ($menuItems as $item) {
+                    $item->delete();
                 }
             });
     }
