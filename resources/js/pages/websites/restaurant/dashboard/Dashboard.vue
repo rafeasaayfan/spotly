@@ -57,7 +57,7 @@ const props = defineProps<Props>();
 <template>
     <Head :title="$t('dashboard')" />
 
-    <DashboardLayout :breadcrumbs="breadcrumbs" dashboardFor="e-commerce" :websiteNameAndLogo="props.websiteNameAndLogo">
+    <DashboardLayout :breadcrumbs="breadcrumbs" dashboardFor="restaurant" :websiteNameAndLogo="props.websiteNameAndLogo">
         <div class="mx-2 my-4 flex flex-col gap-4 md:mx-4">
             <!-- <StatsOverviewCard :gridSize="3">
                 <StatCard
