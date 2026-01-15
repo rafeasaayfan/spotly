@@ -62,12 +62,18 @@ class ProductsController extends BaseController
                 ->orderBy('created_at', 'asc')
                 ->get();
 
-            return $this->jsonSuccess('', [
-                'categories' => $categories,
-                'brands' => $brands,
-                'colors' => $colors,
-                'attributes' => $attributes,
-            ]);
+            return $this->inertiaRender(
+                'pages/products/actions/Create',
+                [
+                    'categories' => $categories,
+                    'brands' => $brands,
+                    'colors' => $colors,
+                    'attributes' => $attributes,
+                    'websiteNameAndLogo' => $this->websiteNameAndLogo()
+                ],
+                true,
+                true
+            );
         } catch (\Exception $e) {
             return $this->logJsonResponse('ProductsController@create', $e, 'An error when fetching the create page');
         }
@@ -78,6 +84,10 @@ class ProductsController extends BaseController
      */
     public function store(StoreProductRequest $request)
     {
+        if ($request->input('step') === 1) {
+            return;
+        }
+
         try {
             DB::beginTransaction();
 
@@ -112,9 +122,15 @@ class ProductsController extends BaseController
                 ->with(['variants.attributes'])->findOrFail($id);
             $product = $this->flattenRelationData($query, ['category_name', 'brand_name']);
 
-            return $this->jsonSuccess('', [
-                'data' => $product,
-            ]);
+            return $this->inertiaRender(
+                'pages/products/actions/View',
+                [
+                    'data' => $product,
+                    'websiteNameAndLogo' => $this->websiteNameAndLogo()
+                ],
+                true,
+                true
+            );
         } catch (\Exception $e) {
             return $this->logJsonResponse('ProductsController@show', $e, 'An error when fetching the show page');
         }
@@ -140,13 +156,19 @@ class ProductsController extends BaseController
                 ->select(['id', 'name', 'type'])
                 ->orderBy('created_at', 'asc')->get();
 
-            return $this->jsonSuccess('', [
-                'data' => $product,
-                'categories' => $categories,
-                'brands' => $brands,
-                'colors' => $colors,
-                'attributes' => $attributes,
-            ]);
+            return $this->inertiaRender(
+                'pages/products/actions/Edit',
+                [
+                    'data' => $product,
+                    'categories' => $categories,
+                    'brands' => $brands,
+                    'colors' => $colors,
+                    'attributes' => $attributes,
+                    'websiteNameAndLogo' => $this->websiteNameAndLogo()
+                ],
+                true,
+                true
+            );
         } catch (\Exception $e) {
             return $this->logJsonResponse('ProductsController@edit', $e, 'An error when fetching the edit page');
         }
@@ -159,12 +181,18 @@ class ProductsController extends BaseController
     {
         if ($product->website_id !== $this->website->id) return;
 
+        if ($request->input('step') === 1) {
+            return;
+        }
+
         try {
             DB::beginTransaction();
 
             $validated = $request->validated();
             $variants = $validated['variants'] ?? [];
             unset($validated['variants']);
+
+            $oldName = $product->name;
 
             $data = array_merge([
                 'is_in_home' => $product->is_active ? ($validated['is_active'] ? $product->is_in_home : false) : false,
@@ -177,7 +205,7 @@ class ProductsController extends BaseController
 
             DB::commit();
 
-            if ($validated['name'] !== $product->name) {
+            if ($validated['name'] !== $oldName) {
                 CreateProductSlugJob::dispatch($product)->afterCommit();
             }
 
@@ -201,7 +229,7 @@ class ProductsController extends BaseController
             ]);
 
             EcommerceProduct::whereIn('id', $validated['ids'])
-                ->with('variants') 
+                ->with('variants')
                 ->chunkById(20, function ($products) {
                     foreach ($products as $product) {
                         foreach ($product->variants as $variant) {
