@@ -15,7 +15,7 @@ class CartController extends BaseController
      */
     public function index()
     {
-        $countries = Country::with('media')->active()->get();
+        $countries = Country::active()->get();
         $cities = config('cities.lebanon');
 
         return $this->inertiaRender('pages/Cart', [
