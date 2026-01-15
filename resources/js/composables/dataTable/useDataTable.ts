@@ -47,6 +47,12 @@ export interface DataTableOptions {
     columns?: Column[];
 }
 
+export interface ActionTypes {
+    isModalForCreate?: boolean;
+    isModalForEdit?: boolean;
+    isModalForView?: boolean;
+}
+
 export function useDataTable(options: DataTableOptions) {
     const query = route().queryParams;
 

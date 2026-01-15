@@ -8,7 +8,7 @@ import TableLimit from './TableLimit.vue';
 
 import Meta from '@/components/pagination/Meta.vue';
 
-import { useDataTable, type Column, type DataTableProps } from '@/composables/dataTable/useDataTable';
+import { useDataTable, type ActionTypes, type Column, type DataTableProps } from '@/composables/dataTable/useDataTable';
 import { useTableActions } from '@/composables/dataTable/useTableActions';
 import { type TableConditions } from '@/lib/dataTable';
 import { type Filter } from '@/types';
@@ -20,7 +20,8 @@ const props = defineProps<{
     routeName: string;
     tableConditions: TableConditions;
     path: string;
-    dashboardFor?: string,
+    dashboardFor?: string;
+    actionTypes?: ActionTypes;
 }>();
 
 // Manage selected rows
@@ -58,7 +59,7 @@ const { handleAction } = useTableActions(selectedIds, props.routeName);
 </script>
 
 <template>
-    <div class="flex flex-col my-4 mx-2 md:mx-4 border border-muted rounded-md">
+    <div class="border-muted mx-2 my-4 flex flex-col rounded-md border md:mx-4">
         <!-- Table header with search and column visibility -->
         <TableHeader
             :columns="props.columns"
@@ -73,6 +74,7 @@ const { handleAction } = useTableActions(selectedIds, props.routeName);
             :tableConditions="tableConditions"
             :path="props.path"
             :dashboardFor="props.dashboardFor"
+            :isModalForCreate="actionTypes?.isModalForCreate"
         />
 
         <!-- Table content -->
@@ -90,11 +92,13 @@ const { handleAction } = useTableActions(selectedIds, props.routeName);
             :path="props.path"
             :routeName="props.routeName"
             :dashboardFor="props.dashboardFor"
+            :isModalForEdit="props.actionTypes?.isModalForEdit"
+            :isModalForView="props.actionTypes?.isModalForView"
         />
 
         <!-- Table footer with pagination -->
-        <div class="flex flex-col-reverse sm:flex-row flex-wrap items-center justify-between gap-4 p-3">
-            <div class="flex items-center justify-center md:justify-start gap-3 flex-wrap">
+        <div class="flex flex-col-reverse flex-wrap items-center justify-between gap-4 p-3 sm:flex-row">
+            <div class="flex flex-wrap items-center justify-center gap-3 md:justify-start">
                 <TableLimit
                     :applyFilters="applyFilters"
                     :selectedLimit="Number(filters.limit ?? 10)"
@@ -104,12 +108,7 @@ const { handleAction } = useTableActions(selectedIds, props.routeName);
                 <Meta :meta="meta.value" />
             </div>
 
-            <Pagination
-                :links="props.tableData.links"
-                :data="props.tableData"
-                :applyFilters="applyFilters"
-                :tableConditions="tableConditions"
-            />
+            <Pagination :links="props.tableData.links" :data="props.tableData" :applyFilters="applyFilters" :tableConditions="tableConditions" />
         </div>
     </div>
 </template>

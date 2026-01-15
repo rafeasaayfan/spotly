@@ -30,13 +30,16 @@ interface HeaderProps {
     routeName: string;
     selectedIds: number[];
     search?: string;
-    handleAction: (action: 'delete', idOrIds: number | number[]) => Promise<void>;
+    handleAction: (action: 'create' | 'delete', idOrIds?: number | number[]) => Promise<void>;
     tableConditions: TableConditions;
     path: string;
     dashboardFor?: string;
+    isModalForCreate?: boolean;
 }
 
-const props = defineProps<HeaderProps>();
+const props = withDefaults(defineProps<HeaderProps>(), {
+    isModalForCreate: true,
+});
 
 const localSearch = ref(props.search);
 
@@ -164,19 +167,20 @@ const colSpanClass = computed(() => {
                     </Button>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent class="w-[250px] sm:w-[500px]" :class="props.filter && props.filter?.length > 1 ? 'lg:w-[800px]' : 'lg:w-[600px]'">
+                <DropdownMenuContent
+                    class="w-[250px] sm:w-[500px]"
+                    :class="props.filter && props.filter?.length > 1 ? 'lg:w-[800px]' : 'lg:w-[600px]'"
+                >
                     <DropdownMenuShortcut>Filter options</DropdownMenuShortcut>
 
                     <DropdownMenuSeparator />
 
                     <DropdownMenuGroup>
-                        <form
-                            class="grid grid-cols-1 gap-5 sm:grid-cols-2"
-                            :class="gridColsClass"
-                            enctype="multipart/form-data"
-                        >
+                        <form class="grid grid-cols-1 gap-5 sm:grid-cols-2" :class="gridColsClass" enctype="multipart/form-data">
                             <div class="grid gap-1" v-for="(column, index) in props.filter" :key="index">
-                                <Label class="text-[11px]" :for="column.label">{{ column.label.charAt(0).toUpperCase() + column.label.slice(1) }}</Label>
+                                <Label class="text-[11px]" :for="column.label">{{
+                                    column.label.charAt(0).toUpperCase() + column.label.slice(1)
+                                }}</Label>
 
                                 <Select
                                     v-if="column.type === 'select'"
@@ -186,7 +190,7 @@ const colSpanClass = computed(() => {
                                     :withStatusColors="true"
                                     :placeholder="column.placeholder ?? column.label"
                                     @update:modelValue="(val: any) => submit(column.key, val)"
-                                    class="text-xs py-1.5 gap-5"
+                                    class="gap-5 py-1.5 text-xs"
                                 >
                                     <option v-for="option in column.options" :key="option.label" :value="option.value">{{ option.label }}</option>
                                 </Select>
@@ -202,18 +206,22 @@ const colSpanClass = computed(() => {
                                             value: option.value ?? option,
                                         }))
                                     "
-                                    class="text-xs py-1.5 h-7.5"
+                                    class="h-7.5 py-1.5 text-xs"
                                     @change="submit"
                                 />
 
                                 <InputError class="mt-1" :message="form.errors?.[column.key]" />
                             </div>
 
-                            <div
-                                class="border-muted col-span-1 mt-1 flex justify-end border-t pt-2 sm:col-span-2"
-                                :class="colSpanClass"
-                            >
-                                <Button variant="secondary" size="sm" type="button" :disabled="isResetting" @click="resetForm()" class="sm:text-xs h-7 px-2">
+                            <div class="border-muted col-span-1 mt-1 flex justify-end border-t pt-2 sm:col-span-2" :class="colSpanClass">
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    type="button"
+                                    :disabled="isResetting"
+                                    @click="resetForm()"
+                                    class="h-7 px-2 sm:text-xs"
+                                >
                                     <LoaderCircle v-if="isResetting" class="h-4 w-4 animate-spin" />
                                     <span v-else>Reset</span>
                                 </Button>
@@ -223,20 +231,24 @@ const colSpanClass = computed(() => {
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            <Dialog v-if="props.selectedIds.length === 0 && props.tableConditions.enableCreate">
-                <DialogTrigger as-child>
-                    <Button>Create</Button>
-                </DialogTrigger>
+            <template v-if="props.selectedIds.length === 0 && props.tableConditions.enableCreate">
+                <Dialog v-if="props.isModalForCreate">
+                    <DialogTrigger as-child>
+                        <Button type="button">Create</Button>
+                    </DialogTrigger>
 
-                <DialogScrollContent>
-                    <DialogHeader>
-                        <DialogTitle>Create</DialogTitle>
-                        <DialogDescription class="sr-only"> No description provided. </DialogDescription>
-                    </DialogHeader>
+                    <DialogScrollContent>
+                        <DialogHeader>
+                            <DialogTitle>Create</DialogTitle>
+                            <DialogDescription class="sr-only"> No description provided. </DialogDescription>
+                        </DialogHeader>
 
-                    <Modal action="create" :path="props.path" :routeName="props.routeName" :dashboardFor="props.dashboardFor" />
-                </DialogScrollContent>
-            </Dialog>
+                        <Modal action="create" :path="props.path" :routeName="props.routeName" :dashboardFor="props.dashboardFor" />
+                    </DialogScrollContent>
+                </Dialog>
+
+                <Button v-else type="button" @click="handleAction('create')">Create</Button>
+            </template>
 
             <Button
                 variant="destructive"

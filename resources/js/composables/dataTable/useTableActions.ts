@@ -4,10 +4,15 @@ import { ref } from 'vue';
 
 export function useTableActions(selectedIds = ref<number[]>([]), routeName: string) {
     async function handleAction(
-        action: 'delete' | 'edit' | 'view' | 'assignRoles' | 'assignPermissions' | 'userAssignments',
-        idOrIds: number | number[],
+        action: 'create' | 'delete' | 'edit' | 'view' | 'assignRoles' | 'assignPermissions' | 'userAssignments',
+        idOrIds?: number | number[],
     ) {
         switch (action) {
+            case 'create': {
+                router.get(route(`${routeName}.create`));
+                break;
+            }
+
             case 'delete': {
                 const ids = Array.isArray(idOrIds) ? idOrIds : [idOrIds];
 
@@ -37,25 +42,25 @@ export function useTableActions(selectedIds = ref<number[]>([]), routeName: stri
                 break;
             }
 
-            // case 'edit': {
-            //     if (typeof idOrIds !== 'number') {
-            //         toast.fire({ icon: 'error', title: 'Edit action requires a single ID!' });
-            //         return;
-            //     }
+            case 'edit': {
+                if (typeof idOrIds !== 'number') {
+                    toast.fire({ icon: 'error', title: 'Edit action requires a single ID!' });
+                    return;
+                }
 
-            //     router.get(route(`${routeName}.edit`, idOrIds));
-            //     break;
-            // }
+                router.get(route(`${routeName}.edit`, idOrIds));
+                break;
+            }
 
-            // case 'view': {
-            //     if (typeof idOrIds !== 'number') {
-            //         toast.fire({ icon: 'error', title: 'View action requires a single ID!' });
-            //         return;
-            //     }
+            case 'view': {
+                if (typeof idOrIds !== 'number') {
+                    toast.fire({ icon: 'error', title: 'View action requires a single ID!' });
+                    return;
+                }
 
-            //     router.get(route(`${routeName}.show`, idOrIds));
-            //     break;
-            // }
+                router.get(route(`${routeName}.show`, idOrIds));
+                break;
+            }
 
             // case 'assignRoles': {
             //     if (typeof idOrIds !== 'number') {

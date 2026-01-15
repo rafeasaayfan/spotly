@@ -11,17 +11,25 @@ import { type Column } from '@/composables/dataTable/useDataTable';
 import { formatters, type TableConditions } from '@/lib/dataTable';
 import { useForm } from '@inertiajs/vue3';
 
-const props = defineProps<{
-    columns: Column[];
-    data: Record<string, any>[];
-    selectedIds: number[];
-    tableConditions: TableConditions;
-    toggleRowSelection: (id: number, value: boolean) => void;
-    path: string;
-    routeName: string;
-    handleAction: (action: 'delete', idOrIds: number | number[]) => Promise<void>;
-    dashboardFor?: string;
-}>();
+const props = withDefaults(
+    defineProps<{
+        columns: Column[];
+        data: Record<string, any>[];
+        selectedIds: number[];
+        tableConditions: TableConditions;
+        toggleRowSelection: (id: number, value: boolean) => void;
+        path: string;
+        routeName: string;
+        handleAction: (action: 'delete' | 'edit' | 'view', idOrIds?: number | number[]) => Promise<void>;
+        dashboardFor?: string;
+        isModalForEdit?: boolean;
+        isModalForView?: boolean;
+    }>(),
+    {
+        isModalForEdit: true,
+        isModalForView: true,
+    },
+);
 
 function updateCol(key: string, value: any, id: number, oldVal?: string) {
     if (oldVal !== value) {
@@ -32,6 +40,20 @@ function updateCol(key: string, value: any, id: number, oldVal?: string) {
         });
     }
 }
+
+const handleModalTypes = (): string[] => {
+    const array = ['assignRoles', 'assignPermissions', 'userAssignments'];
+
+    if (props.isModalForEdit) {
+        array.push('edit');
+    }
+
+    if (props.isModalForView) {
+        array.push('view');
+    }
+
+    return array;
+};
 </script>
 
 <template>
@@ -82,7 +104,7 @@ function updateCol(key: string, value: any, id: number, oldVal?: string) {
                         <span
                             v-for="(item, index) in row[column.key]"
                             :key="index"
-                            :class="item !== null && item !== undefined ? 'bg-black/8 dark:bg-white/8 rounded px-1.5 py-0.5 text-xs' : 'hidden'"
+                            :class="item !== null && item !== undefined ? 'rounded bg-black/8 px-1.5 py-0.5 text-xs dark:bg-white/8' : 'hidden'"
                         >
                             {{ item }}
                         </span>
@@ -149,7 +171,7 @@ function updateCol(key: string, value: any, id: number, oldVal?: string) {
                 "
             >
                 <div class="flex items-center justify-end gap-1.5">
-                    <Dialog v-for="action in ['edit', 'view', 'assignRoles', 'assignPermissions', 'userAssignments']" :key="action">
+                    <Dialog v-for="action in handleModalTypes()" :key="action">
                         <DialogTrigger as-child>
                             <ActionEditBtn v-if="props.tableConditions.enableEdit && action === 'edit'" />
                             <ActionViewBtn v-if="props.tableConditions.enableView && action === 'view'" />
@@ -167,6 +189,15 @@ function updateCol(key: string, value: any, id: number, oldVal?: string) {
                             <Modal :action="action" :path="props.path" :routeName="props.routeName" :id="row.id" :dashboardFor="props.dashboardFor" />
                         </DialogScrollContent>
                     </Dialog>
+
+                    <ActionEditBtn
+                        v-if="props.tableConditions.enableEdit && props.isModalForEdit === false"
+                        @click="handleAction('edit', row.id)"
+                    />
+                    <ActionViewBtn
+                        v-if="props.tableConditions.enableView && props.isModalForView === false"
+                        @click="handleAction('view', row.id)"
+                    />
 
                     <ActionDeleteBtn v-if="props.tableConditions.enableDelete" @click="handleAction('delete', row.id)" />
                 </div>

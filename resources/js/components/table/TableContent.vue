@@ -13,13 +13,15 @@ interface TableProps {
     toggleSelectAll: (value: boolean) => void;
     allSelected: boolean;
     selectedIds: number[];
-    handleAction: (action: 'delete', idOrIds: number | number[]) => Promise<void>;
+    handleAction: (action: 'delete' | 'edit' | 'view', idOrIds?: number | number[]) => Promise<void>;
     applyFilters: (overrides: Record<string, any>) => void;
     filters: Record<string, any>;
     tableConditions: TableConditions;
     path: string;
     routeName: string;
-    dashboardFor?: string,
+    dashboardFor?: string;
+    isModalForEdit?: boolean;
+    isModalForView?: boolean;
 }
 
 const props = defineProps<TableProps>();
@@ -31,8 +33,8 @@ const props = defineProps<TableProps>();
             <Thead>
                 <Tr class="font-semibold">
                     <Th class="text-body-muted w-3 border-none" v-if="props.tableConditions.enableRowsDelete">
-                        <Checkbox 
-                            :modelValue="allSelected" 
+                        <Checkbox
+                            :modelValue="allSelected"
                             @update:modelValue="(val) => typeof val === 'boolean' && toggleSelectAll(val)"
                             class="border-blue-600/20 dark:border-blue-600/10"
                         />
@@ -78,6 +80,8 @@ const props = defineProps<TableProps>();
                 :routeName="props.routeName"
                 :handleAction="props.handleAction"
                 :dashboardFor="props.dashboardFor"
+                :isModalForEdit="props.isModalForEdit"
+                :isModalForView="props.isModalForView"
             />
         </Table>
     </div>
