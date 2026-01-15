@@ -14,9 +14,15 @@ return new class extends Migration
     {
         Schema::create('ecommerce_track_orders', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('website_id')->constrained('websites')->onDelete('cascade');
             $table->foreignId('order_id')->constrained('ecommerce_orders')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained('website_users')->onDelete('set null');
+
             $table->text('status_reason')->nullable();
             $table->string('status')->default(OrderStatus::PENDING->value);
+
+            $table->boolean('is_session_order')->default(false);
+            
             $table->timestamps();
 
             $table->index(['order_id', 'status']);

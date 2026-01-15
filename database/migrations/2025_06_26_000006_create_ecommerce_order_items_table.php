@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('ecommerce_order_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained('ecommerce_orders')->onDelete('cascade');
-            $table->foreignId('product_id')->constrained('ecommerce_products')->onDelete('cascade');
-            $table->foreignId('product_variant_id')->constrained('ecommerce_product_variants')->onDelete('cascade');
+            $table->foreignId('product_id')->nullable()->constrained('ecommerce_products')->onDelete('set null');
+            $table->foreignId('product_variant_id')->nullable()->constrained('ecommerce_product_variants')->onDelete('set null');
 
             $table->json('image_urls')->nullable();
 

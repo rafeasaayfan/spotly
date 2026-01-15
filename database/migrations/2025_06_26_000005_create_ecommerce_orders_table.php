@@ -21,7 +21,7 @@ return new class extends Migration
 
             $table->string('session_id')->nullable();
 
-            $table->string('order_number')->unique();
+            $table->string('order_number');
 
             $table->decimal('subtotal', 12, 2);
             $table->decimal('total_amount', 12, 2);
