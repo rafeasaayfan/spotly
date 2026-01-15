@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Websites\Restaurant\Dashboard\Pages;
 use App\Http\Controllers\Websites\BaseController;
 use App\Http\Requests\Websites\Restaurant\Dashboard\Pages\Menus\StoreMenuItemRequest;
 use App\Http\Requests\Websites\Restaurant\Dashboard\Pages\Menus\UpdateMenuItemRequest;
-use App\Jobs\Websites\Restaurant\CreateProductSlugJob;
+use App\Jobs\Websites\Restaurant\CreateMenuItemSlugJob;
 use App\Models\Category;
 use App\Models\RestaurantMenuItem;
 use App\Models\RestaurantMenuItemGroup;
@@ -97,7 +97,7 @@ class MenuItemsController extends BaseController
 
             $menuItem->storeMediaImages($images, 'restaurant_item_images');
 
-            CreateProductSlugJob::dispatch($menuItem)->afterCommit();
+            CreateMenuItemSlugJob::dispatch($menuItem)->afterCommit();
 
             return $this->redirectSuccess('dashboard.menuItems.index', 'Menu Item created successfully', forWebsite: true);
         } catch (\Exception $e) {
@@ -199,7 +199,7 @@ class MenuItemsController extends BaseController
             $menuItem->updateMediaImages($images, 'restaurant_item_images');
 
             if ($validated['name'] !== $oldName) {
-                CreateProductSlugJob::dispatch($menuItem)->afterCommit();
+                CreateMenuItemSlugJob::dispatch($menuItem)->afterCommit();
             }
 
             return $this->redirectSuccess('dashboard.menuItems.index', 'Menu Item updated successfully', forWebsite: true);
